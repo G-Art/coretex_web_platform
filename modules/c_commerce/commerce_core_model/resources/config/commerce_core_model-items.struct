@@ -1,0 +1,1411 @@
+elements {
+
+    relations {
+        MerchantStoreLanguageRelation(source: MerchantStore, target: Language) {
+            source(languages) {
+                description = "Supported languages"
+                containerType = List
+            }
+            target(stores) {
+                containerType = List
+                description = "Stores"
+            }
+        }
+
+        GeoZoneCountryRelation(source: GeoZone, target: Country) {
+            source(countries) {
+                description = "Countries"
+                containerType = List
+            }
+            target(geoZone) {
+                description = "GeoZone"
+            }
+        }
+
+        ZoneCountryRelation(source: Zone, target: Country) {
+            source(country) {
+                description = "Countries"
+
+            }
+            target(zones) {
+                description = "GeoZone"
+                containerType = Set
+            }
+        }
+
+        ProductProductAvailabilityRelation(source: Product, target: ProductAvailability) {
+            source(availabilities) {
+                description = "Availabilities"
+                containerType = Set
+            }
+            target(product) {
+                description = "Product"
+            }
+        }
+
+        ProductAvailabilityProductPriceRelation(source: ProductAvailability, target: ProductPrice) {
+            source(prices) {
+                description = "Prices"
+                containerType = Set
+            }
+            target(productAvailability) {
+                description = "Product availability"
+            }
+        }
+
+        ProductProductImageRelation(source: Product, target: ProductImage) {
+            source(images) {
+                description = "Images "
+                containerType = Set
+            }
+            target(product) {
+                description = "Product"
+            }
+        }
+
+        ProductRelationshipProductRelation(source: Product, target: ProductRelationship) {
+            source(relationships) {
+                description = "Product relationship "
+                containerType = Set
+            }
+            target(product) {
+                description = "Product"
+            }
+        }
+
+        CategoryCategoryRelation(source: 'Category', target: 'Category') {
+            source(categories) {
+                description = "Categories"
+                containerType = List
+            }
+            target(parent) {
+                description = "Parent category"
+            }
+        }
+
+        CategoryProductRelation(source: 'Category', target: Product) {
+            source(products) {
+                description = "Products"
+                containerType = List
+            }
+            target(categories) {
+                description = "Parent category"
+                containerType = Set
+            }
+        }
+
+        ProductProductAttributeRelation(source: Product, target: ProductAttribute) {
+            source('attributes') {
+                description = "Attributes"
+                containerType = Set
+            }
+            target(product) {
+                description = "Product"
+            }
+        }
+
+        CustomerCustomerAttributeRelation(source: Customer, target: CustomerAttribute) {
+            source('attributes') {
+                description = "Attributes"
+                containerType = Set
+            }
+            target(customer) {
+                description = "Product"
+            }
+        }
+
+        PermissionGroupRelation(source: Permission, target: Group){
+            source(groups) {
+                description = "Groups"
+                containerType = List
+            }
+            target(permissions) {
+                description = "Permissions"
+                containerType = Set
+            }
+        }
+
+        CustomerGroupRelation(source: Customer, target: Group){
+            source(groups) {
+                description = "Groups"
+                containerType = List
+            }
+            target(customers) {
+                description = "Customers"
+                containerType = List
+            }
+        }
+
+        UserGroupRelation(source: User, target: Group){
+            source(groups) {
+                description = "Groups"
+                containerType = List
+            }
+            target(users) {
+                description = "Users"
+                containerType = List
+            }
+        }
+
+        CustomerProductReviewRelation(source: Customer, target: ProductReview){
+            source(reviews) {
+                description = "Groups"
+                containerType = List
+            }
+            target(customer) {
+                description = "Customer"
+            }
+        }
+
+        OrderStatusHistoryOrderRelation(source: OrderStatusHistory, target: Order){
+            source(order) {
+                description = "Order"
+            }
+            target(orderHistory) {
+               description = "Order status history"
+               containerType = Set
+            }
+        }
+
+        OrderAttributeOrderRelation(source: OrderAttribute, target: Order){
+            source(order) {
+                description = "Order"
+            }
+            target(orderAttributes) {
+                description = "Order attribute"
+                containerType = Set
+            }
+        }
+
+        OrderProductOrderRelation(source: OrderProduct, target: Order){
+            source(order) {
+                 description = "Order"
+            }
+            target(orderProducts) {
+                description = "Order products"
+                containerType = Set
+            }
+        }
+
+        OrderProductOrderProductAttributeRelation(source: OrderProduct, target: OrderProductAttribute){
+            source(orderAttributes) {
+                description = "Order attributes"
+                containerType = Set
+            }
+            target(orderProduct) {
+                description = "Order products"
+            }
+        }
+
+        OrderProductOrderProductPriceRelation(source: OrderProduct, target: OrderProductPrice){
+            source(prices) {
+                description = "Order product prices"
+                containerType = Set
+            }
+            target(orderProduct) {
+                description = "Order products"
+            }
+        }
+
+        OrderProductOrderProductDownloadRelation(source: OrderProduct, target: OrderProductDownload){
+            source(downloads) {
+                description = "Order product downloads"
+                containerType = Set
+            }
+            target(orderProduct) {
+                description = "Order products"
+            }
+        }
+
+        OrderTotalOrderRelation(source: OrderTotal, target: Order){
+            source(order) {
+                description = "Order"
+            }
+            target(orderTotal) {
+                description = "OrderTotals"
+                containerType = Set
+            }
+        }
+
+        ShoppingCartShoppingCartEntryRelation(source: ShoppingCart, target: ShoppingCartEntry){
+            source(lineItems) {
+                description = "Shopping cart entries"
+                containerType = Set
+            }
+            target(shoppingCart) {
+                description = "Shopping cart"
+            }
+        }
+
+        ShoppingCartEntryAttributeShoppingCartEntryRelation(source: ShoppingCartEntryAttribute, target: ShoppingCartEntry){
+            source(shoppingCartItem) {
+                description = "Shopping cart entry"
+            }
+            target('attributes') {
+                description = "Shopping cart entry attributes"
+                containerType = Set
+            }
+        }
+
+        MarketPlaceCatalogRelation(source: MarketPlace, target: Catalog){
+            source(catalogs) {
+                description = "Catalogs"
+                containerType = Set
+            }
+            target(marketPlace) {
+                description = "Market place"
+            }
+        }
+
+        OrderAccountOrderAccountProductRelation(source: OrderAccount, target: OrderAccountProduct){
+            source(orderAccountProducts) {
+                description = "Order account products"
+                containerType = Set
+            }
+            target(orderAccount) {
+                description = "Order account"
+            }
+        }
+
+        MerchantStoreDeliveryServiceRelation(source: MerchantStore, target: DeliveryService){
+            source(deliveryServices){
+                description = "Delivery services"
+                containerType = Set
+            }
+            target(store){
+                description = "Merchant store"
+            }
+        }
+
+        CountryDeliveryServiceRelation(source: Country, target: DeliveryService){
+            source(deliveryServices){
+                description = "Delivery services"
+                containerType = Set
+            }
+            target(countries){
+                description = "Countries"
+                containerType = Set
+            }
+        }
+
+        ShoppingCartDeliveryTypeRelation(source: ShoppingCart, target: DeliveryType) {
+            source(deliveryType) {
+                description = "Delivery Type"
+            }
+            target(shoppingCarts) {
+                description = "Shopping carts"
+                containerType = Set
+            }
+        }
+
+        DeliveryServiceDeliveryTypeRelation(source: DeliveryService, target: DeliveryType) {
+            source(deliveryTypes) {
+                description = "Delivery Type"
+                containerType = Set
+            }
+            target(deliveryService) {
+                description = "Delivery Service"
+            }
+        }
+
+        AreaSettlementRelation(source: Area, target: Settlement) {
+            source(settlements) {
+                description = "Settlements"
+                containerType = Set
+            }
+            target(area) {
+                description = "Area"
+            }
+        }
+    }
+
+    items {
+
+        Area {
+            attributes {
+                code(String)
+                name(String) {
+                    localized = true
+                }
+                center(City)
+            }
+        }
+
+        Settlement {
+            attributes {
+                name(String) {
+                    localized = true
+                }
+                code(String)
+                population(Integer)
+                longitude(Double)
+                latitude(Double)
+            }
+        }
+
+        City(extend: Settlement) {
+            attributes {
+                areaCenter(Boolean){
+                    defaultValue = false
+                }
+                capital(Boolean){
+                    defaultValue = false
+                }
+            }
+        }
+
+        DeliveryService(abstract: true) {
+            attributes {
+                code(String) {
+                    optional=false
+                    unique=true
+                }
+                name(String) {
+                    localized = true
+                }
+                image(String)
+                active(Boolean) {
+                    defaultValue = true
+                }
+            }
+        }
+
+        DeliveryType(abstract: true) {
+            attributes {
+                code(String) {
+                    optional=false
+                    unique=true
+                }
+                name(String) {
+                    localized = true
+                }
+                active(Boolean) {
+                    defaultValue = true
+                }
+            }
+        }
+
+        CustomerOptionSet {
+            attributes {
+                sortOrder(Integer)
+                customerOptionValue(CustomerOptionValue)
+                customerOption(CustomerOption)
+            }
+        }
+
+        CustomerOptin {
+            attributes {
+                optinDate(Date)
+                optin(Optin)
+                firstName(String)
+                lastName(String)
+                email(String)
+                value(String)
+                merchantStore(MerchantStore)
+            }
+        }
+
+        Optin {
+            attributes {
+                startDate(Date)
+                endDate(Date)
+                merchant(MerchantStore)
+                code(String)
+                description(String)
+                optinType(OptinType)
+            }
+        }
+
+        Quote {
+            attributes {
+                orderId(Long)
+                customerId(Long)
+                module(String)
+                optionName(String)
+                optionCode(String)
+                optionDeliveryDate(Date)
+                optionShippingDate(Date)
+                quoteDate(Date)
+                estimatedNumberOfDays(Integer)
+                price(BigDecimal)
+                delivery(Delivery)
+                freeShipping(Boolean)
+                handling(BigDecimal)
+                cartId(UUID)
+            }
+        }
+
+        ShippingOrigin {
+            attributes {
+                merchantStore(MerchantStore)
+                active(Boolean)
+                address(String)
+                city(String)
+                postalCode(String)
+                state(String)
+                country(Country)
+                zone(Zone)
+            }
+        }
+
+        IntegrationModule {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                module(String)
+                regions(String)
+                configuration(String)
+                image(String)
+                customModule(Boolean)
+                configDetails(String)
+                type(String)
+
+            }
+        }
+
+        Zone {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                name(String)
+            }
+        }
+
+        GeoZone {
+            attributes {
+                name(String)
+                code(String){
+                    unique = true
+                    optional = false
+                }
+            }
+        }
+
+        Currency {
+            attributes {
+                supported(Boolean){
+                    defaultValue=true
+                }
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                symbol(String)
+                name(String)
+            }
+        }
+
+        Language {
+            description = "Language"
+            attributes {
+                code(String){
+                    description = 'Language code'
+                    unique = true
+                    optional = false
+                }
+                sortOrder(Integer)
+            }
+        }
+
+        MerchantStore {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                useCache(Boolean){
+                    defaultValue = true
+                }
+                storeName(String)
+                storePhone(String)
+                storeAddress(String)
+                storeCity(String)
+                storePostalCode(String)
+                storeStateProvince(String)
+                weightUnitCode(String)
+                seizeUnitCode(String)
+                storeLogo(String)
+                storeTemplate(String)
+                invoiceTemplate(String)
+                inBusinessSince(Date)
+                domainName(String)
+                continueShoppingUrl(String)
+                storeEmailAddress(String)
+                dateBusinessSince(String)
+                currencyFormatNational(Boolean){
+                    defaultValue = true
+                }
+                defaultLanguage(Language)
+                zone(Zone)
+                country(Country)
+                currency('Currency')
+             }
+        }
+
+        MarketPlace {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                store(MerchantStore)
+            }
+        }
+
+        Catalog {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                store(MerchantStore)
+            }
+        }
+
+        OrderAccountProduct {
+            attributes {
+                orderProduct(OrderProduct)
+                orderAccountProductStartDate(Date)
+                orderAccountProductEndDate(Date)
+                orderAccountProductEot(Date)
+                orderAccountProductAccountedDate(Date)
+                orderAccountProductLastStatusDate(Date)
+                orderAccountProductLastTransactionStatus(Integer)
+                orderAccountProductPaymentFrequencyType(Integer)
+                orderAccountProductStatus(Integer)
+            }
+        }
+
+        OrderAccount {
+            attributes {
+                order(Order)
+                orderAccountStartDate(Date)
+                orderAccountEndDate(Date)
+                orderAccountBillDay(Integer)
+            }
+        }
+
+        Content {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                seUrl(String)
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                metatagDescription(String){
+                    localized = true
+                }
+                metatagKeywords(String){
+                    localized = true
+                }
+                productGroup(String)
+                merchantStore(MerchantStore)
+                visible(Boolean){
+                    defaultValue = true
+                }
+                contentType(ContentType)
+                sortOrder(Integer)
+                contentPosition(ContentPosition)
+                linkToMenu(Boolean)
+            }
+        }
+
+        Manufacturer {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                image(String)
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                url(String){
+                    localized = true
+                }
+                merchantStore(MerchantStore)
+                order(Integer)
+            }
+        }
+
+        ProductType {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                allowAddToCart(Boolean)
+            }
+        }
+
+        ProductPrice {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                productPriceAmount(BigDecimal)
+                productPriceSpecialStartDate(Date)
+                productPriceSpecialEndDate(Date)
+                productPriceSpecialAmount(BigDecimal)
+                defaultPrice(Boolean){
+                    defaultValue = false
+                }
+
+                productPriceType(ProductPriceType)
+
+            }
+        }
+
+        ProductAvailability {
+            attributes {
+                productQuantity(Integer)
+                productDateAvailable(Date)
+                region(String)
+                regionVariant(String)
+                productStatus(Boolean)
+                productIsAlwaysFreeShipping(Boolean){
+                    defaultValue = false
+                }
+                productQuantityOrderMin(Integer)
+                productQuantityOrderMax(Integer)
+            }
+        }
+
+        ProductImage {
+            attributes {
+                productImage(String)
+                defaultImage(Boolean){
+                    defaultValue = false
+                }
+                imageType(Integer)
+                imageCrop(Boolean){
+                    defaultValue = false
+                }
+                altTag(String){
+                    localized = true
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                productImageUrl(String)
+            }
+        }
+
+        ProductRelationship {
+            attributes {
+                code(String){
+                    optional = false
+                }
+                active(Boolean){
+                    defaultValue = false
+                }
+                store(MerchantStore)
+                relatedProduct(Product)
+            }
+        }
+
+        Category {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                categoryHighlight(String){
+                    localized = true
+                }
+                seUrl(String)
+                metatagTitle(String){
+                    localized = true
+                }
+                metatagKeywords(String){
+                    localized = true
+                }
+                metatagDescription(String){
+                    localized = true
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                featured(Boolean){
+                    defaultValue = false
+                }
+                sortOrder(Integer)
+                categoryImage(String)
+                categoryStatus(Boolean)
+                visible(Boolean){
+                    defaultValue = true
+                }
+                depth(Integer)
+                lineage(String)
+                merchantStore(MerchantStore)
+            }
+        }
+
+        ProductOption {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                productOptionSortOrder(Integer)
+                productOptionType(String)
+                productOptionComment(String){
+                    localized = true
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                merchantStore(MerchantStore)
+                readOnly(Boolean){
+                    defaultValue = false
+                }
+            }
+        }
+
+        ProductOptionValue {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                productOptionValueSortOrder(Integer)
+                productOptionValueImage(String)
+                merchantStore(MerchantStore)
+                productOptionDisplayOnly(Boolean)
+            }
+        }
+
+        ProductAttribute {
+            attributes {
+                attributePrice(String)
+                productOptionSortOrder(Integer)
+                productAttributeIsFree(Boolean)
+                productAttributeWeight(BigDecimal)
+                attributeDefault(Boolean)
+                attributeRequired(Boolean)
+                attributeDisplayOnly(Boolean)
+                attributeDiscounted(Boolean)
+                attributeSortOrder(String)
+                attributeAdditionalWeight(String)
+                productAttributePrice(BigDecimal)
+                productOption(ProductOption){
+                    associated = true
+                }
+                productOptionValue(ProductOptionValue){
+                    associated = true
+                }
+            }
+        }
+
+        CustomerOption {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                customerOptionComment(String){
+                    localized = true
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                merchantStore(MerchantStore)
+                customerOptionType(String)
+                active(Boolean)
+                publicOption(Boolean)
+                sortOrder(Integer)
+            }
+        }
+
+        CustomerOptionValue {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                merchantStore(MerchantStore)
+                customerOptionValueImage(String)
+                sortOrder(Integer)
+            }
+        }
+
+        CustomerAttribute {
+            attributes {
+                textValue(String)
+                customerOption(CustomerOption){
+                    associated = true
+                }
+                customerOptionValue(CustomerOptionValue){
+                    associated = true
+                }
+            }
+        }
+
+        Permission {
+            attributes {
+                permissionName(String)
+            }
+        }
+
+        Group {
+            attributes {
+                groupName(String){
+                    unique = true
+                }
+                groupType(GroupType)
+            }
+        }
+
+        AbstractAddress(abstract: true) {
+            attributes {
+                company(String)
+                address(String)
+                city(String)
+                postalCode(String)
+                country(Country)
+                zone(Zone)
+                state(String)
+                telephone(String)
+                lastName(String)
+                firstName(String)
+                longitude(String)
+                latitude(String)
+            }
+        }
+
+        Billing(extend: AbstractAddress, table: false) {
+            attributes {
+            }
+        }
+
+        Delivery(extend: AbstractAddress, table: false) {
+            attributes {
+            }
+        }
+
+        ProductReview {
+            attributes {
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                reviewRating(Double)
+                reviewRead(Long)
+                status(Integer)
+                product(Product)
+                reviewDate(Date)
+            }
+        }
+
+
+
+        Product {
+            attributes {
+                sku(String){
+                    unique = true
+                    optional = false
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                productHighlight(String){
+                    localized = true
+                }
+                productExternalDl(String){
+                    localized = true
+                }
+                seUrl(String)
+                metatagTitle(String){
+                    localized = true
+                }
+                metatagKeywords(String){
+                    localized = true
+                }
+                metatagDescription(String){
+                    localized = true
+                }
+                rentalPeriod(Integer)
+                rentalDuration(Integer)
+                productVirtual(Boolean){
+                    defaultValue = false
+                }
+                productLength(BigDecimal)
+                productWidth(BigDecimal)
+                productHeight(BigDecimal)
+                productWeight(BigDecimal)
+                productReviewAvg(BigDecimal)
+                productReviewCount(Integer)
+                productOrdered(Integer)
+                productIsFree(Boolean){
+                    defaultValue = false
+                }
+                dateAvailable(Date)
+                sortOrder(Integer)
+                available(Boolean){
+                    defaultValue = true
+                }
+                productShippable(Boolean){
+                    defaultValue = true
+                }
+                preOrder(Boolean){
+                    defaultValue = false
+                }
+                manufacturer(Manufacturer)
+                type(ProductType)
+                merchantStore(MerchantStore)
+                condition(ProductCondition)
+                rentalStatus(RentalStatus)
+                owner(Customer)
+            }
+        }
+
+        MerchantConfiguration {
+            attributes {
+                key(String)
+                value(String)
+                merchantStore(MerchantStore)
+                merchantConfigurationType(MerchantConfigurationType)
+                active(Boolean){
+                    defaultValue = true
+                }
+            }
+        }
+
+        MerchantLog {
+            attributes {
+                store(MerchantStore)
+                module(String)
+                log(String)
+            }
+        }
+
+        SystemConfiguration {
+            attributes {
+                key(String)
+                value(String)
+            }
+        }
+
+        SystemNotification {
+            attributes {
+                key(String)
+                value(String)
+                startDate(Date)
+                merchantStore(MerchantStore)
+                endDate(Date)
+                user(User)
+            }
+        }
+
+        Principle(abstract: true) {
+            attributes {
+                login(String)
+                password(String)
+                email(String)
+                firstName(String)
+                lastName(String)
+                language(Language)
+                active(Boolean) {
+                    defaultValue = true
+                }
+                merchantStore(MerchantStore)
+            }
+        }
+
+        User (extend: Principle) {
+            attributes {
+                adminName(String)
+                lastAccess(Date)
+                loginTime(Date)
+            }
+        }
+
+        Customer (extend: Principle) {
+            attributes {
+                dateOfBirth(Date)
+                company(String)
+                anonymous(Boolean){
+                    defaultValue = false
+                }
+                showCustomerStateList(String)
+                showBillingStateList(String)
+                showDeliveryStateList(String)
+                defaultLanguage(Language)
+                customerReviewAvg(BigDecimal)
+                customerReviewCount(Integer)
+                provider(String)
+                gender(CustomerGender)
+                billing(Billing)
+                delivery(Delivery)
+            }
+        }
+
+        CreditCard {
+            attributes {
+                ccOwner(String)
+                ccNumber(String)
+                ccExpires(String)
+                ccCvv(String)
+                cardType(CreditCardType)
+            }
+        }
+
+        OrderAttribute {
+            attributes {
+                key(String)
+                value(String)
+            }
+        }
+
+        OrderProductAttribute {
+            attributes {
+                productAttributeIsFree(Boolean)
+                productAttributeWeight(BigDecimal)
+                productAttributeName(String)
+                productAttributeValueName(String)
+                productAttributePrice(BigDecimal)
+                productOptionId(UUID)
+                productOptionValueId(UUID)
+            }
+        }
+
+        OrderProductPrice {
+            attributes {
+                defaultPrice(Boolean)
+                productPriceName(String)
+                productPriceCode(String)
+                productPriceSpecialStartDate(Date)
+                productPriceSpecialEndDate(Date)
+                productPriceSpecial(BigDecimal)
+                productPrice(BigDecimal)
+            }
+        }
+
+        OrderProductDownload {
+            attributes{
+                orderProductFilename(String)
+                maxdays(Integer)
+                downloadCount(Integer)
+            }
+        }
+
+        OrderProduct {
+            attributes {
+                productName(String)
+                productQuantity(Integer)
+                sku(String)
+                oneTimeCharge(BigDecimal)
+            }
+        }
+
+        OrderTotal {
+            attributes {
+                title(String)
+                text(String)
+                value(BigDecimal)
+                module(String)
+                sortOrder(Integer)
+                orderTotalCode(String)
+                orderValueType(OrderValueType)
+                orderTotalType(OrderTotalType)
+            }
+        }
+
+        Order {
+            attributes {
+                status(OrderStatus)
+                lastModified(Date)
+                datePurchased(Date)
+                orderDateFinished(Date)
+                currencyValue(BigDecimal)
+                total(BigDecimal)
+                ipAddress(String)
+                paymentModuleCode(String)
+                shippingModuleCode(String)
+                currency('Currency')
+                merchant(MerchantStore)
+                delivery(Delivery)
+                billing(Billing)
+                customerId(UUID)
+                customerEmailAddress(String)
+                locale(String)
+                customerAgreement(Boolean)
+                confirmedAddress(Boolean)
+                orderType(OrderType)
+                paymentType(PaymentType)
+                channel(OrderChannel)
+                creditCard(CreditCard)
+            }
+        }
+
+        OrderStatusHistory {
+            attributes {
+                status(OrderStatus)
+                dateAdded(Date)
+                customerNotified(Integer)
+                comments(String)
+            }
+        }
+
+        ShoppingCartEntryAttribute {
+            attributes {
+                productAttribute(ProductAttribute)
+            }
+        }
+
+        ShoppingCartEntry {
+            attributes {
+                itemPrice(BigDecimal)
+                quantity(Integer)
+                product(Product)
+                subTotal(BigDecimal)
+                obsolete(Boolean)
+                productVirtual(Boolean)
+            }
+        }
+
+        ShoppingCart {
+            attributes {
+                subTotal(BigDecimal)
+                email(String)
+                userName(String)
+                phone(String)
+                settlement(Settlement)
+                obsolete(Boolean){
+                    defaultValue = false
+                }
+                shoppingCartCode(String)
+                customerId(UUID)
+                merchantStore(MerchantStore)
+            }
+        }
+
+        Transaction {
+            attributes {
+                order(Order)
+                amount(BigDecimal)
+                transactionDate(Date)
+                paymentType(PaymentType)
+                details(String)
+                transactionType(TransactionType)
+            }
+        }
+
+        CustomerReview {
+            attributes {
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                reviewRating(Double)
+                reviewRead(Long)
+                status(Integer)
+                reviewDate(Date)
+                customer(Customer)
+                reviewedCustomer(Customer)
+            }
+        }
+
+        DigitalProduct {
+            attributes {
+                productFileName(String)
+                product(Product)
+            }
+        }
+    }
+
+    enums {
+
+        OptinType {
+            newsletter
+        }
+
+        TransactionType {
+            init
+            authorize
+            capture
+            authorizecapture
+            refund
+        }
+
+        OrderTotalType {
+            shipping
+            handling
+            tax
+            product
+            subtotal
+            total
+            credit
+            refund
+        }
+
+        OrderValueType {
+            one_time
+            monthly
+        }
+
+        CreditCardType {
+            amex
+            visa
+            mastercard
+            diners
+            discovery
+        }
+
+        OrderChannel {
+            online
+            api
+        }
+
+        PaymentType {
+            creditcard
+            free
+            cod
+            moneyorder
+            paypal
+        }
+
+        OrderType {
+            order
+            booking
+        }
+
+        OrderStatus {
+            ordered
+            processed
+            delivered
+            refunded
+            canceled
+        }
+
+        MerchantConfigurationType {
+            integration
+            shop
+            config
+            social
+        }
+
+        GroupType {
+            admin
+            customer
+        }
+
+        CustomerGender {
+            male
+            female
+        }
+
+        RentalStatus {
+            rented
+            available
+        }
+
+        ProductCondition {
+            new_product
+            used
+        }
+
+        ProductPriceType {
+            one_time
+            monthly
+        }
+
+        ContentPosition {
+            left
+            right
+        }
+
+        ContentType {
+            box
+            page
+            section
+        }
+    }
+}

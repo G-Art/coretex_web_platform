@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:component-scan base-package="com.coretex"/>
+    <mvc:annotation-driven/>
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix">
+            <value>/WEB-INF/views/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+
+    <bean id="multipartResolver"
+                class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+        <!-- setting maximum upload size -->
+        <property name="maxUploadSize" value="100000" />
+
+    </bean>
+
+
+    <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+    <import resource="classpath:/config/spring/controllers.xml"/>
+
+    <import resource="classpath:/config/spring/properties.xml"/>
+    <!-- security -->
+    <import resource="classpath:/config/spring/security.xml"/>
+    <!-- servlet-context -->
+    <import resource="classpath:/config/spring/servlet-context.xml"/>
+
+    <mvc:redirect-view-controller path="/" redirect-url="/shop"/>
+
+    <util:map id="specificDataPopuators" key-type="java.lang.String" value-type="com.coretex.core.populators.DeliveryServiceDataPopulator">
+        <entry key="NewPostDeliveryService" value-ref="newPostDeliveryServiceDataPopulator"/>
+    </util:map>
+</beans>

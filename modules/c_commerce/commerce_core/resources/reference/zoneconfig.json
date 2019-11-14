@@ -1,0 +1,148 @@
+{
+  "en": [
+    {
+      "zoneCode": "Zhytomyr_R",
+      "zoneName": "Zhytomyr Region",
+      "zoneNameLocal": [
+        {
+          "lang": "en",
+          "value": "Zhytomyr Region"
+        },
+        {
+          "lang": "ru",
+          "value": "Житомирська область"
+        },
+        {
+          "lang": "ua",
+          "value": "Житомирська область"
+        }
+      ],
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Zaporizhzhya_R",
+      "zoneName": "Zaporizhzhya Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Zakarpattya_R",
+      "zoneName": "Zakarpattya Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Volyn_R",
+      "zoneName": "Volyn Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Vinnytsya_R",
+      "zoneName": "Vinnytsya Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Kyiv",
+      "zoneName": "Kyiv",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Ternopil_R",
+      "zoneName": "Ternopil Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Sumy_R",
+      "zoneName": "Sumy Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Rivne_R",
+      "zoneName": "Rivne Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Poltava_R",
+      "zoneName": "Poltava Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Odesa_R",
+      "zoneName": "Odesa Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Mykolayiv_R",
+      "zoneName": "Mykolayiv Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Lviv_R",
+      "zoneName": "Lviv Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Kyiv_R",
+      "zoneName": "Kyiv Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Luhansk_R",
+      "zoneName": "Luhans'k Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Kirovograd_R",
+      "zoneName": "Kirovograd Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Khmelnytsky_R",
+      "zoneName": "Khmelnytsky Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Kherson_R",
+      "zoneName": "Kherson Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Ivano-Frankivsk_R",
+      "zoneName": "Ivano-Frankivs’k Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Kharkiv_R",
+      "zoneName": "Kharkiv Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Donetsk_R",
+      "zoneName": "Donets'k Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Dnipropetrovsk_R",
+      "zoneName": "Dnipropetrovs'k Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "ARC",
+      "zoneName": "Autonomous Republic of Crimea",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Cherkasy_R",
+      "zoneName": "Cherkasy Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Chernihiv_R",
+      "zoneName": "Chernihiv Region",
+      "countryCode": "UA"
+    },
+    {
+      "zoneCode": "Chernivtsi_R",
+      "zoneName": "Chernivtsi Region",
+      "countryCode": "UA"
+    }
+  ]
+}

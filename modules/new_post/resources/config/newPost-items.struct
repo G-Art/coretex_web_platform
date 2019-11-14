@@ -1,0 +1,45 @@
+elements {
+
+    relations {
+
+    }
+
+    items {
+
+        NewPostDeliveryService(extend: DeliveryService, table: false) {
+            attributes {
+                apiKey(String) {
+                    optional = false
+                }
+                endpoint(String) {
+                    optional = false
+                }
+                dataFormat(DataFormat) {
+                    optional = false
+                }
+                senderCity(UUID) {
+                    optional = false
+                }
+            }
+        }
+
+        NewPostDeliveryType(extend: DeliveryType, table: false) {
+            attributes {
+                payOnDelivery(Boolean) {
+                    defaultValue = true
+                }
+                sendFromWarehouse(Boolean) {
+                    defaultValue = true
+                }
+                sendToWarehouse(Boolean)
+            }
+        }
+    }
+
+    enums {
+        DataFormat{
+            xml
+            json
+        }
+    }
+}

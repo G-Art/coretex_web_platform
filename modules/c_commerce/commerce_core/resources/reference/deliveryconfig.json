@@ -1,0 +1,67 @@
+[
+  {
+    "code": "novaposhta",
+    "name": [
+      {
+        "lang": "en",
+        "value": "Nova Poshta"
+      },
+      {
+        "lang": "ua",
+        "value": "Нова Пошта"
+      },
+      {
+        "lang": "ru",
+        "value": "Новая Почта"
+      }
+    ],
+    "apiKey": "bead4378ccf309a9e0f1bdccad6cc812",
+    "endpoint": "https://api.novaposhta.ua/v2.0/",
+    "dataFormat": "json",
+    "senderCity": "e718466d-4b33-11e4-ab6d-005056801329",
+    "countries": [
+      "UA"
+    ],
+    "image": "logo/N_P_logo.svg",
+    "deliveryTypes": [
+      {
+        "code": "shipToHome",
+        "name": [
+          {
+            "lang": "en",
+            "value": "Ship to home (Pay on delivery)"
+          },
+          {
+            "lang": "ua",
+            "value": "Доставка до дому (Наложений платіж)"
+          },
+          {
+            "lang": "ru",
+            "value": "Доставка к дому (Наложений платеж)"
+          }
+        ],
+        "payOnDelivery": true,
+        "sendToWarehouse": false
+      },
+      {
+        "code": "shipToPostOffice",
+        "name": [
+          {
+            "lang": "en",
+            "value": "Ship to post office (Pay on delivery)"
+          },
+          {
+            "lang": "ua",
+            "value": "Доставка в відділення (Наложений платіж)"
+          },
+          {
+            "lang": "ru",
+            "value": "Доставка в отделение (Наложений платеж)"
+          }
+        ],
+        "payOnDelivery": true,
+        "sendToWarehouse": true
+      }
+    ]
+  }
+]

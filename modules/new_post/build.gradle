@@ -1,0 +1,7 @@
+
+dependencies {
+  compile project(":core")
+  compile project(":commerce_core")
+
+  runtime group: 'javax.servlet', name: 'jstl', version: '1.2'
+}

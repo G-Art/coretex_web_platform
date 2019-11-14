@@ -1,0 +1,46 @@
+configurations.all {
+    exclude group: "org.jboss.slf4j", module: "slf4j-jboss-logging"
+    exclude group: "org.apache.logging.log4j", module: "log4j-api"
+}
+
+dependencies {
+    compile project(":core")
+
+    compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.1.5.RELEASE'
+    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.1.5.RELEASE'
+    compile (group: 'commons-validator', name: 'commons-validator', version: '1.6'){
+        exclude group:'commons-digester', module:'commons-digester'
+    }
+    compile group:'commons-digester', name:'commons-digester', version:'2.0'
+    compile group: 'org.infinispan', name: 'infinispan-core', version: '9.4.15.Final'
+    compile group: 'org.infinispan', name: 'infinispan-cachestore-jdbc', version: '9.4.15.Final'
+    compile group: 'org.infinispan', name: 'infinispan-tree', version: '9.4.15.Final'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
+    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.586'
+
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-ses
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-ses', version: '1.11.586'
+
+    // https://mvnrepository.com/artifact/io.searchbox/jest
+    compile (group: 'io.searchbox', name: 'jest', version: '6.3.1'){
+        exclude group: 'com.google.code.gson'
+        exclude group: 'commons-codec', module: 'commons-codec'
+    }
+
+    // https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch
+    compile group: 'org.elasticsearch', name: 'elasticsearch', version: '7.2.0'
+
+    // https://mvnrepository.com/artifact/javax.validation/validation-api
+    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
+    // https://mvnrepository.com/artifact/org.springframework.social
+    compile group: 'org.springframework.social', name: 'spring-social-web', version: '1.1.6.RELEASE'
+    compile group: 'org.springframework.social', name: 'spring-social-core', version: '1.1.6.RELEASE'
+    compile group: 'org.springframework.social', name: 'spring-social-config', version: '1.1.6.RELEASE'
+    compile group: 'org.springframework.social', name: 'spring-social-security', version: '1.1.6.RELEASE'
+}
