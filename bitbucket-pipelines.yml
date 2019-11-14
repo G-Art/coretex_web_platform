@@ -1,0 +1,25 @@
+# This is a sample build configuration for other languages.
+# Check our guides at https://confluence.atlassian.com/x/VYk8Lw for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+# image: docker-image:tag
+
+pipelines:
+  default:
+    - step:
+        script: &sonar-script
+           - apt-get update
+           - apt-get install jq
+           - export CURRENT_BRANCH="$(hg identify -b)"
+           - echo "$SONAR_SERVER_URL/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY:$CURRENT_BRANCH"
+           - curl --insecure -OL https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-2.8.zip
+           - unzip sonar-scanner-2.8.zip
+           - ./sonar-scanner-2.8/bin/sonar-scanner -Dsonar.host.url="$SONAR_SERVER_URL" -Dsonar.projectKey="$SONAR_PROJECT_KEY" -Dsonar.projectName="$PROJECT_NAME" -Dsonar.sources="$BITBUCKET_CLONE_DIR" -Dsonar.projectVersion="$PROJECT_VERSION" -Dsonar.java.source="$PROJECT_JAVA_VERSION" -Dsonar.branch="$CURRENT_BRANCH"
+           - if [ $(curl -s  "$SONAR_SERVER_URL/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY:$CURRENT_BRANCH" | jq -r '.projectStatus.status') == "ERROR" ]; then echo "Sonar quality gate is failed for $CURRENT_BRANCH"; exit 42; fi
+#           - ./sonar-scanner-2.8/bin/sonar-scanner -Dsonar.analysis.mode=issues -Dsonar.host.url="$SONAR_SERVER_URL" -Dsonar.projectKey="$SONAR_PROJECT_KEY" -Dsonar.projectName="$PROJECT_NAME" -Dsonar.sources="$BITBUCKET_CLONE_DIR"  -Dsonar.bitbucket.repoSlug="$BITBUCKET_REPO_SLUG" -Dsonar.projectVersion="$PROJECT_VERSION" -Dsonar.bitbucket.accountName="$BITBUCKET_REPO_OWNER" -Dsonar.bitbucket.teamName="$TEAM_NAME" -Dsonar.bitbucket.oauthClientKey="$SONAR_API_KEY" -Dsonar.bitbucket.oauthClientSecret="$SONAR_CLIENT_SECRET" -Dsonar.bitbucket.branchName="$CURRENT_BRANCH"
+
+  custom:
+    sonar:
+      - step:
+          script: *sonar-script

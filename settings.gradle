@@ -1,0 +1,33 @@
+/*
+ * Here we iterate over the directories found in the root directory of the
+ * main project, and if the subdirectory contains a build.gradle file, it
+ * is added to the main project as a subproject.
+ */
+println("Searching projects for build ... ")
+rootDir.eachFileRecurse { f ->
+    if ( f.name == "build.gradle" ) {
+        String relativePath = f.parentFile.absolutePath - rootDir.absolutePath
+        if(f.parentFile.absolutePath != rootDir.absolutePath){
+            f.parentFile.eachFileRecurse {
+                if (it.isFile() && it.name ==~ /^module\.properties$/) {
+                    def propFile = it
+                    if (propFile) {
+                        Properties moduleProperties = new Properties()
+                        moduleProperties.load(propFile.newDataInputStream())
+
+                        def moduleName = moduleProperties.getProperty('module.name')
+
+                        if(!moduleName.empty){
+                            include moduleName
+                            project(":${moduleName}").projectDir = f.parentFile
+                            println("Include :${moduleName} project to build [dir: ${project(":${moduleName}").projectDir}]")
+                        }else{
+                            println("No defined module name for ${relativePath} project")
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+}

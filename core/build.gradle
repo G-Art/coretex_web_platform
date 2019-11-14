@@ -1,0 +1,39 @@
+def v = [
+        spring   : '5.1.8.RELEASE',
+        slf4j    : '1.7.7',
+]
+ext.v = v
+
+configurations.all {
+    exclude group: "commons-logging", module: "commons-logging"
+    exclude group: "javax.servlet", module:"servlet-api"
+}
+
+dependencies {
+    compile 'com.google.guava:guava:28.1-jre'
+    compile 'org.apache.commons:commons-lang3:3.9'
+    compile 'org.apache.commons:commons-collections4:4.4'
+
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.26'
+    compile group: 'org.apache.metamodel', name: 'MetaModel-jdbc', version: '5.3.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9.3'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.9'
+
+    compile group: 'com.github.jsqlparser', name: 'jsqlparser', version: '3.0'
+
+    // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+
+    compile 'org.javalite:javalite-common:2.3'
+
+    compile "org.springframework:spring-core:$v.spring"
+    compile "org.springframework:spring-context:$v.spring"
+    compile "org.springframework:spring-beans:$v.spring"
+    compile "org.springframework:spring-test:$v.spring"
+    compile "org.springframework:spring-webmvc:$v.spring"
+    compile "org.springframework:spring-jdbc:$v.spring"
+    compile "org.springframework:spring-aop:$v.spring"
+    compile "org.springframework:spring-aspects:$v.spring"
+    compile "org.springframework:spring-instrument:$v.spring"
+}

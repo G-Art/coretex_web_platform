@@ -1,0 +1,14 @@
+def v = [
+        spring   : '5.1.8.RELEASE',
+        slf4j    : '1.7.7',
+        hibernate    : '5.2.7.Final'
+]
+ext.v = v
+
+configurations.all {
+    exclude group: "commons-logging", module: "commons-logging"
+}
+
+dependencies {
+    compile project(":core")
+}

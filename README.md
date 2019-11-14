@@ -1,2 +1,2 @@
-# coretex-web-platform
-
+# Sales Manager :: Server #
+Sales Manager service backend project

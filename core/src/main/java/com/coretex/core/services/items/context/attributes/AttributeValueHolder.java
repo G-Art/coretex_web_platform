@@ -1,0 +1,162 @@
+package com.coretex.core.services.items.context.attributes;
+
+import com.coretex.core.services.items.context.ItemContext;
+import com.coretex.core.services.items.context.provider.AttributeProvider;
+import com.coretex.items.core.GenericItem;
+import com.google.common.collect.ForwardingList;
+import com.google.common.collect.ForwardingSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+public class AttributeValueHolder implements AttributeValueHolderState {
+
+	public static AttributeValueHolder createLazyValueHolder(String attributeName, ItemContext owner) {
+		return new AttributeValueHolder(attributeName, owner);
+	}
+
+	public static AttributeValueHolder initValueHolder(String attributeName, ItemContext owner, Object initialValue) {
+		AttributeValueHolder valueHolder = createLazyValueHolder(attributeName, owner);
+		valueHolder.originalValue = initialValue;
+		valueHolder.value = initialValue;
+		valueHolder.loaded = true;
+		return valueHolder;
+	}
+
+	private final String attributeName;
+
+	private final ItemContext owner;
+
+	private Object originalValue;
+
+	private Object value;
+
+	private volatile boolean dirty = false;
+
+	private volatile boolean loaded = false;
+
+	private AttributeValueHolder(String attributeName, ItemContext owner) {
+		checkArgument(isNotBlank(attributeName), "Attribute name is required to construct value holder");
+		checkArgument(nonNull(owner), "Item context is required to construct value holder");
+		this.attributeName = attributeName;
+		this.owner = owner;
+	}
+
+	public Object get(AttributeProvider provider) {
+		if (loaded) {
+			return value;
+		}
+
+		originalValue = provider.getValue(attributeName, owner);
+		if(originalValue instanceof Collection){
+			var collection = originalValue instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
+			Collections.addAll(collection, ((Collection) originalValue).toArray());
+			value = collection;
+		}else{
+			value = originalValue;
+		}
+
+		loaded = true;
+		return value;
+	}
+
+	public Object getOriginalValue(AttributeProvider provider){
+		get(provider);
+		return originalValue;
+	}
+
+	public void set(Object newValue) {
+		if(newValue instanceof Collection){
+			var collection = newValue instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
+			Collections.addAll(collection, ((Collection) newValue).toArray());
+			value = collection;
+		}else{
+			value = newValue;
+		}
+		dirty = isLoaded();
+	}
+
+
+	@Override
+	public void flush() {
+		if(value instanceof Collection){
+			var collection = value instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
+			Collections.addAll(collection, ((Collection) value).toArray());
+			originalValue = collection;
+		}else{
+			originalValue = value;
+		}
+		dirty = false;
+	}
+
+	@Override
+	public boolean isDirty() {
+		boolean collectionDirty = false;
+		if(Objects.nonNull(originalValue) && originalValue instanceof Collection){
+			collectionDirty = ((Collection) originalValue).stream().anyMatch(o -> o instanceof GenericItem && ((GenericItem) o).getItemContext().isDirty());
+		}
+		return owner.isNew() || dirty || collectionDirty;
+	}
+
+	@Override
+	public boolean isLoaded() {
+		return owner.isNew() || loaded;
+	}
+
+	@Override
+	public void refresh() {
+		if(originalValue instanceof Collection){
+			var collection = originalValue instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
+			Collections.addAll(collection, ((Collection) originalValue).toArray());
+			value = collection;
+		}else{
+			value = originalValue;
+		}
+		dirty = false;
+	}
+
+	protected class ObservedArrayList extends ForwardingList<Object> {
+		final List<Object> delegate = Lists.newArrayList(); // backing list
+		@Override protected List<Object> delegate() {
+			return delegate;
+		}
+		@Override public void add(int index, Object elem) {
+			dirty = true;
+			super.add(index, elem);
+		}
+		@Override public boolean add(Object elem) {
+			dirty = true;
+			return standardAdd(elem); // implements in terms of add(int, E)
+		}
+		@Override public boolean addAll(Collection<?> c) {
+			dirty = true;
+			return standardAddAll(c); // implements in terms of add
+		}
+	}
+
+	protected class ObservedHashSet extends ForwardingSet<Object> {
+		final Set<Object> delegate = Sets.newHashSet(); // backing list
+		@Override protected Set<Object> delegate() {
+			return delegate;
+		}
+		@Override public boolean add(Object elem) {
+			dirty = true;
+			return super.add(elem); // implements in terms of add(int, E)
+		}
+		@Override public boolean addAll(Collection<?> c) {
+			dirty = true;
+			return standardAddAll(c); // implements in terms of add
+		}
+	}
+
+}

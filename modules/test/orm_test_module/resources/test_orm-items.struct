@@ -1,0 +1,528 @@
+elements {
+
+    relations {
+        OneToOneBidirectionalRelation(source: BiDirectionalRelationTest, target: BiDirectionalRelated) {
+            source(oneToOneTarget) {
+                description = "Related item"
+            }
+            target(oneToOneSource) {
+                description = "Source related item"
+            }
+        }
+
+        OneToManyBidirectionalRelation(source: BiDirectionalRelationTest, target: BiDirectionalRelated) {
+            source(oneToManyTargets) {
+                description = "Related items"
+                containerType = Set
+            }
+            target(oneToManySource) {
+                description = "Source related item"
+            }
+        }
+
+        ManyToOneBidirectionalRelation(source: BiDirectionalRelationTest, target: BiDirectionalRelated) {
+            source(manyToOneTarget) {
+                description = "Related item"
+            }
+            target(manyToOneSources) {
+                description = "Source related items"
+                containerType = Set
+            }
+        }
+
+        ManyToManyBidirectionalRelation(source: BiDirectionalRelationTest, target: BiDirectionalRelated) {
+            source(manyToManyTargets) {
+                description = "Related items"
+                containerType = Set
+            }
+            target(manyToManySources) {
+                description = "Source related item"
+                containerType = Set
+            }
+        }
+
+
+        RemoveOneToOneBidirectionalRelation(source: RemoveRelationTest, target: RemoveRelated) {
+            source(oneToOneTarget) {
+                description = "Related item"
+            }
+            target(oneToOneSource) {
+                description = "Source related item"
+            }
+        }
+
+        RemoveOneToManyBidirectionalRelation(source: RemoveRelationTest, target: RemoveRelated) {
+            source(oneToManyTargets) {
+                description = "Related items"
+                containerType = Set
+            }
+            target(oneToManySource) {
+                description = "Source related item"
+            }
+        }
+
+        RemoveManyToOneBidirectionalRelation(source: RemoveRelationTest, target: RemoveRelated) {
+            source(manyToOneTarget) {
+                description = "Related item"
+            }
+            target(manyToOneSources) {
+                description = "Source related items"
+                containerType = Set
+            }
+        }
+
+        RemoveManyToManyBidirectionalRelation(source: RemoveRelationTest, target: RemoveRelated) {
+            source(manyToManyTargets) {
+                description = "Related items"
+                containerType = Set
+            }
+            target(manyToManySources) {
+                description = "Source related item"
+                containerType = Set
+            }
+        }
+
+        RemoveAssociatedOneToOneBidirectionalRelation(source: RemoveRelationAssociatedTest, target: RemoveRelatedAssociated) {
+            source(oneToOneTarget) {
+                description = "Related item"
+                associated = true
+            }
+            target(oneToOneSource) {
+                description = "Source related item"
+                associated = true
+            }
+        }
+
+        RemoveAssociatedOneToManyBidirectionalRelation(source: RemoveRelationAssociatedTest, target: RemoveRelatedAssociated) {
+            source(oneToManyTargets) {
+                description = "Related items"
+                containerType = Set
+                associated = true
+            }
+            target(oneToManySource) {
+                description = "Source related item"
+                associated = true
+            }
+        }
+
+        RemoveAssociatedManyToOneBidirectionalRelation(source: RemoveRelationAssociatedTest, target: RemoveRelatedAssociated) {
+            source(manyToOneTarget) {
+                description = "Related item"
+                associated = true
+            }
+            target(manyToOneSources) {
+                description = "Source related items"
+                containerType = Set
+                associated = true
+            }
+        }
+
+        RemoveAssociatedManyToManyBidirectionalRelation(source: RemoveRelationAssociatedTest, target: RemoveRelatedAssociated) {
+            source(manyToManyTargets) {
+                description = "Related items"
+                containerType = Set
+                associated = true
+            }
+            target(manyToManySources) {
+                description = "Source related item"
+                containerType = Set
+                associated = true
+            }
+        }
+    }
+
+    items {
+
+        LocalizedUuidTypeContainerTest {
+            description = "Localized uuid types test container"
+            attributes {
+                uuidLocaleType(UUID) {
+                    description = "Test uuid localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedStringTypeContainerTest {
+            description = "Localized String types test container"
+            attributes {
+                stringLocaleType(String) {
+                    description = "Test String localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedLocalTimeTypeContainerTest {
+            description = "Localized LocalTime types test container"
+            attributes {
+                localTimeLocaleType(LocalTime) {
+                    description = "Test LocalTime localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedLocalDateTimeTypeContainerTest {
+            description = "Localized LocalDateTime types test container"
+            attributes {
+                localDateTimeLocaleType(LocalDateTime) {
+                    description = "Test LocalDateTime localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedLocalDateTypeContainerTest {
+            description = "Localized LocalDate types test container"
+            attributes {
+                localDateLocaleType(LocalDate) {
+                    description = "Test LocalDate localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedCharacterTypeContainerTest {
+            description = "Localized Character types test container"
+            attributes {
+                characterType(Character) {
+                    description = "Test Character localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedBigDecimalTypeContainerTest {
+            description = "Localized BigDecimal types test container"
+            attributes {
+                bigDecimalType(BigDecimal) {
+                    description = "Test BigDecimal localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedFloatTypeContainerTest {
+            description = "Localized Float types test container"
+            attributes {
+                floatType(Float) {
+                    description = "Test Float localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedClassTypeContainerTest {
+            description = "Localized Class types test container"
+            attributes {
+                classType(Class) {
+                    description = "Test Class localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedByteTypeContainerTest {
+            description = "Localized Byte types test container"
+            attributes {
+                byteType(Byte) {
+                    description = "Test Byte localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedShortTypeContainerTest {
+            description = "Localized Short types test container"
+            attributes {
+                shortType(Short) {
+                    description = "Test Short localized"
+                    localized = true
+                }
+            }
+        }
+
+        LocalizedDateTypeContainerTest {
+            description = "Localized Date types test container"
+            attributes {
+                dateType(Date) {
+                    description = "Test Date localized"
+                    localized = true
+                }
+            }
+        }
+
+        RegularTypeContainerTest {
+            description = "Regular types test container"
+            attributes {
+                uuidType(UUID) {
+                    description = "Test save uuid"
+                }
+
+                localTimeType(LocalTime) {
+                    description = "Test save big LocalTime"
+                }
+
+                localDateTimeType(LocalDateTime) {
+                    description = "Test save big LocalDateTime"
+                }
+
+                localDateType(LocalDate) {
+                    description = "Test save big localDate"
+                }
+
+                characterType(Character) {
+                    description = "Test save big character"
+                }
+
+                bigDecimalType(BigDecimal) {
+                    description = "Test save big decimal"
+                }
+
+                floatType(Float) {
+                    description = "Test save float"
+                }
+
+                classType(Class) {
+                    description = "Test save class"
+                }
+
+                byteType(Byte) {
+                    description = "Test save byte"
+                }
+
+                shortType(Short) {
+                    description = "Test save short"
+                }
+
+                dateType(Date) {
+                    description = "Test save date"
+                }
+
+                stringType(String) {
+                    description = "Test save string"
+                }
+
+                integerType(Integer) {
+                    description = "Test save int"
+                }
+
+                booleanType(Boolean) {
+                    description = "Test save boolean"
+                }
+
+                longType(Long) {
+                    description = "Test save long"
+                }
+
+                doubleType(Double) {
+                    description = "Test save double"
+                }
+            }
+        }
+
+        BiDirectionalRelated {
+            description = "One directional related item"
+            attributes {
+
+            }
+        }
+
+        BiDirectionalRelationTest {
+            description = "One directional related item"
+            attributes {
+                testId(String){
+                    description = "Test identification"
+                }
+            }
+        }
+
+        OneDirectionalRelated {
+            description = "One directional related item"
+            attributes {
+
+            }
+        }
+
+        OneDirectionalRelationTest {
+            description = "One directional relation test container"
+            attributes {
+                relatedType(OneDirectionalRelated) {
+                    description = "Test save related item"
+                }
+            }
+        }
+
+        EnumRelationTest {
+            description = "Enum test container"
+            attributes {
+                enumFirstType(TestRelation) {
+                    description = "Test save Enum 1"
+                }
+                enumSecondType(TestRelation) {
+                    description = "Test save Enum 2"
+                }
+                enumThirdType(TestRelation) {
+                    description = "Test save Enum 3"
+                }
+            }
+        }
+
+        RemoveTest {
+            description = "Remove test item"
+            attributes {
+                uniqueCode(String) {
+                    description = "Unique code"
+                }
+            }
+        }
+
+        RemoveRelationAssociatedTest {
+            description = "Remove relation test item"
+            attributes {
+                uniqueCode(String) {
+                    description = "Unique code"
+                }
+
+                relatedType(RemoveRelatedAssociated) {
+                    description = "Test remove associated related item"
+                    associated = true
+                }
+            }
+        }
+
+        RemoveRelationTest {
+            description = "Remove relation test item"
+            attributes {
+                uniqueCode(String) {
+                    description = "Unique code"
+                }
+
+                relatedType(RemoveRelated) {
+                    description = "Test remove related item"
+                }
+            }
+        }
+
+        RemoveRelated {
+            description = "Remove related test item"
+            attributes {
+                uniqueCode(String) {
+                    description = "Unique code"
+                }
+            }
+        }
+
+        RemoveRelatedAssociated {
+             description = "Remove related test item"
+             attributes {
+                 uniqueCode(String) {
+                     description = "Unique code"
+                 }
+             }
+        }
+
+        SearchTest {
+            description = "Search test"
+            attributes {
+                code(String) {
+                    description = "Unique code"
+                }
+
+                joinTestItem(SearchJoinTest){
+                    description = "using for join test purposes"
+                }
+            }
+        }
+
+        SearchJoinTest {
+            description = "Search join test"
+            attributes {
+                code(String) {
+                    description = "Unique code"
+                }
+            }
+        }
+
+        SearchExtendsWithoutTableTest(extend: SearchTest, table: false) {
+            description = "Search test extend without table"
+            attributes {
+                indicatorNoTableField(String) {
+                    description = "Indicator info for test"
+                }
+            }
+        }
+
+        SearchExtendsWithTableTest(extend: SearchTest) {
+            description = "Search test extend with table"
+            attributes {
+                indicatorTableField(String) {
+                    description = "Indicator info for test"
+                }
+            }
+        }
+
+        SearchTestCase2 {
+            description = "Search test"
+            attributes {
+                code(String) {
+                    description = "Unique code"
+                }
+
+                joinTestItem(SearchJoinTestCase2){
+                    description = "using for join test purposes"
+                }
+            }
+        }
+
+        SearchJoinTestCase2 {
+            description = "Search join test"
+            attributes {
+                code(String) {
+                    description = "Unique code"
+                }
+            }
+        }
+
+        SearchJoinTestCase2ExtendsWithTable(extend: SearchJoinTestCase2) {
+            description = "Search join test"
+            attributes {
+            }
+        }
+
+        SearchJoinTestCase2ExtendsWithoutTable(extend: SearchJoinTestCase2, table: false) {
+            description = "Search join test"
+            attributes {
+            }
+        }
+
+
+        SearchExtendsWithoutTableTestCase2(extend: SearchTestCase2, table: false) {
+            description = "Search test case 2 extend without table"
+            attributes {
+                indicatorNoTableField(String) {
+                    description = "Indicator info for test case 2"
+                }
+            }
+        }
+
+        SearchExtendsWithTableTestCase2(extend: SearchTestCase2) {
+            description = "Search test case 2 extend with table"
+            attributes {
+                indicatorTableField(String) {
+                    description = "Indicator info for test case 2"
+                }
+            }
+        }
+
+    }
+
+    enums {
+        TestRelation {
+            first
+            second
+            third
+        }
+    }
+}

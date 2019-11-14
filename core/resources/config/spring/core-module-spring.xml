@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.3.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+    <aop:aspectj-autoproxy />
+    <aop:config />
+
+    <context:spring-configured />
+
+    <import resource="core-query-transformation-spring.xml"/>
+
+    <bean id="abstractJdbcService" class="com.coretex.core.activeorm.services.AbstractJdbcService">
+        <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
+        <lookup-method name="getTransactionTemplate" bean="transactionTemplate"/>
+    </bean>
+
+    <bean id="bootstrapConfig" class="com.coretex.core.services.bootstrap.BootstrapConfig"/>
+
+    <bean id="idleQueryTransformationProcessor" class="com.coretex.core.activeorm.query.IdleQueryTransformationProcessor"/>
+    <bean id="selectQueryTransformationProcessor" class="com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor">
+        <constructor-arg index="0" ref="defaultMetaTypeProvider" />
+        <constructor-arg index="1" ref="transformationStrategies"/>
+        <constructor-arg index="2" ref="queryTransformationHelper"/>
+    </bean>
+
+    <bean id="rowMapperFactory" class="com.coretex.core.activeorm.factories.RowMapperFactory">
+        <property name="cortexContext" ref="defaultBootstrapContext"/>
+        <property name="itemContextFactory" ref="defaultItemContextFactory"/>
+    </bean>
+
+    <bean id="defaultSearchService" class="com.coretex.core.activeorm.services.impl.DefaultSearchService" parent="abstractJdbcService">
+    </bean>
+
+    <bean id="specFactory" class="com.coretex.core.activeorm.factories.OperationFactoryImpl" parent="abstractJdbcService">
+    </bean>
+
+    <alias name="defaultItemService" alias="itemService"/>
+    <bean id="defaultItemService" class="com.coretex.core.activeorm.services.impl.DefaultItemService" >
+    </bean>
+
+    <bean id="defaultAttributeProvider" class="com.coretex.core.services.items.context.provider.impl.DefaultAttributeProvider">
+        <property name="metaTypeProvider" ref="defaultMetaTypeProvider"/>
+        <property name="transformationProcessor" ref="selectQueryTransformationProcessor"/>
+        <property name="rowMapperFactory" ref="rowMapperFactory"/>
+        <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
+    </bean>
+
+    <bean id="defaultItemContextFactory" class="com.coretex.core.services.items.context.factory.impl.DefaultItemContextFactory">
+        <property name="attributeProvider" ref="defaultAttributeProvider"/>
+    </bean>
+
+</beans>

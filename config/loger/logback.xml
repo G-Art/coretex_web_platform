@@ -1,0 +1,32 @@
+<configuration>
+
+    <conversionRule conversionWord="highlightex" converterClass="com.coretex.logback.HighlightingCompositeConverterEx" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%highlightex(%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger] - %msg%n)</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${catalina.base}/logs/console.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${catalina.base}/logs/console.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>300000</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.coretex.newpost" level="debug" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>

@@ -1,0 +1,61 @@
+subprojects {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    apply plugin: 'idea'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url "http://repo.spring.io/snapshot" }
+        maven { url "http://central.maven.org/maven2/" }
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url "http://repo.spring.io/libs-release-remote" }
+        maven { url 'http://www.datanucleus.org/downloads/maven2/'}
+        maven { url "https://jetbrains.bintray.com/trove4j/" }
+        maven { url 'https://mymavenrepo.com/repo/Er2QKn4UMp1axP0ll14Z/'}
+    }
+
+    dependencies {
+        testCompile(group:  'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.3.1')
+        testCompile(group:  'org.hamcrest', name: 'java-hamcrest', version: '2.0.0.0')
+        testCompile(group:  'org.mockito', name: 'mockito-core', version: '2.21.0')
+        testRuntime(group:  'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.3.1')
+    }
+
+    sourceSets {
+        main {
+            resources {
+                srcDirs = ["resources"]
+            }
+        }
+        test {
+            resources {
+                srcDirs = ["testResources"]
+            }
+        }
+    }
+
+    version = '0.1'
+
+    idea {
+        module {
+            inheritOutputDirs = false
+
+            //and hint to mark some of existing source dirs as generated sources
+            generatedSourceDirs += [file('genSrc')]
+
+            scopes = [
+                    COMPILE: [
+                            plus: [configurations.compile]
+                    ],
+                    TEST: [
+                            plus: [configurations.testRuntime]
+                          ]
+            ]
+            outputDir = file('classes')
+            testOutputDir = file('classes')
+        }
+    }
+}

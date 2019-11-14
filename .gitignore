@@ -1,0 +1,16 @@
+**/classes/
+**/genSrc/
+**/build/
+**/scripts/
+build/
+target/
+dist/
+release/
+obj/
+.idea/
+.gradle/
+*.iml
+
+velocity.log
+*lib/
+/tmp/*

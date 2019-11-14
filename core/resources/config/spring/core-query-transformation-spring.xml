@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <util:map id="transformationStrategies"
+              key-type="com.coretex.core.activeorm.query.select.transformator.DataInjectionType"
+              value-type="com.coretex.core.activeorm.query.select.transformator.strategies.AbstractTransformationStrategy">
+        <entry key="PLAIN_SELECT"
+               value-ref="plainSelectTransformationStrategy"/>
+        <entry key="SET_OPERATION_LIST"
+               value-ref="setOperationListTransformationStrategy"/>
+        <entry key="SELECT_ITEM_ALL"
+               value-ref="selectItemAllTransformationStrategy"/>
+        <entry key="SELECT_ITEM_EXPRESSION"
+               value-ref="selectItemExpressionTransformationStrategy"/>
+        <entry key="FROM_ITEM_TABLE"
+               value-ref="tableTransformationStrategy"/>
+        <entry key="WHERE_EXPRESSION"
+               value-ref="whereTransformationStrategy"/>
+        <entry key="ORDER_BY_EXPRESSION"
+               value-ref="orderByTransformationStrategy"/>
+        <entry key="GROUP_BY_EXPRESSION"
+               value-ref="groupByTransformationStrategy"/>
+        <entry key="JOIN"
+               value-ref="joinTransformationStrategy"/>
+        <entry key="SUB_SELECT"
+               value-ref="subSelectTransformationStrategy"/>
+    </util:map>
+
+    <bean id="dataInjectionFactory"
+          class="com.coretex.core.activeorm.query.select.transformator.dip.factory.DefaultDataInjectionFactory"/>
+
+    <bean id="queryTransformationHelper"
+          class="com.coretex.core.activeorm.query.select.SelectQueryTransformationHelper">
+        <constructor-arg index="0" ref="defaultMetaTypeProvider"/>
+        <constructor-arg index="1" ref="dataInjectionFactory"/>
+    </bean>
+
+    <!--============================================ TRANSFORMATION STRATEGIES ==========================================-->
+
+    <bean id="abstractTransformationStrategy" abstract="true"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.AbstractTransformationStrategy">
+        <constructor-arg index="0" ref="transformationStrategies"/>
+        <constructor-arg index="1" ref="queryTransformationHelper"/>
+    </bean>
+
+    <bean id="subSelectTransformationStrategy"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.SubSelectTransformationStrategy"
+          parent="abstractTransformationStrategy"/>
+
+    <bean id="joinTransformationStrategy"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.JoinTransformationStrategy"
+          parent="abstractTransformationStrategy"/>
+
+    <bean id="tableTransformationStrategy"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.TableTransformationStrategy"
+          parent="abstractTransformationStrategy"/>
+
+    <bean id="selectItemAllTransformationStrategy"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.SelectItemAllTransformationStrategy"
+          parent="abstractTransformationStrategy"/>
+
+    <bean id="selectItemExpressionTransformationStrategy"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.SelectItemExpressionTransformationStrategy"
+          parent="abstractTransformationStrategy"/>
+
+    <bean id="plainSelectTransformationStrategy"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.PlainSelectTransformationStrategy"
+          parent="abstractTransformationStrategy"/>
+
+    <bean id="setOperationListTransformationStrategy"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.SetOperationListTransformationStrategy"
+          parent="abstractTransformationStrategy"/>
+
+    <bean id="whereTransformationStrategy"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.WhereTransformationStrategy"
+          parent="abstractTransformationStrategy"/>
+
+    <bean id="orderByTransformationStrategy"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.OrderByTransformationStrategy"
+          parent="abstractTransformationStrategy"/>
+
+    <bean id="groupByTransformationStrategy"
+          class="com.coretex.core.activeorm.query.select.transformator.strategies.GroupByTransformationStrategy"
+          parent="abstractTransformationStrategy"/>
+
+
+</beans>
