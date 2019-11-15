@@ -35,7 +35,7 @@ public class GeneralConverter<S, T> implements Converter<S, T>, Populator<S, T>,
     }
 
     protected T createTarget(S source) {
-        return nonNull(supplier) ? supplier.get() : getTargetClass().map(BeanUtils::instantiate).orElseThrow(() ->
+        return nonNull(supplier) ? supplier.get() : getTargetClass().map(BeanUtils::instantiateClass).orElseThrow(() ->
                 new BeanCreationException("Cant determine target class for " + convertBeanName));
     }
 

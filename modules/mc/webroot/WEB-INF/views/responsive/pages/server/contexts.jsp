@@ -4,6 +4,8 @@
 
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/responsive/template" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"  %>
 
 <template:abstractPage pageTitle="Context manager">
     <jsp:attribute name="footerJs">
@@ -80,7 +82,7 @@
                         <div class="row list-group-item list-group-item-action">
                             <div class="row">
                                 <div class="col-md-3">Context path: ${context.key}</div>
-                                <div class="col-md">URL: <a href="${context.value}">${context.value}</a></div>
+                                <div class="col-md">URL: <a href="${applicationBaseUrl}${context.key}">${applicationBaseUrl}${context.value}</a></div>
                                 <div class="col-md-1">
                                     <a href="${reload}" class="btn btn-warning btn-sm">Reload</a>
                                 </div>
