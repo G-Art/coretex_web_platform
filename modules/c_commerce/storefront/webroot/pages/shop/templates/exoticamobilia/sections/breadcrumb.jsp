@@ -19,7 +19,7 @@
                             <ul class="d-flex align-items-stretch m-0">
                                 <c:forEach items="${requestScope.BREADCRUMB.breadCrumbs}" var="breadcrumb" varStatus="count">
                                     <li class="active p-2 d-flex align-items-center"><c:if test="${count.index==0}"><i class="fa fa-home pr-10 float-left"></i></c:if>
-                                        <a href="${breadcrumb.url}<sm:breadcrumbParam/>">${breadcrumb.label}</a>
+                                        <a href="<c:url value="${breadcrumb.url}" /><sm:breadcrumbParam/>">${breadcrumb.label}</a>
                                     </li>
                                 </c:forEach>
                             </ul>

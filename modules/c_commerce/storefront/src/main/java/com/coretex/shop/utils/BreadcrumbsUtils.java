@@ -42,7 +42,6 @@ public class BreadcrumbsUtils {
 		home.setItemType(BreadcrumbItemType.HOME);
 		home.setLabel(messages.getMessage(Constants.HOME_MENU_KEY, LocaleUtils.getLocale(language)));
 		home.setUrl(filePathUtils.buildStoreUri(store, contextPath) + Constants.SHOP_URI);
-
 		Breadcrumb breadCrumb = new Breadcrumb();
 		breadCrumb.setLanguage(language);
 
@@ -91,7 +90,7 @@ public class BreadcrumbsUtils {
 		BreadcrumbItem home = new BreadcrumbItem();
 		home.setItemType(BreadcrumbItemType.HOME);
 		home.setLabel(messages.getMessage(Constants.HOME_MENU_KEY, LocaleUtils.getLocale(language)));
-		home.setUrl(filePathUtils.buildStoreUri(store, contextPath) + Constants.SHOP_URI);
+		home.setUrl(Constants.SHOP_URI);
 
 		Breadcrumb breadCrumb = new Breadcrumb();
 		breadCrumb.setLanguage(language);
