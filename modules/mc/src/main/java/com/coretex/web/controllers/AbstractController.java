@@ -10,4 +10,11 @@ public abstract class AbstractController {
 	public String getRequestPath(final HttpServletRequest request){
 		return request.getRequestURI();
 	}
+
+	@ModelAttribute("applicationBaseUrl")
+	public String getApplicationBaseUrl(final HttpServletRequest request){
+		StringBuffer url = request.getRequestURL();
+		String uri = request.getRequestURI();
+		return url.substring(0, url.length() - uri.length());
+	}
 }
