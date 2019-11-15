@@ -27,7 +27,7 @@ public class FilePathUtils {
 
 
 	public @Resource(name = "goodmood-properties")
-	Properties properties = new Properties();//shopizer-properties
+	Properties properties = new Properties();
 
 	@Resource
 	@Qualifier("img")
@@ -210,8 +210,7 @@ public class FilePathUtils {
 
 	public String buildCategoryUrl(MerchantStoreItem store, String contextPath, String url) {
 		StringBuilder resourcePath = new StringBuilder();
-		resourcePath.append(buildStoreUri(store, contextPath))
-
+		resourcePath
 				.append(Constants.SHOP_URI)
 
 				.append(Constants.CATEGORY_URI)
@@ -225,8 +224,7 @@ public class FilePathUtils {
 
 	public String buildProductUrl(MerchantStoreItem store, String contextPath, String url) {
 		StringBuilder resourcePath = new StringBuilder();
-		resourcePath.append(buildStoreUri(store, contextPath))
-				.append(Constants.SHOP_URI)
+		resourcePath.append(Constants.SHOP_URI)
 				.append(Constants.PRODUCT_URI)
 				.append(Constants.SLASH)
 				.append(url)
