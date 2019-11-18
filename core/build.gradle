@@ -1,12 +1,12 @@
 def v = [
-        spring   : '5.1.8.RELEASE',
-        slf4j    : '1.7.7',
+        spring: '5.1.8.RELEASE',
+        slf4j : '1.7.7',
 ]
 ext.v = v
 
 configurations.all {
     exclude group: "commons-logging", module: "commons-logging"
-    exclude group: "javax.servlet", module:"servlet-api"
+    exclude group: "javax.servlet", module: "servlet-api"
 }
 
 dependencies {
@@ -25,7 +25,8 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
-    compile 'org.javalite:javalite-common:2.3'
+    compile group: 'org.javalite', name: 'javalite-common', version: '2.3'
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.4.1'
 
     compile "org.springframework:spring-core:$v.spring"
     compile "org.springframework:spring-context:$v.spring"

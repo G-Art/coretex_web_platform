@@ -4,6 +4,8 @@ import com.coretex.core.services.bootstrap.dialect.DbDialectFactory;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.core.services.bootstrap.meta.MetaCollector;
 import com.coretex.core.services.bootstrap.meta.MetaDataExtractor;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +16,10 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.io.PrintWriter;
+import java.util.Properties;
 
 @Configuration
 public class BootstrapConfig {
@@ -42,16 +47,26 @@ public class BootstrapConfig {
     @Value("${db.dialect}")
     private String dialect;
 
+    private DriverManagerDataSource dataSource;
+
     private DbDialectFactory dialectFactory = new DbDialectFactory();
 
-    @Bean(DATASOURCE_QUALIFIER)
-    public DataSource defaultDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    @PostConstruct
+    private void init(){
+        dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driverClassName);
         dataSource.setUrl(dbUrl);
         dataSource.setUsername(userName);
         dataSource.setPassword(password);
-        return dataSource;
+    }
+
+    @Bean(DATASOURCE_QUALIFIER)
+    public DataSource defaultDataSource() {
+//        props.put("dataSource.logWriter", new PrintWriter(System.out));
+
+        HikariConfig config = new HikariConfig();
+        config.setDataSource(dataSource);
+        return new HikariDataSource(config);
     }
 
     @Bean
@@ -67,7 +82,7 @@ public class BootstrapConfig {
 
     @Bean
     public DbDialectService dbDialectService(){
-        return dialectFactory.getDialectService(defaultDataSource(), dialect);
+        return dialectFactory.getDialectService(dataSource, dialect);
     }
 
     @Bean
