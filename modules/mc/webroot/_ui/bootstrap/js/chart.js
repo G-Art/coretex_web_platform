@@ -70,7 +70,7 @@ new Vue({
                     }
                 );
 
-                if (config.data.labels.length > 30) {
+                if (config.data.labels.length > 100) {
                     config.data.labels.splice(0, 1); // remove the label first
                     totalMemoryDataset.data.splice(0, 1);
                     jvmMemDataset.data.splice(0, 1);

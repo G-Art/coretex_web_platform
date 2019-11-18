@@ -9,6 +9,8 @@ import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.statement.select.*;
 
+import java.util.Objects;
+
 public abstract class Scanner<T, Q> implements SelectQueryVisitors {
 
 	private int deep;
@@ -19,12 +21,14 @@ public abstract class Scanner<T, Q> implements SelectQueryVisitors {
 
 	private boolean wrapperRequired = false;
 
-	protected SelectQueryTransformationHelper transformationHelper;
+	protected static SelectQueryTransformationHelper transformationHelper;
 
 	public Scanner(int deep, Q parentStatement) {
 		this.deep = deep;
 		this.parentStatement = parentStatement;
-		transformationHelper = ApplicationContextProvider.getApplicationContext().getBean(SelectQueryTransformationHelper.class);
+		if(Objects.isNull(transformationHelper)){
+			transformationHelper = ApplicationContextProvider.getApplicationContext().getBean(SelectQueryTransformationHelper.class);
+		}
 	}
 
 	public Scanner(int deep, Q parentStatement, Scanner parent) {
