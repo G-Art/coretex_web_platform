@@ -13,7 +13,7 @@ import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 public interface GroupService extends SalesManagerEntityService<GroupItem> {
 
 
-	List<GroupItem> listGroup(GroupTypeEnum groupType) throws ServiceException;
+	List<GroupItem> listGroup(GroupTypeEnum groupType);
 
 	List<GroupItem> listGroupByIds(Set<UUID> ids) throws ServiceException;
 

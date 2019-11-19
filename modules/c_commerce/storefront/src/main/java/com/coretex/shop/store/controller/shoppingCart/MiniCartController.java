@@ -61,7 +61,7 @@ public class MiniCartController extends AbstractController {
 	}
 
 
-	@RequestMapping(value = {"/removeMiniShoppingCartItem"}, method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value = {"/removeMiniShoppingCartItem"}, method = {RequestMethod.GET, RequestMethod.POST}, produces = "application/json")
 	public @ResponseBody
 	ShoppingCartData removeShoppingCartItem(String lineItemId, final String shoppingCartCode, HttpServletRequest request, Model model) throws Exception {
 		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);

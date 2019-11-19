@@ -48,6 +48,7 @@
             </c:if>
             </c:if>
             remote: {
+                wildcard: '%QUERY',
                 url: '<c:url value="/services/public/search/${requestScope.MERCHANT_STORE.code}/${requestScope.LANGUAGE.code}/autocomplete.json"/>?q=%QUERY',
                 filter: function (parsedResponse) {
                     // parsedResponse is the array returned from your backend

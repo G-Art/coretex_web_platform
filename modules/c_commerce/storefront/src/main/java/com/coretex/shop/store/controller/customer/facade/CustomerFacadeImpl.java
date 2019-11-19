@@ -617,12 +617,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	}
 
 	private List<GroupItem> getListOfGroups(GroupTypeEnum groupType) {
-		try {
 			return groupService.listGroup(groupType);
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(e);
-		}
-
 	}
 
 	private CustomerItem convertPersistableCustomerToCustomer(PersistableCustomer customer, MerchantStoreItem store) {

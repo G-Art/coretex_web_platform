@@ -153,6 +153,9 @@ public class InitializationLoader {
 				}
 
 				userDetailsService.createDefaultAdmin();
+
+
+
 				MerchantConfig config = new MerchantConfig();
 				config.setAllowPurchaseItems(true);
 				config.setDisplayAddToCartOnFeaturedItems(true);

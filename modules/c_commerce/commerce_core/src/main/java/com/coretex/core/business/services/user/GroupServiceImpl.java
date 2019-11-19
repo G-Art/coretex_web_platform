@@ -27,12 +27,8 @@ public class GroupServiceImpl extends SalesManagerEntityServiceImpl<GroupItem>
 
 
 	@Override
-	public List<GroupItem> listGroup(GroupTypeEnum groupType) throws ServiceException {
-		try {
-			return groupDao.findByType(groupType);
-		} catch (Exception e) {
-			throw new ServiceException(e);
-		}
+	public List<GroupItem> listGroup(GroupTypeEnum groupType) {
+		return groupDao.findByType(groupType);
 	}
 
 	public List<GroupItem> listGroupByIds(Set<UUID> ids) throws ServiceException {

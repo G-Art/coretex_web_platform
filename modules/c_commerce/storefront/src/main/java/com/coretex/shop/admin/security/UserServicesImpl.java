@@ -9,9 +9,12 @@ import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.items.commerce_core_model.PermissionItem;
 import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.shop.admin.model.permission.Permissions;
 import com.coretex.shop.constants.Constants;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,9 +27,12 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.inject.Named;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -41,6 +47,7 @@ public class UserServicesImpl implements WebUserServices {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServicesImpl.class);
 
 	private static final String DEFAULT_INITIAL_PASSWORD = "nimda";
+	private static final String DEFAULT_ADMIN_INITIAL_PASSWORD = "goodmood";
 
 	@Resource
 	private UserService userService;
@@ -59,6 +66,12 @@ public class UserServicesImpl implements WebUserServices {
 
 	@Resource
 	protected GroupService groupService;
+
+	@Resource
+	private ResourceLoader resourceLoader;
+
+	@Resource
+	private ObjectMapper jacksonObjectMapper;
 
 	public final static String ROLE_PREFIX = "ROLE_";//Spring Security 4
 
@@ -132,6 +145,39 @@ public class UserServicesImpl implements WebUserServices {
 		user.setMerchantStore(store);
 		userService.create(user);
 
+		creteAdmins(store);
+
+	}
+
+	private void creteAdmins(MerchantStoreItem store) {
+		org.springframework.core.io.Resource permissionXML = resourceLoader.getResource("classpath:/permission/admins.json");
+
+		try {
+			InputStream xmlSource = permissionXML.getInputStream();
+			List<GroupItem> groups = groupService.listGroup(GroupTypeEnum.ADMIN);
+			Map admins = jacksonObjectMapper.readValue(xmlSource, Map.class);
+			List<Map> employee = (List<Map>) admins.get("employee");
+			String password = passwordEncoder.encode(DEFAULT_ADMIN_INITIAL_PASSWORD);
+			employee.forEach(map -> {
+				UserItem user = new UserItem();
+				user.setAdminName((String) map.get("name"));
+				user.setPassword(password);
+				user.setEmail((String) map.get("email"));
+				user.setFirstName((String) map.get("firstName"));
+				user.setActive((Boolean) map.get("active"));
+				List<String> groupList = (List<String>) map.get("groups");
+				for (GroupItem group : groups) {
+					if (groupList.contains(group.getGroupName())) {
+						user.getGroups().add(group);
+					}
+				}
+				user.setMerchantStore(store);
+				userService.save(user);
+			});
+
+		} catch (IOException e) {
+			LOGGER.error("admins.json read exception", e);
+		}
 
 	}
 
