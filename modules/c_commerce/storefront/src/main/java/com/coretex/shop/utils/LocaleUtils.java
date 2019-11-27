@@ -3,22 +3,22 @@ package com.coretex.shop.utils;
 import java.util.Locale;
 
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.coretex.core.business.constants.Constants;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 
 
 public class LocaleUtils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LocaleUtils.class);
 
-	public static Locale getLocale(LanguageItem language) {
+	public static Locale getLocale(LocaleItem language) {
 
-		return new Locale(language.getCode());
+		return new Locale(language.getIso());
 
 	}
 

@@ -5,8 +5,7 @@ import com.coretex.core.business.services.catalog.product.relationship.ProductRe
 import com.coretex.core.business.services.content.ContentService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
-import com.coretex.items.commerce_core_model.ContentItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
@@ -72,13 +71,12 @@ public class LandingController {
 	@RequestMapping(value = {Constants.SHOP_URI + "/home.html", Constants.SHOP_URI + "/", Constants.SHOP_URI}, method = RequestMethod.GET)
 	public String displayLanding(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
 
 		request.setAttribute(Constants.LINK_CODE, HOME_LINK_CODE);
 
-		ContentItem content = contentService.getByCode(LANDING_PAGE, store, language);
 
 		/** Rebuild breadcrumb **/
 		BreadcrumbItem item = new BreadcrumbItem();
@@ -97,21 +95,6 @@ public class LandingController {
 		request.getSession().setAttribute(Constants.BREADCRUMB, breadCrumb);
 		request.setAttribute(Constants.BREADCRUMB, breadCrumb);
 		/** **/
-
-		if (content != null) {
-
-
-			model.addAttribute("page", content);
-
-			PageInformation pageInformation = new PageInformation();
-			pageInformation.setPageTitle(content.getName());
-			pageInformation.setPageDescription(content.getMetatagDescription());
-			pageInformation.setPageKeywords(content.getMetatagKeywords());
-
-			request.setAttribute(Constants.REQUEST_PAGE_INFORMATION, pageInformation);
-
-		}
-
 		ReadableProductPopulator populator = new ReadableProductPopulator();
 		populator.setPricingService(pricingService);
 		populator.setimageUtils(imageUtils);

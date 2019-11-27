@@ -74,7 +74,7 @@
 
                         <div class="control-group">
                             <label class="required"><s:message code="label.customer.option.name" text="Option name"/>
-                                (<c:out value="${description.language.code}"/>)</label>
+                                (<c:out value="${description.language.iso}"/>)</label>
                             <div class="controls">
                                 <form:input cssClass="highlight input-xxlarge" id="name${counter.index}"
                                             path="descriptionsList[${counter.index}].name"/>
@@ -85,7 +85,7 @@
                         </div>
 
 
-                        <form:hidden path="descriptionsList[${counter.index}].language.code"/>
+                        <form:hidden path="descriptionsList[${counter.index}].language.iso"/>
                         <form:hidden path="descriptionsList[${counter.index}].id"/>
 
                     </c:forEach>

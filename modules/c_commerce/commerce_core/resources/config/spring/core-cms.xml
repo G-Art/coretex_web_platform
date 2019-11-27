@@ -133,24 +133,6 @@
 				<beans:property name="rootName" value="/Applications/MAMP/htdocs/bam-images"/>
 	</beans:bean> -->
 
-    <!-- AWS-->
-    <beans:bean id="awsProductAssetsManager"
-                class="com.coretex.core.business.modules.cms.product.aws.S3ProductContentFileManager"
-                factory-method="getInstance">
-        <!-- internal implementation -->
-        <beans:property name="cmsManager">
-            <beans:ref bean="awsAssetsManager"/>
-        </beans:property>
-    </beans:bean>
-
-    <beans:bean id="awsContentAssetsManager"
-                class="com.coretex.core.business.modules.cms.content.aws.S3StaticContentAssetsManagerImpl"
-                factory-method="getInstance">
-        <beans:property name="cmsManager">
-            <beans:ref bean="awsAssetsManager"/>
-        </beans:property>
-    </beans:bean>
-
 
     <!--  end of CMS implementation for static content data -->
 
@@ -185,13 +167,6 @@
     <beans:bean id="httpdAssetsManager"
                 class="com.coretex.core.business.modules.cms.impl.LocalCacheManagerImpl">
         <beans:constructor-arg value="${config.cms.http.path.location}"/><!-- where files are copied on disk -->
-    </beans:bean>
-
-    <!-- aws -->
-    <beans:bean id="awsAssetsManager"
-                class="com.coretex.core.business.modules.cms.impl.S3CacheManagerImpl">
-        <beans:constructor-arg value="${config.cms.aws.bucket}"/>
-        <beans:constructor-arg value="${config.cms.aws.region}"/>
     </beans:bean>
 
 

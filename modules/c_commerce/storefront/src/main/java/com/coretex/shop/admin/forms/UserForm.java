@@ -14,7 +14,6 @@ public class UserForm implements Serializable {
 
 	private String login;
 	private String password;
-	@Email(message = "{messages.invalid.email}")
 	private String email;
 	private String firstName;
 	private String lastName;

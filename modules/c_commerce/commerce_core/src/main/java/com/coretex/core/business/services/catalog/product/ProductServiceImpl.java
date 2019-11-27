@@ -3,29 +3,21 @@ package com.coretex.core.business.services.catalog.product;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.repositories.catalog.product.ProductDao;
 import com.coretex.core.business.services.catalog.category.CategoryService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductOptionService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductOptionValueService;
-import com.coretex.core.business.services.catalog.product.availability.ProductAvailabilityService;
 import com.coretex.core.business.services.catalog.product.image.ProductImageService;
-import com.coretex.core.business.services.catalog.product.price.ProductPriceService;
 import com.coretex.core.business.services.catalog.product.relationship.ProductRelationshipService;
-import com.coretex.core.business.services.catalog.product.review.ProductReviewService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.business.services.search.SearchService;
 import com.coretex.core.business.utils.CatalogServiceHelper;
-import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.model.catalog.product.ProductCriteria;
 import com.coretex.core.model.catalog.product.ProductList;
 import com.coretex.core.model.content.FileContentType;
 import com.coretex.core.model.content.ImageContentFile;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
-import com.coretex.items.commerce_core_model.ProductReviewItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,21 +42,6 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 	CategoryService categoryService;
 
 	@Resource
-	ProductAvailabilityService productAvailabilityService;
-
-	@Resource
-	ProductPriceService productPriceService;
-
-	@Resource
-	ProductOptionService productOptionService;
-
-	@Resource
-	ProductOptionValueService productOptionValueService;
-
-	@Resource
-	ProductAttributeService productAttributeService;
-
-	@Resource
 	ProductRelationshipService productRelationshipService;
 
 	@Resource
@@ -72,12 +49,6 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 
 	@Resource
 	ProductImageService productImageService;
-
-	@Resource
-	CoreConfiguration configuration;
-
-	@Resource
-	ProductReviewService productReviewService;
 
 	public ProductServiceImpl(ProductDao productDao) {
 		super(productDao);
@@ -95,7 +66,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 	}
 
 	@Override
-	public List<ProductItem> getProducts(List<UUID> categoryIds, LanguageItem language) {
+	public List<ProductItem> getProducts(List<UUID> categoryIds, LocaleItem language) {
 
 		@SuppressWarnings({"unchecked", "rawtypes"})
 		Set<Long> ids = new HashSet(categoryIds);
@@ -110,7 +81,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 	}
 
 	@Override
-	public ProductItem getProductForLocale(UUID productId, LanguageItem language, Locale locale)
+	public ProductItem getProductForLocale(UUID productId, LocaleItem language, Locale locale)
 			throws ServiceException {
 		ProductItem product = productDao.getProductForLocale(productId, language, locale);
 		if (product == null) {
@@ -123,7 +94,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 
 	@Override
 	public List<ProductItem> getProductsForLocale(CategoryItem category,
-												  LanguageItem language, Locale locale) throws ServiceException {
+												  LocaleItem language, Locale locale) throws ServiceException {
 
 		if (category == null) {
 			throw new ServiceException("The category is null");
@@ -151,7 +122,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 
 	@Override
 	public ProductList listByStore(MerchantStoreItem store,
-								   LanguageItem language, ProductCriteria criteria) {
+								   LocaleItem language, ProductCriteria criteria) {
 
 		return productDao.listByStore(store, language, criteria);
 	}
@@ -173,7 +144,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 		LOGGER.debug("Deleting product");
 		Validate.notNull(product, "ProductItem cannot be null");
 		Validate.notNull(product.getMerchantStore(), "MerchantStoreItem cannot be null in product");
-		product = this.getById(product.getUuid());//Prevents detached entity error
+		product = this.getByUUID(product.getUuid());//Prevents detached entity error
 		product.setCategories(null);
 
 		Set<ProductImageItem> images = product.getImages();
@@ -183,12 +154,6 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 		}
 
 		product.setImages(null);
-
-		//delete reviews
-		List<ProductReviewItem> reviews = productReviewService.getByProductNoCustomers(product);
-		for (ProductReviewItem review : reviews) {
-			productReviewService.delete(review);
-		}
 
 		//related - featured
 		List<ProductRelationshipItem> relationships = productRelationshipService.listByProduct(product);

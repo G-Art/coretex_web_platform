@@ -10,9 +10,8 @@ import java.util.UUID;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
-import com.coretex.items.commerce_core_model.ProductOptionValueItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.StringUtils;
@@ -66,11 +65,11 @@ public class ReadableProductPopulator extends
 
 	@Override
 	public ReadableProduct populate(ProductItem source,
-									ReadableProduct target, MerchantStoreItem store, LanguageItem language)
+									ReadableProduct target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 		Validate.notNull(pricingService, "Requires to set PricingService");
 		Validate.notNull(imageUtils, "Requires to set imageUtils");
-		Validate.notNull(language, "LanguageItem cannot be null");
+		Validate.notNull(language, "LocaleItem cannot be null");
 
 		try {
 
@@ -228,35 +227,21 @@ public class ReadableProductPopulator extends
 						ReadableProductOptionValue optValue = new ReadableProductOptionValue();
 						ReadableProductAttributeValue attrValue = new ReadableProductAttributeValue();
 
-						ProductOptionValueItem optionValue = attribute.getProductOptionValue();
 
 						if (attribute.getAttributeDisplayOnly()) {//read only attribute
 							if (readOnlyAttributes == null) {
 								readOnlyAttributes = new TreeMap<>();
 							}
-							attr = readOnlyAttributes.get(attribute.getProductOption().getUuid());
-							if (attr == null) {
-								attr = createAttribute(attribute, language);
-							}
-							if (attr != null) {
-								readOnlyAttributes.put(attribute.getProductOption().getUuid(), attr);
-								//attr.setReadOnlyValue(attrValue);
-							}
-
 
 							attrValue.setDefaultValue(attribute.getAttributeDefault());
 							attrValue.setUuid(attribute.getUuid());//id of the attribute
-							attrValue.setLang(language.getCode());
+							attrValue.setLang(language.getIso());
 
 
 							attrValue.setSortOrder(0);
 							if (attribute.getProductOptionSortOrder() != null) {
 								attrValue.setSortOrder(attribute.getProductOptionSortOrder());
 							}
-
-							attrValue.setName(optionValue.getName());
-							attrValue.setDescription(optionValue.getDescription());
-
 							if (attr != null) {
 								attr.getAttributeValues().add(attrValue);
 							}
@@ -267,31 +252,19 @@ public class ReadableProductPopulator extends
 							if (selectableOptions == null) {
 								selectableOptions = new TreeMap<>();
 							}
-							opt = selectableOptions.get(attribute.getProductOption().getUuid());
-							if (opt == null) {
-								opt = createOption(attribute, language);
-							}
-							if (opt != null) {
-								selectableOptions.put(attribute.getProductOption().getUuid(), opt);
-							}
 
 							optValue.setDefaultValue(attribute.getAttributeDefault());
 							optValue.setUuid(attribute.getUuid());//id of the attribute
-							optValue.setLang(language.getCode());
+							optValue.setLang(language.getIso());
 							if (attribute.getProductAttributePrice() != null && attribute.getProductAttributePrice().doubleValue() > 0) {
 								String formatedPrice = pricingService.getDisplayAmount(attribute.getProductAttributePrice(), store);
 								optValue.setPrice(formatedPrice);
 							}
 
-							if (!StringUtils.isBlank(attribute.getProductOptionValue().getProductOptionValueImage())) {
-								optValue.setImage(imageUtils.buildProductPropertyImageUtils(store, attribute.getProductOptionValue().getProductOptionValueImage()));
-							}
 							optValue.setSortOrder(0);
 							if (attribute.getProductOptionSortOrder() != null) {
 								optValue.setSortOrder(attribute.getProductOptionSortOrder().intValue());
 							}
-							optValue.setName(optionValue.getName());
-							optValue.setDescription(optionValue.getDescription());
 
 							if (opt != null) {
 								opt.getOptionValues().add(optValue);
@@ -359,39 +332,6 @@ public class ReadableProductPopulator extends
 			throw new ConversionException(e);
 		}
 	}
-
-	private ReadableProductOption createOption(ProductAttributeItem productAttribute, LanguageItem language) {
-
-		ReadableProductOption option = new ReadableProductOption();
-		option.setUuid(productAttribute.getProductOption().getUuid());//attribute of the option
-		option.setType(productAttribute.getProductOption().getProductOptionType());
-
-		option.setLang(language.getCode());
-		option.setName(productAttribute.getProductOption().getName());
-		option.setCode(productAttribute.getProductOption().getCode());
-
-
-		return option;
-
-	}
-
-	private ReadableProductAttribute createAttribute(ProductAttributeItem productAttribute, LanguageItem language) {
-
-		ReadableProductAttribute attr = new ReadableProductAttribute();
-		attr.setUuid(productAttribute.getProductOption().getUuid());//attribute of the option
-		attr.setType(productAttribute.getProductOption().getProductOptionType());
-
-
-		attr.setLang(language.getCode());
-		attr.setName(productAttribute.getProductOption().getName());
-		attr.setCode(productAttribute.getProductOption().getCode());
-
-
-		return attr;
-
-	}
-
-
 	@Override
 	protected ReadableProduct createTarget() {
 		// TODO Auto-generated method stub

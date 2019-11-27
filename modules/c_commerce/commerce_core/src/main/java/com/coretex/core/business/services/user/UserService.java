@@ -13,23 +13,16 @@ import com.coretex.items.commerce_core_model.UserItem;
 
 public interface UserService extends SalesManagerEntityService<UserItem> {
 
-	UserItem getByUserName(String userName) throws ServiceException;
+	UserItem getByUserName(String userName);
 
 	List<UserItem> listUser() throws ServiceException;
 
-	/**
-	 * Create or update a UserItem
-	 *
-	 * @param user
-	 * @throws ServiceException
-	 */
-	void saveOrUpdate(UserItem user) throws ServiceException;
+	@Deprecated
+	void saveOrUpdate(UserItem user);
 
 	List<UserItem> listByStore(MerchantStoreItem store) throws ServiceException;
 
 	UserItem findByStore(UUID userId, String storeCode) throws ServiceException;
 
-	GenericEntityList<UserItem> listByCriteria(Criteria criteria) throws ServiceException;
-
-
+	UserItem findByLoginCredentials(String loginOrEmail);
 }

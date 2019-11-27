@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,7 +41,7 @@ public class CountryServiceImpl extends SalesManagerEntityServiceImpl<CountryIte
 	}
 
 	@Override
-	public Map<String, CountryItem> getCountriesMap(LanguageItem language) throws ServiceException {
+	public Map<String, CountryItem> getCountriesMap(LocaleItem language) throws ServiceException {
 
 		List<CountryItem> countries = this.getCountries(language);
 
@@ -56,7 +56,7 @@ public class CountryServiceImpl extends SalesManagerEntityServiceImpl<CountryIte
 
 
 	@Override
-	public List<CountryItem> getCountries(final List<String> isoCodes, final LanguageItem language) throws ServiceException {
+	public List<CountryItem> getCountries(final List<String> isoCodes, final LocaleItem language) throws ServiceException {
 		List<CountryItem> countryList = getCountries(language);
 		List<CountryItem> requestedCountryList = new ArrayList<CountryItem>();
 		if (!CollectionUtils.isEmpty(countryList)) {
@@ -72,19 +72,19 @@ public class CountryServiceImpl extends SalesManagerEntityServiceImpl<CountryIte
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CountryItem> getCountries(LanguageItem language) throws ServiceException {
+	public List<CountryItem> getCountries(LocaleItem language) throws ServiceException {
 
 		List<CountryItem> countries = null;
 		try {
 
-			countries = (List<CountryItem>) cache.getFromCache("COUNTRIES_" + language.getCode());
+			countries = (List<CountryItem>) cache.getFromCache("COUNTRIES_" + language.getIso());
 
 
 			if (countries == null) {
 
 				countries = countryDao.listByLanguage(language);
 
-				cache.putInCache(countries, "COUNTRIES_" + language.getCode());
+				cache.putInCache(countries, "COUNTRIES_" + language.getIso());
 			}
 
 		} catch (Exception e) {
@@ -97,7 +97,7 @@ public class CountryServiceImpl extends SalesManagerEntityServiceImpl<CountryIte
 	}
 
 	@Override
-	public List<CountryItem> listCountryZones(LanguageItem language) throws ServiceException {
+	public List<CountryItem> listCountryZones(LocaleItem language) throws ServiceException {
 		try {
 			return countryDao.listCountryZonesByLanguage(language.getUuid());
 		} catch (Exception e) {

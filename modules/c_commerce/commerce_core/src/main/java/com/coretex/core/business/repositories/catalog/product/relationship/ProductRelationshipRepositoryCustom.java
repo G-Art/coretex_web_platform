@@ -5,17 +5,16 @@ import java.util.List;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 
 
 public interface ProductRelationshipRepositoryCustom {
 
 	List<ProductRelationshipItem> getByType(MerchantStoreItem store, String type,
-											LanguageItem language);
+											LocaleItem language);
 
 	List<ProductRelationshipItem> getByType(MerchantStoreItem store, String type,
-											ProductItem product, LanguageItem language);
+											ProductItem product, LocaleItem language);
 
 	List<ProductRelationshipItem> getByGroup(MerchantStoreItem store, String group);
 

@@ -14,7 +14,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.PermissionItem;
 import com.coretex.shop.init.loader.DataLoader;
-import com.google.api.client.util.Lists;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

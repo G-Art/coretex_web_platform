@@ -1,7 +1,7 @@
 elements {
 
     relations {
-        MerchantStoreLanguageRelation(source: MerchantStore, target: Language) {
+        MerchantStoreLanguageRelation(source: MerchantStore, target: 'Locale') {
             source(languages) {
                 description = "Supported languages"
                 containerType = List
@@ -104,16 +104,6 @@ elements {
             }
         }
 
-        CustomerCustomerAttributeRelation(source: Customer, target: CustomerAttribute) {
-            source('attributes') {
-                description = "Attributes"
-                containerType = Set
-            }
-            target(customer) {
-                description = "Product"
-            }
-        }
-
         PermissionGroupRelation(source: Permission, target: Group){
             source(groups) {
                 description = "Groups"
@@ -144,16 +134,6 @@ elements {
             target(users) {
                 description = "Users"
                 containerType = List
-            }
-        }
-
-        CustomerProductReviewRelation(source: Customer, target: ProductReview){
-            source(reviews) {
-                description = "Groups"
-                containerType = List
-            }
-            target(customer) {
-                description = "Customer"
             }
         }
 
@@ -385,56 +365,6 @@ elements {
             }
         }
 
-        CustomerOptionSet {
-            attributes {
-                sortOrder(Integer)
-                customerOptionValue(CustomerOptionValue)
-                customerOption(CustomerOption)
-            }
-        }
-
-        CustomerOptin {
-            attributes {
-                optinDate(Date)
-                optin(Optin)
-                firstName(String)
-                lastName(String)
-                email(String)
-                value(String)
-                merchantStore(MerchantStore)
-            }
-        }
-
-        Optin {
-            attributes {
-                startDate(Date)
-                endDate(Date)
-                merchant(MerchantStore)
-                code(String)
-                description(String)
-                optinType(OptinType)
-            }
-        }
-
-        Quote {
-            attributes {
-                orderId(Long)
-                customerId(Long)
-                module(String)
-                optionName(String)
-                optionCode(String)
-                optionDeliveryDate(Date)
-                optionShippingDate(Date)
-                quoteDate(Date)
-                estimatedNumberOfDays(Integer)
-                price(BigDecimal)
-                delivery(Delivery)
-                freeShipping(Boolean)
-                handling(BigDecimal)
-                cartId(UUID)
-            }
-        }
-
         ShippingOrigin {
             attributes {
                 merchantStore(MerchantStore)
@@ -445,23 +375,6 @@ elements {
                 state(String)
                 country(Country)
                 zone(Zone)
-            }
-        }
-
-        IntegrationModule {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                module(String)
-                regions(String)
-                configuration(String)
-                image(String)
-                customModule(Boolean)
-                configDetails(String)
-                type(String)
-
             }
         }
 
@@ -499,17 +412,6 @@ elements {
             }
         }
 
-        Language {
-            description = "Language"
-            attributes {
-                code(String){
-                    description = 'Language code'
-                    unique = true
-                    optional = false
-                }
-                sortOrder(Integer)
-            }
-        }
 
         MerchantStore {
             attributes {
@@ -539,7 +441,7 @@ elements {
                 currencyFormatNational(Boolean){
                     defaultValue = true
                 }
-                defaultLanguage(Language)
+                defaultLanguage('Locale')
                 zone(Zone)
                 country(Country)
                 currency('Currency')
@@ -586,40 +488,6 @@ elements {
                 orderAccountStartDate(Date)
                 orderAccountEndDate(Date)
                 orderAccountBillDay(Integer)
-            }
-        }
-
-        Content {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                seUrl(String)
-                name(String){
-                    localized = true
-                }
-                title(String){
-                    localized = true
-                }
-                description(String){
-                    localized = true
-                }
-                metatagDescription(String){
-                    localized = true
-                }
-                metatagKeywords(String){
-                    localized = true
-                }
-                productGroup(String)
-                merchantStore(MerchantStore)
-                visible(Boolean){
-                    defaultValue = true
-                }
-                contentType(ContentType)
-                sortOrder(Integer)
-                contentPosition(ContentPosition)
-                linkToMenu(Boolean)
             }
         }
 
@@ -782,55 +650,6 @@ elements {
             }
         }
 
-        ProductOption {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                productOptionSortOrder(Integer)
-                productOptionType(String)
-                productOptionComment(String){
-                    localized = true
-                }
-                name(String){
-                    localized = true
-                }
-                title(String){
-                    localized = true
-                }
-                description(String){
-                    localized = true
-                }
-                merchantStore(MerchantStore)
-                readOnly(Boolean){
-                    defaultValue = false
-                }
-            }
-        }
-
-        ProductOptionValue {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                name(String){
-                    localized = true
-                }
-                title(String){
-                    localized = true
-                }
-                description(String){
-                    localized = true
-                }
-                productOptionValueSortOrder(Integer)
-                productOptionValueImage(String)
-                merchantStore(MerchantStore)
-                productOptionDisplayOnly(Boolean)
-            }
-        }
-
         ProductAttribute {
             attributes {
                 attributePrice(String)
@@ -844,71 +663,6 @@ elements {
                 attributeSortOrder(String)
                 attributeAdditionalWeight(String)
                 productAttributePrice(BigDecimal)
-                productOption(ProductOption){
-                    associated = true
-                }
-                productOptionValue(ProductOptionValue){
-                    associated = true
-                }
-            }
-        }
-
-        CustomerOption {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                customerOptionComment(String){
-                    localized = true
-                }
-                name(String){
-                    localized = true
-                }
-                title(String){
-                    localized = true
-                }
-                description(String){
-                    localized = true
-                }
-                merchantStore(MerchantStore)
-                customerOptionType(String)
-                active(Boolean)
-                publicOption(Boolean)
-                sortOrder(Integer)
-            }
-        }
-
-        CustomerOptionValue {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                name(String){
-                    localized = true
-                }
-                title(String){
-                    localized = true
-                }
-                description(String){
-                    localized = true
-                }
-                merchantStore(MerchantStore)
-                customerOptionValueImage(String)
-                sortOrder(Integer)
-            }
-        }
-
-        CustomerAttribute {
-            attributes {
-                textValue(String)
-                customerOption(CustomerOption){
-                    associated = true
-                }
-                customerOptionValue(CustomerOptionValue){
-                    associated = true
-                }
             }
         }
 
@@ -953,27 +707,6 @@ elements {
             attributes {
             }
         }
-
-        ProductReview {
-            attributes {
-                name(String){
-                    localized = true
-                }
-                title(String){
-                    localized = true
-                }
-                description(String){
-                    localized = true
-                }
-                reviewRating(Double)
-                reviewRead(Long)
-                status(Integer)
-                product(Product)
-                reviewDate(Date)
-            }
-        }
-
-
 
         Product {
             attributes {
@@ -1053,29 +786,10 @@ elements {
             }
         }
 
-        MerchantLog {
-            attributes {
-                store(MerchantStore)
-                module(String)
-                log(String)
-            }
-        }
-
         SystemConfiguration {
             attributes {
                 key(String)
                 value(String)
-            }
-        }
-
-        SystemNotification {
-            attributes {
-                key(String)
-                value(String)
-                startDate(Date)
-                merchantStore(MerchantStore)
-                endDate(Date)
-                user(User)
             }
         }
 
@@ -1086,7 +800,7 @@ elements {
                 email(String)
                 firstName(String)
                 lastName(String)
-                language(Language)
+                language('Locale')
                 active(Boolean) {
                     defaultValue = true
                 }
@@ -1112,23 +826,13 @@ elements {
                 showCustomerStateList(String)
                 showBillingStateList(String)
                 showDeliveryStateList(String)
-                defaultLanguage(Language)
+                defaultLanguage('Locale')
                 customerReviewAvg(BigDecimal)
                 customerReviewCount(Integer)
                 provider(String)
                 gender(CustomerGender)
                 billing(Billing)
                 delivery(Delivery)
-            }
-        }
-
-        CreditCard {
-            attributes {
-                ccOwner(String)
-                ccNumber(String)
-                ccExpires(String)
-                ccCvv(String)
-                cardType(CreditCardType)
             }
         }
 
@@ -1216,7 +920,6 @@ elements {
                 orderType(OrderType)
                 paymentType(PaymentType)
                 channel(OrderChannel)
-                creditCard(CreditCard)
             }
         }
 
@@ -1262,37 +965,6 @@ elements {
             }
         }
 
-        Transaction {
-            attributes {
-                order(Order)
-                amount(BigDecimal)
-                transactionDate(Date)
-                paymentType(PaymentType)
-                details(String)
-                transactionType(TransactionType)
-            }
-        }
-
-        CustomerReview {
-            attributes {
-                name(String){
-                    localized = true
-                }
-                title(String){
-                    localized = true
-                }
-                description(String){
-                    localized = true
-                }
-                reviewRating(Double)
-                reviewRead(Long)
-                status(Integer)
-                reviewDate(Date)
-                customer(Customer)
-                reviewedCustomer(Customer)
-            }
-        }
-
         DigitalProduct {
             attributes {
                 productFileName(String)
@@ -1305,14 +977,6 @@ elements {
 
         OptinType {
             newsletter
-        }
-
-        TransactionType {
-            init
-            authorize
-            capture
-            authorizecapture
-            refund
         }
 
         OrderTotalType {
@@ -1345,7 +1009,6 @@ elements {
         }
 
         PaymentType {
-            creditcard
             free
             cod
             moneyorder
@@ -1397,15 +1060,5 @@ elements {
             monthly
         }
 
-        ContentPosition {
-            left
-            right
-        }
-
-        ContentType {
-            box
-            page
-            section
-        }
     }
 }

@@ -56,7 +56,7 @@ public class ProductKeywordsController {
 		this.setMenu(model, request);
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		if (product == null || !product.getMerchantStore().getUuid().equals(store.getUuid())) {
 			return "redirect:/admin/products/products.html";
@@ -77,7 +77,7 @@ public class ProductKeywordsController {
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 
-		ProductItem product = productService.getById(keyword.getProductId());
+		ProductItem product = productService.getByUUID(keyword.getProductId());
 
 		model.addAttribute("store", store);
 		model.addAttribute("product", product);
@@ -132,7 +132,7 @@ public class ProductKeywordsController {
 
 			int index = Integer.parseInt(ids[0]);
 
-			ProductItem product = productService.getById(UUID.fromString(productId));
+			ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 
 			if (product == null) {
@@ -215,7 +215,7 @@ public class ProductKeywordsController {
 
 		try {
 
-			product = productService.getById(productId);
+			product = productService.getByUUID(productId);
 
 
 			if (product == null) {

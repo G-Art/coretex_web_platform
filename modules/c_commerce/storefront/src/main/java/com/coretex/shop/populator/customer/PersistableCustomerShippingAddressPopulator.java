@@ -6,14 +6,14 @@ import org.apache.commons.lang3.StringUtils;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.customer.address.Address;
 import com.coretex.core.populators.AbstractDataPopulator;
 
 public class PersistableCustomerShippingAddressPopulator extends AbstractDataPopulator<Address, CustomerItem> {
 
 	@Override
-	public CustomerItem populate(Address source, CustomerItem target, MerchantStoreItem store, LanguageItem language)
+	public CustomerItem populate(Address source, CustomerItem target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 

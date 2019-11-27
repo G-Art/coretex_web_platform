@@ -3,24 +3,17 @@ package com.coretex.shop.populator.customer;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.commerce_core_model.CustomerAttributeItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.customer.ReadableCustomer;
 import com.coretex.shop.model.customer.address.Address;
-import com.coretex.shop.model.customer.attribute.CustomerOptionDescription;
-import com.coretex.shop.model.customer.attribute.CustomerOptionValueDescription;
-import com.coretex.shop.model.customer.attribute.ReadableCustomerAttribute;
-import com.coretex.shop.model.customer.attribute.ReadableCustomerOption;
-import com.coretex.shop.model.customer.attribute.ReadableCustomerOptionValue;
-
 public class ReadableCustomerPopulator extends
 		AbstractDataPopulator<CustomerItem, ReadableCustomer> {
 
 
 	@Override
 	public ReadableCustomer populate(CustomerItem source, ReadableCustomer target,
-									 MerchantStoreItem store, LanguageItem language) throws ConversionException {
+									 MerchantStoreItem store, LocaleItem language) throws ConversionException {
 
 		try {
 
@@ -79,35 +72,6 @@ public class ReadableCustomerPopulator extends
 				}
 
 				target.setDelivery(address);
-			}
-
-			if (source.getAttributes() != null) {
-				for (CustomerAttributeItem attribute : source.getAttributes()) {
-					ReadableCustomerAttribute readableAttribute = new ReadableCustomerAttribute();
-					readableAttribute.setUuid(attribute.getUuid());
-					ReadableCustomerOption option = new ReadableCustomerOption();
-					option.setUuid(attribute.getCustomerOption().getUuid());
-					option.setCode(attribute.getCustomerOption().getCode());
-
-					CustomerOptionDescription d = new CustomerOptionDescription();
-					d.setDescription(attribute.getCustomerOption().getDescription());
-					d.setName(attribute.getCustomerOption().getName());
-					option.setDescription(d);
-
-					readableAttribute.setCustomerOption(option);
-
-					ReadableCustomerOptionValue optionValue = new ReadableCustomerOptionValue();
-					optionValue.setUuid(attribute.getCustomerOptionValue().getUuid());
-					CustomerOptionValueDescription vd = new CustomerOptionValueDescription();
-					vd.setDescription(attribute.getCustomerOptionValue().getDescription());
-					vd.setName(attribute.getCustomerOptionValue().getName());
-					optionValue.setCode(attribute.getCustomerOptionValue().getCode());
-					optionValue.setDescription(vd);
-
-
-					readableAttribute.setCustomerOptionValue(optionValue);
-					target.getAttributes().add(readableAttribute);
-				}
 			}
 
 		} catch (Exception e) {

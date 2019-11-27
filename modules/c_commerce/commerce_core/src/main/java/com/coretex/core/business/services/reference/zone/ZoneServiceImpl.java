@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -46,10 +46,10 @@ public class ZoneServiceImpl extends SalesManagerEntityServiceImpl<ZoneItem> imp
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ZoneItem> getZones(CountryItem country, LanguageItem language) throws ServiceException {
+	public List<ZoneItem> getZones(CountryItem country, LocaleItem language) throws ServiceException {
 
 		//Validate.notNull(country,"CountryItem cannot be null");
-		Validate.notNull(language, "LanguageItem cannot be null");
+		Validate.notNull(language, "LocaleItem cannot be null");
 
 		List<ZoneItem> zones = null;
 		try {
@@ -59,7 +59,7 @@ public class ZoneServiceImpl extends SalesManagerEntityServiceImpl<ZoneItem> imp
 				countryCode = country.getIsoCode();
 			}
 
-			String cacheKey = ZONE_CACHE_PREFIX + countryCode + Constants.UNDERSCORE + language.getCode();
+			String cacheKey = ZONE_CACHE_PREFIX + countryCode + Constants.UNDERSCORE + language.getIso();
 
 			zones = (List<ZoneItem>) cache.getFromCache(cacheKey);
 
@@ -81,16 +81,16 @@ public class ZoneServiceImpl extends SalesManagerEntityServiceImpl<ZoneItem> imp
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ZoneItem> getZones(String countryCode, LanguageItem language) throws ServiceException {
+	public List<ZoneItem> getZones(String countryCode, LocaleItem language) throws ServiceException {
 
 		Validate.notNull(countryCode, "countryCode cannot be null");
-		Validate.notNull(language, "LanguageItem cannot be null");
+		Validate.notNull(language, "LocaleItem cannot be null");
 
 		List<ZoneItem> zones = null;
 		try {
 
 
-			String cacheKey = ZONE_CACHE_PREFIX + countryCode + Constants.UNDERSCORE + language.getCode();
+			String cacheKey = ZONE_CACHE_PREFIX + countryCode + Constants.UNDERSCORE + language.getIso();
 
 			zones = (List<ZoneItem>) cache.getFromCache(cacheKey);
 
@@ -112,12 +112,12 @@ public class ZoneServiceImpl extends SalesManagerEntityServiceImpl<ZoneItem> imp
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Map<String, ZoneItem> getZones(LanguageItem language) {
+	public Map<String, ZoneItem> getZones(LocaleItem language) {
 
 		Map<String, ZoneItem> zones = null;
 		try {
 
-			String cacheKey = ZONE_CACHE_PREFIX + language.getCode();
+			String cacheKey = ZONE_CACHE_PREFIX + language.getIso();
 
 			zones = (Map<String, ZoneItem>) cache.getFromCache(cacheKey);
 

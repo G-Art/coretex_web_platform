@@ -1,11 +1,10 @@
 package com.coretex.core.business.repositories.catalog.product.relationship;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
-import com.coretex.items.commerce_core_model.LanguageItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
-import com.coretex.relations.commerce_core_model.ProductRelationshipProductRelation;
+import com.coretex.items.core.LocaleItem;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class ProductRelationshipDaoImpl extends DefaultGenericDao<ProductRelatio
 	}
 
 	@Override
-	public List<ProductRelationshipItem> getByType(MerchantStoreItem store, String type, ProductItem product, LanguageItem language) {
+	public List<ProductRelationshipItem> getByType(MerchantStoreItem store, String type, ProductItem product, LocaleItem language) {
 
 		StringBuilder qs = new StringBuilder();
 		qs.append("select distinct pr from ProductRelationshipItem as pr ");
@@ -54,7 +53,7 @@ public class ProductRelationshipDaoImpl extends DefaultGenericDao<ProductRelatio
 	}
 
 	@Override
-	public List<ProductRelationshipItem> getByType(MerchantStoreItem store, String type, LanguageItem language) {
+	public List<ProductRelationshipItem> getByType(MerchantStoreItem store, String type, LocaleItem language) {
 
 		StringBuilder qs = new StringBuilder();
 		qs.append("SELECT distinct * FROM "+ ProductRelationshipItem.ITEM_TYPE +" AS pr ");

@@ -10,7 +10,7 @@ import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.core.data.web.Menu;
 import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.UserItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
@@ -18,7 +18,6 @@ import com.coretex.shop.admin.forms.UserForm;
 import com.coretex.shop.admin.mapppers.UserFormMapper;
 import com.coretex.shop.admin.mapppers.dto.GroupDtoMapper;
 import com.coretex.shop.admin.model.secutity.Password;
-import com.coretex.shop.admin.security.SecurityQuestion;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.constants.EmailConstants;
 import com.coretex.shop.utils.EmailUtils;
@@ -253,7 +252,7 @@ public class UserController {
 	@RequestMapping(value = "/admin/users/displayStoreUser.html", method = RequestMethod.GET)
 	public String displayUserEdit(@ModelAttribute("id") String id, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
-		UserItem dbUser = userService.getById(UUID.fromString(id));
+		UserItem dbUser = userService.getByUUID(UUID.fromString(id));
 
 		if (dbUser == null) {
 			LOGGER.info("UserItem is null for id " + id);
@@ -402,7 +401,7 @@ public class UserController {
 		UserItem user;
 
 		if(Objects.nonNull(userForm.getUuid())){
-			user = userService.getById(userForm.getUuid());
+			user = userService.getByUUID(userForm.getUuid());
 			userFormMapper.updateToUserItem(userForm, user);
 		}else{
 			user = userFormMapper.toUserItem(userForm);
@@ -411,9 +410,9 @@ public class UserController {
 
 		this.populateUserObjects(user, store, model, locale);
 
-		LanguageItem language = user.getLanguage();
+		LocaleItem language = user.getLanguage();
 
-		LanguageItem l = languageService.getById(language.getUuid());
+		LocaleItem l = languageService.getByUUID(language.getUuid());
 
 		user.setLanguage(l);
 
@@ -550,7 +549,7 @@ public class UserController {
 		try {
 
 			UUID userId = UUID.fromString(sUserId);
-			UserItem user = userService.getById(userId);
+			UserItem user = userService.getByUUID(userId);
 
 			/**
 			 * In order to remove a UserItem the logged in ser must be STORE_ADMIN

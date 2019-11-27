@@ -4,7 +4,7 @@ import com.coretex.core.business.services.catalog.product.manufacturer.Manufactu
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.coretex.shop.model.shop.PageInformation;
@@ -41,7 +41,7 @@ public class ListItemsController {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 		//ManufacturerItem manufacturer = manufacturerService.getByUrl(store, language, url); // this needs to be checked
 

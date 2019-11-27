@@ -2,7 +2,7 @@ package com.coretex.shop.populator.manufacturer;
 
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.shop.model.catalog.manufacturer.ReadableManufacturer;
@@ -13,7 +13,7 @@ public class ReadableManufacturerPopulator extends AbstractDataPopulator<Manufac
 	@Override
 	public ReadableManufacturer populate(
 			ManufacturerItem source,
-			ReadableManufacturer target, MerchantStoreItem store, LanguageItem language) throws ConversionException {
+			ReadableManufacturer target, MerchantStoreItem store, LocaleItem language) throws ConversionException {
 		target.setUuid(source.getUuid());
 
 		target.setOrder(source.getOrder()!=null? source.getOrder():0);

@@ -6,7 +6,7 @@ import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.manufacturer.ManufacturerDescription;
 import com.coretex.shop.model.catalog.manufacturer.PersistableManufacturer;
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,7 +25,7 @@ public class PersistableManufacturerPopulator extends AbstractDataPopulator<Pers
 
 	@Override
 	public ManufacturerItem populate(PersistableManufacturer source,
-									 ManufacturerItem target, MerchantStoreItem store, LanguageItem language)
+									 ManufacturerItem target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 		Validate.notNull(languageService, "Requires to set LanguageService");
@@ -38,9 +38,9 @@ public class PersistableManufacturerPopulator extends AbstractDataPopulator<Pers
 			if (!CollectionUtils.isEmpty(source.getDescriptions())) {
 				for (ManufacturerDescription description : source.getDescriptions()) {
 
-					LanguageItem lang = languageService.getByCode(description.getLanguage());
+					LocaleItem lang = languageService.getByCode(description.getLanguage());
 					if (lang == null) {
-						throw new ConversionException("LanguageItem is null for code " + description.getLanguage() + " use language ISO code [en, fr ...]");
+						throw new ConversionException("LocaleItem is null for code " + description.getLanguage() + " use language ISO code [en, fr ...]");
 					}
 					target.setDescription(description.getDescription(), languageService.toLocale(lang, store));
 					target.setName(description.getName(), languageService.toLocale(lang, store));

@@ -8,8 +8,6 @@ import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.business.services.customer.CustomerService;
-import com.coretex.core.business.services.payments.TransactionService;
-import com.coretex.core.business.services.shipping.ShippingService;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
 import com.coretex.core.model.order.OrderCriteria;
 import com.coretex.core.model.order.OrderList;
@@ -17,13 +15,11 @@ import com.coretex.core.model.order.OrderSummary;
 import com.coretex.core.model.order.OrderSummaryType;
 import com.coretex.core.model.order.OrderTotalSummary;
 import com.coretex.core.model.order.OrderValueType;
-import com.coretex.core.model.payments.Payment;
 import com.coretex.core.model.shipping.ShippingConfiguration;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.enums.commerce_core_model.OrderTotalTypeEnum;
-import com.coretex.enums.commerce_core_model.TransactionTypeEnum;
 import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
@@ -34,7 +30,6 @@ import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
-import com.coretex.items.commerce_core_model.TransactionItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -51,6 +46,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -65,9 +61,6 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 	private InvoiceModule invoiceModule;
 
 	@Resource
-	private ShippingService shippingService;
-
-	@Resource
 	private PricingService pricingService;
 
 	@Resource
@@ -75,10 +68,6 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 	@Resource
 	private CustomerService customerService;
-
-	@Resource
-	private TransactionService transactionService;
-
 
 	private final OrderDao orderDao;
 
@@ -88,25 +77,28 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 	}
 
 	@Override
+	public Map getStaticForPeriod(Date from) {
+		if(Objects.isNull(from)){
+			return orderDao.getOrderStatistic();
+		}
+		return orderDao.getOrderStatistic(from);
+	}
+
+	@Override
 	public void addOrderStatusHistory(OrderItem order, OrderStatusHistoryItem history) throws ServiceException {
 		order.getOrderHistory().add(history);
 		history.setOrder(order);
-		update(order);
+		save(order);
 	}
 
 	@Override
-	public OrderItem processOrder(OrderItem order, CustomerItem customer, List<ShoppingCartEntryItem> items, OrderTotalSummary summary, Payment payment, MerchantStoreItem store) throws ServiceException {
+	public OrderItem processOrder(OrderItem order, CustomerItem customer, List<ShoppingCartEntryItem> items, OrderTotalSummary summary, MerchantStoreItem store) throws ServiceException {
 
-		return this.process(order, customer, items, summary, payment, null, store);
+		return this.process(order, customer, items, summary, store);
 	}
 
-	@Override
-	public OrderItem processOrder(OrderItem order, CustomerItem customer, List<ShoppingCartEntryItem> items, OrderTotalSummary summary, Payment payment, TransactionItem transaction, MerchantStoreItem store) throws ServiceException {
 
-		return this.process(order, customer, items, summary, payment, transaction, store);
-	}
-
-	private OrderItem process(OrderItem order, CustomerItem customer, List<ShoppingCartEntryItem> items, OrderTotalSummary summary, Payment payment, TransactionItem transaction, MerchantStoreItem store) throws ServiceException {
+	private OrderItem process(OrderItem order, CustomerItem customer, List<ShoppingCartEntryItem> items, OrderTotalSummary summary, MerchantStoreItem store) throws ServiceException {
 
 
 		Validate.notNull(order, "OrderItem cannot be null");
@@ -132,7 +124,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 				qty = qty - orderProduct.getProductQuantity();
 				availability.setProductQuantity(qty);
 			}
-			productService.update(p);
+			productService.save(p);
 		}
 
 
@@ -142,7 +134,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 				status = OrderStatusEnum.ORDERED;
 				order.setStatus(status);
 			}
-			Set<OrderStatusHistoryItem> statusHistorySet = new HashSet<OrderStatusHistoryItem>();
+			Set<OrderStatusHistoryItem> statusHistorySet = new HashSet<>();
 			OrderStatusHistoryItem statusHistory = new OrderStatusHistoryItem();
 			statusHistory.setStatus(status);
 			statusHistory.setDateAdded(new Date());
@@ -160,11 +152,6 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 		this.create(order);
 
-		if (transaction != null) {
-			transaction.setOrder(order);
-			transactionService.save(transaction);
-		}
-
 		//TODO post order processing
 
 
@@ -173,7 +160,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 	}
 
-	private OrderTotalSummary caculateOrder(OrderSummary summary, CustomerItem customer, final MerchantStoreItem store, final LanguageItem language) throws Exception {
+	private OrderTotalSummary caculateOrder(OrderSummary summary, CustomerItem customer, final MerchantStoreItem store, final LocaleItem language) throws Exception {
 
 		OrderTotalSummary totalSummary = new OrderTotalSummary();
 		List<OrderTotalItem> orderTotals = new ArrayList<OrderTotalItem>();
@@ -340,7 +327,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 
 	@Override
-	public OrderTotalSummary caculateOrderTotal(final OrderSummary orderSummary, final CustomerItem customer, final MerchantStoreItem store, final LanguageItem language) throws ServiceException {
+	public OrderTotalSummary caculateOrderTotal(final OrderSummary orderSummary, final CustomerItem customer, final MerchantStoreItem store, final LocaleItem language) throws ServiceException {
 		Validate.notNull(orderSummary, "OrderItem summary cannot be null");
 		Validate.notNull(orderSummary.getProducts(), "OrderItem summary.products cannot be null");
 		Validate.notNull(store, "MerchantStoreItem cannot be null");
@@ -356,7 +343,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 
 	@Override
-	public OrderTotalSummary caculateOrderTotal(final OrderSummary orderSummary, final MerchantStoreItem store, final LanguageItem language) throws ServiceException {
+	public OrderTotalSummary caculateOrderTotal(final OrderSummary orderSummary, final MerchantStoreItem store, final LocaleItem language) throws ServiceException {
 		Validate.notNull(orderSummary, "OrderItem summary cannot be null");
 		Validate.notNull(orderSummary.getProducts(), "OrderItem summary.products cannot be null");
 		Validate.notNull(store, "MerchantStoreItem cannot be null");
@@ -369,7 +356,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 	}
 
-	private OrderTotalSummary caculateShoppingCart(final ShoppingCartItem shoppingCart, final CustomerItem customer, final MerchantStoreItem store, final LanguageItem language) throws Exception {
+	private OrderTotalSummary caculateShoppingCart(final ShoppingCartItem shoppingCart, final CustomerItem customer, final MerchantStoreItem store, final LocaleItem language) throws Exception {
 
 
 		OrderSummary orderSummary = new OrderSummary();
@@ -399,7 +386,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 	@Override
 	public OrderTotalSummary calculateShoppingCartTotal(
 			final ShoppingCartItem shoppingCart, final CustomerItem customer, final MerchantStoreItem store,
-			final LanguageItem language) throws ServiceException {
+			final LocaleItem language) throws ServiceException {
 		Validate.notNull(shoppingCart, "OrderItem summary cannot be null");
 		Validate.notNull(customer, "Customery cannot be null");
 		Validate.notNull(store, "MerchantStoreItem cannot be null.");
@@ -426,7 +413,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 	 */
 	@Override
 	public OrderTotalSummary calculateShoppingCartTotal(
-			final ShoppingCartItem shoppingCart, final MerchantStoreItem store, final LanguageItem language)
+			final ShoppingCartItem shoppingCart, final MerchantStoreItem store, final LocaleItem language)
 			throws ServiceException {
 		Validate.notNull(shoppingCart, "OrderItem summary cannot be null");
 		Validate.notNull(store, "MerchantStoreItem cannot be null");
@@ -440,7 +427,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 	}
 
 	@Override
-	public ByteArrayOutputStream generateInvoice(final MerchantStoreItem store, final OrderItem order, final LanguageItem language) throws ServiceException {
+	public ByteArrayOutputStream generateInvoice(final MerchantStoreItem store, final OrderItem order, final LocaleItem language) throws ServiceException {
 
 		Validate.notNull(order.getOrderProducts(), "OrderItem products cannot be null");
 		Validate.notNull(order.getOrderTotal(), "OrderItem totals cannot be null");
@@ -457,7 +444,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 	@Override
 	public OrderItem getOrder(final UUID orderId) {
-		return getById(orderId);
+		return getByUUID(orderId);
 	}
 
 
@@ -506,79 +493,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 	@Override
 	public List<OrderItem> getCapturableOrders(MerchantStoreItem store, Date startDate, Date endDate) throws ServiceException {
 
-		List<TransactionItem> transactions = transactionService.listTransactions(startDate, endDate);
-
-		List<OrderItem> returnOrders = null;
-
-		if (!CollectionUtils.isEmpty(transactions)) {
-
-			returnOrders = new ArrayList<>();
-
-			//order id
-			Map<UUID, OrderItem> preAuthOrders = new HashMap<>();
-			//order id
-			Map<UUID, List<TransactionItem>> processingTransactions = new HashMap<>();
-
-			for (TransactionItem trx : transactions) {
-				OrderItem order = trx.getOrder();
-				if (TransactionTypeEnum.AUTHORIZE.name().equals(trx.getTransactionType().name())) {
-					preAuthOrders.put(order.getUuid(), order);
-				}
-
-				//put transaction
-				List<TransactionItem> listTransactions = null;
-				if (processingTransactions.containsKey(order.getUuid())) {
-					listTransactions = processingTransactions.get(order.getUuid());
-				} else {
-					listTransactions = new ArrayList<>();
-					processingTransactions.put(order.getUuid(), listTransactions);
-				}
-				listTransactions.add(trx);
-			}
-
-			//should have when captured
-			/**
-			 * OrderItem id  TransactionItem type
-			 * 1          AUTHORIZE
-			 * 1          CAPTURE 
-			 */
-
-			//should have when not captured
-			/**
-			 * OrderItem id  TransactionItem type
-			 * 2          AUTHORIZE
-			 */
-
-			for (UUID orderId : processingTransactions.keySet()) {
-
-				List<TransactionItem> trx = processingTransactions.get(orderId);
-				if (CollectionUtils.isNotEmpty(trx)) {
-
-					boolean capturable = true;
-					for (TransactionItem t : trx) {
-
-						if (TransactionTypeEnum.CAPTURE.name().equals(t.getTransactionType().name())) {
-							capturable = false;
-						} else if (TransactionTypeEnum.AUTHORIZECAPTURE.name().equals(t.getTransactionType().name())) {
-							capturable = false;
-						} else if (TransactionTypeEnum.REFUND.name().equals(t.getTransactionType().name())) {
-							capturable = false;
-						}
-
-					}
-
-					if (capturable) {
-						OrderItem o = preAuthOrders.get(orderId);
-						returnOrders.add(o);
-					}
-
-				}
-
-
-			}
-		}
-
-		return returnOrders;
+		return null;
 	}
 
 

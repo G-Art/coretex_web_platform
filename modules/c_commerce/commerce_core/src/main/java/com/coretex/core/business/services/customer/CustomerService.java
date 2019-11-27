@@ -27,8 +27,5 @@ public interface CustomerService extends SalesManagerEntityService<CustomerItem>
 
 	CustomerItem getByNick(String nick, UUID storeId);
 
-	Address getCustomerAddress(MerchantStoreItem store, String ipAddress)
-			throws ServiceException;
-
 
 }

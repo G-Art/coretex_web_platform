@@ -392,7 +392,7 @@
                             <div id="customer-agreement-area">
                                 <c:choose>
                                     <c:when test="${requestScope.CONTENT['agreement']!=null}">
-                                        <sm:pageContent contentCode="agreement"/>
+
                                     </c:when>
                                     <c:otherwise>
                                         <s:message code="message.content.missing.agreement"

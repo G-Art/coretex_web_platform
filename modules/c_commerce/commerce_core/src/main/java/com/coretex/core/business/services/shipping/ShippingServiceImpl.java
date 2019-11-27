@@ -11,7 +11,7 @@ import com.coretex.core.model.shipping.ShippingProduct;
 import com.coretex.core.model.shipping.ShippingType;
 import com.coretex.core.model.system.IntegrationConfiguration;
 import com.coretex.core.business.utils.Encryption;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
@@ -186,7 +186,7 @@ public class ShippingServiceImpl implements ShippingService {
 	}
 
 	@Override
-	public List<CountryItem> getShipToCountryList(MerchantStoreItem store, LanguageItem language) throws ServiceException {
+	public List<CountryItem> getShipToCountryList(MerchantStoreItem store, LocaleItem language) throws ServiceException {
 
 
 		ShippingConfiguration shippingConfiguration = getShippingConfiguration(store);

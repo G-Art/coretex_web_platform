@@ -4,7 +4,7 @@ import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.customer.address.Address;
 
@@ -13,7 +13,7 @@ public class PersistableCustomerPopulator extends
 
 	@Override
 	public PersistableCustomer populate(CustomerItem source,
-										PersistableCustomer target, MerchantStoreItem store, LanguageItem language)
+										PersistableCustomer target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 
@@ -77,14 +77,14 @@ public class PersistableCustomerPopulator extends
 				target.setGender(source.getGender().name());
 			}
 			if (source.getDefaultLanguage() != null) {
-				target.setLanguage(source.getDefaultLanguage().getCode());
+				target.setLanguage(source.getDefaultLanguage().getIso());
 			}
 			target.setUserName(source.getFirstName());
 			target.setStoreCode(store.getCode());
 			if (source.getDefaultLanguage() != null) {
-				target.setLanguage(source.getDefaultLanguage().getCode());
+				target.setLanguage(source.getDefaultLanguage().getIso());
 			} else {
-				target.setLanguage(store.getDefaultLanguage().getCode());
+				target.setLanguage(store.getDefaultLanguage().getIso());
 			}
 
 

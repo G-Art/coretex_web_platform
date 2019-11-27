@@ -4,26 +4,21 @@ import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.catalog.product.relationship.ProductRelationshipService;
-import com.coretex.core.business.services.catalog.product.review.ProductReviewService;
 import com.coretex.core.business.utils.CacheUtils;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
 import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
-import com.coretex.items.commerce_core_model.LanguageItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductOptionValueItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
-import com.coretex.items.commerce_core_model.ProductReviewItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
 import com.coretex.shop.model.catalog.product.ReadableProductPrice;
-import com.coretex.shop.model.catalog.product.ReadableProductReview;
 import com.coretex.shop.model.shop.Breadcrumb;
 import com.coretex.shop.model.shop.PageInformation;
 import com.coretex.shop.populator.catalog.ReadableFinalPricePopulator;
 import com.coretex.shop.populator.catalog.ReadableProductPopulator;
-import com.coretex.shop.populator.catalog.ReadableProductReviewPopulator;
 import com.coretex.shop.store.controller.ControllerConstants;
 import com.coretex.shop.store.model.catalog.Attribute;
 import com.coretex.shop.store.model.catalog.AttributeValue;
@@ -80,9 +75,6 @@ public class ShopProductController {
 	private PricingService pricingService;
 
 	@Resource
-	private ProductReviewService productReviewService;
-
-	@Resource
 	private CacheUtils cache;
 
 	@Resource
@@ -135,7 +127,7 @@ public class ShopProductController {
 
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 		ProductItem product = productService.getBySeUrl(store, friendlyUrl, locale);
 
@@ -169,7 +161,7 @@ public class ShopProductController {
 				.append("_")
 				.append(Constants.RELATEDITEMS_CACHE_KEY)
 				.append("-")
-				.append(language.getCode());
+				.append(language.getIso());
 
 		StringBuilder relatedItemsMissed = new StringBuilder();
 		relatedItemsMissed
@@ -217,52 +209,36 @@ public class ShopProductController {
 			for (ProductAttributeItem attribute : attributes) {
 				Attribute attr = null;
 				AttributeValue attrValue = new AttributeValue();
-				ProductOptionValueItem optionValue = attribute.getProductOptionValue();
 
 				if (attribute.getAttributeDisplayOnly() == true) {//read only attribute
 					if (readOnlyAttributes == null) {
 						readOnlyAttributes = new TreeMap<>();
 					}
-					attr = readOnlyAttributes.get(attribute.getProductOption().getUuid());
-					if (attr == null) {
-						attr = createAttribute(attribute, language);
-					}
+
 					if (attr != null) {
-						readOnlyAttributes.put(attribute.getProductOption().getUuid(), attr);
 						attr.setReadOnlyValue(attrValue);
 					}
 				} else {//selectable option
 					if (selectableOptions == null) {
 						selectableOptions = new TreeMap<>();
 					}
-					attr = selectableOptions.get(attribute.getProductOption().getUuid());
-					if (attr == null) {
-						attr = createAttribute(attribute, language);
-					}
-					if (attr != null) {
-						selectableOptions.put(attribute.getProductOption().getUuid(), attr);
-					}
+
 				}
 
 
 				attrValue.setDefaultAttribute(attribute.getAttributeDefault());
 				attrValue.setUuid(attribute.getUuid());//id of the attribute
-				attrValue.setLanguage(language.getCode());
+				attrValue.setLanguage(language.getIso());
 				if (attribute.getProductAttributePrice() != null && attribute.getProductAttributePrice().doubleValue() > 0) {
 					String formatedPrice = pricingService.getDisplayAmount(attribute.getProductAttributePrice(), store);
 					attrValue.setPrice(formatedPrice);
 				}
 
-				if (!StringUtils.isBlank(attribute.getProductOptionValue().getProductOptionValueImage())) {
-					attrValue.setImage(imageUtils.buildProductPropertyImageUtils(store, attribute.getProductOptionValue().getProductOptionValueImage()));
-				}
 				attrValue.setSortOrder(0);
 				if (attribute.getProductOptionSortOrder() != null) {
 					attrValue.setSortOrder(attribute.getProductOptionSortOrder().intValue());
 				}
 
-				attrValue.setName(optionValue.getName());
-				attrValue.setDescription(optionValue.getDescription());
 				List<AttributeValue> attrs = attr.getValues();
 				if (attrs == null) {
 					attrs = new ArrayList<>();
@@ -271,19 +247,6 @@ public class ShopProductController {
 				attrs.add(attrValue);
 			}
 
-		}
-
-
-		List<ProductReviewItem> reviews = productReviewService.getByProduct(product, language);
-		if (!CollectionUtils.isEmpty(reviews)) {
-			List<ReadableProductReview> revs = new ArrayList<ReadableProductReview>();
-			ReadableProductReviewPopulator reviewPopulator = new ReadableProductReviewPopulator();
-			for (ProductReviewItem review : reviews) {
-				ReadableProductReview rev = new ReadableProductReview();
-				reviewPopulator.populate(review, rev, store, language);
-				revs.add(rev);
-			}
-			model.addAttribute("reviews", revs);
 		}
 
 		List<Attribute> attributesList = null;
@@ -323,10 +286,10 @@ public class ShopProductController {
 
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		@SuppressWarnings("unchecked")
 		List<UUID> ids = Arrays.stream(attributeIds).map(UUID::fromString).collect(Collectors.toList());
@@ -347,27 +310,7 @@ public class ShopProductController {
 
 	}
 
-	private Attribute createAttribute(ProductAttributeItem productAttribute, LanguageItem language) {
-
-		Attribute attribute = new Attribute();
-		attribute.setUuid(productAttribute.getProductOption().getUuid());//attribute of the option
-		attribute.setType(productAttribute.getProductOption().getProductOptionType());
-
-		if (productAttribute.getProductOption() == null) {
-			return null;
-		}
-
-		attribute.setType(productAttribute.getProductOption().getProductOptionType());
-		attribute.setLanguage(language.getCode());
-		attribute.setName(productAttribute.getProductOption().getName());
-		attribute.setCode(productAttribute.getProductOption().getCode());
-
-
-		return attribute;
-
-	}
-
-	private List<ReadableProduct> relatedItems(MerchantStoreItem store, ProductItem product, LanguageItem language) throws Exception {
+	private List<ReadableProduct> relatedItems(MerchantStoreItem store, ProductItem product, LocaleItem language) throws Exception {
 
 
 		ReadableProductPopulator populator = new ReadableProductPopulator();

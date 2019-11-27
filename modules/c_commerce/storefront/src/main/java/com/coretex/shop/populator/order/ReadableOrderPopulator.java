@@ -11,7 +11,7 @@ import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.enums.commerce_core_model.OrderTotalTypeEnum;
 import com.coretex.items.commerce_core_model.OrderAttributeItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.customer.ReadableDelivery;
 import com.coretex.shop.model.customer.address.Address;
 import com.coretex.shop.model.order.ReadableOrder;
@@ -21,7 +21,7 @@ public class ReadableOrderPopulator extends
 
 	@Override
 	public ReadableOrder populate(OrderItem source, ReadableOrder target,
-								  MerchantStoreItem store, LanguageItem language) throws ConversionException {
+								  MerchantStoreItem store, LocaleItem language) throws ConversionException {
 
 
 		target.setUuid(source.getUuid());

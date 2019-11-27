@@ -1,7 +1,7 @@
 
 package com.coretex.shop.populator.customer;
 
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.lang3.StringUtils;
 
 
@@ -19,7 +19,7 @@ import com.coretex.shop.model.customer.address.Address;
 public class CustomerDeliveryAddressPopulator extends AbstractDataPopulator<CustomerItem, Address> {
 
 	@Override
-	public Address populate(CustomerItem source, Address target, MerchantStoreItem store, LanguageItem language)
+	public Address populate(CustomerItem source, Address target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 		if (source.getDelivery() != null) {

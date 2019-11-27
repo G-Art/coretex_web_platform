@@ -36,7 +36,7 @@ public class ProductImageServiceImpl extends SalesManagerEntityServiceImpl<Produ
 	private ProductFileManager productFileManager;
 
 
-	public ProductImageItem getById(UUID id) {
+	public ProductImageItem getByUUID(UUID id) {
 		return productImageDao.findOne(id);
 	}
 
@@ -153,7 +153,7 @@ public class ProductImageServiceImpl extends SalesManagerEntityServiceImpl<Produ
 			productFileManager.removeProductImage(productImage);//managed internally
 		}
 
-		ProductImageItem p = this.getById(productImage.getUuid());
+		ProductImageItem p = this.getByUUID(productImage.getUuid());
 
 
 		this.delete(p);

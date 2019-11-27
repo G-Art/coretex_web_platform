@@ -21,12 +21,11 @@ public class UserServiceImpl extends SalesManagerEntityServiceImpl<UserItem>
 	public UserServiceImpl(UserDao userDao) {
 		super(userDao);
 		this.userDao = userDao;
-
 	}
 
 
 	@Override
-	public UserItem getByUserName(String userName) throws ServiceException {
+	public UserItem getByUserName(String userName) {
 		return userDao.findByUserName(userName);
 	}
 
@@ -50,7 +49,8 @@ public class UserServiceImpl extends SalesManagerEntityServiceImpl<UserItem>
 
 
 	@Override
-	public void saveOrUpdate(UserItem user) throws ServiceException {
+	@Deprecated
+	public void saveOrUpdate(UserItem user) {
 		userDao.save(user);
 	}
 
@@ -60,10 +60,10 @@ public class UserServiceImpl extends SalesManagerEntityServiceImpl<UserItem>
 		return userDao.findByUserAndStore(userId, storeCode);
 	}
 
-
 	@Override
-	public GenericEntityList<UserItem> listByCriteria(Criteria criteria) throws ServiceException {
-		return userDao.listByCriteria(criteria);
+	public UserItem findByLoginCredentials(String loginOrEmail) {
+		return userDao.findByCredentials(loginOrEmail);
 	}
+
 
 }

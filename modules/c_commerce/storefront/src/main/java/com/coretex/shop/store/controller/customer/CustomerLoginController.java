@@ -8,7 +8,7 @@ import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.customer.SecuredCustomer;
@@ -88,7 +88,7 @@ public class CustomerLoginController extends AbstractController {
 
 			//user goes to shop filter first so store and language are set
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
-			LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+			LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 			//check if username is from the appropriate store
 			CustomerItem customerModel = customerFacade.getCustomerByUserName(userName, store);
@@ -203,7 +203,7 @@ public class CustomerLoginController extends AbstractController {
 	}
 
 
-	private ShoppingCartData populateShoppingCartData(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LanguageItem language) {
+	private ShoppingCartData populateShoppingCartData(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LocaleItem language) {
 		try {
 			return shoppingCartDataPopulator.populate(cartModel, store, language);
 		} catch (ConversionException ce) {

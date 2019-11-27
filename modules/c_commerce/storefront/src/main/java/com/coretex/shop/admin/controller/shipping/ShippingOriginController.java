@@ -5,7 +5,7 @@ import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.shipping.ShippingOriginService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.items.commerce_core_model.ShippingOriginItem;
 import com.coretex.core.data.web.Menu;
@@ -59,7 +59,7 @@ public class ShippingOriginController {
 		this.setMenu(model, request);
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 		ShippingOriginItem shippingOrigin = shippingOriginService.getByStore(store);
 
@@ -86,7 +86,7 @@ public class ShippingOriginController {
 		this.setMenu(model, request);
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		List<CountryItem> countries = countryService.getCountries(language);
 
 		ShippingOriginItem shippingOrigin = shippingOriginService.getByStore(store);
@@ -126,7 +126,7 @@ public class ShippingOriginController {
 
 		ShippingOriginItem shippingOrigin = shippingOriginService.getByStore(store);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		List<CountryItem> countries = countryService.getCountries(language);
 
 

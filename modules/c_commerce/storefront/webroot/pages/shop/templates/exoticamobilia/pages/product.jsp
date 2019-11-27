@@ -198,11 +198,6 @@
                                                     text="Inches"/></dd>
                                         </dl>
                                         </p>
-                                        <c:if test="${product.manufacturer.code=='green' || product.manufacturer.code=='local'}">
-                                            <c:if test="${requestScope.CONTENT['fsa']!=null}">
-                                                <sm:pageContent contentCode="fsa"/>
-                                            </c:if>
-                                        </c:if>
                                     </div>
                                     <div id="h2tab2" class="tab-pane fade">
 

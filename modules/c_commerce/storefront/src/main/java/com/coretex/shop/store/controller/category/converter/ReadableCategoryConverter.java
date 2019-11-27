@@ -1,7 +1,7 @@
 package com.coretex.shop.store.controller.category.converter;
 
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.shop.model.catalog.category.Category;
 import com.coretex.shop.model.catalog.category.CategoryDescription;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ReadableCategoryConverter implements Converter<CategoryItem, ReadableCategory> {
 
 	@Override
-	public ReadableCategory convert(CategoryItem source, MerchantStoreItem store, LanguageItem language) {
+	public ReadableCategory convert(CategoryItem source, MerchantStoreItem store, LocaleItem language) {
 		ReadableCategory target = new ReadableCategory();
 
 

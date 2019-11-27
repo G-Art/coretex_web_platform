@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.coretex.core.model.common.Criteria;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.security.ReadablePermission;
 import com.coretex.shop.model.user.PersistableUser;
 import com.coretex.shop.model.user.ReadableUser;
@@ -24,7 +24,7 @@ public interface UserFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableUser findByUserName(String userName, LanguageItem lang);
+	ReadableUser findByUserName(String userName, LocaleItem lang);
 
 	/**
 	 * Creates a UserItem
@@ -67,14 +67,6 @@ public interface UserFacade {
 	 * @return
 	 */
 	String authenticatedUser();
-
-	/**
-	 * Get by criteria
-	 *
-	 * @param criteria
-	 * @return
-	 */
-	ReadableUserList getByCriteria(LanguageItem language, String draw, Criteria criteria);
 
 	/**
 	 * Delete user

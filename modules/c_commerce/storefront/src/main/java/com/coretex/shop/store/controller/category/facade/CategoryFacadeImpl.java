@@ -6,7 +6,7 @@ import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.category.PersistableCategory;
 import com.coretex.shop.model.catalog.category.ReadableCategory;
 import com.coretex.shop.populator.catalog.PersistableCategoryPopulator;
@@ -50,7 +50,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 
 	@Override
 	public List<ReadableCategory> getCategoryHierarchy(
-			MerchantStoreItem store, int depth, LanguageItem language, String filter) {
+			MerchantStoreItem store, int depth, LocaleItem language, String filter) {
 		List<CategoryItem> categories = getCategories(store, depth, language, filter);
 
 		List<ReadableCategory> readableCategories =
@@ -83,7 +83,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 	}
 
 	private List<CategoryItem> getCategories(
-			MerchantStoreItem store, int depth, LanguageItem language, String filter) {
+			MerchantStoreItem store, int depth, LocaleItem language, String filter) {
 		if (StringUtils.isNotBlank(filter) && FEATURED_CATEGORY.equals(filter)) {
 			return categoryService.getListByDepthFilterByFeatured(store, depth, language);
 		} else {
@@ -101,7 +101,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 
 			CategoryItem target =
 					Optional.ofNullable(category.getUuid())
-							.map(categoryService::getById)
+							.map(categoryService::getByUUID)
 							.orElse(new CategoryItem());
 
 			CategoryItem dbCategory = populateCategory(store, category, target);
@@ -172,7 +172,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 	}
 
 	@Override
-	public ReadableCategory getById(MerchantStoreItem store, UUID id, LanguageItem language) {
+	public ReadableCategory getById(MerchantStoreItem store, UUID id, LocaleItem language) {
 		CategoryItem categoryModel = getCategoryById(id, language);
 
 		StringBuilder lineage =
@@ -215,7 +215,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 		return categoryService.getListByLineage(store, lineage);
 	}
 
-	private CategoryItem getCategoryById(UUID id, LanguageItem language) {
+	private CategoryItem getCategoryById(UUID id, LocaleItem language) {
 		return Optional.ofNullable(categoryService.getOneByLanguage(id, language))
 				.orElseThrow(() -> new ResourceNotFoundException("CategoryItem id not found"));
 	}
@@ -226,7 +226,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 	}
 
 	@Override
-	public ReadableCategory getByCode(MerchantStoreItem store, String code, LanguageItem language)
+	public ReadableCategory getByCode(MerchantStoreItem store, String code, LocaleItem language)
 			throws Exception {
 
 		Validate.notNull(code, "category code must not be null");
@@ -246,7 +246,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 	}
 
 	private CategoryItem getOne(UUID categoryId) {
-		return Optional.ofNullable(categoryService.getById(categoryId))
+		return Optional.ofNullable(categoryService.getByUUID(categoryId))
 				.orElseThrow(
 						() ->
 								new ResourceNotFoundException(

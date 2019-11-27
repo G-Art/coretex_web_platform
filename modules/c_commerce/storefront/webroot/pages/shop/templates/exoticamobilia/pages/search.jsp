@@ -63,7 +63,7 @@ function search() {
 $('#productsContainer').showLoading();
 var url = '${pageContext.servletContext.contextPath}/services/public/search/<c:out
         value="${requestScope.MERCHANT_STORE.code}"/>/<c:out
-        value="${requestScope.LANGUAGE.code}"/>/' + START_COUNT_PRODUCTS + '/' + MAX_PRODUCTS + '/search.json';
+        value="${requestScope.LANGUAGE.iso}"/>/' + START_COUNT_PRODUCTS + '/' + MAX_PRODUCTS + '/search.json';
 searchProducts(url,'#productsContainer','<c:out value="${q}"/>',null);
 }
 

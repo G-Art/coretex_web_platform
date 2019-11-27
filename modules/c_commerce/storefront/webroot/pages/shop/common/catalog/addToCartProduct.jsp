@@ -21,10 +21,6 @@
 </script>
 
 <c:set var="SKU" value="product_${product.sku}" scope="request"/>
-<c:if test="${requestScope.CONTENT[SKU]!=null}">
-    <sm:pageContent contentCode="${SKU}"/>
-</c:if>
-
 
 <!-- leave the form id as is -->
 <form id="input-<c:out value="${product.uuid}" />">

@@ -3,7 +3,7 @@ package com.coretex.core.business.repositories.reference.country;
 import java.util.List;
 import java.util.UUID;
 
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.core.activeorm.dao.Dao;
 
@@ -15,7 +15,7 @@ public interface CountryDao extends Dao<CountryItem> {
 
 
 	//	@Query("select c from CountryItem c left join fetch c.descriptions cd where cd.language.id=?1")
-	List<CountryItem> listByLanguage(LanguageItem id);
+	List<CountryItem> listByLanguage(LocaleItem id);
 
 	/**
 	 * get country including zones by language

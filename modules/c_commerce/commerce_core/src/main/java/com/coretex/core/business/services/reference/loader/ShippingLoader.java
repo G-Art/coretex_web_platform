@@ -94,6 +94,7 @@ public class ShippingLoader {
 				postDeliveryTypeItem.setCode((String) dt.get("code"));
 				postDeliveryTypeItem.setPayOnDelivery((Boolean) dt.get("payOnDelivery"));
 				postDeliveryTypeItem.setSendToWarehouse((Boolean) dt.get("sendToWarehouse"));
+				postDeliveryTypeItem.setActive((Boolean) dt.get("active"));
 
 				setLocalizedField("name", dt, (locale, o) -> postDeliveryTypeItem.setName(String.valueOf(o), locale));
 				serviceItem.getDeliveryTypes().add(postDeliveryTypeItem);

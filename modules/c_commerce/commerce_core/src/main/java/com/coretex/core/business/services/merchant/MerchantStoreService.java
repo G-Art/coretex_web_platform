@@ -9,7 +9,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 
 public interface MerchantStoreService extends SalesManagerEntityService<MerchantStoreItem> {
 
-	MerchantStoreItem getByCode(String code) throws ServiceException;
+	MerchantStoreItem getByCode(String code);
 
 	boolean existByCode(String code);
 

@@ -64,7 +64,7 @@ public class ProductImagesController {
 		setMenu(model, request);
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		if (product == null) {
 			return "redirect:/admin/products/products.html";
@@ -87,7 +87,7 @@ public class ProductImagesController {
 		setMenu(model, request);
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		if (product == null) {
 			return "redirect:/admin/products/products.html";
@@ -137,7 +137,7 @@ public class ProductImagesController {
 		try {
 
 
-			product = productService.getById(productId);
+			product = productService.getByUUID(productId);
 
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
@@ -211,7 +211,7 @@ public class ProductImagesController {
 		try {
 
 
-			product = productService.getById(productId);
+			product = productService.getByUUID(productId);
 
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
@@ -269,7 +269,7 @@ public class ProductImagesController {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		ProductItem product = productService.getById(productImages.getProductId());
+		ProductItem product = productService.getByUUID(productImages.getProductId());
 		model.addAttribute("product", product);
 		if (product == null) {
 			FieldError error = new FieldError("productImages", "image", messages.getMessage("message.error", locale));
@@ -313,7 +313,7 @@ public class ProductImagesController {
 
 
 		//reload
-		product = productService.getById(productImages.getProductId());
+		product = productService.getByUUID(productImages.getProductId());
 		model.addAttribute("product", product);
 		model.addAttribute("success", "success");
 
@@ -337,7 +337,7 @@ public class ProductImagesController {
 		model.addAttribute("productImage", productImage);
 		model.addAttribute("mediaTypes", mediaTypes);
 
-		ProductItem product = productService.getById(productImage.getUuid());
+		ProductItem product = productService.getByUUID(productImage.getUuid());
 		model.addAttribute("product", product);
 		if (product == null) {
 			FieldError error = new FieldError("productImages", "image", messages.getMessage("message.error", locale));
@@ -386,7 +386,7 @@ public class ProductImagesController {
 			UUID imageId = UUID.fromString(sImageId);
 
 
-			ProductImageItem productImage = productImageService.getById(imageId);
+			ProductImageItem productImage = productImageService.getByUUID(imageId);
 			if (productImage == null) {
 				resp.setStatusMessage(messages.getMessage("message.unauthorized", locale));
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
@@ -430,7 +430,7 @@ public class ProductImagesController {
 
 		try {
 			final UUID imageId = UUID.fromString(sImageId);
-			final ProductImageItem productImage = productImageService.getById(imageId);
+			final ProductImageItem productImage = productImageService.getByUUID(imageId);
 
 			if (productImage == null) {
 				resp.setStatusMessage(messages.getMessage("message.unauthorized", locale));
@@ -449,7 +449,7 @@ public class ProductImagesController {
 			productImage.setDefaultImage(true);
 			productImageService.saveOrUpdate(productImage);
 
-			final Set<ProductImageItem> images = productService.getById(productImage.getProduct().getUuid()).getImages();
+			final Set<ProductImageItem> images = productService.getByUUID(productImage.getProduct().getUuid()).getImages();
 			for (final ProductImageItem image : images) {
 				if (image.getUuid() != productImage.getUuid()) {
 					image.setDefaultImage(false);

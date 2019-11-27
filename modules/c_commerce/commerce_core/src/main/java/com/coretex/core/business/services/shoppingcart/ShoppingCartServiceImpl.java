@@ -17,7 +17,7 @@ import com.coretex.core.model.shipping.ShippingProduct;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
-import com.google.api.client.util.Sets;
+import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -133,7 +133,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	 * @param id
 	 */
 	@Override
-	public ShoppingCartItem getById(final UUID id) {
+	public ShoppingCartItem getByUUID(final UUID id) {
 
 		try {
 			ShoppingCartItem shoppingCart = shoppingCartDao.findOne(id);
@@ -171,7 +171,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 
 	@Override
 	public void deleteCart(final ShoppingCartItem shoppingCart) {
-		ShoppingCartItem cart = this.getById(shoppingCart.getUuid());
+		ShoppingCartItem cart = this.getByUUID(shoppingCart.getUuid());
 		if (cart != null) {
 			super.delete(cart);
 		}
@@ -471,7 +471,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 		if (CollectionUtils.isNotEmpty(sessionCart.getLineItems())) {
 			shoppingCartItemsSet = new HashSet<>();
 			for (ShoppingCartEntryItem shoppingCartItem : sessionCart.getLineItems()) {
-				ProductItem product = productService.getById(shoppingCartItem.getProduct().getUuid());
+				ProductItem product = productService.getByUUID(shoppingCartItem.getProduct().getUuid());
 				if (product == null) {
 					throw new Exception("Item with id " + shoppingCartItem.getProduct().getUuid() + " does not exist");
 				}
@@ -490,7 +490,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 				if (CollectionUtils.isNotEmpty(cartAttributes)) {
 					for (ShoppingCartEntryAttributeItem shoppingCartAttributeItem : cartAttributes) {
 						ProductAttributeItem productAttribute = productAttributeService
-								.getById(shoppingCartAttributeItem.getUuid());
+								.getByUUID(shoppingCartAttributeItem.getUuid());
 						if (productAttribute != null
 								&& productAttribute.getProduct().getUuid().equals(product.getUuid())) {
 

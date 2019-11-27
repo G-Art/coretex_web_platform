@@ -2,9 +2,9 @@ package com.coretex.core.populators;
 
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.items.commerce_core_model.DeliveryServiceItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.core.data.shipping.DeliveryServiceData;
+import com.coretex.items.core.LocaleItem;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,7 +16,7 @@ public abstract class DeliveryServiceDataPopulator<SOURCE extends DeliveryServic
 	public TARGET populate(SOURCE deliveryServiceItem,
 						   TARGET deliveryServiceData,
 										MerchantStoreItem store,
-										LanguageItem language) throws ConversionException {
+										LocaleItem language) throws ConversionException {
 		deliveryServiceData.setUuid(deliveryServiceItem.getUuid().toString());
 		deliveryServiceData.setCode(deliveryServiceItem.getCode());
 		deliveryServiceData.setImage(deliveryServiceItem.getImage());

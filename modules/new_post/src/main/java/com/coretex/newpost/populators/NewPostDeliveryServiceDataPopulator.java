@@ -2,7 +2,7 @@ package com.coretex.newpost.populators;
 
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.DeliveryServiceDataPopulator;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.newpost.NewPostDeliveryServiceItem;
 import com.coretex.items.newpost.NewPostDeliveryTypeItem;
@@ -24,7 +24,7 @@ public class NewPostDeliveryServiceDataPopulator extends DeliveryServiceDataPopu
 	}
 
 	@Override
-	public NewPostDeliveryServiceData populate(NewPostDeliveryServiceItem deliveryServiceItem, NewPostDeliveryServiceData deliveryServiceData, MerchantStoreItem store, LanguageItem language) throws ConversionException {
+	public NewPostDeliveryServiceData populate(NewPostDeliveryServiceItem deliveryServiceItem, NewPostDeliveryServiceData deliveryServiceData, MerchantStoreItem store, LocaleItem language) throws ConversionException {
 		super.populate(deliveryServiceItem, deliveryServiceData, store, language);
 		var deliveryTypeDataList = deliveryServiceItem.getDeliveryTypes()
 				.stream()

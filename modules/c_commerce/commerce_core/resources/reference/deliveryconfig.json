@@ -41,7 +41,8 @@
           }
         ],
         "payOnDelivery": true,
-        "sendToWarehouse": false
+        "sendToWarehouse": false,
+        "active": false
       },
       {
         "code": "shipToPostOffice",
@@ -60,7 +61,8 @@
           }
         ],
         "payOnDelivery": true,
-        "sendToWarehouse": true
+        "sendToWarehouse": true,
+        "active": true
       }
     ]
   }

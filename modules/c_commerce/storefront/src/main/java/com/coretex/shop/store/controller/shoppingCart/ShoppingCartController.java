@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -136,7 +136,7 @@ public class ShoppingCartController extends AbstractController {
 
 		//Look in the HttpSession to see if a customer is logged in
 		MerchantStoreItem store = getSessionAttribute(Constants.MERCHANT_STORE, request);
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 		CustomerItem customer = getSessionAttribute(Constants.CUSTOMER, request);
 
 
@@ -222,7 +222,7 @@ public class ShoppingCartController extends AbstractController {
 
 		LOG.debug("Starting to calculate shopping cart...");
 
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 
 
 		//meta information
@@ -288,7 +288,7 @@ public class ShoppingCartController extends AbstractController {
 		MerchantStoreItem merchantStore = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
 		CustomerItem customer = getSessionAttribute(Constants.CUSTOMER, request);
 
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 
 		if (StringUtils.isBlank(shoppingCartCode)) {
 			return "redirect:/shop";
@@ -363,7 +363,7 @@ public class ShoppingCartController extends AbstractController {
 		//store the shopping cart in the http session
 
 		MerchantStoreItem store = getSessionAttribute(Constants.MERCHANT_STORE, request);
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 		CustomerItem customer = getSessionAttribute(Constants.CUSTOMER, request);
 
 		/** there must be a cart in the session **/
@@ -408,7 +408,7 @@ public class ShoppingCartController extends AbstractController {
 
 
 		MerchantStoreItem store = getSessionAttribute(Constants.MERCHANT_STORE, request);
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 
 
 		String cartCode = (String) request.getSession().getAttribute(Constants.SHOPPING_CART);

@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionValueService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
@@ -16,16 +14,12 @@ import com.coretex.enums.commerce_core_model.CustomerGenderEnum;
 import com.coretex.items.commerce_core_model.BillingItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.commerce_core_model.CustomerAttributeItem;
-import com.coretex.items.commerce_core_model.CustomerOptionItem;
-import com.coretex.items.commerce_core_model.CustomerOptionValueItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.customer.address.Address;
-import com.coretex.shop.model.customer.attribute.PersistableCustomerAttribute;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -39,8 +33,6 @@ public class CustomerPopulator extends
 	private ZoneService zoneService;
 	private LanguageService languageService;
 
-	private CustomerOptionService customerOptionService;
-	private CustomerOptionValueService customerOptionValueService;
 	private GroupService groupService;
 
 
@@ -49,10 +41,8 @@ public class CustomerPopulator extends
 	 */
 	@Override
 	public CustomerItem populate(PersistableCustomer source, CustomerItem target,
-								 MerchantStoreItem store, LanguageItem language) throws ConversionException {
+								 MerchantStoreItem store, LocaleItem language) throws ConversionException {
 
-		Validate.notNull(customerOptionService, "Requires to set CustomerOptionService");
-		Validate.notNull(customerOptionValueService, "Requires to set CustomerOptionValueService");
 		Validate.notNull(zoneService, "Requires to set ZoneService");
 		Validate.notNull(countryService, "Requires to set CountryService");
 		Validate.notNull(languageService, "Requires to set LanguageService");
@@ -185,38 +175,6 @@ public class CustomerPopulator extends
 				}
 			}
 
-			if (source.getAttributes() != null) {
-				for (PersistableCustomerAttribute attr : source.getAttributes()) {
-
-					CustomerOptionItem customerOption = customerOptionService.getById(attr.getCustomerOption().getUuid());
-					if (customerOption == null) {
-						throw new ConversionException("CustomerItem option id " + attr.getCustomerOption().getUuid() + " does not exist");
-					}
-
-					CustomerOptionValueItem customerOptionValue = customerOptionValueService.getById(attr.getCustomerOptionValue().getUuid());
-					if (customerOptionValue == null) {
-						throw new ConversionException("CustomerItem option value id " + attr.getCustomerOptionValue().getUuid() + " does not exist");
-					}
-
-					if (!customerOption.getMerchantStore().getUuid().equals(store.getUuid())) {
-						throw new ConversionException("Invalid customer option id ");
-					}
-
-					if (!customerOptionValue.getMerchantStore().getUuid().equals(store.getUuid())) {
-						throw new ConversionException("Invalid customer option value id ");
-					}
-
-					CustomerAttributeItem attribute = new CustomerAttributeItem();
-					attribute.setCustomer(target);
-					attribute.setCustomerOption(customerOption);
-					attribute.setCustomerOptionValue(customerOptionValue);
-					attribute.setTextValue(attr.getTextValue());
-
-					target.getAttributes().add(attribute);
-
-				}
-			}
-
 			if (target.getDefaultLanguage() == null) {
 				target.setDefaultLanguage(target.getMerchantStore().getDefaultLanguage());
 			}
@@ -235,21 +193,6 @@ public class CustomerPopulator extends
 		return new CustomerItem();
 	}
 
-	public void setCustomerOptionService(CustomerOptionService customerOptionService) {
-		this.customerOptionService = customerOptionService;
-	}
-
-	public CustomerOptionService getCustomerOptionService() {
-		return customerOptionService;
-	}
-
-	public void setCustomerOptionValueService(CustomerOptionValueService customerOptionValueService) {
-		this.customerOptionValueService = customerOptionValueService;
-	}
-
-	public CustomerOptionValueService getCustomerOptionValueService() {
-		return customerOptionValueService;
-	}
 
 	public CountryService getCountryService() {
 		return countryService;

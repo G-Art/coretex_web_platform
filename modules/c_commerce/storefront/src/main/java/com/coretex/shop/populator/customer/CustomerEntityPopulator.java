@@ -2,7 +2,7 @@
 package com.coretex.shop.populator.customer;
 
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.lang3.StringUtils;
 
 
@@ -27,7 +27,7 @@ public class CustomerEntityPopulator
 
 	@Override
 	public CustomerEntity populate(final CustomerItem source, final CustomerEntity target,
-								   final MerchantStoreItem merchantStore, final LanguageItem language)
+								   final MerchantStoreItem merchantStore, final LocaleItem language)
 			throws ConversionException {
 		try {
 

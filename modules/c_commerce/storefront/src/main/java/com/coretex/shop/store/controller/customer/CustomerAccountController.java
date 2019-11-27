@@ -2,23 +2,15 @@ package com.coretex.shop.store.controller.customer;
 
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.customer.CustomerService;
-import com.coretex.core.business.services.customer.attribute.CustomerAttributeService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionSetService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionValueService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.commerce_core_model.CustomerAttributeItem;
-import com.coretex.items.commerce_core_model.CustomerOptionItem;
-import com.coretex.core.model.customer.attribute.CustomerOptionType;
-import com.coretex.items.commerce_core_model.CustomerOptionValueItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.customer.CustomerEntity;
 import com.coretex.shop.model.customer.CustomerPassword;
@@ -36,9 +28,7 @@ import com.coretex.shop.utils.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -49,13 +39,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Entry point for logged in customers
@@ -73,18 +70,6 @@ public class CustomerAccountController extends AbstractController {
 
 	@Resource
 	private CustomerService customerService;
-
-	@Resource
-	private CustomerOptionService customerOptionService;
-
-	@Resource
-	private CustomerOptionValueService customerOptionValueService;
-
-	@Resource
-	private CustomerOptionSetService customerOptionSetService;
-
-	@Resource
-	private CustomerAttributeService customerAttributeService;
 
 	@Resource
 	private LanguageService languageService;
@@ -182,7 +167,7 @@ public class CustomerAccountController extends AbstractController {
 		ReadableCustomer readableCustomer = new ReadableCustomer();
 
 
-		LanguageItem lang = languageUtils.getRequestLanguage(request, response);
+		LocaleItem lang = languageUtils.getRequestLanguage(request, response);
 
 		ReadableCustomerPopulator readableCustomerPopulator = new ReadableCustomerPopulator();
 		readableCustomerPopulator.populate(customer, readableCustomer, store, lang);
@@ -328,13 +313,6 @@ public class CustomerAccountController extends AbstractController {
 			return new ResponseEntity<String>(returnString, HttpStatus.OK);
 		}
 
-		List<CustomerAttributeItem> customerAttributes = customerAttributeService.getByCustomer(store, customer);
-		Map<UUID, CustomerAttributeItem> customerAttributesMap = new HashMap<>();
-
-		for (CustomerAttributeItem attr : customerAttributes) {
-			customerAttributesMap.put(attr.getCustomerOption().getUuid(), attr);
-		}
-
 		parameterNames = request.getParameterNames();
 
 		while (parameterNames.hasMoreElements()) {
@@ -344,62 +322,11 @@ public class CustomerAccountController extends AbstractController {
 			try {
 
 				String[] parameterKey = parameterName.split("-");
-				CustomerOptionItem customerOption = null;
-				CustomerOptionValueItem customerOptionValue = null;
 
 
 				if (CUSTOMER_ID_PARAMETER.equals(parameterName)) {
 					continue;
 				}
-
-				if (parameterKey.length > 1) {
-					//parse key - value
-					String key = parameterKey[0];
-					String value = parameterKey[1];
-					//should be on
-					customerOption = customerOptionService.getById(UUID.fromString(key));
-					customerOptionValue = customerOptionValueService.getById(UUID.fromString(value));
-
-
-				} else {
-					customerOption = customerOptionService.getById(UUID.fromString(parameterName));
-					customerOptionValue = customerOptionValueService.getById(UUID.fromString(parameterValue));
-
-				}
-
-				//get the attribute
-				//CustomerAttributeItem attribute = customerAttributeService.getByCustomerOptionId(store, customer.getUuid(), customerOption.getUuid());
-				CustomerAttributeItem attribute = customerAttributesMap.get(customerOption.getUuid());
-				if (attribute == null) {
-					attribute = new CustomerAttributeItem();
-					attribute.setCustomer(customer);
-					attribute.setCustomerOption(customerOption);
-				} else {
-					customerAttributes.remove(attribute);
-				}
-
-				if (customerOption.getCustomerOptionType().equals(CustomerOptionType.Text.name())) {
-					if (!StringUtils.isBlank(parameterValue)) {
-						attribute.setCustomerOptionValue(customerOptionValue);
-						attribute.setTextValue(parameterValue);
-					} else {
-						attribute.setTextValue(null);
-					}
-				} else {
-					attribute.setCustomerOptionValue(customerOptionValue);
-				}
-
-
-				if (attribute.getUuid() != null) {
-					if (attribute.getCustomerOptionValue() == null) {
-						customerAttributeService.delete(attribute);
-					} else {
-						customerAttributeService.update(attribute);
-					}
-				} else {
-					customerAttributeService.save(attribute);
-				}
-
 
 			} catch (Exception e) {
 				LOGGER.error("Cannot get parameter information " + parameterName, e);
@@ -407,13 +334,8 @@ public class CustomerAccountController extends AbstractController {
 
 		}
 
-		//and now the remaining to be removed
-		for (CustomerAttributeItem attr : customerAttributes) {
-			customerAttributeService.delete(attr);
-		}
-
 		//refresh customer
-		CustomerItem c = customerService.getById(customer.getUuid());
+		CustomerItem c = customerService.getByUUID(customer.getUuid());
 		super.setSessionAttribute(Constants.CUSTOMER, c, request);
 
 		resp.setStatus(AjaxResponse.RESPONSE_STATUS_SUCCESS);
@@ -429,7 +351,7 @@ public class CustomerAccountController extends AbstractController {
 
 
 		MerchantStoreItem store = getSessionAttribute(Constants.MERCHANT_STORE, request);
-		LanguageItem language = getSessionAttribute(Constants.LANGUAGE, request);
+		LocaleItem language = getSessionAttribute(Constants.LANGUAGE, request);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		CustomerItem customer = null;
@@ -517,10 +439,10 @@ public class CustomerAccountController extends AbstractController {
 		}
 
 
-		LanguageItem language = getSessionAttribute(Constants.LANGUAGE, request);
+		LocaleItem language = getSessionAttribute(Constants.LANGUAGE, request);
 		customerFacade.updateAddress(customer.getUuid(), store, address, language);
 
-		CustomerItem c = customerService.getById(customer.getUuid());
+		CustomerItem c = customerService.getByUUID(customer.getUuid());
 		super.setSessionAttribute(Constants.CUSTOMER, c, request);
 
 		model.addAttribute("success", "success");
@@ -533,10 +455,10 @@ public class CustomerAccountController extends AbstractController {
 	@ModelAttribute("countries")
 	protected List<CountryItem> getCountries(final HttpServletRequest request) {
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		try {
 			if (language == null) {
-				language = (LanguageItem) request.getAttribute("LANGUAGE");
+				language = (LocaleItem) request.getAttribute("LANGUAGE");
 			}
 
 			if (language == null) {

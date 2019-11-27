@@ -1,35 +1,53 @@
 
 package com.coretex.shop.store.controller.customer.facade;
 
+import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.exception.ServiceException;
-import com.coretex.core.model.customer.CustomerCriteria;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.core.business.modules.email.Email;
+import com.coretex.core.business.services.customer.CustomerService;
+import com.coretex.core.business.services.reference.country.CountryService;
+import com.coretex.core.business.services.reference.language.LanguageService;
+import com.coretex.core.business.services.reference.zone.ZoneService;
+import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
+import com.coretex.core.business.services.system.EmailService;
+import com.coretex.core.business.services.user.GroupService;
+import com.coretex.core.business.services.user.PermissionService;
+import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.model.customer.CustomerList;
-import com.coretex.items.commerce_core_model.CustomerReviewItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
-import com.coretex.items.commerce_core_model.ShoppingCartItem;
-import com.coretex.items.commerce_core_model.CustomerOptinItem;
-import com.coretex.items.commerce_core_model.OptinItem;
+import com.coretex.enums.commerce_core_model.GroupTypeEnum;
+import com.coretex.enums.commerce_core_model.OptinTypeEnum;
+import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.GroupItem;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.PermissionItem;
+import com.coretex.items.commerce_core_model.ShoppingCartItem;
+import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.core.CountryItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.shop.admin.model.userpassword.UserReset;
+import com.coretex.shop.constants.Constants;
+import com.coretex.shop.constants.EmailConstants;
+import com.coretex.shop.model.customer.CustomerEntity;
+import com.coretex.shop.model.customer.PersistableCustomer;
+import com.coretex.shop.model.customer.ReadableCustomer;
+import com.coretex.shop.model.customer.UserAlreadyExistException;
+import com.coretex.shop.model.customer.address.Address;
+import com.coretex.shop.populator.customer.CustomerBillingAddressPopulator;
+import com.coretex.shop.populator.customer.CustomerDeliveryAddressPopulator;
+import com.coretex.shop.populator.customer.CustomerEntityPopulator;
+import com.coretex.shop.populator.customer.CustomerPopulator;
+import com.coretex.shop.populator.customer.PersistableCustomerBillingAddressPopulator;
+import com.coretex.shop.populator.customer.PersistableCustomerShippingAddressPopulator;
 import com.coretex.shop.populator.customer.ReadableCustomerList;
+import com.coretex.shop.populator.customer.ReadableCustomerPopulator;
 import com.coretex.shop.store.api.exception.ConversionRuntimeException;
 import com.coretex.shop.store.api.exception.ResourceNotFoundException;
 import com.coretex.shop.store.api.exception.ServiceRuntimeException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.annotation.Resource;
-
+import com.coretex.shop.utils.EmailTemplatesUtils;
+import com.coretex.shop.utils.EmailUtils;
+import com.coretex.shop.utils.ImageFilePath;
+import com.coretex.shop.utils.LabelUtils;
+import com.coretex.shop.utils.LocaleUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -44,50 +62,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.modules.email.Email;
-import com.coretex.core.business.services.customer.CustomerService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionValueService;
-import com.coretex.core.business.services.customer.optin.CustomerOptinService;
-import com.coretex.core.business.services.customer.review.CustomerReviewService;
-import com.coretex.core.business.services.reference.country.CountryService;
-import com.coretex.core.business.services.reference.language.LanguageService;
-import com.coretex.core.business.services.reference.zone.ZoneService;
-import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
-import com.coretex.core.business.services.system.EmailService;
-import com.coretex.core.business.services.system.optin.OptinService;
-import com.coretex.core.business.services.user.GroupService;
-import com.coretex.core.business.services.user.PermissionService;
-import com.coretex.core.business.utils.CoreConfiguration;
-import com.coretex.items.core.CountryItem;
-import com.coretex.enums.commerce_core_model.OptinTypeEnum;
-import com.coretex.enums.commerce_core_model.GroupTypeEnum;
-import com.coretex.shop.admin.model.userpassword.UserReset;
-import com.coretex.shop.constants.Constants;
-import com.coretex.shop.constants.EmailConstants;
-import com.coretex.shop.model.customer.CustomerEntity;
-import com.coretex.shop.model.customer.PersistableCustomer;
-import com.coretex.shop.model.customer.PersistableCustomerReview;
-import com.coretex.shop.model.customer.ReadableCustomer;
-import com.coretex.shop.model.customer.ReadableCustomerReview;
-import com.coretex.shop.model.customer.UserAlreadyExistException;
-import com.coretex.shop.model.customer.address.Address;
-import com.coretex.shop.model.customer.optin.PersistableCustomerOptin;
-import com.coretex.shop.populator.customer.CustomerBillingAddressPopulator;
-import com.coretex.shop.populator.customer.CustomerDeliveryAddressPopulator;
-import com.coretex.shop.populator.customer.CustomerEntityPopulator;
-import com.coretex.shop.populator.customer.CustomerPopulator;
-import com.coretex.shop.populator.customer.PersistableCustomerBillingAddressPopulator;
-import com.coretex.shop.populator.customer.PersistableCustomerReviewPopulator;
-import com.coretex.shop.populator.customer.PersistableCustomerShippingAddressPopulator;
-import com.coretex.shop.populator.customer.ReadableCustomerPopulator;
-import com.coretex.shop.populator.customer.ReadableCustomerReviewPopulator;
-import com.coretex.shop.utils.EmailTemplatesUtils;
-import com.coretex.shop.utils.EmailUtils;
-import com.coretex.shop.utils.ImageFilePath;
-import com.coretex.shop.utils.LabelUtils;
-import com.coretex.shop.utils.LocaleUtils;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 /**
@@ -114,22 +98,10 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	private CustomerService customerService;
 
 	@Resource
-	private OptinService optinService;
-
-	@Resource
-	private CustomerOptinService customerOptinService;
-
-	@Resource
 	private ShoppingCartService shoppingCartService;
 
 	@Resource
 	private LanguageService languageService;
-
-	@Resource
-	private CustomerOptionValueService customerOptionValueService;
-
-	@Resource
-	private CustomerOptionService customerOptionService;
 
 	@Resource
 	private LabelUtils messages;
@@ -141,8 +113,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	@Resource
 	private GroupService groupService;
 
-	@Resource
-	private PermissionService permissionService;
 
 	@Resource
 	private ZoneService zoneService;
@@ -158,9 +128,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	@Resource
 	private AuthenticationManager customerAuthenticationManager;
-
-	@Resource
-	private CustomerReviewService customerReviewService;
 
 
 	@Resource
@@ -184,7 +151,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	 */
 	@Override
 	public CustomerEntity getCustomerDataByUserName(final String userName, final MerchantStoreItem store,
-													final LanguageItem language) throws Exception {
+													final LocaleItem language) throws Exception {
 		LOG.info("Fetching customer with userName" + userName);
 		CustomerItem customer = customerService.getByNick(userName);
 
@@ -209,12 +176,12 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	 * (non-Javadoc)
 	 *
 	 * @see com.coretex.web.shop.controller.customer.facade#mergeCart(final CustomerItem
-	 * customerModel, final String sessionShoppingCartId ,final MerchantStoreItem store,final LanguageItem
+	 * customerModel, final String sessionShoppingCartId ,final MerchantStoreItem store,final LocaleItem
 	 * language)
 	 */
 	@Override
 	public ShoppingCartItem mergeCart(final CustomerItem customerModel, final String sessionShoppingCartId,
-									  final MerchantStoreItem store, final LanguageItem language) throws Exception {
+									  final MerchantStoreItem store, final LocaleItem language) throws Exception {
 
 		LOG.debug("Starting merge cart process");
 		if (customerModel != null) {
@@ -289,7 +256,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	}
 
 	@Override
-	public ReadableCustomer getByUserName(String userName, MerchantStoreItem merchantStore, LanguageItem language) {
+	public ReadableCustomer getByUserName(String userName, MerchantStoreItem merchantStore, LocaleItem language) {
 		Validate.notNull(userName, "Username cannot be null");
 		Validate.notNull(merchantStore, "MerchantStoreItem cannot be null");
 
@@ -338,7 +305,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	@Override
 	public PersistableCustomer registerCustomer(final PersistableCustomer customer,
-												final MerchantStoreItem merchantStore, LanguageItem language) throws Exception {
+												final MerchantStoreItem merchantStore, LocaleItem language) throws Exception {
 		LOG.info("Starting customer registration process..");
 
 		if (this.userExist(customer.getUserName())) {
@@ -363,14 +330,12 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	@Override
 	public CustomerItem getCustomerModel(final PersistableCustomer customer,
-										 final MerchantStoreItem merchantStore, LanguageItem language) throws Exception {
+										 final MerchantStoreItem merchantStore, LocaleItem language) throws Exception {
 
 		LOG.info("Starting to populate customer model from customer data");
 		CustomerItem customerModel = null;
 		CustomerPopulator populator = new CustomerPopulator();
 		populator.setCountryService(countryService);
-		populator.setCustomerOptionService(customerOptionService);
-		populator.setCustomerOptionValueService(customerOptionValueService);
 		populator.setLanguageService(languageService);
 		populator.setLanguageService(languageService);
 		populator.setZoneService(zoneService);
@@ -462,7 +427,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 							  boolean isBillingAddress) throws Exception {
 		LOG.info("Fetching customer for id {} ", userId);
 		Address address = null;
-		final CustomerItem customerModel = customerService.getById(userId);
+		final CustomerItem customerModel = customerService.getByUUID(userId);
 
 		if (customerModel == null) {
 			LOG.error("CustomerItem with ID {} does not exists..", userId);
@@ -491,9 +456,9 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	@Override
 	public void updateAddress(UUID userId, MerchantStoreItem merchantStore, Address address,
-							  final LanguageItem language) throws Exception {
+							  final LocaleItem language) throws Exception {
 
-		CustomerItem customerModel = customerService.getById(userId);
+		CustomerItem customerModel = customerService.getByUUID(userId);
 		Map<String, CountryItem> countriesMap = countryService.getCountriesMap(language);
 		CountryItem country = countriesMap.get(address.getCountry());
 
@@ -552,35 +517,12 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	@Override
 	public ReadableCustomer getCustomerById(final UUID id, final MerchantStoreItem merchantStore,
-											final LanguageItem language) {
+											final LocaleItem language) {
 
-		CustomerItem customerModel = Optional.ofNullable(customerService.getById(id))
+		CustomerItem customerModel = Optional.ofNullable(customerService.getByUUID(id))
 				.orElseThrow(() -> new ResourceNotFoundException("No CustomerItem found for ID : " + id));
 
 		return convertCustomerToReadableCustomer(customerModel, merchantStore, language);
-	}
-
-
-	@Override
-	public CustomerItem populateCustomerModel(CustomerItem customerModel, PersistableCustomer customer,
-											  MerchantStoreItem merchantStore, LanguageItem language) throws Exception {
-		LOG.info("Starting to populate customer model from customer data");
-		CustomerPopulator populator = new CustomerPopulator();
-		populator.setCountryService(countryService);
-		populator.setCustomerOptionService(customerOptionService);
-		populator.setCustomerOptionValueService(customerOptionValueService);
-		populator.setLanguageService(languageService);
-		populator.setLanguageService(languageService);
-		populator.setGroupService(groupService);
-		populator.setZoneService(zoneService);
-		populator.setGroupService(groupService);
-
-
-		customerModel = populator.populate(customer, customerModel, merchantStore, language);
-
-		LOG.info("About to persist customer to database.");
-		customerService.saveOrUpdate(customerModel);
-		return customerModel;
 	}
 
 
@@ -626,8 +568,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 		CustomerPopulator populator = new CustomerPopulator();
 		populator.setCountryService(countryService);
-		populator.setCustomerOptionService(customerOptionService);
-		populator.setCustomerOptionValueService(customerOptionValueService);
 		populator.setLanguageService(languageService);
 		populator.setLanguageService(languageService);
 		populator.setZoneService(zoneService);
@@ -661,7 +601,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	}
 
-	private void notifyNewCustomer(PersistableCustomer customer, MerchantStoreItem store, LanguageItem lang) {
+	private void notifyNewCustomer(PersistableCustomer customer, MerchantStoreItem store, LocaleItem lang) {
 		Locale customerLocale = LocaleUtils.getLocale(lang);
 		String shopSchema = coreConfiguration.getProperty("SHOP_SCHEME");
 		emailTemplatesUtils.sendRegistrationEmail(customer, store, customerLocale, shopSchema);
@@ -675,14 +615,11 @@ public class CustomerFacadeImpl implements CustomerFacade {
 			throw new ServiceRuntimeException("Can't update a customer with null id");
 		}
 
-		CustomerItem cust = customerService.getById(customer.getUuid());
+		CustomerItem cust = customerService.getByUUID(customer.getUuid());
 
 
 		CustomerPopulator populator = new CustomerPopulator();
 		populator.setCountryService(countryService);
-		populator.setCustomerOptionService(customerOptionService);
-		populator.setCustomerOptionValueService(customerOptionValueService);
-		populator.setLanguageService(languageService);
 		populator.setLanguageService(languageService);
 		populator.setZoneService(zoneService);
 		populator.setGroupService(groupService);
@@ -714,134 +651,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 
 	@Override
-	public PersistableCustomerReview saveOrUpdateCustomerReview(PersistableCustomerReview reviewTO, MerchantStoreItem store,
-																LanguageItem language) {
-		CustomerReviewItem review = convertPersistableCustomerReviewToCustomerReview(reviewTO, store, language);
-		createReview(review);
-		reviewTO.setUuid(review.getUuid());
-		return reviewTO;
-	}
-
-	private void createReview(CustomerReviewItem review) {
-		customerReviewService.create(review);
-	}
-
-	private CustomerReviewItem convertPersistableCustomerReviewToCustomerReview(
-			PersistableCustomerReview review, MerchantStoreItem store, LanguageItem language) {
-		PersistableCustomerReviewPopulator populator = new PersistableCustomerReviewPopulator();
-		populator.setCustomerService(customerService);
-		populator.setLanguageService(languageService);
-		try {
-			return populator.populate(review, new CustomerReviewItem(), store, language);
-		} catch (ConversionException e) {
-			throw new ConversionRuntimeException(e);
-		}
-	}
-
-
-	@Override
-	public List<ReadableCustomerReview> getAllCustomerReviewsByReviewed(UUID customerId,
-																		MerchantStoreItem store, LanguageItem language) {
-
-		//customer exist
-		CustomerItem customer = getCustomerById(customerId);
-		Validate.notNull(customer, "Reviewed customer cannot be null");
-
-		return customerReviewService.getByReviewedCustomer(customer)
-				.stream()
-				.map(
-						customerReview ->
-								convertCustomerReviewToReadableCustomerReview(customerReview, store, language))
-				.collect(Collectors.toList());
-	}
-
-	private ReadableCustomerReview convertCustomerReviewToReadableCustomerReview(
-			CustomerReviewItem customerReview, MerchantStoreItem store, LanguageItem language) {
-		try {
-			ReadableCustomerReviewPopulator populator = new ReadableCustomerReviewPopulator();
-			return populator.populate(customerReview, new ReadableCustomerReview(), store, language);
-		} catch (ConversionException e) {
-			throw new ConversionRuntimeException(e);
-		}
-	}
-
-	private CustomerItem getCustomerById(UUID customerId) {
-		return Optional.ofNullable(customerService.getById(customerId))
-				.orElseThrow(() -> new ResourceNotFoundException("CustomerItem id " + customerId + " does not exists"));
-	}
-
-
-	@Override
-	public void deleteCustomerReview(UUID customerId, UUID reviewId, MerchantStoreItem store, LanguageItem language) {
-
-		CustomerReviewItem customerReview = getCustomerReviewById(reviewId);
-
-		if (!customerReview.getReviewedCustomer().getUuid().equals(customerId)) {
-			throw new ResourceNotFoundException("CustomerItem review with id " + reviewId + " does not exist for this customer");
-		}
-		deleteCustomerReview(customerReview);
-	}
-
-	private CustomerReviewItem getCustomerReviewById(UUID reviewId) {
-		return Optional.ofNullable(customerReviewService.getById(reviewId))
-				.orElseThrow(() -> new ResourceNotFoundException("CustomerItem review with id " + reviewId + " does not exist"));
-	}
-
-	private void deleteCustomerReview(CustomerReviewItem review) {
-		customerReviewService.delete(review);
-	}
-
-
-	@Override
-	public void optinCustomer(PersistableCustomerOptin optin, MerchantStoreItem store) {
-		// check if customer optin exists
-		OptinItem optinDef = getOptinByCode(store);
-
-		CustomerOptinItem customerOptin = getCustomerOptinByEmailAddress(optin.getEmail(), store, OptinTypeEnum.NEWSLETTER);
-
-		if (customerOptin != null) {
-			// exists update
-			customerOptin.setEmail(optin.getEmail());
-			customerOptin.setFirstName(optin.getFirstName());
-			customerOptin.setLastName(optin.getLastName());
-		} else {
-			customerOptin = new CustomerOptinItem();
-			customerOptin.setEmail(optin.getEmail());
-			customerOptin.setFirstName(optin.getFirstName());
-			customerOptin.setLastName(optin.getLastName());
-			customerOptin.setOptinDate(new Date());
-			customerOptin.setOptin(optinDef);
-			customerOptin.setMerchantStore(store);
-		}
-		saveCustomerOption(customerOptin);
-	}
-
-	private void saveCustomerOption(CustomerOptinItem customerOptin) {
-		customerOptinService.save(customerOptin);
-	}
-
-	private OptinItem getOptinByCode(MerchantStoreItem store) {
-		try {
-			return Optional.ofNullable(optinService.getOptinByCode(store, OptinTypeEnum.NEWSLETTER.name()))
-					.orElseThrow(() -> new ServiceRuntimeException("OptinItem newsletter does not exist"));
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(e);
-		}
-	}
-
-	private CustomerOptinItem getCustomerOptinByEmailAddress(String optinEmail,
-															 MerchantStoreItem store, OptinTypeEnum optinType) {
-		try {
-			return customerOptinService.findByEmailAddress(store, optinEmail, optinType.name());
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(e);
-		}
-
-	}
-
-
-	@Override
-	public void resetPassword(CustomerItem customer, MerchantStoreItem store, LanguageItem language)
+	public void resetPassword(CustomerItem customer, MerchantStoreItem store, LocaleItem language)
 			throws Exception {
 
 
@@ -895,19 +705,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	}
 
-	@Override
-	public ReadableCustomer getCustomerByNick(String userName, MerchantStoreItem merchantStore,
-											  LanguageItem language) {
-		CustomerItem customer = getByNick(userName);
-		return convertCustomerToReadableCustomer(customer, merchantStore, language);
-	}
-
-	@Override
-	public void deleteByNick(String userName) {
-		CustomerItem customer = getByNick(userName);
-		delete(customer);
-	}
-
 	private CustomerItem getByNick(String userName) {
 		return Optional.ofNullable(customerService.getByNick(userName))
 				.orElseThrow(() -> new ResourceNotFoundException("No CustomerItem found for ID : " + userName));
@@ -918,15 +715,8 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		customerService.delete(entity);
 	}
 
-	@Override
-	public ReadableCustomerList getListByStore(MerchantStoreItem store, CustomerCriteria criteria,
-											   LanguageItem language) {
-		CustomerList customerList = customerService.getListByStore(store, criteria);
-		return convertCustomerListToReadableCustomerList(customerList, store, language);
-	}
-
 	private ReadableCustomerList convertCustomerListToReadableCustomerList(
-			CustomerList customerList, MerchantStoreItem store, LanguageItem language) {
+			CustomerList customerList, MerchantStoreItem store, LocaleItem language) {
 		List<ReadableCustomer> readableCustomers = customerList.getCustomers()
 				.stream()
 				.map(customer -> convertCustomerToReadableCustomer(customer, store, language))
@@ -938,7 +728,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		return readableCustomerList;
 	}
 
-	private ReadableCustomer convertCustomerToReadableCustomer(CustomerItem customer, MerchantStoreItem merchantStore, LanguageItem language) {
+	private ReadableCustomer convertCustomerToReadableCustomer(CustomerItem customer, MerchantStoreItem merchantStore, LocaleItem language) {
 		ReadableCustomerPopulator populator = new ReadableCustomerPopulator();
 		try {
 			return populator.populate(customer, new ReadableCustomer(), merchantStore, language);
@@ -947,50 +737,4 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		}
 	}
 
-	@Override
-	public PersistableCustomerReview createCustomerReview(
-			UUID customerId,
-			PersistableCustomerReview review,
-			MerchantStoreItem merchantStore,
-			LanguageItem language) {
-
-		// rating already exist
-		Optional<CustomerReviewItem> customerReview =
-				Optional.ofNullable(
-						customerReviewService.getByReviewerAndReviewed(review.getCustomerId(), customerId));
-
-		if (customerReview.isPresent()) {
-			throw new ServiceRuntimeException("A review already exist for this customer and product");
-		}
-
-		// rating maximum 5
-		if (review.getRating() > Constants.MAX_REVIEW_RATING_SCORE) {
-			throw new ServiceRuntimeException("Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
-		}
-
-		review.setReviewedCustomer(customerId);
-
-		saveOrUpdateCustomerReview(review, merchantStore, language);
-
-		return review;
-	}
-
-	@Override
-	public PersistableCustomerReview updateCustomerReview(UUID id, UUID reviewId, PersistableCustomerReview review,
-														  MerchantStoreItem store, LanguageItem language) {
-
-		CustomerReviewItem customerReview = getCustomerReviewById(reviewId);
-
-		if (!customerReview.getReviewedCustomer().getUuid().equals(id)) {
-			throw new ResourceNotFoundException("CustomerItem review with id " + reviewId + " does not exist for this customer");
-		}
-
-		//rating maximum 5
-		if (review.getRating() > Constants.MAX_REVIEW_RATING_SCORE) {
-			throw new ServiceRuntimeException("Maximum rating score is " + Constants.MAX_REVIEW_RATING_SCORE);
-		}
-
-		review.setReviewedCustomer(id);
-		return review;
-	}
 }

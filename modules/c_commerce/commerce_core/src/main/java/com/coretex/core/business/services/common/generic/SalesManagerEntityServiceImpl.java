@@ -1,6 +1,8 @@
 package com.coretex.core.business.services.common.generic;
 
 import com.coretex.core.activeorm.dao.Dao;
+import com.coretex.core.activeorm.services.PageableSearchResult;
+import com.coretex.items.core.GenericItem;
 import com.coretex.meta.AbstractGenericItem;
 
 import java.lang.reflect.ParameterizedType;
@@ -11,11 +13,7 @@ import java.util.UUID;
 public abstract class SalesManagerEntityServiceImpl<E extends AbstractGenericItem>
 		implements SalesManagerEntityService<E> {
 
-	/**
-	 * Classe de l'entité, déterminé à partir des paramètres generics.
-	 */
 	private Class<E> objectClass;
-
 
 	private Dao<E> repository;
 
@@ -31,8 +29,8 @@ public abstract class SalesManagerEntityServiceImpl<E extends AbstractGenericIte
 	}
 
 
-	public E getById(UUID id) {
-		return repository.findSingle(Map.of("uuid", id), true);
+	public E getByUUID(UUID id) {
+		return repository.findSingle(Map.of(GenericItem.UUID, id), true);
 	}
 
 
@@ -45,7 +43,7 @@ public abstract class SalesManagerEntityServiceImpl<E extends AbstractGenericIte
 		save(entity);
 	}
 
-
+	@Deprecated
 	public void update(E entity) {
 		save(entity);
 	}
@@ -60,9 +58,22 @@ public abstract class SalesManagerEntityServiceImpl<E extends AbstractGenericIte
 		return repository.find();
 	}
 
-
 	public Long count() {
 		return repository.count();
 	}
 
+	@Override
+	public PageableSearchResult<E> pageableList() {
+		return repository.findPageable();
+	}
+
+	@Override
+	public PageableSearchResult<E> pageableList(long count) {
+		return repository.findPageable(count);
+	}
+
+	@Override
+	public PageableSearchResult<E> pageableList(long count, long page) {
+		return repository.findPageable(count, page);
+	}
 }

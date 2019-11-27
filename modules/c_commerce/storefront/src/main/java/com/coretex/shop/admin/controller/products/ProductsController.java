@@ -7,7 +7,7 @@ import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.core.model.catalog.product.ProductCriteria;
 import com.coretex.core.model.catalog.product.ProductList;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.core.data.web.Menu;
@@ -56,7 +56,7 @@ public class ProductsController {
 
 		setMenu(model, request);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 		List<CategoryItem> categories = categoryService.listByStore(store, language);
@@ -90,7 +90,7 @@ public class ProductsController {
 			int startRow = Integer.parseInt(request.getParameter("_startRow"));
 			int endRow = Integer.parseInt(request.getParameter("_endRow"));
 
-			LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+			LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 			ProductCriteria criteria = new ProductCriteria();
@@ -115,7 +115,7 @@ public class ProductsController {
 
 				if (lcategoryId != null) {
 
-					CategoryItem category = categoryService.getById(lcategoryId);
+					CategoryItem category = categoryService.getByUUID(lcategoryId);
 
 					if (category == null || !category.getMerchantStore().getUuid().equals(store.getUuid())) {
 						resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
@@ -209,7 +209,7 @@ public class ProductsController {
 
 			UUID id = UUID.fromString(sid);
 
-			ProductItem product = productService.getById(id);
+			ProductItem product = productService.getByUUID(id);
 
 			if (product == null || product.getMerchantStore().getUuid() != store.getUuid()) {
 

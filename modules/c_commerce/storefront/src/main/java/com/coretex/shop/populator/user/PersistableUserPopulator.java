@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.inject.Named;
 
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.UserItem;
 import org.apache.commons.lang3.Validate;
@@ -36,7 +36,7 @@ public class PersistableUserPopulator extends AbstractDataPopulator<PersistableU
 	private PasswordEncoder passwordEncoder;
 
 	@Override
-	public UserItem populate(PersistableUser source, UserItem target, MerchantStoreItem store, LanguageItem language)
+	public UserItem populate(PersistableUser source, UserItem target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 		Validate.notNull(source, "PersistableUser cannot be null");
 		Validate.notNull(store, "MerchantStoreItem cannot be null");
@@ -54,7 +54,7 @@ public class PersistableUserPopulator extends AbstractDataPopulator<PersistableU
 		}
 		target.setActive(source.isActive());
 
-		LanguageItem lang = null;
+		LocaleItem lang = null;
 		try {
 			lang = languageService.getByCode(source.getDefaultLanguage());
 		} catch (Exception e) {
@@ -70,13 +70,9 @@ public class PersistableUserPopulator extends AbstractDataPopulator<PersistableU
 		for (PersistableGroup group : source.getGroups()) {
 
 			GroupItem g = null;
-			try {
-				g = groupService.findByName(group.getName());
-				if (g == null) {
-					throw new ConversionException("Cannot find group [" + group.getName() + "]");
-				}
-			} catch (ServiceException e) {
-				throw new ConversionException("Cannot find group [" + group.getName() + "]", e);
+			g = groupService.findByName(group.getName());
+			if (g == null) {
+				throw new ConversionException("Cannot find group [" + group.getName() + "]");
 			}
 			userGroups.add(g);
 		}

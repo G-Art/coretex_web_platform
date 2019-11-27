@@ -2,8 +2,8 @@ package com.coretex.shop.store.controller.search.facade;
 
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.core.model.search.SearchResponse;
 import com.coretex.shop.model.ValueList;
 import com.coretex.shop.model.catalog.SearchProductList;
@@ -32,7 +32,7 @@ public interface SearchFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	SearchProductList search(MerchantStoreItem store, LanguageItem language, SearchProductRequest searchRequest);
+	SearchProductList search(MerchantStoreItem store, LocaleItem language, SearchProductRequest searchRequest);
 
 	/**
 	 * Copy sm-core search response to a simple readable format populated with corresponding products
@@ -40,7 +40,7 @@ public interface SearchFacade {
 	 * @param searchResponse
 	 * @return
 	 */
-	SearchProductList copySearchResponse(SearchResponse searchResponse, MerchantStoreItem store, int start, int count, LanguageItem language) throws Exception;
+	SearchProductList copySearchResponse(SearchResponse searchResponse, MerchantStoreItem store, int start, int count, LocaleItem language) throws Exception;
 
 	/**
 	 * List of keywords / autocompletes for a given word being typed
@@ -51,5 +51,5 @@ public interface SearchFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ValueList autocompleteRequest(String query, MerchantStoreItem store, LanguageItem language);
+	ValueList autocompleteRequest(String query, MerchantStoreItem store, LocaleItem language);
 }

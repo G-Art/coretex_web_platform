@@ -3,6 +3,7 @@ package com.coretex.core.business.services.order;
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import com.coretex.core.business.exception.ServiceException;
@@ -15,14 +16,14 @@ import com.coretex.core.model.order.OrderList;
 import com.coretex.core.model.order.OrderSummary;
 import com.coretex.core.model.order.OrderTotalSummary;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
-import com.coretex.core.model.payments.Payment;
-import com.coretex.items.commerce_core_model.TransactionItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 
 
 public interface OrderService extends SalesManagerEntityService<OrderItem> {
+
+	Map getStaticForPeriod(Date from);
 
 	void addOrderStatusHistory(OrderItem order, OrderStatusHistoryItem history)
 			throws ServiceException;
@@ -38,7 +39,7 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	 * @throws ServiceException
 	 */
 	OrderTotalSummary caculateOrderTotal(OrderSummary orderSummary,
-										 CustomerItem customer, MerchantStoreItem store, LanguageItem language)
+										 CustomerItem customer, MerchantStoreItem store, LocaleItem language)
 			throws ServiceException;
 
 	/**
@@ -51,7 +52,7 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	 * @throws ServiceException
 	 */
 	OrderTotalSummary caculateOrderTotal(OrderSummary orderSummary,
-										 MerchantStoreItem store, LanguageItem language) throws ServiceException;
+										 MerchantStoreItem store, LocaleItem language) throws ServiceException;
 
 
 	/**
@@ -64,7 +65,7 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	 * @return @return {@link OrderTotalSummary}
 	 * @throws ServiceException
 	 */
-	OrderTotalSummary calculateShoppingCartTotal(final ShoppingCartItem shoppingCart, final CustomerItem customer, final MerchantStoreItem store, final LanguageItem language) throws ServiceException;
+	OrderTotalSummary calculateShoppingCartTotal(final ShoppingCartItem shoppingCart, final CustomerItem customer, final MerchantStoreItem store, final LocaleItem language) throws ServiceException;
 
 	/**
 	 * Can be used to calculates the final prices of all items contained in a ShoppingCartItem
@@ -75,10 +76,10 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	 * @return {@link OrderTotalSummary}
 	 * @throws ServiceException
 	 */
-	OrderTotalSummary calculateShoppingCartTotal(final ShoppingCartItem shoppingCart, final MerchantStoreItem store, final LanguageItem language) throws ServiceException;
+	OrderTotalSummary calculateShoppingCartTotal(final ShoppingCartItem shoppingCart, final MerchantStoreItem store, final LocaleItem language) throws ServiceException;
 
 	ByteArrayOutputStream generateInvoice(MerchantStoreItem store, OrderItem order,
-										  LanguageItem language) throws ServiceException;
+										  LocaleItem language) throws ServiceException;
 
 	OrderItem getOrder(UUID id);
 
@@ -104,14 +105,7 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	void saveOrUpdate(OrderItem order) throws ServiceException;
 
 	OrderItem processOrder(OrderItem order, CustomerItem customer,
-						   List<ShoppingCartEntryItem> items, OrderTotalSummary summary,
-						   Payment payment, MerchantStoreItem store) throws ServiceException;
-
-	OrderItem processOrder(OrderItem order, CustomerItem customer,
-						   List<ShoppingCartEntryItem> items, OrderTotalSummary summary,
-						   Payment payment, TransactionItem transaction, MerchantStoreItem store)
-			throws ServiceException;
-
+						   List<ShoppingCartEntryItem> items, OrderTotalSummary summary, MerchantStoreItem store) throws ServiceException;
 
 	/**
 	 * Determines if an OrderItem has download files

@@ -23,7 +23,7 @@ import com.coretex.items.commerce_core_model.CityItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.DeliveryServiceItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
@@ -31,7 +31,6 @@ import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
-import com.coretex.items.commerce_core_model.TransactionItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.newpost.NewPostDeliveryServiceItem;
@@ -185,7 +184,7 @@ public class ShoppingOrderController extends AbstractController {
 	@RequestMapping("/checkout.html")
 	public String displayCheckout(@CookieValue("cart") String cookie, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
 		CustomerItem customer = getSessionService().getSessionAttribute(Constants.CUSTOMER, CustomerItem.class);
 
@@ -227,7 +226,7 @@ public class ShoppingOrderController extends AbstractController {
 		for (ShoppingCartEntryItem item : items) {
 
 			UUID id = item.getProduct().getUuid();
-			ProductItem p = productService.getById(id);
+			ProductItem p = productService.getByUUID(id);
 			if (p.getAvailable()) {
 				availables.add(item);
 			} else {
@@ -318,7 +317,7 @@ public class ShoppingOrderController extends AbstractController {
 	public String commitPreAuthorizedOrder(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		ShopOrder order = super.getSessionAttribute(Constants.ORDER, request);
 		if (order == null) {
 			StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Pages.timeout).append(".").append(store.getStoreTemplate());
@@ -372,7 +371,7 @@ public class ShoppingOrderController extends AbstractController {
 	private OrderItem commitOrder(ShopOrder order, HttpServletRequest request, Locale locale) throws Exception {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		String shoppingCartCode = getSessionService().getSessionAttribute(Constants.SHOPPING_CART, String.class);
 
 		String userName = null;
@@ -419,12 +418,8 @@ public class ShoppingOrderController extends AbstractController {
 
 
 		OrderItem modelOrder = null;
-		TransactionItem initialTransaction =  super.getSessionAttribute(Constants.INIT_TRANSACTION_KEY, request);
-		if (initialTransaction != null) {
-			modelOrder = orderFacade.processOrder(order, modelCustomer, initialTransaction, store, language);
-		} else {
+
 			modelOrder = orderFacade.processOrder(order, modelCustomer, store, language);
-		}
 
 		//save order id in session
 		super.setSessionAttribute(Constants.ORDER_ID, modelOrder.getUuid(), request);
@@ -499,7 +494,7 @@ public class ShoppingOrderController extends AbstractController {
 	public String commitOrder(@CookieValue("cart") String cookie, @Valid @ModelAttribute(value = "order") ShopOrder order, BindingResult bindingResult, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		//validate if session has expired
 
 		model.addAttribute("order", order);
@@ -695,7 +690,7 @@ public class ShoppingOrderController extends AbstractController {
 	public @ResponseBody
 	ReadableShopOrder calculateOrderTotal(@ModelAttribute(value = "order") ShopOrder order, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
 		CustomerItem customer = getSessionService().getSessionAttribute(Constants.CUSTOMER, CustomerItem.class);
 		String shoppingCartCode = getSessionAttribute(Constants.SHOPPING_CART, request);

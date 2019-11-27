@@ -202,7 +202,7 @@
     function loadItemsProducts() {
 
         ///products/public/page/{start}/{max}/{store}/{language}/manufacturer/{id}
-        var url = '<%=request.getContextPath()%>/services/public/products/page/' + START_COUNT_PRODUCTS + '/' + MAX_PRODUCTS + '/<c:out value="${requestScope.MERCHANT_STORE.code}"/>/<c:out value="${requestScope.LANGUAGE.code}"/>/manufacturer/<c:out value="${manufacturer.id}"/>';
+        var url = '<%=request.getContextPath()%>/services/public/products/page/' + START_COUNT_PRODUCTS + '/' + MAX_PRODUCTS + '/<c:out value="${requestScope.MERCHANT_STORE.code}"/>/<c:out value="${requestScope.LANGUAGE.iso}"/>/manufacturer/<c:out value="${manufacturer.id}"/>';
 
         if (filter != null) {
             url = url + '/filter=' + filter + '/filter-value=' + filterValue + '';

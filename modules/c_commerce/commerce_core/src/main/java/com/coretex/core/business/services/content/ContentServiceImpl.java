@@ -1,107 +1,29 @@
 package com.coretex.core.business.services.content;
 
-import java.net.URLConnection;
-import java.util.List;
-import java.util.UUID;
-import javax.annotation.Resource;
-
-import com.coretex.items.commerce_core_model.ContentItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.core.business.exception.ServiceException;
+import com.coretex.core.business.modules.cms.content.StaticContentFileManager;
+import com.coretex.core.model.content.FileContentType;
+import com.coretex.core.model.content.InputContentFile;
+import com.coretex.core.model.content.OutputContentFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import com.coretex.core.business.exception.ServiceException;
-import com.coretex.core.business.modules.cms.content.StaticContentFileManager;
-import com.coretex.core.business.repositories.content.ContentDao;
-import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
-import com.coretex.enums.commerce_core_model.ContentTypeEnum;
-import com.coretex.core.model.content.FileContentType;
-import com.coretex.core.model.content.InputContentFile;
-import com.coretex.core.model.content.OutputContentFile;
+
+import javax.annotation.Resource;
+import java.net.URLConnection;
+import java.util.List;
 
 
 @Service("contentService")
-public class ContentServiceImpl extends SalesManagerEntityServiceImpl<ContentItem>
+public class ContentServiceImpl
 		implements ContentService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ContentServiceImpl.class);
 
-	private final ContentDao contentDao;
-
 	@Resource
 	private StaticContentFileManager contentFileManager;
 
-	public ContentServiceImpl(ContentDao contentDao) {
-		super(contentDao);
-
-		this.contentDao = contentDao;
-	}
-
-	@Override
-	public List<ContentItem> listByType(ContentTypeEnum contentType, MerchantStoreItem store, LanguageItem language)
-			throws ServiceException {
-
-		return contentDao.findByType(contentType, store.getUuid(), language.getUuid());
-	}
-
-	@Override
-	public ContentItem getByLanguage(UUID id, LanguageItem language) throws ServiceException {
-		return contentDao.findByIdAndLanguage(id, language.getUuid());
-	}
-
-
-	@Override
-	public List<ContentItem> listByType(List<ContentTypeEnum> contentType, MerchantStoreItem store,
-										LanguageItem language) throws ServiceException {
-
-		/*
-		 * List<String> contentTypes = new ArrayList<String>(); for (int i = 0; i < contentType.size();
-		 * i++) { contentTypes.add(contentType.get(i).name()); }
-		 */
-
-		return contentDao.findByTypes(contentType, store.getUuid(), language.getUuid());
-	}
-
-	@Override
-	public List<ContentItem> listNameByType(List<ContentTypeEnum> contentType, MerchantStoreItem store,
-											LanguageItem language) throws ServiceException {
-
-
-		return contentDao.listNameByType(contentType, store, language);
-	}
-
-	@Override
-	public List<ContentItem> listByType(List<ContentTypeEnum> contentType, MerchantStoreItem store)
-			throws ServiceException {
-		/*
-		 * List<String> contentTypes = new ArrayList<String>(); for (int i = 0; i < contentType.size();
-		 * i++) { contentTypes.add(contentType.get(i).name()); }
-		 */
-
-		return contentDao.findByTypes(contentType, store.getUuid());
-	}
-
-	@Override
-	public ContentItem getByCode(String code, MerchantStoreItem store) throws ServiceException {
-
-
-		return contentDao.findByCode(code, store.getUuid());
-
-	}
-
-	@Override
-	public void saveOrUpdate(final ContentItem content) throws ServiceException {
-
-		super.save(content);
-	}
-
-	@Override
-	public ContentItem getByCode(String code, MerchantStoreItem store, LanguageItem language)
-			throws ServiceException {
-		return contentDao.findByCode(code, store.getUuid(), language.getUuid());
-	}
 
 	/**
 	 * Method responsible for adding content file for given merchant store in underlying Infinispan
@@ -211,16 +133,6 @@ public class ContentServiceImpl extends SalesManagerEntityServiceImpl<ContentIte
 
 	}
 
-
-	/**
-	 * Method responsible for adding list of content images for given merchant store in underlying
-	 * Infinispan tree cache. It will take list of {@link CMSContentImage} and will store them for
-	 * given merchant store.
-	 *
-	 * @param merchantStoreCode Merchant store
-	 * @param contentImagesList list of {@link CMSContentImage} being stored
-	 * @throws ServiceException service exception
-	 */
 	@Override
 	public void addContentFiles(String merchantStoreCode, List<InputContentFile> contentFilesList)
 			throws ServiceException {
@@ -245,14 +157,6 @@ public class ContentServiceImpl extends SalesManagerEntityServiceImpl<ContentIte
 
 	}
 
-	/**
-	 * Method to remove given content image.Images are stored in underlying system based on there
-	 * name. Name will be used to search given image for removal
-	 *
-	 * @param contentImage
-	 * @param merchantStoreCode merchant store
-	 * @throws ServiceException
-	 */
 	@Override
 	public void removeFile(String merchantStoreCode, FileContentType fileContentType, String fileName)
 			throws ServiceException {
@@ -297,17 +201,6 @@ public class ContentServiceImpl extends SalesManagerEntityServiceImpl<ContentIte
 
 	}
 
-
-	/**
-	 * Implementation for getContentImage method defined in {@link ContentService} interface. Methods
-	 * will return ContentItem image with given image name for the Merchant store or will return null if
-	 * no image with given name found for requested Merchant Store in Infinispan tree cache.
-	 *
-	 * @param store     Merchant merchantStoreCode
-	 * @param imageName name of requested image
-	 * @return {@link OutputContentImage}
-	 * @throws ServiceException
-	 */
 	@Override
 	public OutputContentFile getContentFile(String merchantStoreCode, FileContentType fileContentType,
 											String fileName) throws ServiceException {
@@ -325,15 +218,6 @@ public class ContentServiceImpl extends SalesManagerEntityServiceImpl<ContentIte
 
 	}
 
-	/**
-	 * Implementation for getContentImages method defined in {@link ContentService} interface. Methods
-	 * will return list of all ContentItem image associated with given Merchant store or will return empty
-	 * list if no image is associated with given Merchant Store in Infinispan tree cache.
-	 *
-	 * @param merchantStoreId Merchant store
-	 * @return list of {@link OutputContentImage}
-	 * @throws ServiceException
-	 */
 	@Override
 	public List<OutputContentFile> getContentFiles(String merchantStoreCode,
 												   FileContentType fileContentType) throws ServiceException {
@@ -342,14 +226,6 @@ public class ContentServiceImpl extends SalesManagerEntityServiceImpl<ContentIte
 		return contentFileManager.getFiles(merchantStoreCode, fileContentType);
 	}
 
-	/**
-	 * Returns the image names for a given merchant and store
-	 *
-	 * @param merchantStoreCode
-	 * @param imageContentType
-	 * @return images name list
-	 * @throws ServiceException
-	 */
 	@Override
 	public List<String> getContentFilesNames(String merchantStoreCode,
 											 FileContentType fileContentType) throws ServiceException {
@@ -364,18 +240,5 @@ public class ContentServiceImpl extends SalesManagerEntityServiceImpl<ContentIte
 		 * contentFileManager.getFileNames(merchantStoreCode, fileContentType); }
 		 */
 	}
-
-	@Override
-	public ContentItem getBySeUrl(MerchantStoreItem store, String seUrl) {
-		return contentDao.getBySeUrl(store, seUrl);
-	}
-
-	@Override
-	public List<ContentItem> getByCodeLike(ContentTypeEnum type, String codeLike, MerchantStoreItem store,
-										   LanguageItem language) {
-		return contentDao.findByCodeLike(type, '%' + codeLike + '%', store.getUuid(),
-				language.getUuid());
-	}
-
 
 }

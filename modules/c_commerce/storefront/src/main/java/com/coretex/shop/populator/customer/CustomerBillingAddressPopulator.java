@@ -6,7 +6,7 @@ import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.customer.address.Address;
 
 /**
@@ -16,7 +16,7 @@ import com.coretex.shop.model.customer.address.Address;
 public class CustomerBillingAddressPopulator extends AbstractDataPopulator<CustomerItem, Address> {
 
 	@Override
-	public Address populate(CustomerItem source, Address target, MerchantStoreItem store, LanguageItem language)
+	public Address populate(CustomerItem source, Address target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 		target.setCity(source.getBilling().getCity());

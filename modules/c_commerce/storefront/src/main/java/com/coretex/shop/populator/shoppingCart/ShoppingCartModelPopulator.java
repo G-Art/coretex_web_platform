@@ -10,13 +10,13 @@ import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.shop.model.shoppingcart.ShoppingCartAttribute;
 import com.coretex.shop.model.shoppingcart.ShoppingCartData;
-import com.google.api.client.util.Sets;
+import com.google.common.collect.Sets;
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -79,7 +79,7 @@ public class ShoppingCartModelPopulator
 
 
 	@Override
-	public ShoppingCartItem populate(ShoppingCartData shoppingCart, ShoppingCartItem cartMdel, final MerchantStoreItem store, LanguageItem language) {
+	public ShoppingCartItem populate(ShoppingCartData shoppingCart, ShoppingCartItem cartMdel, final MerchantStoreItem store, LocaleItem language) {
 
 
 		// if id >0 get the original from the database, override products
@@ -167,7 +167,7 @@ public class ShoppingCartModelPopulator
 												 MerchantStoreItem store)
 			throws Exception {
 
-		ProductItem product = productService.getById(shoppingCartItem.getProductId());
+		ProductItem product = productService.getByUUID(shoppingCartItem.getProductId());
 
 		if (product == null) {
 			throw new Exception("Item with id " + shoppingCartItem.getProductId() + " does not exist");
@@ -189,7 +189,7 @@ public class ShoppingCartModelPopulator
 		List<ShoppingCartAttribute> cartAttributes = shoppingCartItem.getShoppingCartAttributes();
 		if (!CollectionUtils.isEmpty(cartAttributes)) {
 			for (ShoppingCartAttribute attribute : cartAttributes) {
-				ProductAttributeItem productAttribute = productAttributeService.getById(attribute.getAttributeId());
+				ProductAttributeItem productAttribute = productAttributeService.getByUUID(attribute.getAttributeId());
 				if (productAttribute != null
 						&& productAttribute.getProduct().getUuid().equals(product.getUuid())) {
 					ShoppingCartEntryAttributeItem attributeItem = new ShoppingCartEntryAttributeItem();

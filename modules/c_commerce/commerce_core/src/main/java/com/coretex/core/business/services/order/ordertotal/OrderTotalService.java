@@ -5,8 +5,8 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.core.model.order.OrderSummary;
 import com.coretex.core.model.order.OrderTotalVariation;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.core.LocaleItem;
 
 /**
  * Additional dynamic order total calculation
@@ -16,6 +16,6 @@ import com.coretex.items.commerce_core_model.LanguageItem;
  */
 public interface OrderTotalService {
 
-	OrderTotalVariation findOrderTotalVariation(final OrderSummary summary, final CustomerItem customer, final MerchantStoreItem store, final LanguageItem language) throws Exception;
+	OrderTotalVariation findOrderTotalVariation(final OrderSummary summary, final CustomerItem customer, final MerchantStoreItem store, final LocaleItem language) throws Exception;
 
 }

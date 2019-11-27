@@ -12,7 +12,7 @@ import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.core.model.catalog.product.ProductCriteria;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.ProductList;
 import com.coretex.shop.model.catalog.category.ReadableCategory;
@@ -136,7 +136,7 @@ public class ShoppingCategoryController {
 		//get category
 		CategoryItem category = categoryService.getBySeUrl(store, friendlyUrl);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 		if (category == null) {
 			LOGGER.error("No category found for friendlyUrl " + friendlyUrl);
@@ -191,7 +191,7 @@ public class ShoppingCategoryController {
 				.append("_")
 				.append(Constants.SUBCATEGORIES_CACHE_KEY)
 				.append("-")
-				.append(language.getCode());
+				.append(language.getIso());
 
 		StringBuilder subCategoriesMissed = new StringBuilder();
 		subCategoriesMissed
@@ -230,7 +230,7 @@ public class ShoppingCategoryController {
 		ReadableCategory parentProxy = null;
 
 		if (category.getParent() != null) {
-			CategoryItem parent = categoryService.getById(category.getParent().getUuid());
+			CategoryItem parent = categoryService.getByUUID(category.getParent().getUuid());
 			parentProxy = populator.populate(parent, new ReadableCategory(), store, language);
 		}
 
@@ -255,7 +255,7 @@ public class ShoppingCategoryController {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<ReadableManufacturer> getManufacturersByProductAndCategory(MerchantStoreItem store, CategoryItem category, List<UUID> subCategoryIds, LanguageItem language) throws Exception {
+	private List<ReadableManufacturer> getManufacturersByProductAndCategory(MerchantStoreItem store, CategoryItem category, List<UUID> subCategoryIds, LocaleItem language) throws Exception {
 
 		List<ReadableManufacturer> manufacturerList = null;
 		/** List of manufacturers **/
@@ -267,7 +267,7 @@ public class ShoppingCategoryController {
 					.append("_")
 					.append(Constants.MANUFACTURERS_BY_PRODUCTS_CACHE_KEY)
 					.append("-")
-					.append(language.getCode());
+					.append(language.getIso());
 
 			StringBuilder manufacturersKeyMissed = new StringBuilder();
 			manufacturersKeyMissed
@@ -300,7 +300,7 @@ public class ShoppingCategoryController {
 		return manufacturerList;
 	}
 
-	private List<ReadableManufacturer> getManufacturers(MerchantStoreItem store, List<UUID> ids, LanguageItem language) throws Exception {
+	private List<ReadableManufacturer> getManufacturers(MerchantStoreItem store, List<UUID> ids, LocaleItem language) throws Exception {
 		List<ReadableManufacturer> manufacturerList = new ArrayList<>();
 		List<ManufacturerItem> manufacturers = manufacturerService.listByProductsByCategoriesId(store, ids, language);
 		if (!manufacturers.isEmpty()) {
@@ -325,7 +325,7 @@ public class ShoppingCategoryController {
 
 		for (Map<String, Object> counts : countProductsByCategories) {
 			Object[] objects = counts.values().toArray();
-			CategoryItem c = categoryService.getById((UUID) objects[0]);
+			CategoryItem c = categoryService.getByUUID((UUID) objects[0]);
 			if (c.getParent() != null) {
 				if (c.getParent().getUuid() == category.getUuid()) {
 					countByCategories.put(c.getUuid(), (Long) objects[1]);
@@ -351,7 +351,7 @@ public class ShoppingCategoryController {
 
 	}
 
-	private List<ReadableCategory> getSubCategories(MerchantStoreItem store, CategoryItem category, Map<UUID, Long> productCount, LanguageItem language, Locale locale) throws Exception {
+	private List<ReadableCategory> getSubCategories(MerchantStoreItem store, CategoryItem category, Map<UUID, Long> productCount, LocaleItem language, Locale locale) throws Exception {
 
 
 		//sub categories
@@ -384,8 +384,8 @@ public class ShoppingCategoryController {
 	@ResponseBody
 	public List<ReadableCategory> getCategories(@PathVariable final String language, @PathVariable final String store, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		Map<String, LanguageItem> langs = languageService.getLanguagesMap();
-		LanguageItem l = langs.get(language);
+		Map<String, LocaleItem> langs = languageService.getLanguagesMap();
+		LocaleItem l = langs.get(language);
 		if (l == null) {
 			l = languageService.getByCode(Constants.DEFAULT_LANGUAGE);
 		}
@@ -451,7 +451,7 @@ public class ShoppingCategoryController {
 			 */
 
 			MerchantStoreItem merchantStore = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
-			Map<String, LanguageItem> langs = languageService.getLanguagesMap();
+			Map<String, LocaleItem> langs = languageService.getLanguagesMap();
 
 			if (merchantStore != null) {
 				if (!merchantStore.getCode().equals(store)) {
@@ -489,7 +489,7 @@ public class ShoppingCategoryController {
 			}
 			ids.add(cat.getUuid());
 
-			LanguageItem lang = langs.get(language);
+			LocaleItem lang = langs.get(language);
 			if (lang == null) {
 				lang = langs.get(Constants.DEFAULT_LANGUAGE);
 			}
@@ -592,7 +592,7 @@ public class ShoppingCategoryController {
 			MerchantStoreItem merchantStore = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
 			List<BigDecimal> prices = new ArrayList<BigDecimal>();
 
-			Map<String, LanguageItem> langs = languageService.getLanguagesMap();
+			Map<String, LocaleItem> langs = languageService.getLanguagesMap();
 
 			if (merchantStore != null) {
 				if (!merchantStore.getCode().equals(store)) {
@@ -634,7 +634,7 @@ public class ShoppingCategoryController {
 			ids.add(cat.getUuid());
 
 
-			LanguageItem lang = langs.get(language);
+			LocaleItem lang = langs.get(language);
 			if (lang == null) {
 				lang = langs.get(Constants.DEFAULT_LANGUAGE);
 			}

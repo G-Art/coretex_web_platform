@@ -64,7 +64,7 @@ public class ShoppingOrderDownloadController extends AbstractController {
 		FileContentType fileType = FileContentType.PRODUCT_DIGITAL;
 
 		//get customer and check order
-		OrderItem order = orderService.getById(UUID.fromString(orderId));
+		OrderItem order = orderService.getByUUID(UUID.fromString(orderId));
 		if (order == null) {
 			LOGGER.warn("OrderItem is null for id " + orderId);
 			response.sendError(404, "Image not found");
@@ -81,7 +81,7 @@ public class ShoppingOrderDownloadController extends AbstractController {
 
 
 		String fileName = null;//get it from OrderProductDownlaod
-		OrderProductDownloadItem download = orderProductDownloadService.getById(UUID.fromString(id));
+		OrderProductDownloadItem download = orderProductDownloadService.getByUUID(UUID.fromString(id));
 		if (download == null) {
 			LOGGER.warn("OrderProductDownloadItem is null for id " + id);
 			response.sendError(404, "Image not found");

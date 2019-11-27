@@ -181,7 +181,7 @@
     }
 
     function loadCategoryProducts() {
-        var url = '${pageContext.request.contextPath}/services/public/products/page/' + START_COUNT_PRODUCTS + '/' + MAX_PRODUCTS + '/<c:out value="${requestScope.MERCHANT_STORE.code}"/>/<c:out value="${requestScope.LANGUAGE.code}"/>/<c:out value="${category.description.friendlyUrl}"/>';
+        var url = '${pageContext.request.contextPath}/services/public/products/page/' + START_COUNT_PRODUCTS + '/' + MAX_PRODUCTS + '/<c:out value="${requestScope.MERCHANT_STORE.code}"/>/<c:out value="${requestScope.LANGUAGE.iso}"/>/<c:out value="${category.description.friendlyUrl}"/>';
 
         if (filter != null) {
             url = url + '/filter=' + filter + '/filter-value=' + filterValue + '';

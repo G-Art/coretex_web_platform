@@ -1,7 +1,6 @@
 package com.coretex.shop.model.order.transaction;
 
 import com.coretex.enums.commerce_core_model.PaymentTypeEnum;
-import com.coretex.enums.commerce_core_model.TransactionTypeEnum;
 import com.coretex.shop.utils.Enum;
 
 public class PersistablePayment extends PaymentEntity {
@@ -11,7 +10,6 @@ public class PersistablePayment extends PaymentEntity {
 	@Enum(enumClass = PaymentTypeEnum.class, ignoreCase = true)
 	private String paymentType;
 
-	@Enum(enumClass = TransactionTypeEnum.class, ignoreCase = true)
 	private String transactionType;
 
 	private String paymentToken;//any token after doing init

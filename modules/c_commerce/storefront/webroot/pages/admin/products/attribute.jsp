@@ -168,7 +168,7 @@
 
                             <label class="required"><s:message code="label.product.attribute.value"
                                                                text="Attribute value"/> (<c:out
-                                    value="${description.language.code}"/>)</label>
+                                    value="${description.language.iso}"/>)</label>
                             <div class="controls">
                                 <form:input cssClass="input-xlarge" id="name${counter.index}"
                                             path="productOptionValue.descriptionsList[${counter.index}].description"/>
@@ -177,7 +177,7 @@
                                         cssClass="error"/></span>
                             </div>
 
-                            <form:hidden path="productOptionValue.descriptionsList[${counter.index}].language.code"/>
+                            <form:hidden path="productOptionValue.descriptionsList[${counter.index}].language.iso"/>
                             <form:hidden path="productOptionValue.descriptionsList[${counter.index}].language.id"/>
                             <form:hidden path="productOptionValue.descriptionsList[${counter.index}].id"/>
                             <form:hidden path="productOptionValue.id"/>

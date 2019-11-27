@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.core.LocaleItem;
 
 
 public class Breadcrumb implements Serializable {
@@ -13,15 +13,15 @@ public class Breadcrumb implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private BreadcrumbItemType itemType;
-	transient private LanguageItem language;
+	transient private LocaleItem language;
 	private String urlRefContent = null;
 	private List<BreadcrumbItem> breadCrumbs = new ArrayList<BreadcrumbItem>();
 
-	public LanguageItem getLanguage() {
+	public LocaleItem getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(LanguageItem language) {
+	public void setLanguage(LocaleItem language) {
 		this.language = language;
 	}
 

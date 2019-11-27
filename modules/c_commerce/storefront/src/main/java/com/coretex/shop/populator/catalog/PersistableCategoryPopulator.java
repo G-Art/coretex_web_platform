@@ -3,7 +3,7 @@ package com.coretex.shop.populator.catalog;
 import javax.annotation.Resource;
 
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -45,7 +45,7 @@ public class PersistableCategoryPopulator extends
 
 	@Override
 	public CategoryItem populate(PersistableCategory source, CategoryItem target,
-								 MerchantStoreItem store, LanguageItem language)
+								 MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 		try {
@@ -73,7 +73,7 @@ public class PersistableCategoryPopulator extends
 				if (!StringUtils.isBlank(source.getParent().getCode())) {
 					parent = categoryService.getByCode(store.getCode(), source.getParent().getCode());
 				} else if (source.getParent().getUuid() != null) {
-					parent = categoryService.getById(source.getParent().getUuid());
+					parent = categoryService.getByUUID(source.getParent().getUuid());
 				} else {
 					throw new ConversionException("CategoryItem parent needs at least an id or a code for reference");
 				}
@@ -108,9 +108,9 @@ public class PersistableCategoryPopulator extends
 
 			if (!CollectionUtils.isEmpty(source.getDescriptions())) {
 				for (CategoryDescription description : source.getDescriptions()) {
-					LanguageItem lang = languageService.getByCode(description.getLanguage());
+					LocaleItem lang = languageService.getByCode(description.getLanguage());
 					if (lang == null) {
-						throw new ConversionException("LanguageItem is null for code " + description.getLanguage() + " use language ISO code [en, fr ...]");
+						throw new ConversionException("LocaleItem is null for code " + description.getLanguage() + " use language ISO code [en, fr ...]");
 					}
 					target.setCategoryHighlight(description.getHighlights());
 					target.setDescription(description.getDescription());

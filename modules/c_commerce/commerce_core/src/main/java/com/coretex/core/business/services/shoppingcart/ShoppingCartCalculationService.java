@@ -5,7 +5,7 @@ import com.coretex.core.business.exception.ServiceException;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.core.model.order.OrderTotalSummary;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 
 /**
@@ -29,7 +29,7 @@ public interface ShoppingCartCalculationService {
 	 * @throws ServiceException
 	 */
 	OrderTotalSummary calculate(final ShoppingCartItem cartModel, final CustomerItem customer, final MerchantStoreItem store,
-								final LanguageItem language) throws ServiceException;
+								final LocaleItem language) throws ServiceException;
 
 	/**
 	 * Method which will be used to calculate price for each line items as well
@@ -41,6 +41,6 @@ public interface ShoppingCartCalculationService {
 	 * @param language
 	 * @throws ServiceException
 	 */
-	OrderTotalSummary calculate(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LanguageItem language)
+	OrderTotalSummary calculate(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LocaleItem language)
 			throws ServiceException;
 }

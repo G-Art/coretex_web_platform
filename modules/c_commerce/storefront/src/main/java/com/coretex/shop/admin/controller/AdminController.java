@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,7 +34,7 @@ public class AdminController {
 	@PreAuthorize("hasRole('AUTH')")
 	@RequestMapping(value = {"/admin/home.html", "/admin/", "/admin"}, method = RequestMethod.GET)
 	public String displayDashboard(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 		//display menu
 		Map<String, String> activeMenus = new HashMap<String, String>();

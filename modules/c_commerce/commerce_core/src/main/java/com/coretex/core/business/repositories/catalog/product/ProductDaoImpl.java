@@ -8,13 +8,11 @@ import com.coretex.core.model.catalog.product.ProductList;
 import com.coretex.core.model.catalog.product.attribute.AttributeCriteria;
 import com.coretex.enums.commerce_core_model.RentalStatusEnum;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductOptionItem;
-import com.coretex.items.commerce_core_model.ProductOptionValueItem;
 import com.coretex.relations.commerce_core_model.CategoryProductRelation;
 import com.coretex.relations.commerce_core_model.ProductProductAttributeRelation;
 import com.coretex.relations.commerce_core_model.ProductProductAvailabilityRelation;
@@ -39,7 +37,7 @@ public class ProductDaoImpl extends DefaultGenericDao<ProductItem> implements Pr
 	}
 
 	@Override
-	public ProductItem getByCode(String productCode, LanguageItem language) {
+	public ProductItem getByCode(String productCode, LocaleItem language) {
 		return findSingle(Map.of(ProductItem.SKU, productCode), true);
 	}
 
@@ -74,7 +72,7 @@ public class ProductDaoImpl extends DefaultGenericDao<ProductItem> implements Pr
 	}
 
 	@Override
-	public List<ProductItem> getProductsForLocale(MerchantStoreItem store, Set<UUID> categoryIds, LanguageItem language, Locale locale) {
+	public List<ProductItem> getProductsForLocale(MerchantStoreItem store, Set<UUID> categoryIds, LocaleItem language, Locale locale) {
 
 		ProductList products = this.getProductsListForLocale(store, categoryIds, language, locale, 0, -1);
 
@@ -82,7 +80,7 @@ public class ProductDaoImpl extends DefaultGenericDao<ProductItem> implements Pr
 	}
 
 	@Override
-	public ProductItem getProductForLocale(UUID productId, LanguageItem language, Locale locale) {
+	public ProductItem getProductForLocale(UUID productId, LocaleItem language, Locale locale) {
 
 
 		List regionList = new ArrayList();
@@ -211,7 +209,7 @@ public class ProductDaoImpl extends DefaultGenericDao<ProductItem> implements Pr
 	}
 
 	@Override
-	public List<ProductItem> getProductsListByCategories(Set<Long> categoryIds, LanguageItem language) {
+	public List<ProductItem> getProductsListByCategories(Set<Long> categoryIds, LocaleItem language) {
 
 
 		//List regionList = new ArrayList();
@@ -288,7 +286,7 @@ public class ProductDaoImpl extends DefaultGenericDao<ProductItem> implements Pr
 	 * so the listing page can display everything related to all products
 	 */
 	@SuppressWarnings({"rawtypes", "unchecked", "unused"})
-	private ProductList getProductsListForLocale(MerchantStoreItem store, Set categoryIds, LanguageItem language, Locale locale, int first, int max) {
+	private ProductList getProductsListForLocale(MerchantStoreItem store, Set categoryIds, LocaleItem language, Locale locale, int first, int max) {
 
 
 		List regionList = new ArrayList();
@@ -390,12 +388,10 @@ public class ProductDaoImpl extends DefaultGenericDao<ProductItem> implements Pr
 	 * This query is used for filtering products based on criterias
 	 *
 	 * @param store
-	 * @param first
-	 * @param max
 	 * @return
 	 */
 	@Override
-	public ProductList listByStore(MerchantStoreItem store, LanguageItem language, ProductCriteria criteria) {
+	public ProductList listByStore(MerchantStoreItem store, LocaleItem language, ProductCriteria criteria) {
 
 		ProductList productList = new ProductList();
 
@@ -411,8 +407,6 @@ public class ProductDaoImpl extends DefaultGenericDao<ProductItem> implements Pr
 		if (!CollectionUtils.isEmpty(criteria.getAttributeCriteria())) {
 			qs.append(" JOIN " + ProductProductAttributeRelation.ITEM_TYPE + " AS pattrr ON (pattrr.source = p.uuid)");
 			qs.append(" JOIN " + ProductAttributeItem.ITEM_TYPE + " AS pattr ON (pattrr.target = pattr.uuid)");
-			qs.append(" JOIN " + ProductOptionItem.ITEM_TYPE + " AS po ON (po.uuid = pattr.productOption)");
-			qs.append(" JOIN " + ProductOptionValueItem.ITEM_TYPE + " AS pov ON (pov.uuid = pattr.productOption)");
 		}
 
 		qs.append(" WHERE p.merchantStore=:mId");

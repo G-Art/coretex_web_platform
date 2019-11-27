@@ -8,7 +8,7 @@ import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.product.ReadableProductPrice;
 
 
@@ -28,7 +28,7 @@ public class ReadableProductPricePopulator extends
 
 	@Override
 	public ReadableProductPrice populate(ProductPriceItem source,
-										 ReadableProductPrice target, MerchantStoreItem store, LanguageItem language)
+										 ReadableProductPrice target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 		Validate.notNull(pricingService, "pricingService must be set");
 		Validate.notNull(source.getProductAvailability(), "productPrice.availability cannot be null");

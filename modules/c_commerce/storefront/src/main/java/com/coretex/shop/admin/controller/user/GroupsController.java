@@ -79,7 +79,7 @@ public class GroupsController {
 			}
 		}
 
-		GroupItem group = groupService.getById(UUID.fromString(groupId));
+		GroupItem group = groupService.getByUUID(UUID.fromString(groupId));
 
 		if (group == null) {
 			return "redirect://admin/groups/groups.html";
@@ -113,7 +113,7 @@ public class GroupsController {
 		try {
 
 			UUID groupId = UUID.fromString(sGroupId);
-			GroupItem group = groupService.getById(groupId);
+			GroupItem group = groupService.getByUUID(groupId);
 
 
 			if (group == null) {
@@ -174,7 +174,7 @@ public class GroupsController {
 		//check if already exists
 		GroupItem g = null;
 		if (group.getGroup().getUuid() != null) {
-			GroupItem gid = groupService.getById(group.getGroup().getUuid());
+			GroupItem gid = groupService.getByUUID(group.getGroup().getUuid());
 			if (gid != null && !gid.getGroupName().equals(group.getGroup().getGroupName())) {
 				g = groupService.findByName(group.getGroup().getGroupName());
 			}

@@ -5,8 +5,8 @@ import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.references.ReadableCountry;
 import com.coretex.shop.populator.references.ReadableCountryPopulator;
 import com.coretex.shop.store.api.exception.ConversionRuntimeException;
@@ -25,14 +25,14 @@ public class CountryFacadeImpl implements CountryFacade {
 	private CountryService countryService;
 
 	@Override
-	public List<ReadableCountry> getListCountryZones(LanguageItem language, MerchantStoreItem merchantStore) {
+	public List<ReadableCountry> getListCountryZones(LocaleItem language, MerchantStoreItem merchantStore) {
 		return getListOfCountryZones(language)
 				.stream()
 				.map(country -> convertToReadableCountry(country, language, merchantStore))
 				.collect(Collectors.toList());
 	}
 
-	private ReadableCountry convertToReadableCountry(CountryItem country, LanguageItem language, MerchantStoreItem merchantStore) {
+	private ReadableCountry convertToReadableCountry(CountryItem country, LocaleItem language, MerchantStoreItem merchantStore) {
 		try {
 			ReadableCountryPopulator populator = new ReadableCountryPopulator();
 			return populator.populate(country, new ReadableCountry(), merchantStore, language);
@@ -41,7 +41,7 @@ public class CountryFacadeImpl implements CountryFacade {
 		}
 	}
 
-	private List<CountryItem> getListOfCountryZones(LanguageItem language) {
+	private List<CountryItem> getListOfCountryZones(LocaleItem language) {
 		try {
 			return countryService.listCountryZones(language);
 		} catch (ServiceException e) {

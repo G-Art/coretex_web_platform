@@ -1,14 +1,13 @@
 package com.coretex.core.model.shipping;
 
+import com.coretex.items.commerce_core_model.DeliveryItem;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.coretex.items.commerce_core_model.DeliveryItem;
-import com.coretex.items.commerce_core_model.IntegrationModuleItem;
 
 public class ShippingQuote implements Serializable {
 
@@ -53,8 +52,6 @@ public class ShippingQuote implements Serializable {
 	private List<String> warnings = new ArrayList<String>();
 
 	private ShippingOption selectedShippingOption = null;
-
-	private IntegrationModuleItem currentShippingModule;
 
 	private String quoteError = null;
 
@@ -142,14 +139,6 @@ public class ShippingQuote implements Serializable {
 
 	public void setQuoteInformations(Map<String, Object> quoteInformations) {
 		this.quoteInformations = quoteInformations;
-	}
-
-	public IntegrationModuleItem getCurrentShippingModule() {
-		return currentShippingModule;
-	}
-
-	public void setCurrentShippingModule(IntegrationModuleItem currentShippingModule) {
-		this.currentShippingModule = currentShippingModule;
 	}
 
 	public List<String> getWarnings() {

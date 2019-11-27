@@ -12,10 +12,6 @@
         <beans:property name="secretKey" ref="secretKey"/>
     </beans:bean>
 
-    <!--Geo Location-->
-    <beans:bean id="geoLocation"
-                class="com.coretex.core.business.modules.utils.GeoLocationImpl">
-    </beans:bean>
 
     <!-- Invoices -->
     <beans:bean id="invoiceModule"

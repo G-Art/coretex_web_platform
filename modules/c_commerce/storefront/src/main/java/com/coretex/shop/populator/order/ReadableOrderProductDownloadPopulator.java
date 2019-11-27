@@ -3,7 +3,7 @@ package com.coretex.shop.populator.order;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.shop.model.order.ReadableOrderProductDownload;
 
@@ -13,7 +13,7 @@ public class ReadableOrderProductDownloadPopulator extends
 	@Override
 	public ReadableOrderProductDownload populate(OrderProductDownloadItem source,
 												 ReadableOrderProductDownload target, MerchantStoreItem store,
-												 LanguageItem language) throws ConversionException {
+												 LocaleItem language) throws ConversionException {
 		try {
 
 			target.setProductName(source.getOrderProduct().getProductName());

@@ -5,7 +5,7 @@ import com.coretex.core.business.exception.ServiceException;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.store.api.exception.ConversionRuntimeException;
 import com.coretex.shop.store.api.exception.ServiceRuntimeException;
 
@@ -30,7 +30,7 @@ import com.coretex.core.business.services.search.SearchService;
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.model.catalog.product.ProductCriteria;
 import com.coretex.core.model.catalog.product.ProductList;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.core.model.search.IndexProduct;
 import com.coretex.core.model.search.SearchEntry;
 import com.coretex.core.model.search.SearchFacet;
@@ -93,9 +93,9 @@ public class SearchFacadeImpl implements SearchFacade {
 	}
 
 	@Override
-	public SearchProductList search(MerchantStoreItem store, LanguageItem language, SearchProductRequest searchRequest) {
+	public SearchProductList search(MerchantStoreItem store, LocaleItem language, SearchProductRequest searchRequest) {
 		String query = String.format(coreConfiguration.getProperty("SEARCH_QUERY"), searchRequest.getQuery());
-		SearchResponse response = search(store, language.getCode(), query, searchRequest.getCount(), searchRequest.getStart());
+		SearchResponse response = search(store, language.getIso(), query, searchRequest.getCount(), searchRequest.getStart());
 		return copySearchResponse(response, store, searchRequest.getStart(), searchRequest.getCount(), language);
 	}
 
@@ -109,7 +109,7 @@ public class SearchFacadeImpl implements SearchFacade {
 	}
 
 	@Override
-	public SearchProductList copySearchResponse(SearchResponse searchResponse, MerchantStoreItem merchantStore, int start, int count, LanguageItem language) {
+	public SearchProductList copySearchResponse(SearchResponse searchResponse, MerchantStoreItem merchantStore, int start, int count, LocaleItem language) {
 
 		SearchProductList returnList = new SearchProductList();
 		List<SearchEntry> entries = searchResponse.getEntries();
@@ -187,7 +187,7 @@ public class SearchFacadeImpl implements SearchFacade {
 	}
 
 	private ReadableCategory convertCategoryToReadableCategory(MerchantStoreItem merchantStore,
-															   LanguageItem language, Map<String, Long> productCategoryCount, CategoryItem category) {
+															   LocaleItem language, Map<String, Long> productCategoryCount, CategoryItem category) {
 		ReadableCategoryPopulator populator = new ReadableCategoryPopulator();
 		try {
 			ReadableCategory categoryProxy = populator.populate(category, new ReadableCategory(), merchantStore, language);
@@ -202,7 +202,7 @@ public class SearchFacadeImpl implements SearchFacade {
 	}
 
 	private ReadableProduct convertProductToReadableProduct(ProductItem product, MerchantStoreItem merchantStore,
-															LanguageItem language) {
+															LocaleItem language) {
 
 		ReadableProductPopulator populator = new ReadableProductPopulator();
 		populator.setPricingService(pricingService);
@@ -216,8 +216,8 @@ public class SearchFacadeImpl implements SearchFacade {
 	}
 
 	@Override
-	public ValueList autocompleteRequest(String query, MerchantStoreItem store, LanguageItem language) {
-		AutoCompleteRequest req = new AutoCompleteRequest(store.getCode(), language.getCode());
+	public ValueList autocompleteRequest(String query, MerchantStoreItem store, LocaleItem language) {
+		AutoCompleteRequest req = new AutoCompleteRequest(store.getCode(), language.getIso());
 		String formattedQuery = String.format(coreConfiguration.getProperty("AUTOCOMPLETE_QUERY"), query);
 
 		/** formatted toJSONString because of te specific field names required in the UI **/

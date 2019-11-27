@@ -10,7 +10,7 @@ import com.coretex.core.business.services.catalog.product.attribute.ProductAttri
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.shop.model.order.PersistableOrderProduct;
@@ -25,17 +25,17 @@ public class ShoppingCartItemPopulator extends
 
 	@Override
 	public ShoppingCartEntryItem populate(PersistableOrderProduct source,
-										  ShoppingCartEntryItem target, MerchantStoreItem store, LanguageItem language)
+										  ShoppingCartEntryItem target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 		Validate.notNull(productService, "Requires to set productService");
 		Validate.notNull(productAttributeService, "Requires to set productAttributeService");
 		Validate.notNull(shoppingCartService, "Requires to set shoppingCartService");
 
-		ProductItem product = productService.getById(source.getProduct().getUuid());
+		ProductItem product = productService.getByUUID(source.getProduct().getUuid());
 		if (source.getAttributes() != null) {
 
 			for (com.coretex.shop.model.catalog.product.attribute.ProductAttribute attr : source.getAttributes()) {
-				ProductAttributeItem attribute = productAttributeService.getById(attr.getUuid());
+				ProductAttributeItem attribute = productAttributeService.getByUUID(attr.getUuid());
 				if (attribute == null) {
 					throw new ConversionException("ProductAttributeItem with id " + attr.getUuid() + " is null");
 				}

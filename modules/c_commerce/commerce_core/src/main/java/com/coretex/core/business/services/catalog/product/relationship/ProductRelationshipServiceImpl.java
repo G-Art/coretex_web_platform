@@ -4,7 +4,7 @@ import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.repositories.catalog.product.relationship.ProductRelationshipDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
@@ -77,7 +77,7 @@ public class ProductRelationshipServiceImpl extends
 	public void delete(ProductRelationshipItem relationship) {
 
 		//throws detached exception so need to query first
-		relationship = this.getById(relationship.getUuid());
+		relationship = this.getByUUID(relationship.getUuid());
 		super.delete(relationship);
 
 
@@ -92,14 +92,14 @@ public class ProductRelationshipServiceImpl extends
 
 
 	@Override
-	public List<ProductRelationshipItem> getByType(MerchantStoreItem store, ProductItem product, ProductRelationshipType type, LanguageItem language) {
+	public List<ProductRelationshipItem> getByType(MerchantStoreItem store, ProductItem product, ProductRelationshipType type, LocaleItem language) {
 
 		return productRelationshipDao.getByType(store, type.name(), product, language);
 
 	}
 
 	@Override
-	public List<ProductRelationshipItem> getByType(MerchantStoreItem store, ProductRelationshipType type, LanguageItem language) {
+	public List<ProductRelationshipItem> getByType(MerchantStoreItem store, ProductRelationshipType type, LocaleItem language) {
 		return productRelationshipDao.getByType(store, type.name(), language);
 	}
 
@@ -118,7 +118,7 @@ public class ProductRelationshipServiceImpl extends
 	}
 
 	@Override
-	public List<ProductRelationshipItem> getByGroup(MerchantStoreItem store, String groupName, LanguageItem language) throws ServiceException {
+	public List<ProductRelationshipItem> getByGroup(MerchantStoreItem store, String groupName, LocaleItem language) throws ServiceException {
 
 		return productRelationshipDao.getByType(store, groupName, language);
 

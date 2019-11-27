@@ -14,7 +14,6 @@ import java.util.UUID;
 @Component
 public class UserDaoImpl extends DefaultGenericDao<UserItem> implements UserDao {
 
-
 	public UserDaoImpl() {
 		super(UserItem.ITEM_TYPE);
 	}
@@ -22,6 +21,17 @@ public class UserDaoImpl extends DefaultGenericDao<UserItem> implements UserDao 
 	@Override
 	public UserItem findByUserName(String userName) {
 		return findSingle(Map.of(UserItem.ADMIN_NAME, userName), true);
+	}
+
+	@Override
+	public UserItem findByCredentials(String loginOrEmail) {
+		String query = "SELECT u.* FROM " + UserItem.ITEM_TYPE +" AS p " +
+				"WHERE u."+UserItem.ADMIN_NAME+" = :login OR u."+UserItem.EMAIL+" = :email";
+		var result = getSearchService().<UserItem>search(query, Map.of("login", loginOrEmail, "email", loginOrEmail)).getResult();
+		if(result.isEmpty()){
+			return null;
+		}
+		return result.iterator().next();
 	}
 
 	@Override
@@ -44,8 +54,4 @@ public class UserDaoImpl extends DefaultGenericDao<UserItem> implements UserDao 
 		return null;
 	}
 
-	@Override
-	public GenericEntityList<UserItem> listByCriteria(Criteria criteria) throws ServiceException {
-		return null;
-	}
 }

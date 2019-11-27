@@ -9,7 +9,7 @@ import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.utils.CacheUtils;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.utils.DateUtil;
 import com.coretex.shop.utils.LanguageUtils;
@@ -70,14 +70,14 @@ public class ReferenceController {
 
 		try {
 
-			LanguageItem language = null;
+			LocaleItem language = null;
 
 			if (!StringUtils.isBlank(lang)) {
 				language = languageService.getByCode(lang);
 			}
 
 			if (language == null) {
-				language = (LanguageItem) request.getAttribute("LANGUAGE");
+				language = (LocaleItem) request.getAttribute("LANGUAGE");
 			}
 
 			if (language == null) {
@@ -123,7 +123,7 @@ public class ReferenceController {
 	String countryName(@RequestParam String countryCode, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
-			LanguageItem language = languageUtils.getRequestLanguage(request, response);
+			LocaleItem language = languageUtils.getRequestLanguage(request, response);
 			if (language == null) {
 				return countryCode;
 			}
@@ -146,7 +146,7 @@ public class ReferenceController {
 	String zoneName(@RequestParam String zoneCode, HttpServletRequest request, HttpServletResponse response) {
 
 		try {
-			LanguageItem language = languageUtils.getRequestLanguage(request, response);
+			LocaleItem language = languageUtils.getRequestLanguage(request, response);
 			if (language == null) {
 				return zoneCode;
 			}

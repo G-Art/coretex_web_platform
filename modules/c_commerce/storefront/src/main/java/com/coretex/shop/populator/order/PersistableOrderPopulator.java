@@ -17,10 +17,9 @@ import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
-import com.coretex.items.commerce_core_model.CreditCardItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.commerce_core_model.CurrencyItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.order.PersistableOrder;
@@ -50,7 +49,7 @@ public class PersistableOrderPopulator extends
 
 	@Override
 	public OrderItem populate(PersistableOrder source, OrderItem target,
-							  MerchantStoreItem store, LanguageItem language) throws ConversionException {
+							  MerchantStoreItem store, LocaleItem language) throws ConversionException {
 
 
 		Validate.notNull(productService, "productService must be set");
@@ -70,7 +69,7 @@ public class PersistableOrderPopulator extends
 			PersistableCustomer customer = source.getCustomer();
 			if (customer != null) {
 				if (customer.getUuid() != null) {
-					CustomerItem modelCustomer = customerService.getById(customer.getUuid());
+					CustomerItem modelCustomer = customerService.getByUUID(customer.getUuid());
 					if (modelCustomer == null) {
 						throw new ConversionException("CustomerItem id " + customer.getUuid() + " does not exists");
 					}
@@ -88,13 +87,6 @@ public class PersistableOrderPopulator extends
 
 			target.setLocale(LocaleUtils.getLocale(store).toString());
 
-			CreditCardItem creditCard = source.getCreditCard();
-			if (creditCard != null) {
-				String maskedNumber = CreditCardUtils.maskCardNumber(creditCard.getCcNumber());
-				creditCard.setCcNumber(maskedNumber);
-				target.setCreditCard(creditCard);
-			}
-
 			CurrencyItem currency = null;
 			try {
 				currency = currencyService.getByCode(source.getCurrency());
@@ -108,7 +100,6 @@ public class PersistableOrderPopulator extends
 
 			target.setCurrency(currency);
 			target.setDatePurchased(source.getDatePurchased());
-			//target.setCurrency(store.getCurrency());
 			target.setCurrencyValue(new BigDecimal(0));
 			target.setMerchant(store);
 			target.setStatus(source.getOrderStatus());

@@ -21,7 +21,7 @@
     }
 
     function getLanguageCode() {
-        return "${requestScope.LANGUAGE.code}";
+        return "${requestScope.LANGUAGE.iso}";
     }
 
     function supportsCustomerLogin() {

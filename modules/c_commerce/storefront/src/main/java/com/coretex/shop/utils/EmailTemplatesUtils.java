@@ -13,7 +13,7 @@ import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.shop.constants.ApplicationConstants;
 import com.coretex.shop.constants.EmailConstants;
@@ -86,7 +86,7 @@ public class EmailTemplatesUtils {
 	 * @param merchantStore
 	 * @param contextPath
 	 */
-	public void sendOrderEmail(String toEmail, CustomerItem customer, OrderItem order, Locale customerLocale, LanguageItem language, MerchantStoreItem merchantStore, String contextPath) {
+	public void sendOrderEmail(String toEmail, CustomerItem customer, OrderItem order, Locale customerLocale, LocaleItem language, MerchantStoreItem merchantStore, String contextPath) {
 		/** issue with putting that elsewhere **/
 		LOGGER.info("Sending welcome email to customer");
 		try {

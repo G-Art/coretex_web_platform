@@ -148,7 +148,7 @@
 
                             <label class="required"><s:message code="label.product.price.name"
                                                                text="Product price name"/> (<c:out
-                                    value="${description.language.code}"/>)</label>
+                                    value="${description.language.iso}"/>)</label>
                             <div class="controls">
                                 <form:input cssClass="input-large highlight" id="name${counter.index}"
                                             path="descriptions[${counter.index}].name"/>
@@ -158,7 +158,7 @@
                         </div>
 
                         <form:hidden path="descriptions[${counter.index}].language.id"/>
-                        <form:hidden path="descriptions[${counter.index}].language.code"/>
+                        <form:hidden path="descriptions[${counter.index}].language.iso"/>
                         <form:hidden path="descriptions[${counter.index}].id"/>
 
                     </c:forEach>

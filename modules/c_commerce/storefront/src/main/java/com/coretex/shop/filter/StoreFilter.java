@@ -1,14 +1,5 @@
 package com.coretex.shop.filter;
 
-import com.coretex.enums.commerce_core_model.ContentTypeEnum;
-import com.coretex.enums.commerce_core_model.MerchantConfigurationTypeEnum;
-import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.ContentItem;
-import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.content.ContentService;
@@ -18,8 +9,14 @@ import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.system.MerchantConfigurationService;
 import com.coretex.core.business.utils.CacheUtils;
 import com.coretex.core.business.utils.CoreConfiguration;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.core.model.system.MerchantConfig;
+import com.coretex.enums.commerce_core_model.MerchantConfigurationTypeEnum;
+import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.category.ReadableCategory;
 import com.coretex.shop.model.customer.AnonymousCustomer;
@@ -30,10 +27,10 @@ import com.coretex.shop.model.shop.BreadcrumbItemType;
 import com.coretex.shop.model.shop.PageInformation;
 import com.coretex.shop.populator.catalog.ReadableCategoryPopulator;
 import com.coretex.shop.store.controller.category.facade.CategoryFacade;
-import com.coretex.shop.utils.GeoLocationUtils;
 import com.coretex.shop.utils.LabelUtils;
 import com.coretex.shop.utils.LanguageUtils;
 import com.coretex.shop.utils.WebApplicationCacheUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -46,7 +43,12 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.coretex.core.business.constants.Constants.DEFAULT_STORE;
@@ -190,35 +192,15 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 					(AnonymousCustomer) request.getSession().getAttribute(Constants.ANONYMOUS_CUSTOMER);
 			if (anonymousCustomer == null) {
 
-				Address address = null;
-				try {
-
-					String ipAddress = GeoLocationUtils.getClientIpAddress(request);
-					com.coretex.core.model.common.Address geoAddress =
-							customerService.getCustomerAddress(store, ipAddress);
-					if (geoAddress != null) {
-						address = new Address();
-						address.setCountry(geoAddress.getCountry());
-						address.setCity(geoAddress.getCity());
-						address.setZone(geoAddress.getZone());
-						/** no postal code **/
-						// address.setPostalCode(geoAddress.getPostalCode());
-					}
-				} catch (Exception ce) {
-					LOGGER.error("Cannot get geo ip component ", ce);
+				Address address = new Address();
+				address.setCountry(store.getCountry().getIsoCode());
+				if (store.getZone() != null) {
+					address.setZone(store.getZone().getCode());
+				} else {
+					address.setStateProvince(store.getStoreStateProvince());
 				}
-
-				if (address == null) {
-					address = new Address();
-					address.setCountry(store.getCountry().getIsoCode());
-					if (store.getZone() != null) {
-						address.setZone(store.getZone().getCode());
-					} else {
-						address.setStateProvince(store.getStoreStateProvince());
-					}
-					/** no postal code **/
-					// address.setPostalCode(store.getStorepostalcode());
-				}
+				/** no postal code **/
+				// address.setPostalCode(store.getStorepostalcode());
 
 				anonymousCustomer = new AnonymousCustomer();
 				anonymousCustomer.setBilling(address);
@@ -229,7 +211,7 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 
 			/** language & locale **/
-			LanguageItem language = languageUtils.getRequestLanguage(request, response);
+			LocaleItem language = languageUtils.getRequestLanguage(request, response);
 			request.setAttribute(Constants.LANGUAGE, language);
 
 
@@ -284,32 +266,6 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 			pageInformation.setPageTitle(store.getStoreName());
 			pageInformation.setPageDescription(store.getStoreName());
 			pageInformation.setPageKeywords(store.getStoreName());
-
-
-			@SuppressWarnings("unchecked")
-			Map<String, ContentItem> contents =
-					(Map<String, ContentItem>) request.getAttribute(Constants.REQUEST_CONTENT_OBJECTS);
-
-			if (contents != null) {
-				// for(String key : contents.keySet()) {
-				// List<ContentDescription> contentsList = contents.get(key);
-				// for(ContentItem content : contentsList) {
-				// if(key.equals(Constants.CONTENT_LANDING_PAGE)) {
-
-				// List<ContentDescription> descriptions = content.getDescriptions();
-				ContentItem contentDescription = contents.get(Constants.CONTENT_LANDING_PAGE);
-				if (contentDescription != null) {
-					// for(ContentDescription contentDescription : descriptions) {
-					// if(contentDescription.getLanguage().getCode().equals(language.getCode())) {
-					pageInformation.setPageTitle(contentDescription.getName());
-					pageInformation.setPageDescription(contentDescription.getMetatagDescription());
-					pageInformation.setPageKeywords(contentDescription.getMetatagKeywords());
-					// }
-				}
-				// }
-				// }
-				// }
-			}
 
 			request.setAttribute(Constants.REQUEST_PAGE_INFORMATION, pageInformation);
 
@@ -388,7 +344,7 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 
 	@SuppressWarnings("unchecked")
-	private void getContentPageNames(MerchantStoreItem store, LanguageItem language,
+	private void getContentPageNames(MerchantStoreItem store, LocaleItem language,
 									 HttpServletRequest request) throws Exception {
 
 
@@ -405,54 +361,15 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 		StringBuilder contentKey = new StringBuilder();
 		contentKey.append(store.getUuid()).append("_").append(Constants.CONTENT_PAGE_CACHE_KEY)
-				.append("-").append(language.getCode());
+				.append("-").append(language.getIso());
 
 		StringBuilder contentKeyMissed = new StringBuilder();
 		contentKeyMissed.append(contentKey.toString()).append(Constants.MISSED_CACHE_KEY);
 
-		Map<String, List<ContentItem>> contents = null;
-
-		if (store.getUseCache()) {
-
-			// get from the cache
-			contents = (Map<String, List<ContentItem>>) cache.getFromCache(contentKey.toString());
-
-
-			if (contents == null) {
-				// get from missed cache
-				// Boolean missedContent = (Boolean)cache.getFromCache(contentKeyMissed.toString());
-
-
-				// if(missedContent==null) {
-
-				contents = this.getContentPagesNames(store, language);
-
-				if (contents != null) {
-					// put in cache
-					cache.putInCache(contents, contentKey.toString());
-
-				} else {
-					// put in missed cache
-					// cache.putInCache(new Boolean(true), contentKeyMissed.toString());
-				}
-				// }
-			}
-		} else {
-			contents = this.getContentPagesNames(store, language);
-		}
-
-
-		if (contents != null && contents.size() > 0) {
-			List<ContentItem> descriptions = contents.get(contentKey.toString());
-
-			if (descriptions != null) {
-				request.setAttribute(Constants.REQUEST_CONTENT_PAGE_OBJECTS, descriptions);
-			}
-		}
 	}
 
 	@SuppressWarnings({"unchecked"})
-	private void getContentObjects(MerchantStoreItem store, LanguageItem language, HttpServletRequest request)
+	private void getContentObjects(MerchantStoreItem store, LocaleItem language, HttpServletRequest request)
 			throws Exception {
 
 
@@ -469,73 +386,20 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 		StringBuilder contentKey = new StringBuilder();
 		contentKey.append(store.getUuid()).append("_").append(Constants.CONTENT_CACHE_KEY).append("-")
-				.append(language.getCode());
+				.append(language.getIso());
 
 		StringBuilder contentKeyMissed = new StringBuilder();
 		contentKeyMissed.append(contentKey.toString()).append(Constants.MISSED_CACHE_KEY);
 
-		Map<String, List<ContentItem>> contents = null;
-
-		if (store.getUseCache()) {
-
-			// get from the cache
-			contents = (Map<String, List<ContentItem>>) cache.getFromCache(contentKey.toString());
-
-
-			if (contents == null) {
-
-				// get from missed cache
-				// Boolean missedContent = (Boolean)cache.getFromCache(contentKeyMissed.toString());
-
-
-				// if(missedContent==null) {
-
-				contents = this.getContent(store, language);
-				if (contents != null && contents.size() > 0) {
-					// put in cache
-					cache.putInCache(contents, contentKey.toString());
-				} else {
-					// put in missed cache
-					// cache.putInCache(new Boolean(true), contentKeyMissed.toString());
-				}
-				// }
-
-			}
-		} else {
-
-			contents = this.getContent(store, language);
-
-		}
-
-
-		if (contents != null && contents.size() > 0) {
-
-			// request.setAttribute(Constants.REQUEST_CONTENT_OBJECTS, contents);
-
-			List<ContentItem> contentByStore = contents.get(contentKey.toString());
-			if (!CollectionUtils.isEmpty(contentByStore)) {
-				Map<String, ContentItem> contentMap = new HashMap<>();
-				for (ContentItem content : contentByStore) {
-					if (content.getVisible()) {
-						contentMap.put(content.getCode(), content);
-					}
-				}
-				request.setAttribute(Constants.REQUEST_CONTENT_OBJECTS, contentMap);
-			}
-
-
-		}
-
-
 	}
 
 	@SuppressWarnings("unchecked")
-	private void setTopCategories(MerchantStoreItem store, LanguageItem language, HttpServletRequest request)
+	private void setTopCategories(MerchantStoreItem store, LocaleItem language, HttpServletRequest request)
 			throws Exception {
 
 		StringBuilder categoriesKey = new StringBuilder();
 		categoriesKey.append(store.getUuid()).append("_").append(Constants.CATEGORIES_CACHE_KEY)
-				.append("-").append(language.getCode());
+				.append("-").append(language.getIso());
 
 		StringBuilder categoriesKeyMissed = new StringBuilder();
 		categoriesKeyMissed.append(categoriesKey.toString()).append(Constants.MISSED_CACHE_KEY);
@@ -554,11 +418,11 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 				loadedCategories = categoryFacade.getCategoryHierarchy(store, 0, language, null);// null
 				// filter
 				objects = new ConcurrentHashMap<String, List<ReadableCategory>>();
-				objects.put(language.getCode(), loadedCategories);
+				objects.put(language.getIso(), loadedCategories);
 				webApplicationCache.putInCache(categoriesKey.toString(), objects);
 
 			} else {
-				loadedCategories = objects.get(language.getCode());
+				loadedCategories = objects.get(language.getIso());
 			}
 
 		} else {
@@ -572,172 +436,6 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 	}
 
-
-	private Map<String, List<ContentItem>> getContentPagesNames(MerchantStoreItem store,
-																LanguageItem language) throws Exception {
-
-
-		Map<String, List<ContentItem>> contents =
-				new ConcurrentHashMap<String, List<ContentItem>>();
-
-		// Get boxes and sections from the database
-		List<ContentTypeEnum> contentTypes = new ArrayList<ContentTypeEnum>();
-		contentTypes.add(ContentTypeEnum.PAGE);
-
-
-		List<ContentItem> contentPages =
-				contentService.listNameByType(contentTypes, store, language);
-
-		if (contentPages != null && contentPages.size() > 0) {
-
-			// create a Map<String,List<ContentItem>
-			for (ContentItem content : contentPages) {
-
-
-				LanguageItem lang = language;
-				String key = new StringBuilder().append(store.getUuid()).append("_")
-						.append(Constants.CONTENT_PAGE_CACHE_KEY).append("-").append(lang.getCode()).toString();
-				List<ContentItem> contentList = null;
-				if (contents == null || contents.size() == 0) {
-					contents = new HashMap<>();
-				}
-				if (!contents.containsKey(key)) {
-					contentList = new ArrayList<>();
-
-					contents.put(key, contentList);
-				} else {// get from key
-					contentList = contents.get(key);
-					if (contentList == null) {
-						LOGGER.error("Cannot find content key in cache " + key);
-						continue;
-					}
-				}
-				contentList.add(content);
-			}
-		}
-		return contents;
-	}
-
-	private Map<String, List<ContentItem>> getContent(MerchantStoreItem store, LanguageItem language)
-			throws Exception {
-
-
-		Map<String, List<ContentItem>> contents = new ConcurrentHashMap<>();
-
-		// Get boxes and sections from the database
-		List<ContentTypeEnum> contentTypes = new ArrayList<>();
-		contentTypes.add(ContentTypeEnum.BOX);
-		contentTypes.add(ContentTypeEnum.SECTION);
-
-		List<ContentItem> contentPages = contentService.listByType(contentTypes, store, language);
-
-		if (contentPages != null && contentPages.size() > 0) {
-
-			// create a Map<String,List<ContentItem>
-			for (ContentItem content : contentPages) {
-				if (content.getVisible()) {
-					for (LanguageItem lang : store.getLanguages()) {
-						String key = new StringBuilder().append(store.getUuid()).append("_")
-								.append(Constants.CONTENT_CACHE_KEY).append("-").append(lang.getCode()).toString();
-						List<ContentItem> contentList = null;
-						if (contents == null || contents.size() == 0) {
-							contents = new HashMap<>();
-						}
-						if (!contents.containsKey(key)) {
-							contentList = new ArrayList<>();
-
-							contents.put(key, contentList);
-						} else {// get from key
-							contentList = contents.get(key);
-							if (contentList == null) {
-								LOGGER.error("Cannot find content key in cache " + key);
-								continue;
-							}
-						}
-						contentList.add(content);
-					}
-				}
-			}
-		}
-		return contents;
-	}
-
-	/**
-	 * @param store
-	 * @param language
-	 * @return
-	 * @throws Exception
-	 */
-	// private Map<String, List<CategoryItem>> getCategories(MerchantStoreItem store, LanguageItem language)
-	// throws Exception {
-	private Map<String, List<ReadableCategory>> getCategories(MerchantStoreItem store, LanguageItem language)
-			throws Exception {
-
-		// Map<String, List<CategoryItem>> objects = new ConcurrentHashMap<String, List<CategoryItem>>();
-		Map<String, List<ReadableCategory>> objects =
-				new ConcurrentHashMap<>();
-
-		/** returns categories with required depth, 0 = root category, 1 = root + 1 layer child ...) **/
-		List<CategoryItem> categories = categoryService.getListByDepth(store, 0, language);
-
-		ReadableCategoryPopulator readableCategoryPopulator = new ReadableCategoryPopulator();
-
-
-		Map<String, ReadableCategory> subs = new ConcurrentHashMap<String, ReadableCategory>();
-
-		if (categories != null && categories.size() > 0) {
-
-			// create a Map<String,List<ContentItem>
-			for (CategoryItem category : categories) {
-				if (category.getVisible()) {
-					// if(category.getDepth().intValue()==0) {
-					// ReadableCategory readableCategory = new ReadableCategory();
-					// readableCategoryPopulator.populate(category, readableCategory, store, language);
-
-
-					for (LanguageItem lang : store.getLanguages()) {
-
-						ReadableCategory readableCategory = new ReadableCategory();
-						readableCategoryPopulator.populate(category, readableCategory, store, language);
-
-						String key = new StringBuilder().append(store.getUuid()).append("_")
-								.append(Constants.CATEGORIES_CACHE_KEY).append("-").append(lang.getCode())
-								.toString();
-
-						if (category.getDepth().intValue() == 0) {
-
-							// List<CategoryItem> cacheCategories = null;
-							List<ReadableCategory> cacheCategories = null;
-							if (objects == null || objects.size() == 0) {
-								// objects = new HashMap<String, List<CategoryItem>>();
-								objects = new HashMap<>();
-							}
-							if (!objects.containsKey(key)) {
-								// cacheCategories = new ArrayList<CategoryItem>();
-								cacheCategories = new ArrayList<>();
-
-								objects.put(key, cacheCategories);
-							} else {
-								cacheCategories = objects.get(key);
-								if (cacheCategories == null) {
-									LOGGER.error("Cannot find categories key in cache " + key);
-									continue;
-								}
-							}
-							// cacheCategories.add(category);
-							cacheCategories.add(readableCategory);
-
-						} else {
-							subs.put(lang.getCode(), readableCategory);
-						}
-					}
-				}
-			}
-
-
-		}
-		return objects;
-	}
 
 	@SuppressWarnings("unused")
 	private Map<String, Object> getConfigurations(MerchantStoreItem store) {
@@ -803,7 +501,7 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 			// breadcrumb
 			Breadcrumb breadCrumb = (Breadcrumb) request.getSession().getAttribute(Constants.BREADCRUMB);
-			LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+			LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 			if (breadCrumb == null) {
 				breadCrumb = new Breadcrumb();
 				breadCrumb.setLanguage(language);
@@ -812,7 +510,7 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 			} else {
 
 				// check language
-				if (Objects.nonNull(breadCrumb.getLanguage()) && language.getCode().equals(breadCrumb.getLanguage().getCode())) {
+				if (Objects.nonNull(breadCrumb.getLanguage()) && language.getIso().equals(breadCrumb.getLanguage().getIso())) {
 
 					// rebuild using the appropriate language
 					List<BreadcrumbItem> items = new ArrayList<BreadcrumbItem>();
@@ -844,16 +542,6 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 								categoryItem.setUrl(category.getSeUrl());
 								items.add(categoryItem);
 							}
-						} else if (item.getItemType().name().equals(BreadcrumbItemType.PAGE)) {
-							ContentItem content = contentService.getByLanguage(item.getId(), language);
-							if (content != null) {
-								BreadcrumbItem contentItem = new BreadcrumbItem();
-								contentItem.setId(content.getUuid());
-								contentItem.setItemType(BreadcrumbItemType.PAGE);
-								contentItem.setLabel(content.getName());
-								contentItem.setUrl(content.getSeUrl());
-								items.add(contentItem);
-							}
 						}
 
 					}
@@ -875,7 +563,7 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 	}
 
-	private BreadcrumbItem getDefaultBreadcrumbItem(LanguageItem language, Locale locale) {
+	private BreadcrumbItem getDefaultBreadcrumbItem(LocaleItem language, Locale locale) {
 
 		// set home page item
 		BreadcrumbItem item = new BreadcrumbItem();

@@ -56,7 +56,7 @@
 
     function getZones(countryCode) {
 
-        var url = '<c:url value="/admin/reference/provinces.html"/>?lang=<c:out value="${requestScope.LANGUAGE.code}"/>';
+        var url = '<c:url value="/admin/reference/provinces.html"/>?lang=<c:out value="${requestScope.LANGUAGE.iso}"/>';
 
         $.ajax({
             type: 'POST',

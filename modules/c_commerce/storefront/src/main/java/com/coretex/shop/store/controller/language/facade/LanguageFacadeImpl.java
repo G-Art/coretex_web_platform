@@ -2,8 +2,8 @@ package com.coretex.shop.store.controller.language.facade;
 
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.reference.language.LanguageService;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.store.api.exception.ResourceNotFoundException;
 import com.coretex.shop.store.api.exception.ServiceRuntimeException;
 
@@ -19,9 +19,9 @@ public class LanguageFacadeImpl implements LanguageFacade {
 	private LanguageService languageService;
 
 	@Override
-	public List<LanguageItem> getLanguages() {
+	public List<LocaleItem> getLanguages() {
 		try {
-			List<LanguageItem> languages = languageService.getLanguages();
+			List<LocaleItem> languages = languageService.getLanguages();
 			if (languages.isEmpty()) {
 				throw new ResourceNotFoundException("No languages found");
 			}

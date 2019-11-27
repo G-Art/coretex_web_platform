@@ -2,7 +2,7 @@ package com.coretex.shop.store.controller.category.facade;
 
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.category.PersistableCategory;
 import com.coretex.shop.model.catalog.category.ReadableCategory;
 
@@ -20,13 +20,13 @@ public interface CategoryFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	List<ReadableCategory> getCategoryHierarchy(MerchantStoreItem store, int depth, LanguageItem language, String filter);
+	List<ReadableCategory> getCategoryHierarchy(MerchantStoreItem store, int depth, LocaleItem language, String filter);
 
 	PersistableCategory saveCategory(MerchantStoreItem store, PersistableCategory category);
 
-	ReadableCategory getById(MerchantStoreItem store, UUID id, LanguageItem language);
+	ReadableCategory getById(MerchantStoreItem store, UUID id, LocaleItem language);
 
-	ReadableCategory getByCode(MerchantStoreItem store, String code, LanguageItem language) throws Exception;
+	ReadableCategory getByCode(MerchantStoreItem store, String code, LocaleItem language) throws Exception;
 
 	void deleteCategory(UUID categoryId);
 

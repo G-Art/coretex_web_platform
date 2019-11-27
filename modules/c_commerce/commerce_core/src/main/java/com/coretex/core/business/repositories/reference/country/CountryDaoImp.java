@@ -1,7 +1,7 @@
 package com.coretex.core.business.repositories.reference.country;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.relations.core.LocaleCountryRelation;
@@ -24,12 +24,12 @@ public class CountryDaoImp extends DefaultGenericDao<CountryItem> implements Cou
 	}
 
 	@Override
-	public List<CountryItem> listByLanguage(LanguageItem languageItem) {
+	public List<CountryItem> listByLanguage(LocaleItem languageItem) {
 		String query = "SELECT c.* FROM " + CountryItem.ITEM_TYPE + " AS c " +
 				"LEFT JOIN " + LocaleCountryRelation.ITEM_TYPE + " AS lcr ON (c.uuid = lcr.target) " +
 				"LEFT JOIN " + LocaleItem.ITEM_TYPE + " AS l ON (lcr.source = l.uuid) " +
 				"WHERE l." + LocaleItem.ISO + " = :code ";
-		return find(query, Map.of("code", languageItem.getCode()));
+		return find(query, Map.of("code", languageItem.getIso()));
 	}
 
 	@Override

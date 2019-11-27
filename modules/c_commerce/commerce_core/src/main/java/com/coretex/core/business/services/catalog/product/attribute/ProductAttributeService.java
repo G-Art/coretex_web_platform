@@ -8,7 +8,7 @@ import com.coretex.core.business.services.common.generic.SalesManagerEntityServi
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 
 public interface ProductAttributeService extends
 		SalesManagerEntityService<ProductAttributeItem> {
@@ -22,7 +22,7 @@ public interface ProductAttributeService extends
 	List<ProductAttributeItem> getByOptionValueId(MerchantStoreItem store,
 												  UUID id);
 
-	List<ProductAttributeItem> getByProductId(MerchantStoreItem store, ProductItem product, LanguageItem language);
+	List<ProductAttributeItem> getByProductId(MerchantStoreItem store, ProductItem product, LocaleItem language);
 
 	List<ProductAttributeItem> getByAttributeIds(MerchantStoreItem store, ProductItem product, List<UUID> ids);
 }

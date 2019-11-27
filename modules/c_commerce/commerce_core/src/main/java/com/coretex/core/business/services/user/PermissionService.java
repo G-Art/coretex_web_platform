@@ -17,7 +17,7 @@ public interface PermissionService extends SalesManagerEntityService<PermissionI
 
 	List<PermissionItem> listPermission() throws ServiceException;
 
-	PermissionItem getById(UUID permissionId);
+	PermissionItem getByUUID(UUID permissionId);
 
 	List<PermissionItem> getPermissions(List<UUID> groupIds) throws ServiceException;
 

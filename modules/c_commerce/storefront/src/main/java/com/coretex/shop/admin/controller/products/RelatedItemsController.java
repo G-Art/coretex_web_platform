@@ -10,7 +10,7 @@ import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
 import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
 import com.coretex.core.data.web.Menu;
 import com.coretex.shop.constants.Constants;
@@ -56,11 +56,11 @@ public class RelatedItemsController {
 
 		setMenu(model, request);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 		//get the product and validate it belongs to the current merchant
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		if (product == null) {
 			return "redirect:/admin/products/products.html";
@@ -94,9 +94,9 @@ public class RelatedItemsController {
 
 
 			UUID productId = UUID.fromString(sProductId);
-			ProductItem product = productService.getById(productId);
+			ProductItem product = productService.getByUUID(productId);
 
-			LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+			LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 
@@ -158,7 +158,7 @@ public class RelatedItemsController {
 
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-			ProductItem product = productService.getById(lProductId);
+			ProductItem product = productService.getByUUID(lProductId);
 
 			if (product == null) {
 				resp.setStatus(AjaxPageableResponse.RESPONSE_STATUS_FAIURE);
@@ -172,7 +172,7 @@ public class RelatedItemsController {
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
 
-			ProductItem baseProduct = productService.getById(lBaseProductId);
+			ProductItem baseProduct = productService.getByUUID(lBaseProductId);
 
 			if (baseProduct == null) {
 				resp.setStatus(AjaxPageableResponse.RESPONSE_STATUS_FAIURE);
@@ -228,7 +228,7 @@ public class RelatedItemsController {
 
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-			ProductItem product = productService.getById(lproductId);
+			ProductItem product = productService.getByUUID(lproductId);
 
 			if (product == null) {
 				resp.setStatus(AjaxPageableResponse.RESPONSE_STATUS_FAIURE);
@@ -242,7 +242,7 @@ public class RelatedItemsController {
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
 
-			ProductItem baseProduct = productService.getById(lBaseProductId);
+			ProductItem baseProduct = productService.getByUUID(lBaseProductId);
 
 			if (baseProduct == null) {
 				resp.setStatus(AjaxPageableResponse.RESPONSE_STATUS_FAIURE);

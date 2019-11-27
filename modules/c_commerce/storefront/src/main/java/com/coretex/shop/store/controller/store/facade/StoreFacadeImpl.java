@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import com.coretex.core.business.constants.Constants;
 import com.coretex.enums.commerce_core_model.MerchantConfigurationTypeEnum;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
 import org.apache.commons.lang3.Validate;
-import org.drools.core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -88,41 +88,31 @@ public class StoreFacadeImpl implements StoreFacade {
 
 	@Override
 	public MerchantStoreItem get(String code) {
-		try {
-			return merchantStoreService.getByCode(code);
-		} catch (ServiceException e) {
-			LOG.error("Error while getting MerchantStoreItem", e);
-			throw new ServiceRuntimeException(e);
-		}
-
+		return merchantStoreService.getByCode(code);
 	}
 
 	@Override
 	public ReadableMerchantStore getByCode(String code, String lang) {
-		LanguageItem language = getLanguage(lang);
+		LocaleItem language = getLanguage(lang);
 		return getByCode(code, language);
 	}
 
-	private LanguageItem getLanguage(String lang) {
+	private LocaleItem getLanguage(String lang) {
 		return languageUtils.getServiceLanguage(lang);
 	}
 
 	@Override
-	public ReadableMerchantStore getByCode(String code, LanguageItem language) {
+	public ReadableMerchantStore getByCode(String code, LocaleItem language) {
 		MerchantStoreItem store = getMerchantStoreByCode(code);
 		return convertMerchantStoreToReadableMerchantStore(language, store);
 	}
 
 	@Override
 	public boolean existByCode(String code) {
-		try {
-			return merchantStoreService.getByCode(code) != null;
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(e);
-		}
+		return merchantStoreService.getByCode(code) != null;
 	}
 
-	private ReadableMerchantStore convertMerchantStoreToReadableMerchantStore(LanguageItem language,
+	private ReadableMerchantStore convertMerchantStoreToReadableMerchantStore(LocaleItem language,
 																			  MerchantStoreItem store) {
 		ReadableMerchantStore readable = new ReadableMerchantStore();
 
@@ -132,7 +122,7 @@ public class StoreFacadeImpl implements StoreFacade {
 		populator.setFilePath(imageUtils);
 
 		/**
-		 * LanguageItem is not important for this conversion using default language
+		 * LocaleItem is not important for this conversion using default language
 		 */
 		try {
 			readable = populator.populate(store, readable, store, language);
@@ -173,7 +163,7 @@ public class StoreFacadeImpl implements StoreFacade {
 	}
 
 	private MerchantStoreItem convertPersistableMerchantStoreToMerchantStore(
-			PersistableMerchantStore store, LanguageItem language) {
+			PersistableMerchantStore store, LocaleItem language) {
 		MerchantStoreItem mStore = new MerchantStoreItem();
 
 		// set default values
@@ -207,7 +197,7 @@ public class StoreFacadeImpl implements StoreFacade {
 	}
 
 	private MerchantStoreItem mergePersistableMerchantStoreToMerchantStore(PersistableMerchantStore store,
-																		   String code, LanguageItem language) {
+																		   String code, LocaleItem language) {
 
 		MerchantStoreItem mStore = getMerchantStoreByCode(code);
 
@@ -223,7 +213,7 @@ public class StoreFacadeImpl implements StoreFacade {
 
 	@Override
 	public ReadableMerchantStoreList getByCriteria(MerchantStoreCriteria criteria, String drawParam,
-												   LanguageItem lang) {
+												   LocaleItem lang) {
 		GenericEntityList<MerchantStoreItem> entityList = getMerchantStoresByCriteria(criteria);
 
 		List<MerchantStoreItem> stores = entityList.getList();
@@ -231,7 +221,7 @@ public class StoreFacadeImpl implements StoreFacade {
 		return createReadableMerchantStoreList(drawParam, lang, entityList, stores);
 	}
 
-	private ReadableMerchantStoreList createReadableMerchantStoreList(String drawParam, LanguageItem lang,
+	private ReadableMerchantStoreList createReadableMerchantStoreList(String drawParam, LocaleItem lang,
 																	  GenericEntityList<MerchantStoreItem> list, List<MerchantStoreItem> stores) {
 		ReadableMerchantStoreList merchantStoreToList = new ReadableMerchantStoreList();
 		merchantStoreToList.setTotalCount(list.getTotalCount());

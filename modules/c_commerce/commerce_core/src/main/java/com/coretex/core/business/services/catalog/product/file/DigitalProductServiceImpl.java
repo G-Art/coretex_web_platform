@@ -80,7 +80,7 @@ public class DigitalProductServiceImpl extends SalesManagerEntityServiceImpl<Dig
 		Assert.notNull(digitalProduct, "DigitalProductItem cannot be null");
 		Assert.notNull(digitalProduct.getProduct(), "DigitalProductItem.product cannot be null");
 		//refresh file
-		digitalProduct = this.getById(digitalProduct.getUuid());
+		digitalProduct = this.getByUUID(digitalProduct.getUuid());
 		super.delete(digitalProduct);
 		productDownloadsFileManager.removeFile(digitalProduct.getProduct().getMerchantStore().getCode(), FileContentType.PRODUCT, digitalProduct.getProductFileName());
 		digitalProduct.getProduct().setProductVirtual(false);

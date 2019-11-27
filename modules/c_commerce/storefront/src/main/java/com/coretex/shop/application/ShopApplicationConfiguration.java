@@ -12,6 +12,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.context.event.ContextStartedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
@@ -41,7 +43,7 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 @EnableWebMvc
 @EnableSocial
-public class ShopApplicationConfiguration implements WebMvcConfigurer , SocialConfigurer {
+public class ShopApplicationConfiguration implements WebMvcConfigurer, SocialConfigurer {
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
@@ -57,7 +59,7 @@ public class ShopApplicationConfiguration implements WebMvcConfigurer , SocialCo
 	@Resource
 	private TextEncryptor textEncryptor;
 
-	//	@EventListener(ApplicationReadyEvent.class)
+	@EventListener(ContextStartedEvent.class)
 	public void applicationReadyCode() {
 		String workingDir = System.getProperty("user.dir");
 		System.out.println("Current working directory : " + workingDir);
@@ -72,6 +74,7 @@ public class ShopApplicationConfiguration implements WebMvcConfigurer , SocialCo
 
 		return mapper;
 	}
+
 	/**
 	 * Configure TilesConfigurer.
 	 */

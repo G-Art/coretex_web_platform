@@ -10,7 +10,7 @@ import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderProductAttributeItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
 import com.coretex.shop.model.order.ReadableOrderProduct;
 import com.coretex.shop.model.order.ReadableOrderProductAttribute;
@@ -42,7 +42,7 @@ public class ReadableOrderProductPopulator extends
 
 	@Override
 	public ReadableOrderProduct populate(OrderProductItem source,
-										 ReadableOrderProduct target, MerchantStoreItem store, LanguageItem language)
+										 ReadableOrderProduct target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 		Validate.notNull(productService, "Requires ProductService");

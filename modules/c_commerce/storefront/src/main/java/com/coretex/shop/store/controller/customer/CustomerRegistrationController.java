@@ -12,7 +12,7 @@ import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.shop.constants.ApplicationConstants;
@@ -157,7 +157,7 @@ public class CustomerRegistrationController extends AbstractController {
 								   HttpServletRequest request, HttpServletResponse response, final Locale locale)
 			throws Exception {
 		MerchantStoreItem merchantStore = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
-		LanguageItem language = super.getLanguage(request);
+		LocaleItem language = super.getLanguage(request);
 
 		String userName = null;
 		String password = null;
@@ -299,10 +299,10 @@ public class CustomerRegistrationController extends AbstractController {
 	@ModelAttribute("countryList")
 	public List<CountryItem> getCountries(final HttpServletRequest request) {
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		try {
 			if (language == null) {
-				language = (LanguageItem) request.getAttribute("LANGUAGE");
+				language = (LocaleItem) request.getAttribute("LANGUAGE");
 			}
 
 			if (language == null) {
@@ -324,7 +324,7 @@ public class CustomerRegistrationController extends AbstractController {
 	}
 
 
-	private ShoppingCartData populateShoppingCartData(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LanguageItem language) {
+	private ShoppingCartData populateShoppingCartData(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LocaleItem language) {
 
 		try {
 			return shoppingCartDataPopulator.populate(cartModel, store, language);

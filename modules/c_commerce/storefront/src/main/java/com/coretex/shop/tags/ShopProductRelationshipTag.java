@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +20,7 @@ import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.relationship.ProductRelationshipService;
 import com.coretex.core.business.utils.CacheUtils;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
 import com.coretex.shop.populator.catalog.ReadableProductPopulator;
@@ -77,7 +77,7 @@ public class ShopProductRelationshipTag extends RequestContextAwareTag {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
 
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 
 		StringBuilder groupKey = new StringBuilder();
 		groupKey
@@ -87,7 +87,7 @@ public class ShopProductRelationshipTag extends RequestContextAwareTag {
 				.append("-")
 				.append(this.getGroupName())
 				.append("_")
-				.append(language.getCode());
+				.append(language.getIso());
 
 		StringBuilder groupKeyMissed = new StringBuilder();
 		groupKeyMissed
@@ -132,7 +132,7 @@ public class ShopProductRelationshipTag extends RequestContextAwareTag {
 	private List<ReadableProduct> getProducts(HttpServletRequest request) throws Exception {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 
 		List<ProductRelationshipItem> relationships = productRelationshipService.getByGroup(store, this.getGroupName(), language);
 

@@ -1,12 +1,5 @@
 package com.coretex.core.business.modules.email;
 
-import java.io.StringWriter;
-import javax.annotation.Resource;
-
-import org.jsoup.helper.Validate;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailPreparationException;
-import org.springframework.stereotype.Component;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
@@ -18,6 +11,13 @@ import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.apache.commons.lang3.Validate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailPreparationException;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.io.StringWriter;
 
 /**
  * AWS HTML email sender

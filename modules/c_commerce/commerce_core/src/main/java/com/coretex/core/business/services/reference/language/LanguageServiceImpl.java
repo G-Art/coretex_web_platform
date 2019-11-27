@@ -1,24 +1,21 @@
 package com.coretex.core.business.services.reference.language;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.coretex.core.business.repositories.reference.language.LanguageDao;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import org.apache.commons.lang3.LocaleUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
+import com.coretex.core.activeorm.dao.LocaleDao;
 import com.coretex.core.business.constants.Constants;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.business.utils.CacheUtils;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.core.LocaleItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * https://samerabdelkafi.wordpress.com/2014/05/29/spring-data-jpa/
@@ -27,7 +24,7 @@ import com.coretex.core.business.utils.CacheUtils;
  */
 
 @Service("languageService")
-public class LanguageServiceImpl extends SalesManagerEntityServiceImpl<LanguageItem>
+public class LanguageServiceImpl extends SalesManagerEntityServiceImpl<LocaleItem>
 		implements LanguageService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LanguageServiceImpl.class);
@@ -35,49 +32,49 @@ public class LanguageServiceImpl extends SalesManagerEntityServiceImpl<LanguageI
 	@Resource
 	private CacheUtils cache;
 
-	private LanguageDao languageDao;
+	private LocaleDao languageDao;
 
-	public LanguageServiceImpl(LanguageDao languageDao) {
+	public LanguageServiceImpl(LocaleDao languageDao) {
 		super(languageDao);
 		this.languageDao = languageDao;
 	}
 
 
 	@Override
-	public LanguageItem getByCode(String code) throws ServiceException {
-		return languageDao.findByCode(code);
+	public LocaleItem getByCode(String code) {
+		return languageDao.findSingle(Map.of(LocaleItem.ISO, code), true);
 	}
 
 	@Override
-	public Locale toLocale(LanguageItem language, MerchantStoreItem store) {
-		return new Locale(language.getCode());
+	public Locale toLocale(LocaleItem language, MerchantStoreItem store) {
+		return new Locale(language.getIso());
 	}
 
 	@Override
-	public LanguageItem toLanguage(Locale locale) {
+	public LocaleItem toLanguage(Locale locale) {
 
 		try {
-			LanguageItem lang = getLanguagesMap().get(locale.getLanguage());
+			LocaleItem lang = getLanguagesMap().get(locale.getLanguage());
 			return lang;
 		} catch (Exception e) {
 			LOGGER.error("Cannot convert locale " + locale.getLanguage() + " to language");
 		}
 
-		var languageItem = new LanguageItem();
-		languageItem.setCode(Constants.DEFAULT_LANGUAGE);
+		var languageItem = new LocaleItem();
+		languageItem.setIso(Constants.DEFAULT_LANGUAGE);
 
 		return languageItem;
 
 	}
 
 	@Override
-	public Map<String, LanguageItem> getLanguagesMap() throws ServiceException {
+	public Map<String, LocaleItem> getLanguagesMap() throws ServiceException {
 
-		List<LanguageItem> langs = this.getLanguages();
-		Map<String, LanguageItem> returnMap = new LinkedHashMap<String, LanguageItem>();
+		List<LocaleItem> langs = this.getLanguages();
+		Map<String, LocaleItem> returnMap = new LinkedHashMap<String, LocaleItem>();
 
-		for (LanguageItem lang : langs) {
-			returnMap.put(lang.getCode(), lang);
+		for (LocaleItem lang : langs) {
+			returnMap.put(lang.getIso(), lang);
 		}
 		return returnMap;
 
@@ -86,13 +83,13 @@ public class LanguageServiceImpl extends SalesManagerEntityServiceImpl<LanguageI
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LanguageItem> getLanguages() throws ServiceException {
+	public List<LocaleItem> getLanguages() throws ServiceException {
 
 
-		List<LanguageItem> langs = null;
+		List<LocaleItem> langs = null;
 		try {
 
-			langs = (List<LanguageItem>) cache.getFromCache("LANGUAGES");
+			langs = (List<LocaleItem>) cache.getFromCache("LANGUAGES");
 			if (langs == null) {
 				langs = this.list();
 				cache.putInCache(langs, "LANGUAGES");
@@ -108,7 +105,7 @@ public class LanguageServiceImpl extends SalesManagerEntityServiceImpl<LanguageI
 	}
 
 	@Override
-	public LanguageItem defaultLanguage() {
+	public LocaleItem defaultLanguage() {
 		return toLanguage(Locale.ENGLISH);
 	}
 

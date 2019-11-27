@@ -2,17 +2,15 @@ package com.coretex.shop.admin.controller.orders;
 
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.coretex.core.business.services.order.OrderService;
-import com.coretex.core.business.services.system.ModuleConfigurationService;
 import com.coretex.core.business.utils.ProductPriceUtils;
 import com.coretex.core.business.utils.ajax.AjaxPageableResponse;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.core.model.common.CriteriaOrderBy;
 import com.coretex.core.model.order.OrderCriteria;
 import com.coretex.core.model.order.OrderList;
-import com.coretex.items.commerce_core_model.IntegrationModuleItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
 import com.coretex.core.data.web.Menu;
 import com.coretex.shop.constants.Constants;
@@ -21,8 +19,6 @@ import com.coretex.shop.utils.LabelUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,9 +53,6 @@ public class OrdersController {
 
 	@Resource
 	private ProductPriceUtils priceUtil;
-
-	@Resource
-	protected ModuleConfigurationService moduleConfigurationService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderControler.class);
 
@@ -106,10 +99,8 @@ public class OrdersController {
 				criteria.setCustomerName(customerName);
 			}
 
-			LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+			LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-			List<IntegrationModuleItem> paymentModules = moduleConfigurationService.getIntegrationModules("PAYMENT");
-
 
 			OrderList orderList = orderService.listByStore(store, criteria);
 
@@ -125,16 +116,6 @@ public class OrdersController {
 					entry.put("date", DateUtil.formatDate(order.getDatePurchased()));
 					entry.put("status", order.getStatus().name());
 
-
-					if (paymentModules != null && paymentModules.size() > 0) {
-						for (int index = 0; index < paymentModules.size(); index++) {
-							if (paymentModules.get(index).getCode().equalsIgnoreCase(order.getPaymentModuleCode())) {
-								paymentModule = paymentModules.get(index).getCode();
-								break;
-							}
-						}
-
-					}
 
 					entry.put("paymentModule", paymentModule);
 					resp.addDataEntry(entry);

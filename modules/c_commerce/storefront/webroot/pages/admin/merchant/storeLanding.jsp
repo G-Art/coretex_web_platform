@@ -43,7 +43,7 @@
             <!-- Title -->
             <div class="control-group">
                 <label><s:message code="label.storefront.landingpage.title" text="Title"/> (<c:out
-                        value="${description.language.code}"/>)</label>
+                        value="${description.language.iso}"/>)</label>
                 <div class="controls">
                     <form:input id="title${counter.index}" cssClass="input-large highlight"
                                 path="descriptions[${counter.index}].title"/>
@@ -55,7 +55,7 @@
             <!-- Description -->
             <div class="control-group">
                 <label><s:message code="label.storefront.metatags.description" text="Tags description"/> (<c:out
-                        value="${description.language.code}"/>)</label>
+                        value="${description.language.iso}"/>)</label>
                 <div class="controls">
                     <form:textarea id="description${counter.index}" cssClass="span6"
                                    path="descriptions[${counter.index}].description" rows="5"/>
@@ -68,7 +68,7 @@
             <!-- Keywords -->
             <div class="control-group">
                 <label><s:message code="label.storefront.metatags.keywords" text="Keywords"/> (<c:out
-                        value="${description.language.code}"/>)</label>
+                        value="${description.language.iso}"/>)</label>
                 <div class="controls">
                     <form:textarea id="keywords${counter.index}" cssClass="span6"
                                    path="descriptions[${counter.index}].keywords" rows="5"/>
@@ -81,7 +81,7 @@
             <!-- Content -->
             <div class="control-group">
                 <label><s:message code="label.storefront.storetext" text="Page content"/> (<c:out
-                        value="${description.language.code}"/>)</label>
+                        value="${description.language.iso}"/>)</label>
                 <div class="controls">
                         
 
@@ -127,7 +127,7 @@
             </div>
 
 
-            <form:hidden path="descriptions[${counter.index}].language.code"/>
+            <form:hidden path="descriptions[${counter.index}].language.iso"/>
 
 
         </c:forEach>

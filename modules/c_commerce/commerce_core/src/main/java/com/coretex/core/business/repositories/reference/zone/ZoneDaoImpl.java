@@ -1,7 +1,7 @@
 package com.coretex.core.business.repositories.reference.zone;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
@@ -32,7 +32,7 @@ public class ZoneDaoImpl extends DefaultGenericDao<ZoneItem> implements ZoneDao 
 				"JOIN " + CountryItem.ITEM_TYPE + " AS zc ON (zcr.target = zc.uuid) " +
 				"JOIN " + LocaleCountryRelation.ITEM_TYPE + " AS lcr ON (lcr.target = zc.uuid) " +
 				"JOIN " + LocaleItem.ITEM_TYPE + " AS l ON (lcr.source = l.uuid) " +
-				"JOIN " + LanguageItem.ITEM_TYPE + " AS lng ON (l.iso = lng.code) " +
+				"JOIN " + LocaleItem.ITEM_TYPE + " AS lng ON (l.iso = lng.code) " +
 				"WHERE lng.uuid=:localeId";
 		return find(query, Map.of("localeId", id));
 	}

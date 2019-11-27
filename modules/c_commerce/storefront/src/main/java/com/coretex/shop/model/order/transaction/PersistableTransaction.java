@@ -2,7 +2,6 @@ package com.coretex.shop.model.order.transaction;
 
 import java.io.Serializable;
 
-import com.coretex.enums.commerce_core_model.TransactionTypeEnum;
 import com.coretex.enums.commerce_core_model.PaymentTypeEnum;
 import com.coretex.shop.utils.Enum;
 
@@ -19,7 +18,6 @@ public class PersistableTransaction extends TransactionEntity implements Seriali
 	@Enum(enumClass = PaymentTypeEnum.class, ignoreCase = true)
 	private String paymentType;
 
-	@Enum(enumClass = TransactionTypeEnum.class, ignoreCase = true)
 	private String transactionType;
 
 	public String getPaymentType() {

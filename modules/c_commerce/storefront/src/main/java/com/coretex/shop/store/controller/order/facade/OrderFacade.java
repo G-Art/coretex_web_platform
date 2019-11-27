@@ -7,9 +7,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.commerce_core_model.TransactionItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.springframework.validation.BindingResult;
 
 import com.coretex.core.business.exception.ServiceException;
@@ -19,7 +18,6 @@ import com.coretex.core.model.order.OrderTotalSummary;
 import com.coretex.core.model.shipping.ShippingQuote;
 import com.coretex.core.model.shipping.ShippingSummary;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
-import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.order.PersistableOrder;
 import com.coretex.shop.model.order.PersistableOrderApi;
 import com.coretex.shop.model.order.ReadableOrder;
@@ -30,36 +28,31 @@ import com.coretex.shop.model.order.transaction.ReadableTransaction;
 
 public interface OrderFacade {
 
-	ShopOrder initializeOrder(MerchantStoreItem store, CustomerItem customer, ShoppingCartItem shoppingCart, LanguageItem language) throws Exception;
+	ShopOrder initializeOrder(MerchantStoreItem store, CustomerItem customer, ShoppingCartItem shoppingCart, LocaleItem language) throws Exception;
 
-	void refreshOrder(ShopOrder order, MerchantStoreItem store, CustomerItem customer, ShoppingCartItem shoppingCart, LanguageItem language) throws Exception;
+	void refreshOrder(ShopOrder order, MerchantStoreItem store, CustomerItem customer, ShoppingCartItem shoppingCart, LocaleItem language) throws Exception;
 
 	/**
 	 * used in website
 	 **/
-	OrderTotalSummary calculateOrderTotal(MerchantStoreItem store, ShopOrder order, LanguageItem language) throws Exception;
+	OrderTotalSummary calculateOrderTotal(MerchantStoreItem store, ShopOrder order, LocaleItem language) throws Exception;
 
 	/**
 	 * used in the API
 	 **/
-	OrderTotalSummary calculateOrderTotal(MerchantStoreItem store, PersistableOrder order, LanguageItem language) throws Exception;
+	OrderTotalSummary calculateOrderTotal(MerchantStoreItem store, PersistableOrder order, LocaleItem language) throws Exception;
 
-	OrderTotalSummary calculateOrderTotal(MerchantStoreItem store, CustomerItem customer, PersistableOrder order, LanguageItem language) throws Exception;
+	OrderTotalSummary calculateOrderTotal(MerchantStoreItem store, CustomerItem customer, PersistableOrder order, LocaleItem language) throws Exception;
 
 	/**
 	 * process a valid order
 	 **/
-	OrderItem processOrder(ShopOrder order, CustomerItem customer, MerchantStoreItem store, LanguageItem language) throws ServiceException;
-
-	/**
-	 * process a valid order against an initial transaction
-	 **/
-	OrderItem processOrder(ShopOrder order, CustomerItem customer, TransactionItem transaction, MerchantStoreItem store, LanguageItem language) throws ServiceException;
+	OrderItem processOrder(ShopOrder order, CustomerItem customer, MerchantStoreItem store, LocaleItem language) throws ServiceException;
 
 	/**
 	 * process a valid order submitted from the API
 	 **/
-	OrderItem processOrder(PersistableOrderApi order, CustomerItem customer, MerchantStoreItem store, LanguageItem language, Locale locale) throws ServiceException;
+	OrderItem processOrder(PersistableOrderApi order, CustomerItem customer, MerchantStoreItem store, LocaleItem language, Locale locale) throws ServiceException;
 
 
 	/**
@@ -67,7 +60,7 @@ public interface OrderFacade {
 	 **/
 	CustomerItem initEmptyCustomer(MerchantStoreItem store);
 
-	List<CountryItem> getShipToCountry(MerchantStoreItem store, LanguageItem language)
+	List<CountryItem> getShipToCountry(MerchantStoreItem store, LocaleItem language)
 			throws Exception;
 
 	/**
@@ -78,7 +71,7 @@ public interface OrderFacade {
 	 * @param language
 	 * @return
 	 */
-	ShippingSummary getShippingSummary(ShippingQuote quote, MerchantStoreItem store, LanguageItem language);
+	ShippingSummary getShippingSummary(ShippingQuote quote, MerchantStoreItem store, LocaleItem language);
 
 	/**
 	 * Validates an order submitted from the web application
@@ -103,7 +96,7 @@ public interface OrderFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableOrder getReadableOrder(UUID orderId, MerchantStoreItem store, LanguageItem language) throws Exception;
+	ReadableOrder getReadableOrder(UUID orderId, MerchantStoreItem store, LocaleItem language) throws Exception;
 
 
 	/**
@@ -118,7 +111,7 @@ public interface OrderFacade {
 	 */
 
 	ReadableOrderList getReadableOrderList(MerchantStoreItem store, CustomerItem customer, int start,
-										   int maxCount, LanguageItem language) throws Exception;
+										   int maxCount, LocaleItem language) throws Exception;
 
 
 	/**
@@ -144,7 +137,7 @@ public interface OrderFacade {
 	 * @throws Exception
 	 */
 	ReadableOrderList getCapturableOrderList(MerchantStoreItem store, Date startDate, Date endDate,
-											 LanguageItem language) throws Exception;
+											 LocaleItem language) throws Exception;
 
 
 	/**
@@ -158,5 +151,5 @@ public interface OrderFacade {
 	 * @throws Exception
 	 */
 	ReadableOrderList getReadableOrderList(MerchantStoreItem store, int start,
-										   int maxCount, LanguageItem language) throws Exception;
+										   int maxCount, LocaleItem language) throws Exception;
 }

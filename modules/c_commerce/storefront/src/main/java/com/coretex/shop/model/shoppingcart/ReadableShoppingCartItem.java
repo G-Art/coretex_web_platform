@@ -18,7 +18,6 @@ public class ReadableShoppingCartItem extends ReadableProduct implements Seriali
 	private static final long serialVersionUID = 1L;
 	private BigDecimal subTotal;
 	private String displaySubTotal;
-	private List<ReadableShoppingCartAttribute> cartItemattributes = new ArrayList<ReadableShoppingCartAttribute>();
 
 
 	public BigDecimal getSubTotal() {
@@ -36,14 +35,5 @@ public class ReadableShoppingCartItem extends ReadableProduct implements Seriali
 	public void setDisplaySubTotal(String displaySubTotal) {
 		this.displaySubTotal = displaySubTotal;
 	}
-
-	public List<ReadableShoppingCartAttribute> getCartItemattributes() {
-		return cartItemattributes;
-	}
-
-	public void setCartItemattributes(List<ReadableShoppingCartAttribute> cartItemattributes) {
-		this.cartItemattributes = cartItemattributes;
-	}
-
 
 }

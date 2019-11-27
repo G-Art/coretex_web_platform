@@ -3,7 +3,7 @@ package com.coretex.shop.store.controller.system;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.system.MerchantConfigurationService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.core.model.system.MerchantConfig;
 import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
 import com.coretex.shop.model.system.Configs;
@@ -26,7 +26,7 @@ public class MerchantConfigurationFacadeImpl implements MerchantConfigurationFac
 	private MerchantConfigurationService merchantConfigurationService;
 
 	@Override
-	public Configs getMerchantConfig(MerchantStoreItem merchantStore, LanguageItem language) {
+	public Configs getMerchantConfig(MerchantStoreItem merchantStore, LocaleItem language) {
 
 		MerchantConfig configs = getMerchantConfig(merchantStore);
 

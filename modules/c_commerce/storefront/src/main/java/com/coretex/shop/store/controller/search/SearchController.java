@@ -1,14 +1,18 @@
 package com.coretex.shop.store.controller.search;
 
-import java.util.Locale;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.coretex.core.business.services.merchant.MerchantStoreService;
+import com.coretex.core.business.services.search.SearchService;
+import com.coretex.core.model.search.SearchKeywords;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.shop.constants.Constants;
+import com.coretex.shop.model.catalog.SearchProductList;
+import com.coretex.shop.model.catalog.SearchProductRequest;
+import com.coretex.shop.store.controller.ControllerConstants;
+import com.coretex.shop.store.controller.search.facade.SearchFacade;
+import com.coretex.shop.store.model.search.AutoCompleteRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,22 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.coretex.core.business.services.catalog.category.CategoryService;
-import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
-import com.coretex.core.business.services.merchant.MerchantStoreService;
-import com.coretex.core.business.services.reference.language.LanguageService;
-import com.coretex.core.business.services.search.SearchService;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.core.model.search.SearchKeywords;
-import com.coretex.shop.constants.Constants;
-import com.coretex.shop.model.catalog.SearchProductList;
-import com.coretex.shop.model.catalog.SearchProductRequest;
-import com.coretex.shop.store.controller.ControllerConstants;
-import com.coretex.shop.store.controller.search.facade.SearchFacade;
-import com.coretex.shop.store.model.search.AutoCompleteRequest;
-import com.coretex.shop.utils.ImageFilePath;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 
 @Controller
 public class SearchController {
@@ -42,26 +34,10 @@ public class SearchController {
 	private MerchantStoreService merchantStoreService;
 
 	@Resource
-	private LanguageService languageService;
-
-	@Resource
 	private SearchService searchService;
 
 	@Resource
-	private ProductService productService;
-
-	@Resource
-	private CategoryService categoryService;
-
-	@Resource
-	private PricingService pricingService;
-
-	@Resource
 	private SearchFacade searchFacade;
-
-	@Resource
-	@Qualifier("img")
-	private ImageFilePath imageUtils;
 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchController.class);
@@ -124,14 +100,9 @@ public class SearchController {
 	/**
 	 * Displays the search result page
 	 *
-	 * @param json
 	 * @param store
 	 * @param language
-	 * @param start
-	 * @param max
 	 * @param model
-	 * @param request
-	 * @param response
 	 * @return
 	 * @throws Exception
 	 */
@@ -141,7 +112,7 @@ public class SearchController {
 	public SearchProductList search(
 			@RequestBody SearchProductRequest searchRequest,
 			Model model,
-			LanguageItem language,
+			LocaleItem language,
 			MerchantStoreItem store) {
 
 
@@ -158,7 +129,7 @@ public class SearchController {
 			IOUtils.copy(request.getInputStream(), writer, "UTF-8");
 			json = writer.toString();
 			
-			Map<String,LanguageItem> langs = languageService.getLanguagesMap();
+			Map<String,LocaleItem> langs = languageService.getLanguagesMap();
 			
 			if(merchantStore!=null) {
 				if(!merchantStore.getCode().equals(store)) {
@@ -176,7 +147,7 @@ public class SearchController {
 				return null;
 			}
 			
-			LanguageItem l = langs.get(language);
+			LocaleItem l = langs.get(language);
 			if(l==null) {
 				l = languageService.getByCode(Constants.DEFAULT_LANGUAGE);
 			}

@@ -11,7 +11,7 @@ import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.repositories.catalog.product.attribute.ProductAttributeDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 
 @Service("productAttributeService")
 public class ProductAttributeServiceImpl extends
@@ -54,7 +54,7 @@ public class ProductAttributeServiceImpl extends
 	 */
 	@Override
 	public List<ProductAttributeItem> getByProductId(MerchantStoreItem store,
-													 ProductItem product, LanguageItem language) {
+													 ProductItem product, LocaleItem language) {
 		return productAttributeDao.findByProductId(store.getUuid(), product.getUuid(), language.getUuid());
 
 	}
@@ -75,7 +75,7 @@ public class ProductAttributeServiceImpl extends
 	public void delete(ProductAttributeItem attribute) {
 
 		//override method, this allows the error that we try to remove a detached instance
-		attribute = this.getById(attribute.getUuid());
+		attribute = this.getByUUID(attribute.getUuid());
 		super.delete(attribute);
 
 	}

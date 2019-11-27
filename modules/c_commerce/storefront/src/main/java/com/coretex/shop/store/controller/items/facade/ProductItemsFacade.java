@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.product.ReadableProductList;
 
 public interface ProductItemsFacade {
@@ -18,7 +18,7 @@ public interface ProductItemsFacade {
 	 * @param manufacturerId
 	 * @return
 	 */
-	ReadableProductList listItemsByManufacturer(MerchantStoreItem store, LanguageItem language, UUID manufacturerId, int startCount, int maxCount) throws Exception;
+	ReadableProductList listItemsByManufacturer(MerchantStoreItem store, LocaleItem language, UUID manufacturerId, int startCount, int maxCount) throws Exception;
 
 	/**
 	 * List product items by id
@@ -31,7 +31,7 @@ public interface ProductItemsFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableProductList listItemsByIds(MerchantStoreItem store, LanguageItem language, List<UUID> ids, int startCount, int maxCount) throws Exception;
+	ReadableProductList listItemsByIds(MerchantStoreItem store, LocaleItem language, List<UUID> ids, int startCount, int maxCount) throws Exception;
 
 
 	/**
@@ -43,7 +43,7 @@ public interface ProductItemsFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableProductList listItemsByGroup(String group, MerchantStoreItem store, LanguageItem language) throws Exception;
+	ReadableProductList listItemsByGroup(String group, MerchantStoreItem store, LocaleItem language) throws Exception;
 
 	/**
 	 * Add product to a group
@@ -55,7 +55,7 @@ public interface ProductItemsFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableProductList addItemToGroup(ProductItem product, String group, MerchantStoreItem store, LanguageItem language) throws Exception;
+	ReadableProductList addItemToGroup(ProductItem product, String group, MerchantStoreItem store, LocaleItem language) throws Exception;
 
 	/**
 	 * Removes a product from a group
@@ -67,7 +67,7 @@ public interface ProductItemsFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableProductList removeItemFromGroup(ProductItem product, String group, MerchantStoreItem store, LanguageItem language) throws Exception;
+	ReadableProductList removeItemFromGroup(ProductItem product, String group, MerchantStoreItem store, LocaleItem language) throws Exception;
 
 
 }

@@ -1,10 +1,6 @@
 package com.coretex.shop.admin.controller.customers;
 
 import com.coretex.core.business.services.customer.CustomerService;
-import com.coretex.core.business.services.customer.attribute.CustomerAttributeService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionSetService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionValueService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
@@ -12,30 +8,21 @@ import com.coretex.core.business.services.system.EmailService;
 import com.coretex.core.business.services.user.GroupService;
 import com.coretex.core.business.utils.ajax.AjaxPageableResponse;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.core.data.web.Menu;
 import com.coretex.core.model.customer.CustomerCriteria;
 import com.coretex.core.model.customer.CustomerList;
-import com.coretex.items.commerce_core_model.CustomerAttributeItem;
-import com.coretex.items.commerce_core_model.CustomerOptionItem;
-import com.coretex.items.commerce_core_model.CustomerOptionSetItem;
-import com.coretex.core.model.customer.attribute.CustomerOptionType;
-import com.coretex.items.commerce_core_model.CustomerOptionValueItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
-import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.enums.commerce_core_model.GroupTypeEnum;
-import com.coretex.shop.admin.model.customer.attribute.CustomerOption;
-import com.coretex.shop.admin.model.customer.attribute.CustomerOptionValue;
-import com.coretex.core.data.web.Menu;
+import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.commerce_core_model.GroupItem;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.core.CountryItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
-import com.coretex.shop.populator.customer.ReadableCustomerOptionPopulator;
 import com.coretex.shop.store.controller.customer.facade.CustomerFacade;
 import com.coretex.shop.utils.EmailUtils;
 import com.coretex.shop.utils.LabelUtils;
 import com.coretex.shop.utils.LocaleUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,15 +74,6 @@ public class CustomerController {
 	private CustomerService customerService;
 
 	@Resource
-	private CustomerOptionService customerOptionService;
-
-	@Resource
-	private CustomerOptionValueService customerOptionValueService;
-
-	@Resource
-	private CustomerOptionSetService customerOptionSetService;
-
-	@Resource
 	private CountryService countryService;
 
 	@Resource
@@ -103,9 +81,6 @@ public class CustomerController {
 
 	@Resource
 	private LanguageService languageService;
-
-	@Resource
-	private CustomerAttributeService customerAttributeService;
 
 	@Resource
 	@Named("passwordEncoder")
@@ -148,7 +123,7 @@ public class CustomerController {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		List<LanguageItem> languages = languageService.getLanguages();
+		List<LocaleItem> languages = languageService.getLanguages();
 
 		model.addAttribute("languages", languages);
 
@@ -158,7 +133,7 @@ public class CustomerController {
 		if (id != null) {//edit mode
 
 			//get from DB
-			customer = customerService.getById(UUID.fromString(id));
+			customer = customerService.getByUUID(UUID.fromString(id));
 			if (customer == null) {
 				return "redirect:/admin/customers/list.html";
 			}
@@ -170,76 +145,17 @@ public class CustomerController {
 			customer = new CustomerItem();
 		}
 		//get list of countries (see merchant controller)
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		//get countries
 		List<CountryItem> countries = countryService.getCountries(language);
 
 		//get list of zones
 		List<ZoneItem> zones = zoneService.list();
 
-		this.getCustomerOptions(model, customer, store, language);
-
 		model.addAttribute("zones", zones);
 		model.addAttribute("countries", countries);
 		model.addAttribute("customer", customer);
 		return "admin-customer";
-
-	}
-
-	private void getCustomerOptions(Model model, CustomerItem customer, MerchantStoreItem store, LanguageItem language) throws Exception {
-
-		Map<UUID, CustomerOption> options = new HashMap<>();
-		//get options
-		List<CustomerOptionSetItem> optionSet = customerOptionSetService.listByStore(store, language);
-		if (!CollectionUtils.isEmpty(optionSet)) {
-
-
-			ReadableCustomerOptionPopulator optionPopulator = new ReadableCustomerOptionPopulator();
-
-			Set<CustomerAttributeItem> customerAttributes = customer.getAttributes();
-
-			for (CustomerOptionSetItem optSet : optionSet) {
-
-				CustomerOptionItem custOption = optSet.getCustomerOption();
-				if (!custOption.getActive()) {
-					continue;
-				}
-				CustomerOption customerOption = options.get(custOption.getUuid());
-
-				optionPopulator.setOptionSet(optSet);
-
-
-				if (customerOption == null) {
-					customerOption = new CustomerOption();
-					customerOption.setUuid(custOption.getUuid());
-					customerOption.setType(custOption.getCustomerOptionType());
-					customerOption.setName(custOption.getName());
-
-				}
-
-				optionPopulator.populate(custOption, customerOption, store, language);
-				options.put(customerOption.getUuid(), customerOption);
-
-				if (!CollectionUtils.isEmpty(customerAttributes)) {
-					for (CustomerAttributeItem customerAttribute : customerAttributes) {
-						if (customerAttribute.getCustomerOption().getUuid().equals(customerOption.getUuid())) {
-							CustomerOptionValue selectedValue = new CustomerOptionValue();
-							CustomerOptionValueItem attributeValue = customerAttribute.getCustomerOptionValue();
-							selectedValue.setUuid(attributeValue.getUuid());
-							selectedValue.setName(attributeValue.getName());
-							customerOption.setDefaultValue(selectedValue);
-							if (customerOption.getType().equalsIgnoreCase(CustomerOptionType.Text.name())) {
-								selectedValue.setName(customerAttribute.getTextValue());
-							}
-						}
-					}
-				}
-			}
-		}
-
-
-		model.addAttribute("options", options.values());
-
 
 	}
 
@@ -252,9 +168,9 @@ public class CustomerController {
 		String email_regEx = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 		Pattern pattern = Pattern.compile(email_regEx);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		List<LanguageItem> languages = languageService.getLanguages();
+		List<LocaleItem> languages = languageService.getLanguages();
 
 		model.addAttribute("languages", languages);
 
@@ -266,8 +182,6 @@ public class CustomerController {
 		}
 
 		model.addAttribute("groups", groups);
-
-		this.getCustomerOptions(model, customer, store, language);
 
 		//get countries
 		List<CountryItem> countries = countryService.getCountries(language);
@@ -330,7 +244,7 @@ public class CustomerController {
 		CustomerItem newCustomer = new CustomerItem();
 
 		if (customer.getUuid() != null) {
-			newCustomer = customerService.getById(customer.getUuid());
+			newCustomer = customerService.getByUUID(customer.getUuid());
 
 			if (newCustomer == null) {
 				return "redirect:/admin/customers/list.html";
@@ -443,7 +357,7 @@ public class CustomerController {
 			String parameterName = (String) parameterNames.nextElement();
 			String parameterValue = request.getParameter(parameterName);
 			if (CUSTOMER_ID_PARAMETER.equals(parameterName)) {
-				customer = customerService.getById(UUID.fromString(parameterValue));
+				customer = customerService.getByUUID(UUID.fromString(parameterValue));
 				break;
 			}
 		}
@@ -462,13 +376,6 @@ public class CustomerController {
 			return new ResponseEntity<String>(returnString, HttpStatus.OK);
 		}
 
-		List<CustomerAttributeItem> customerAttributes = customerAttributeService.getByCustomer(store, customer);
-		Map<UUID, CustomerAttributeItem> customerAttributesMap = new HashMap<>();
-
-		for (CustomerAttributeItem attr : customerAttributes) {
-			customerAttributesMap.put(attr.getCustomerOption().getUuid(), attr);
-		}
-
 		parameterNames = request.getParameterNames();
 
 		while (parameterNames.hasMoreElements()) {
@@ -478,72 +385,16 @@ public class CustomerController {
 			try {
 
 				String[] parameterKey = parameterName.split("-");
-				CustomerOptionItem customerOption = null;
-				CustomerOptionValueItem customerOptionValue = null;
 
 
 				if (CUSTOMER_ID_PARAMETER.equals(parameterName)) {
 					continue;
 				}
 
-				if (parameterKey.length > 1) {
-					//parse key - value
-					String key = parameterKey[0];
-					String value = parameterKey[1];
-					//should be on
-					customerOption = customerOptionService.getById(UUID.fromString(key));
-					customerOptionValue = customerOptionValueService.getById(UUID.fromString(value));
-
-
-				} else {
-					customerOption = customerOptionService.getById(UUID.fromString(parameterName));
-					customerOptionValue = customerOptionValueService.getById(UUID.fromString(parameterValue));
-
-				}
-
-				//get the attribute
-				//CustomerAttributeItem attribute = customerAttributeService.getByCustomerOptionId(store, customer.getUuid(), customerOption.getUuid());
-				CustomerAttributeItem attribute = customerAttributesMap.get(customerOption.getUuid());
-				if (attribute == null) {
-					attribute = new CustomerAttributeItem();
-					attribute.setCustomer(customer);
-					attribute.setCustomerOption(customerOption);
-				} else {
-					customerAttributes.remove(attribute);
-				}
-
-				if (!customerOption.getCustomerOptionType().equals(CustomerOptionType.Text.name())) {
-					if (!StringUtils.isBlank(parameterValue)) {
-						attribute.setCustomerOptionValue(customerOptionValue);
-						attribute.setTextValue(parameterValue);
-					} else {
-						attribute.setTextValue(null);
-					}
-				} else {
-					attribute.setCustomerOptionValue(customerOptionValue);
-				}
-
-
-				if (attribute.getUuid() != null) {
-					if (attribute.getCustomerOptionValue() == null) {
-						customerAttributeService.delete(attribute);
-					} else {
-						customerAttributeService.update(attribute);
-					}
-				} else {
-					customerAttributeService.save(attribute);
-				}
-
-
 			} catch (Exception e) {
 				LOGGER.error("Cannot get parameter information " + parameterName, e);
 			}
 
-		}
-
-		//and now the remaining to be removed
-		for (CustomerAttributeItem attr : customerAttributes) {
-			customerAttributeService.delete(attr);
 		}
 
 		resp.setStatus(AjaxResponse.RESPONSE_STATUS_SUCCESS);
@@ -581,7 +432,7 @@ public class CustomerController {
 
 		AjaxPageableResponse resp = new AjaxPageableResponse();
 
-		//LanguageItem language = (LanguageItem)request.getAttribute("LANGUAGE");
+		//LocaleItem language = (LocaleItem)request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 
@@ -670,7 +521,7 @@ public class CustomerController {
 
 			UUID id = UUID.fromString(customerId);
 
-			CustomerItem customer = customerService.getById(id);
+			CustomerItem customer = customerService.getByUUID(id);
 
 			if (customer == null) {
 				resp.setErrorString("CustomerItem does not exist");
@@ -686,7 +537,7 @@ public class CustomerController {
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
 
-			LanguageItem userLanguage = customer.getDefaultLanguage();
+			LocaleItem userLanguage = customer.getDefaultLanguage();
 
 			customerFacade.resetPassword(customer, store, userLanguage);
 
@@ -721,7 +572,7 @@ public class CustomerController {
 
 			UUID id = UUID.fromString(customerId);
 
-			CustomerItem customer = customerService.getById(id);
+			CustomerItem customer = customerService.getByUUID(id);
 
 			if (customer == null) {
 				resp.setErrorString("CustomerItem does not exist");
@@ -744,7 +595,7 @@ public class CustomerController {
 				return new ResponseEntity<>(returnString, HttpStatus.OK);
 			}
 
-			LanguageItem userLanguage = customer.getDefaultLanguage();
+			LocaleItem userLanguage = customer.getDefaultLanguage();
 
 			Locale customerLocale = LocaleUtils.getLocale(userLanguage);
 

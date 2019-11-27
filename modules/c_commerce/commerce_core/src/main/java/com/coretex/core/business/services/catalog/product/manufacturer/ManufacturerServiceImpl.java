@@ -3,7 +3,7 @@ package com.coretex.core.business.services.catalog.product.manufacturer;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.repositories.catalog.product.manufacturer.ManufacturerDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class ManufacturerServiceImpl extends
 
 
 	@Override
-	public List<ManufacturerItem> listByStore(MerchantStoreItem store, LanguageItem language) throws ServiceException {
+	public List<ManufacturerItem> listByStore(MerchantStoreItem store, LocaleItem language) throws ServiceException {
 		return manufacturerDao.findByStoreAndLanguage(store.getUuid(), language.getUuid());
 	}
 
@@ -47,7 +47,7 @@ public class ManufacturerServiceImpl extends
 	}
 
 	@Override
-	public List<ManufacturerItem> listByProductsByCategoriesId(MerchantStoreItem store, List<UUID> ids, LanguageItem language) throws ServiceException {
+	public List<ManufacturerItem> listByProductsByCategoriesId(MerchantStoreItem store, List<UUID> ids, LocaleItem language) throws ServiceException {
 		return manufacturerDao.findByCategoriesAndLanguage(ids, language.getUuid());
 	}
 

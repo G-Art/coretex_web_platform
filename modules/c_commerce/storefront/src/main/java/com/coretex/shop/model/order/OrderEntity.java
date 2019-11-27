@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
-import com.coretex.items.commerce_core_model.CreditCardItem;
 import com.coretex.enums.commerce_core_model.PaymentTypeEnum;
 import com.coretex.shop.model.order.total.OrderTotal;
 
@@ -22,7 +21,6 @@ public class OrderEntity extends Order implements Serializable {
 	private String shippingModule;
 	private List<OrderStatusEnum> previousOrderStatus;
 	private OrderStatusEnum orderStatus;
-	private CreditCardItem creditCard;
 	private Date datePurchased;
 	private String currency;
 	private boolean customerAgreed;
@@ -59,14 +57,6 @@ public class OrderEntity extends Order implements Serializable {
 
 	public void setShippingModule(String shippingModule) {
 		this.shippingModule = shippingModule;
-	}
-
-	public CreditCardItem getCreditCard() {
-		return creditCard;
-	}
-
-	public void setCreditCard(CreditCardItem creditCard) {
-		this.creditCard = creditCard;
 	}
 
 	public Date getDatePurchased() {

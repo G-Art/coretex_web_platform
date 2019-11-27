@@ -3,7 +3,7 @@ package com.coretex.shop.admin.controller.products;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.ProductService;
@@ -57,7 +57,7 @@ public class CustomProductGroupsController {
 
 		setMenu(model, request);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 		ProductRelationshipItem group = new ProductRelationshipItem();
@@ -239,7 +239,7 @@ public class CustomProductGroupsController {
 
 		setMenu(model, request);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 		List<CategoryItem> categories = categoryService.listByStore(store, language);//for categories
@@ -264,7 +264,7 @@ public class CustomProductGroupsController {
 		try {
 
 
-			LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+			LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 
@@ -320,7 +320,7 @@ public class CustomProductGroupsController {
 
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-			ProductItem product = productService.getById(lProductId);
+			ProductItem product = productService.getByUUID(lProductId);
 
 			if (product == null) {
 				resp.setStatus(AjaxPageableResponse.RESPONSE_STATUS_FAIURE);
@@ -375,7 +375,7 @@ public class CustomProductGroupsController {
 
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-			ProductItem product = productService.getById(lproductId);
+			ProductItem product = productService.getByUUID(lproductId);
 
 			if (product == null) {
 				resp.setStatus(AjaxPageableResponse.RESPONSE_STATUS_FAIURE);

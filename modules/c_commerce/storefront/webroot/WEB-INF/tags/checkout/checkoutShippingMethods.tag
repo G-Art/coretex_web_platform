@@ -22,7 +22,7 @@
                            aria-expanded="${status.index == 0 ? 'true' : 'false'}" aria-controls="collapse${status.index}">
                             <div class="row">
                                 <div class="col-md-4 align-self-center">
-                                    <span class="align-middle">${deliveryService.name[requestScope.LANGUAGE.code]}</span>
+                                    <span class="align-middle">${deliveryService.name[requestScope.LANGUAGE.iso]}</span>
                                 </div>
                                 <div class="offset-md-6 col-md-2">
                                     <img class="media-object"
@@ -44,7 +44,7 @@
                                     <label class="text m-0 ml-2">
                                         <input onchange="showDeliverySpecificData(this)" type="radio" name="deliveryMethod" id="optionsRadios${s.index}" ${deliveryMethod.code eq cart.deliveryMethod ? 'checked' : ''}
                                                value="${deliveryMethod.code}">
-                                            ${deliveryMethod.name[requestScope.LANGUAGE.code]}
+                                            ${deliveryMethod.name[requestScope.LANGUAGE.iso]}
                                     </label>
                                 </div>
 

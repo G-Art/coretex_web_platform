@@ -12,6 +12,8 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,8 +25,33 @@ public class OrderDaoImpl extends DefaultGenericDao<OrderItem> implements OrderD
 	}
 
 	@Override
-	public OrderItem findOne(UUID id) {
-		return find(id);
+	public List<OrderItem> findByPeriod(Date from, Date to) {
+
+		String query = "SELECT o.* FROM \"" + OrderItem.ITEM_TYPE + "\" AS o " +
+				"WHERE o." + OrderItem.CREATE_DATE + " BETWEEN :from AND :to " +
+				"ORDER BY o."+OrderItem.CREATE_DATE+" desc";
+		var result = getSearchService().<OrderItem>search(query, Map.of("from", from, "to", to));
+		return result.getResult();
+	}
+
+	@Override
+	public List<OrderItem> findByPeriod(Date from) {
+		return findByPeriod(from, new Date());
+	}
+
+	@Override
+	public Map getOrderStatistic() {
+		String query = "SELECT count(o.uuid), sum(o.total) FROM \"" + OrderItem.ITEM_TYPE + "\" AS o ";
+		var result = getSearchService().<Map>search(query);
+		return result.getResult().iterator().next();
+	}
+
+	@Override
+	public Map getOrderStatistic(Date from) {
+		String query = "SELECT count(o.uuid), sum(o.total) FROM \"" + OrderItem.ITEM_TYPE + "\" AS o " +
+				"WHERE o." + OrderItem.CREATE_DATE + ">= :from";
+		var result = getSearchService().<Map>search(query, Map.of("from", from));
+		return result.getResult().iterator().next();
 	}
 
 	@SuppressWarnings("unchecked")

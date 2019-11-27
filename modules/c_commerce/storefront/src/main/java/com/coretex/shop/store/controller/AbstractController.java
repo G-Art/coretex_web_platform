@@ -5,8 +5,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.coretex.core.business.services.SessionService;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.store.model.paging.PaginationData;
 
@@ -33,8 +33,8 @@ public abstract class AbstractController {
 		sessionService.removeSessionAttribute(key);
 	}
 
-	protected LanguageItem getLanguage(HttpServletRequest request) {
-		return (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+	protected LocaleItem getLanguage(HttpServletRequest request) {
+		return (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 	}
 
 	protected PaginationData createPaginaionData(final int pageNumber, final int pageSize) {

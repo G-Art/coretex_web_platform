@@ -11,7 +11,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.core.model.order.OrderSummary;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.core.model.order.OrderTotalSummary;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.SettlementItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
@@ -76,10 +76,10 @@ public class ShoppingCartDataPopulator extends AbstractDataPopulator<ShoppingCar
 
 	@Override
 	public ShoppingCartData populate(final ShoppingCartItem shoppingCart,
-									 final ShoppingCartData cart, final MerchantStoreItem store, final LanguageItem language) {
+									 final ShoppingCartData cart, final MerchantStoreItem store, final LocaleItem language) {
 
 		Validate.notNull(shoppingCart, "Requires ShoppingCartItem");
-		Validate.notNull(language, "Requires LanguageItem not null");
+		Validate.notNull(language, "Requires LocaleItem not null");
 		int cartQuantity = 0;
 		cart.setCode(shoppingCart.getShoppingCartCode());
 		Set<ShoppingCartEntryItem> items = shoppingCart.getLineItems();
@@ -137,15 +137,7 @@ public class ShoppingCartDataPopulator extends AbstractDataPopulator<ShoppingCar
 							ShoppingCartAttribute cartAttribute = new ShoppingCartAttribute();
 							cartAttribute.setUuid(attribute.getUuid());
 							cartAttribute.setAttributeId(attribute.getProductAttribute().getUuid());
-							cartAttribute.setOptionId(attribute.getProductAttribute().getProductOption().getUuid());
-							cartAttribute.setOptionValueId(attribute.getProductAttribute().getProductOptionValue().getUuid());
 
-
-							String optionName = attribute.getProductAttribute().getProductOption().getName();
-							String optionValue = attribute.getProductAttribute().getProductOptionValue().getName();
-
-							cartAttribute.setOptionName(optionName);
-							cartAttribute.setOptionValue(optionValue);
 							cartAttributes.add(cartAttribute);
 
 						}

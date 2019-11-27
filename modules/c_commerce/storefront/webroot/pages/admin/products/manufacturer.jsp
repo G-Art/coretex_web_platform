@@ -146,7 +146,7 @@
                     <div class="control-group">
                         <label class="required"><s:message code="label.manufactureredit.manufacturername"
                                                            text="Manufacturer Name"/> (<c:out
-                                value="${description.language.code}"/>)</label>
+                                value="${description.language.iso}"/>)</label>
                         <div class="controls">
                             <form:input cssClass="input-large highlight" id="name${counter.index}"
                                         path="descriptions[${counter.index}].name"/>
@@ -157,7 +157,7 @@
 
                     <div class="control-group">
                         <label><s:message code="label.manufactureredit.manufacturertitle" text="Manufacturer Title"/>
-                            (<c:out value="${description.language.code}"/>)</label>
+                            (<c:out value="${description.language.iso}"/>)</label>
                         <div class="controls">
                             <form:input cssClass="input-large" id="title${counter.index}"
                                         path="descriptions[${counter.index}].title"/>
@@ -168,7 +168,7 @@
 
                     <div class="control-group">
                         <label><s:message code="label.manufactureredit.manufacturerurl" text="URL"/> (<c:out
-                                value="${description.language.code}"/>)</label>
+                                value="${description.language.iso}"/>)</label>
                         <div class="controls">
                             <form:input cssClass="input-large" id="url${counter.index}"
                                         path="descriptions[${counter.index}].url"/>
@@ -180,7 +180,7 @@
                     <div class="control-group">
                         <label class="required"><s:message code="label.manufactureredit.manufacturerdescription"
                                                            text="Manufacturer Description"/> (<c:out
-                                value="${description.language.code}"/>)</label>
+                                value="${description.language.iso}"/>)</label>
                         <div class="controls">
 	                     	 
 	                        			 <textarea cols="30" id="descriptions${counter.index}.description"
@@ -220,7 +220,7 @@
 
                     </div>
                     <form:hidden path="descriptions[${counter.index}].language.id"/>
-                    <form:hidden path="descriptions[${counter.index}].language.code"/>
+                    <form:hidden path="descriptions[${counter.index}].language.iso"/>
                     <form:hidden path="descriptions[${counter.index}].id"/>
 
                 </c:forEach>

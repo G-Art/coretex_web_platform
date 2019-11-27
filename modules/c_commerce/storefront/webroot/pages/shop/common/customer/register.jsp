@@ -197,7 +197,7 @@
                 <div class="control-group form-group">
                     <div class="controls">
 
-                        <script src="https://www.google.com/recaptcha/api.js?hl=<c:out value="${requestScope.LANGUAGE.code}"/>"
+                        <script src="https://www.google.com/recaptcha/api.js?hl=<c:out value="${requestScope.LANGUAGE.iso}"/>"
                                 async defer></script>
 
                         <div class="g-recaptcha" data-sitekey="<c:out value="${recapatcha_public_key}"/>"></div>

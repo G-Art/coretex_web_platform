@@ -17,7 +17,7 @@ import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -70,14 +70,14 @@ public class ODSInvoiceModule implements InvoiceModule {
 
 
 	@Override
-	public ByteArrayOutputStream createInvoice(MerchantStoreItem store, OrderItem order, LanguageItem language) throws Exception {
+	public ByteArrayOutputStream createInvoice(MerchantStoreItem store, OrderItem order, LocaleItem language) throws Exception {
 
 
 		List<ZoneItem> zones = zoneService.getZones(store.getCountry(), language);
 		Map<String, CountryItem> countries = countryService.getCountriesMap(language);
 
 		//get default template
-		String template = new StringBuilder().append(INVOICE_TEMPLATE).append("_").append(language.getCode().toLowerCase()).append(INVOICE_TEMPLATE_EXTENSION).toString();
+		String template = new StringBuilder().append(INVOICE_TEMPLATE).append("_").append(language.getIso().toLowerCase()).append(INVOICE_TEMPLATE_EXTENSION).toString();
 
 		//try by language
 		InputStream is = null;

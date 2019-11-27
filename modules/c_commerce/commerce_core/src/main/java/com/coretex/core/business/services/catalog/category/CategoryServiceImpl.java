@@ -6,7 +6,7 @@ import com.coretex.core.business.repositories.catalog.category.CategoryDao;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import org.springframework.stereotype.Service;
@@ -64,18 +64,18 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 	@Override
 	public List<CategoryItem> listByCodes(MerchantStoreItem store, List<String> codes,
-										  LanguageItem language) {
+										  LocaleItem language) {
 		return categoryDao.findByCodes(store.getUuid(), codes, language.getUuid());
 	}
 
 	@Override
 	public List<CategoryItem> listByIds(MerchantStoreItem store, List<UUID> ids,
-										LanguageItem language) {
+										LocaleItem language) {
 		return categoryDao.findByIds(store.getUuid(), ids, language.getUuid());
 	}
 
 	@Override
-	public CategoryItem getOneByLanguage(UUID categoryId, LanguageItem language) {
+	public CategoryItem getOneByLanguage(UUID categoryId, LocaleItem language) {
 		return categoryDao.findById(categoryId, language.getUuid());
 	}
 
@@ -175,9 +175,9 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 	}
 
 	@Override
-	public List<CategoryItem> listByParent(CategoryItem category, LanguageItem language) {
+	public List<CategoryItem> listByParent(CategoryItem category, LocaleItem language) {
 		Assert.notNull(category, "CategoryItem cannot be null");
-		Assert.notNull(language, "LanguageItem cannot be null");
+		Assert.notNull(language, "LocaleItem cannot be null");
 		Assert.notNull(category.getMerchantStore(), "category.merchantStore cannot be null");
 
 		return categoryDao.findByParent(category.getUuid(), language.getUuid());
@@ -192,7 +192,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 		lineage.append(category.getLineage()).append(category.getUuid()).append(Constants.SLASH);
 		List<CategoryItem> categories = this.getListByLineage(category.getMerchantStore(), lineage.toString());
 
-		CategoryItem dbCategory = this.getById(category.getUuid());
+		CategoryItem dbCategory = this.getByUUID(category.getUuid());
 
 
 		if (dbCategory != null && dbCategory.getUuid().equals(category.getUuid())) {
@@ -213,7 +213,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 			List<ProductItem> products = productService.getProducts(categoryIds);
 
 			for (ProductItem product : products) {
-				ProductItem dbProduct = productService.getById(product.getUuid());
+				ProductItem dbProduct = productService.getByUUID(product.getUuid());
 				Set<CategoryItem> productCategories = dbProduct.getCategories();
 				if (productCategories.size() > 1) {
 					for (CategoryItem c : categories) {
@@ -232,7 +232,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 			}
 
-			CategoryItem categ = this.getById(category.getUuid());
+			CategoryItem categ = this.getByUUID(category.getUuid());
 			categoryDao.delete(categ);
 
 		}
@@ -260,7 +260,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 			} else {
 
-				CategoryItem p = this.getById(parent.getUuid());//parent
+				CategoryItem p = this.getByUUID(parent.getUuid());//parent
 
 
 				String lineage = p.getLineage();
@@ -302,17 +302,17 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 	}
 
 	@Override
-	public List<CategoryItem> getListByDepth(MerchantStoreItem store, int depth, LanguageItem language) {
+	public List<CategoryItem> getListByDepth(MerchantStoreItem store, int depth, LocaleItem language) {
 		return categoryDao.findByDepth(store.getUuid(), depth, language.getUuid());
 	}
 
 	@Override
-	public List<CategoryItem> getListByDepthFilterByFeatured(MerchantStoreItem store, int depth, LanguageItem language) {
+	public List<CategoryItem> getListByDepthFilterByFeatured(MerchantStoreItem store, int depth, LocaleItem language) {
 		return categoryDao.findByDepthFilterByFeatured(store.getUuid(), depth, language.getUuid());
 	}
 
 	@Override
-	public List<CategoryItem> getByName(MerchantStoreItem store, String name, LanguageItem language) throws ServiceException {
+	public List<CategoryItem> getByName(MerchantStoreItem store, String name, LocaleItem language) throws ServiceException {
 
 		try {
 			return categoryDao.findByName(store.getUuid(), name, language.getUuid());
@@ -336,7 +336,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 	}
 
 	@Override
-	public List<CategoryItem> listByStore(MerchantStoreItem store, LanguageItem language)
+	public List<CategoryItem> listByStore(MerchantStoreItem store, LocaleItem language)
 			throws ServiceException {
 
 		try {

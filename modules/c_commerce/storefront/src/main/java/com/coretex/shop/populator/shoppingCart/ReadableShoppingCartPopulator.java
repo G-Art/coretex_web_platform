@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
-import com.coretex.items.commerce_core_model.ProductOptionItem;
-import com.coretex.items.commerce_core_model.ProductOptionValueItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import org.apache.commons.collections4.CollectionUtils;
@@ -28,9 +26,6 @@ import com.coretex.core.model.order.OrderTotalSummary;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.shop.model.order.total.ReadableOrderTotal;
 import com.coretex.shop.model.shoppingcart.ReadableShoppingCart;
-import com.coretex.shop.model.shoppingcart.ReadableShoppingCartAttribute;
-import com.coretex.shop.model.shoppingcart.ReadableShoppingCartAttributeOption;
-import com.coretex.shop.model.shoppingcart.ReadableShoppingCartAttributeOptionValue;
 import com.coretex.shop.model.shoppingcart.ReadableShoppingCartItem;
 import com.coretex.shop.populator.catalog.ReadableProductPopulator;
 import com.coretex.shop.utils.ImageFilePath;
@@ -47,9 +42,9 @@ public class ReadableShoppingCartPopulator extends AbstractDataPopulator<Shoppin
 
 	@Override
 	public ReadableShoppingCart populate(ShoppingCartItem source, ReadableShoppingCart target, MerchantStoreItem store,
-										 LanguageItem language) throws ConversionException {
+										 LocaleItem language) throws ConversionException {
 		Validate.notNull(source, "Requires ShoppingCartItem");
-		Validate.notNull(language, "Requires LanguageItem not null");
+		Validate.notNull(language, "Requires LocaleItem not null");
 		Validate.notNull(store, "Requires MerchantStoreItem not null");
 		Validate.notNull(pricingService, "Requires to set pricingService");
 		Validate.notNull(productAttributeService, "Requires to set productAttributeService");
@@ -100,43 +95,12 @@ public class ReadableShoppingCartPopulator extends AbstractDataPopulator<Shoppin
 					if (attributes != null) {
 						for (ShoppingCartEntryAttributeItem attribute : attributes) {
 
-							ProductAttributeItem productAttribute = productAttributeService.getById(attribute.getProductAttribute().getUuid());
+							ProductAttributeItem productAttribute = productAttributeService.getByUUID(attribute.getProductAttribute().getUuid());
 
 							if (productAttribute == null) {
 								LOGGER.warn("ProductItem attribute with ID " + attribute.getUuid() + " not found, skipping cart attribute " + attribute.getUuid());
 								continue;
 							}
-
-							ReadableShoppingCartAttribute cartAttribute = new ReadableShoppingCartAttribute();
-
-
-							cartAttribute.setUuid(attribute.getUuid());
-
-							ProductOptionItem option = productAttribute.getProductOption();
-							ProductOptionValueItem optionValue = productAttribute.getProductOptionValue();
-
-
-							String optName = null;
-							String optValue = null;
-							optName = option.getName();
-							optValue = optionValue.getName();
-
-							if (optName != null) {
-								ReadableShoppingCartAttributeOption attributeOption = new ReadableShoppingCartAttributeOption();
-								attributeOption.setCode(option.getCode());
-								attributeOption.setUuid(option.getUuid());
-								attributeOption.setName(optName);
-								cartAttribute.setOption(attributeOption);
-							}
-
-							if (optValue != null) {
-								ReadableShoppingCartAttributeOptionValue attributeOptionValue = new ReadableShoppingCartAttributeOptionValue();
-								attributeOptionValue.setCode(optionValue.getCode());
-								attributeOptionValue.setUuid(optionValue.getUuid());
-								attributeOptionValue.setName(optValue);
-								cartAttribute.setOptionValue(attributeOptionValue);
-							}
-							shoppingCartItem.getCartItemattributes().add(cartAttribute);
 						}
 
 					}

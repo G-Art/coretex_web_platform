@@ -1,7 +1,7 @@
 package com.coretex.shop.filter;
 
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -107,14 +107,14 @@ public class AdminFilter extends HandlerInterceptorAdapter {
 		request.setAttribute(Constants.ADMIN_STORE, store);
 
 
-		LanguageItem language = languageUtils.getRequestLanguage(request, response);
+		LocaleItem language = languageUtils.getRequestLanguage(request, response);
 
-		//LanguageItem language = (LanguageItem) request.getSession().getAttribute("LANGUAGE");
+		//LocaleItem language = (LocaleItem) request.getSession().getAttribute("LANGUAGE");
 
 		if (language == null) {
 
 			//TODO get the Locale from Spring API, is it simply request.getLocale() ???
-			//if so then based on the Locale language locale.getLanguage() get the appropriate LanguageItem
+			//if so then based on the Locale language locale.getLanguage() get the appropriate LocaleItem
 			//object as represented below
 			if (user != null) {
 				language = user.getLanguage();

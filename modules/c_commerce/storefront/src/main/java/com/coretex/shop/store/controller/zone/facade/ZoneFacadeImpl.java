@@ -4,7 +4,7 @@ import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.shop.model.references.ReadableZone;
 import com.coretex.shop.populator.references.ReadableZonePopulator;
@@ -25,7 +25,7 @@ public class ZoneFacadeImpl implements ZoneFacade {
 	private ZoneService zoneService;
 
 	@Override
-	public List<ReadableZone> getZones(String countryCode, LanguageItem language, MerchantStoreItem merchantStore) {
+	public List<ReadableZone> getZones(String countryCode, LocaleItem language, MerchantStoreItem merchantStore) {
 		List<ZoneItem> listZones = getListZones(countryCode, language);
 		if (listZones.isEmpty()) {
 			throw new ResourceNotFoundException("No zones found");
@@ -35,7 +35,7 @@ public class ZoneFacadeImpl implements ZoneFacade {
 				.collect(Collectors.toList());
 	}
 
-	private ReadableZone convertToReadableZone(ZoneItem zone, LanguageItem language, MerchantStoreItem merchantStore) {
+	private ReadableZone convertToReadableZone(ZoneItem zone, LocaleItem language, MerchantStoreItem merchantStore) {
 		try {
 			ReadableZonePopulator populator = new ReadableZonePopulator();
 			return populator.populate(zone, new ReadableZone(), merchantStore, language);
@@ -44,7 +44,7 @@ public class ZoneFacadeImpl implements ZoneFacade {
 		}
 	}
 
-	private List<ZoneItem> getListZones(String countryCode, LanguageItem language) {
+	private List<ZoneItem> getListZones(String countryCode, LocaleItem language) {
 		try {
 			return zoneService.getZones(countryCode, language);
 		} catch (ServiceException e) {

@@ -13,7 +13,7 @@ import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.commerce_core_model.CurrencyItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.items.commerce_core_model.UserItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
@@ -173,7 +173,7 @@ public class MerchantStoreController {
 	public String displayMerchantStore(@ModelAttribute("id") String id, Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
 		setMenu(model, request);
-		MerchantStoreItem store = merchantStoreService.getById(UUID.fromString(id));
+		MerchantStoreItem store = merchantStoreService.getByUUID(UUID.fromString(id));
 		return displayMerchantStore(store, model, request, response, locale);
 	}
 
@@ -181,8 +181,8 @@ public class MerchantStoreController {
 
 
 		setMenu(model, request);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
-		List<LanguageItem> languages = languageService.getLanguages();
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
+		List<LocaleItem> languages = languageService.getLanguages();
 		List<CurrencyItem> currencies = currencyService.list();
 		Date dt = store.getInBusinessSince();
 		if (dt != null) {
@@ -238,7 +238,7 @@ public class MerchantStoreController {
 			}
 		}
 
-		var store = merchantStoreService.getById(storeData.getId());
+		var store = merchantStoreService.getByUUID(storeData.getId());
 
 
 		PersistableMerchantStorePopulator populator = new PersistableMerchantStorePopulator();
@@ -263,8 +263,8 @@ public class MerchantStoreController {
 		List<CurrencyItem> currencies = currencyService.list();
 
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
-		List<LanguageItem> languages = languageService.getLanguages();
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
+		List<LocaleItem> languages = languageService.getLanguages();
 
 		//get countries
 		List<CountryItem> countries = countryService.getCountries(language);
@@ -307,10 +307,10 @@ public class MerchantStoreController {
 			zone = zoneService.getByCode(zone.getCode());
 		}
 		CurrencyItem currency = store.getCurrency();
-		currency = currencyService.getById(currency.getUuid());
+		currency = currencyService.getByUUID(currency.getUuid());
 
-		LanguageItem defaultLanguage = store.getDefaultLanguage();
-		defaultLanguage = languageService.getById(defaultLanguage.getUuid());
+		LocaleItem defaultLanguage = store.getDefaultLanguage();
+		defaultLanguage = languageService.getByUUID(defaultLanguage.getUuid());
 		if (defaultLanguage != null) {
 			store.setDefaultLanguage(defaultLanguage);
 		}
@@ -422,7 +422,7 @@ public class MerchantStoreController {
 		try {
 
 			UUID storeId = UUID.fromString(sMerchantStoreId);
-			MerchantStoreItem store = merchantStoreService.getById(storeId);
+			MerchantStoreItem store = merchantStoreService.getByUUID(storeId);
 
 			UserItem user = userService.getByUserName(request.getRemoteUser());
 

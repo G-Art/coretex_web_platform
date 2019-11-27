@@ -3,7 +3,7 @@ package com.coretex.core.business.services.reference.country;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 
 import java.util.List;
 import java.util.Map;
@@ -12,12 +12,12 @@ public interface CountryService extends SalesManagerEntityService<CountryItem> {
 
 	CountryItem getByCode(String code);
 
-	List<CountryItem> getCountries(LanguageItem language) throws ServiceException;
+	List<CountryItem> getCountries(LocaleItem language) throws ServiceException;
 
-	Map<String, CountryItem> getCountriesMap(LanguageItem language)
+	Map<String, CountryItem> getCountriesMap(LocaleItem language)
 			throws ServiceException;
 
-	List<CountryItem> getCountries(List<String> isoCodes, LanguageItem language)
+	List<CountryItem> getCountries(List<String> isoCodes, LocaleItem language)
 			throws ServiceException;
 
 
@@ -28,5 +28,5 @@ public interface CountryService extends SalesManagerEntityService<CountryItem> {
 	 * @return
 	 * @throws ServiceException
 	 */
-	List<CountryItem> listCountryZones(LanguageItem language) throws ServiceException;
+	List<CountryItem> listCountryZones(LocaleItem language) throws ServiceException;
 }

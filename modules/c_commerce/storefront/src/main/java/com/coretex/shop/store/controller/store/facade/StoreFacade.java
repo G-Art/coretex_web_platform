@@ -6,8 +6,8 @@ import com.coretex.core.model.content.InputContentFile;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.core.model.merchant.MerchantStoreCriteria;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.shop.PersistableBrand;
 import com.coretex.shop.model.shop.PersistableMerchantStore;
 import com.coretex.shop.model.shop.ReadableBrand;
@@ -36,7 +36,7 @@ public interface StoreFacade {
 
 	ReadableMerchantStore getByCode(String code, String lang);
 
-	ReadableMerchantStore getByCode(String code, LanguageItem lang);
+	ReadableMerchantStore getByCode(String code, LocaleItem lang);
 
 	boolean existByCode(String code);
 
@@ -48,7 +48,7 @@ public interface StoreFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableMerchantStoreList getByCriteria(MerchantStoreCriteria criteria, String drawParam, LanguageItem lang);
+	ReadableMerchantStoreList getByCriteria(MerchantStoreCriteria criteria, String drawParam, LocaleItem lang);
 
 	/**
 	 * Creates a brand new MerchantStoreItem

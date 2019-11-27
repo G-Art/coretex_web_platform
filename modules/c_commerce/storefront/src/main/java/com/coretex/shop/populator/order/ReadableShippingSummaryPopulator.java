@@ -5,7 +5,7 @@ import org.apache.commons.lang3.Validate;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.core.model.shipping.ShippingSummary;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.shop.model.customer.ReadableDelivery;
@@ -19,7 +19,7 @@ public class ReadableShippingSummaryPopulator extends
 	@Override
 	public ReadableShippingSummary populate(ShippingSummary source,
 											ReadableShippingSummary target, MerchantStoreItem store,
-											LanguageItem language) throws ConversionException {
+											LocaleItem language) throws ConversionException {
 
 		Validate.notNull(pricingService, "PricingService must be set");
 

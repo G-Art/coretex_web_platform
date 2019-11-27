@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import com.coretex.core.business.services.content.ContentService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.currency.CurrencyService;
@@ -45,22 +44,6 @@ public class StoreBrandingController {
 
 	@Resource
 	MerchantStoreService merchantStoreService;
-
-	@Resource
-	CountryService countryService;
-
-	@Resource
-	ZoneService zoneService;
-
-	@Resource
-	LanguageService languageService;
-
-	@Resource
-	CurrencyService currencyService;
-
-	@Resource
-	private ContentService contentService;
-
 
 	@Resource(name = "templates")
 	List<String> templates;
@@ -85,8 +68,6 @@ public class StoreBrandingController {
 	/**
 	 * https://spring.io/guides/gs/uploading-files/
 	 *
-	 * @param contentImages
-	 * @param result
 	 * @param model
 	 * @param request
 	 * @param response
@@ -116,7 +97,6 @@ public class StoreBrandingController {
 			cmsContentImage.setFileName(imageName);
 			cmsContentImage.setMimeType(mimeType);
 			cmsContentImage.setFile(inputStream);
-			contentService.addLogo(store.getCode(), cmsContentImage);
 
 			//Update store
 			store.setStoreLogo(imageName);
@@ -165,9 +145,6 @@ public class StoreBrandingController {
 		AjaxResponse resp = new AjaxResponse();
 
 		try {
-
-
-			contentService.removeFile(store.getCode(), FileContentType.LOGO, store.getStoreLogo());
 
 			store.setStoreLogo(null);
 			merchantStoreService.update(store);

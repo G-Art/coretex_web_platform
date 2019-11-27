@@ -2,7 +2,7 @@ package com.coretex.core.business.services.catalog.product.manufacturer;
 
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface ManufacturerService extends SalesManagerEntityService<ManufacturerItem> {
 
-	List<ManufacturerItem> listByStore(MerchantStoreItem store, LanguageItem language)
+	List<ManufacturerItem> listByStore(MerchantStoreItem store, LocaleItem language)
 			throws ServiceException;
 
 	List<ManufacturerItem> listByStore(MerchantStoreItem store) throws ServiceException;
@@ -33,6 +33,6 @@ public interface ManufacturerService extends SalesManagerEntityService<Manufactu
 	 * @throws ServiceException
 	 */
 	List<ManufacturerItem> listByProductsByCategoriesId(MerchantStoreItem store,
-														List<UUID> ids, LanguageItem language) throws ServiceException;
+														List<UUID> ids, LocaleItem language) throws ServiceException;
 
 }

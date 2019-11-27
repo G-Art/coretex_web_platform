@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +51,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.customer.UserAlreadyExistException;
@@ -238,7 +238,7 @@ public class FacebookCustomerAuthenticationManager extends CustomAuthenticationM
 			try {
 
 				MerchantStoreItem merchantStore = storeFacade.getByCode(request);
-				LanguageItem language = languageUtils.getRESTLanguage(request, merchantStore);
+				LocaleItem language = languageUtils.getRESTLanguage(request, merchantStore);
 
 				registration = register(token.getConnection());
 

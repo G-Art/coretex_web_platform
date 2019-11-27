@@ -9,8 +9,8 @@ import com.coretex.items.commerce_core_model.ProductRelationshipItem;
 import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.core.LocaleItem;
 
 public interface ProductRelationshipService extends
 		SalesManagerEntityService<ProductRelationshipItem> {
@@ -29,7 +29,7 @@ public interface ProductRelationshipService extends
 	 * @throws ServiceException
 	 */
 	List<ProductRelationshipItem> getByType(MerchantStoreItem store, ProductItem product,
-											ProductRelationshipType type, LanguageItem language) throws ServiceException;
+											ProductRelationshipType type, LocaleItem language) throws ServiceException;
 
 	/**
 	 * Get product relationship List for a given type (RELATED, FEATURED...) and a given base product
@@ -58,7 +58,7 @@ public interface ProductRelationshipService extends
 	List<ProductRelationshipItem> listByProduct(ProductItem product);
 
 	List<ProductRelationshipItem> getByType(MerchantStoreItem store,
-											ProductRelationshipType type, LanguageItem language);
+											ProductRelationshipType type, LocaleItem language);
 
 	/**
 	 * Get a list of relationship acting as groups of products
@@ -89,6 +89,6 @@ public interface ProductRelationshipService extends
 			throws ServiceException;
 
 	List<ProductRelationshipItem> getByGroup(MerchantStoreItem store, String groupName,
-											 LanguageItem language) throws ServiceException;
+											 LocaleItem language) throws ServiceException;
 
 }

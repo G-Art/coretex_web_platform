@@ -16,7 +16,7 @@ import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.constants.SchemaConstant;
 import com.coretex.items.commerce_core_model.CurrencyItem;
 import com.coretex.items.commerce_core_model.DeliveryServiceItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductTypeItem;
@@ -136,7 +136,7 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 
 	private void createCountries() {
 		LOGGER.info(String.format("%s : Populating Countries ", name));
-		List<LanguageItem> languages = languageService.list();
+		List<LocaleItem> languages = languageService.list();
 		SchemaConstant.COUNTRY_CONFIG.forEach((k,v) -> {
 			CountryItem country = new CountryItem();
 			country.setIsoCode(k);
@@ -194,9 +194,6 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 		LOGGER.info(String.format("%s : Populating Languages ", name));
 		for (String code : SchemaConstant.LANGUAGE_ISO_CODE) {
 			var locale = LocaleUtils.toLocale(code);
-			LanguageItem language = new LanguageItem();
-			language.setCode(code);
-			languageService.create(language);
 
 			LocaleItem localeItem = new LocaleItem();
 			localeItem.setIso(code);
@@ -212,12 +209,12 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 
 		Date date = new Date(System.currentTimeMillis());
 
-		LanguageItem en = languageService.getByCode("ru");
+		LocaleItem en = languageService.getByCode("ru");
 		CountryItem ca = countryService.getByCode("UA");
 		CurrencyItem currency = currencyService.getByCode("UAH");
 		ZoneItem qc = zoneService.getByCode("Kyiv");
 
-		List<LanguageItem> supportedLanguages = new ArrayList<LanguageItem>();
+		List<LocaleItem> supportedLanguages = new ArrayList<LocaleItem>();
 		supportedLanguages.add(en);
 
 		//create a merchant
@@ -230,13 +227,13 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 		store.setZone(qc);
 		store.setUseCache(true);
 		store.setStoreName("G.O.O.D M.O.O.D");
-		store.setStorePhone("888-888-8888");
+		store.setStorePhone("+38(066) 666-66-66");
 		store.setCode(Constants.DEFAULT_STORE);
-		store.setStoreCity("My city");
+		store.setStoreCity("Kiev");
 		store.setStoreAddress("1234 Street address");
-		store.setStorePostalCode("H2H-2H2");
-		store.setStoreEmailAddress("john@test.com");
-		store.setDomainName("localhost:8008");
+		store.setStorePostalCode("08122");
+		store.setStoreEmailAddress("support@goodmood.market");
+		store.setDomainName("https//goodmood.market:8888/");
 		store.setStoreTemplate("exoticamobilia");
 		store.setLanguages(supportedLanguages);
 		store.setCurrencyFormatNational(true);

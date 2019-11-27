@@ -197,7 +197,7 @@ public class ProductPriceUtils {
 		try {
 
 			currency = Currency.getInstance(store.getCurrency().getCode());
-			locale = new Locale(store.getDefaultLanguage().getCode(), store.getCountry().getIsoCode());
+			locale = new Locale(store.getDefaultLanguage().getIso(), store.getCountry().getIsoCode());
 		} catch (Exception e) {
 			LOGGER.error("Cannot create currency or locale instance for store " + store.getCode());
 		}

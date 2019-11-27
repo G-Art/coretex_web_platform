@@ -48,7 +48,7 @@ public class DigitalProductController {
 		this.setMenu(model, request);
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		if (product == null || !product.getMerchantStore().getUuid().equals(store.getUuid())) {
 			return "redirect:/admin/products/products.html";
@@ -70,7 +70,7 @@ public class DigitalProductController {
 		this.setMenu(model, request);
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		ProductItem product = productService.getById(productFiles.getProduct().getUuid());
+		ProductItem product = productService.getByUUID(productFiles.getProduct().getUuid());
 		DigitalProductItem digitalProduct = new DigitalProductItem();
 		if (product == null || !product.getMerchantStore().getUuid().equals(store.getUuid())) {
 			return "redirect:/admin/products/products.html";
@@ -130,7 +130,7 @@ public class DigitalProductController {
 
 		try {
 
-			DigitalProductItem digitalProduct = digitalProductService.getById(UUID.fromString(fileId));
+			DigitalProductItem digitalProduct = digitalProductService.getByUUID(UUID.fromString(fileId));
 
 			//validate store
 			if (digitalProduct == null) {

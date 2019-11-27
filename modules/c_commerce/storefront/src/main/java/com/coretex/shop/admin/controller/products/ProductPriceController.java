@@ -6,7 +6,7 @@ import com.coretex.core.business.utils.ProductPriceUtils;
 import com.coretex.core.business.utils.ajax.AjaxPageableResponse;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.enums.commerce_core_model.ProductPriceTypeEnum;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductItem;
@@ -70,7 +70,7 @@ public class ProductPriceController {
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 		//get the product and validate it belongs to the current merchant
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		if (product == null) {
 			return "redirect:/admin/products/products.html";
@@ -102,7 +102,7 @@ public class ProductPriceController {
 		String sProductId = request.getParameter("productId");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 
 		AjaxResponse resp = new AjaxResponse();
@@ -123,7 +123,7 @@ public class ProductPriceController {
 
 		try {
 
-			product = productService.getById(productId);
+			product = productService.getByUUID(productId);
 
 
 			if (product == null) {
@@ -199,7 +199,7 @@ public class ProductPriceController {
 	@RequestMapping(value = "/admin/products/price/edit.html", method = RequestMethod.GET)
 	public String editProductPrice(@RequestParam("id") String productPriceId, @RequestParam("productId") String productId, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		if (product == null) {
 			return "redirect:/admin/products/products.html";
@@ -220,7 +220,7 @@ public class ProductPriceController {
 	public String displayCreateProductPrice(@RequestParam("productId") String productId, @RequestParam("availabilityId") String avilabilityId, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 		if (product == null) {
 			return "redirect:/admin/products/products.html";
 		}
@@ -315,7 +315,7 @@ public class ProductPriceController {
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 		ProductItem product = price.getProduct();
-		ProductItem dbProduct = productService.getById(product.getUuid());
+		ProductItem dbProduct = productService.getByUUID(product.getUuid());
 		if (!store.getUuid().equals(dbProduct.getMerchantStore().getUuid())) {
 			return "redirect:/admin/products/products.html";
 		}
@@ -412,7 +412,7 @@ public class ProductPriceController {
 		try {
 
 			UUID priceId = UUID.fromString(sPriceid);
-			ProductPriceItem price = productPriceService.getById(priceId);
+			ProductPriceItem price = productPriceService.getByUUID(priceId);
 
 
 			if (price == null || !price.getProductAvailability().getProduct().getMerchantStore().getUuid().equals(store.getUuid())) {

@@ -100,14 +100,14 @@
                         <div class="control-group">
                             <label><s:message code="label.configuration.useglobalsearch_suggestions"
                                               text="Use global pre-defined search suggestions"/>
-                                (${language.code})</label>
+                                (${language.iso})</label>
                             <div class="controls">
-                                <form:checkbox path="useDefaultSearchConfig['${language.code}']" value="on"/>
+                                <form:checkbox path="useDefaultSearchConfig['${language.iso}']" value="on"/>
                                 <br/>
                                 <s:message code="label.configuration.globalsearch_suggestions_path"
                                            text="Global pre-defined search suggestions file path"/>
-                                (${language.code})<br/>
-                                <form:input cssClass="input-large" path="defaultSearchConfigPath['${language.code}']"/>
+                                (${language.iso})<br/>
+                                <form:input cssClass="input-large" path="defaultSearchConfigPath['${language.iso}']"/>
                                 <span class="help-inline"></span>
                             </div>
                         </div>

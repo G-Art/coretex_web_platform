@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.logging.Log;
@@ -17,7 +17,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.store.api.exception.ServiceRuntimeException;
 
@@ -29,14 +29,10 @@ public class LanguageUtils {
 	@Resource
 	LanguageService languageService;
 
-	public LanguageItem getServiceLanguage(String lang) {
-		LanguageItem l = null;
+	public LocaleItem getServiceLanguage(String lang) {
+		LocaleItem l = null;
 		if (!StringUtils.isBlank(lang)) {
-			try {
-				l = languageService.getByCode(lang);
-			} catch (ServiceException e) {
-				logger.error("Cannot retrieve language " + lang, e);
-			}
+			l = languageService.getByCode(lang);
 		}
 
 		if (l == null) {
@@ -52,11 +48,11 @@ public class LanguageUtils {
 	 * @param request
 	 * @return
 	 */
-	public LanguageItem getRequestLanguage(HttpServletRequest request, HttpServletResponse response) {
+	public LocaleItem getRequestLanguage(HttpServletRequest request, HttpServletResponse response) {
 
 		Locale locale = null;
 
-		LanguageItem language = (LanguageItem) request.getSession().getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getSession().getAttribute(Constants.LANGUAGE);
 		MerchantStoreItem store = (MerchantStoreItem) request.getSession().getAttribute(Constants.MERCHANT_STORE);
 
 
@@ -95,7 +91,7 @@ public class LanguageUtils {
 
 
 			Locale localeFromContext = LocaleContextHolder.getLocale();//should be browser locale
-			if (!language.getCode().equals(localeFromContext.getLanguage())) {
+			if (!language.getIso().equals(localeFromContext.getLanguage())) {
 				//get locale context
 				language = languageService.toLanguage(localeFromContext);
 			}
@@ -126,32 +122,28 @@ public class LanguageUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public LanguageItem getRESTLanguage(HttpServletRequest request, MerchantStoreItem store) {
+	public LocaleItem getRESTLanguage(HttpServletRequest request, MerchantStoreItem store) {
 
 		Validate.notNull(request, "HttpServletRequest must not be null");
 		Validate.notNull(store, "MerchantStoreItem must not be null");
 
-		try {
-			LanguageItem language = null;
+		LocaleItem language = null;
 
-			String lang = request.getParameter(Constants.LANG);
+		String lang = request.getParameter(Constants.LANG);
 
-			if (StringUtils.isBlank(lang)) {
-				if (language == null) {
-					language = languageService.defaultLanguage();
-				}
-			} else {
-				language = languageService.getByCode(lang);
-				if (language == null) {
-					language = languageService.defaultLanguage();
-				}
+		if (StringUtils.isBlank(lang)) {
+			if (language == null) {
+				language = languageService.defaultLanguage();
 			}
-
-			return language;
-
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(e);
+		} else {
+			language = languageService.getByCode(lang);
+			if (language == null) {
+				language = languageService.defaultLanguage();
+			}
 		}
+
+		return language;
+
 	}
 
 }

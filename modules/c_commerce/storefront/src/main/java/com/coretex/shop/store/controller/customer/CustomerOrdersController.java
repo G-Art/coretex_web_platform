@@ -6,7 +6,7 @@ import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.order.ReadableOrder;
 import com.coretex.shop.model.order.ReadableOrderList;
@@ -65,7 +65,7 @@ public class CustomerOrdersController extends AbstractController {
 
 		LOGGER.info("Fetching orders for current customer");
 		MerchantStoreItem store = getSessionAttribute(Constants.MERCHANT_STORE, request);
-		LanguageItem language = getSessionAttribute(Constants.LANGUAGE, request);
+		LocaleItem language = getSessionAttribute(Constants.LANGUAGE, request);
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		CustomerItem customer = null;
@@ -101,7 +101,7 @@ public class CustomerOrdersController extends AbstractController {
 
 		MerchantStoreItem store = getSessionAttribute(Constants.MERCHANT_STORE, request);
 
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 
 		if (StringUtils.isBlank(orderId)) {
 			LOGGER.error("OrderItem Id can not be null or empty");

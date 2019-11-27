@@ -3,23 +3,19 @@ package com.coretex.shop.populator.catalog;
 import com.coretex.core.business.constants.Constants;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.services.catalog.category.CategoryService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductOptionService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductOptionValueService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductOptionItem;
-import com.coretex.items.commerce_core_model.ProductOptionValueItem;
 import com.coretex.items.commerce_core_model.ProductPriceItem;
 import com.coretex.shop.model.catalog.product.PersistableImage;
 import com.coretex.shop.model.catalog.product.PersistableProduct;
@@ -47,25 +43,13 @@ public class PersistableProductPopulator extends
 	@Resource
 	private LanguageService languageService;
 	@Resource
-	private ProductOptionService productOptionService;
-	@Resource
-	private ProductOptionValueService productOptionValueService;
-	@Resource
 	private CustomerService customerService;
 
 
 	@Override
 	public ProductItem populate(PersistableProduct source,
-								ProductItem target, MerchantStoreItem store, LanguageItem language)
+								ProductItem target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
-		
-/*			Validate.notNull(manufacturerService, "Requires to set ManufacturerService");
-			Validate.notNull(languageService, "Requires to set LanguageService");
-			Validate.notNull(categoryService, "Requires to set CategoryService");
-			Validate.notNull(taxClassService, "Requires to set TaxClassService");
-			Validate.notNull(customerService, "Requires to set CustomerService");//RENTAL
-			Validate.notNull(productOptionService, "Requires to set ProductOptionService");
-			Validate.notNull(productOptionValueService, "Requires to set ProductOptionValueService");*/
 
 		try {
 
@@ -89,7 +73,7 @@ public class PersistableProductPopulator extends
 			/** end RENTAL **/
 
 			if (source.getOwner() != null && source.getOwner().getUuid() != null) {
-				CustomerItem owner = customerService.getById(source.getOwner().getUuid());
+				CustomerItem owner = customerService.getByUUID(source.getOwner().getUuid());
 				target.setOwner(owner);
 			}
 
@@ -104,7 +88,7 @@ public class PersistableProductPopulator extends
 					manuf = manufacturerService.getByCode(store, source.getManufacturer().getCode());
 				} else {
 					Validate.notNull(source.getManufacturer().getUuid(), "Requires to set manufacturer id");
-					manuf = manufacturerService.getById(source.getManufacturer().getUuid());
+					manuf = manufacturerService.getByUUID(source.getManufacturer().getUuid());
 				}
 
 				if (manuf == null) {
@@ -205,43 +189,8 @@ public class PersistableProductPopulator extends
 			if (source.getAttributes() != null) {
 				for (com.coretex.shop.model.catalog.product.attribute.PersistableProductAttribute attr : source.getAttributes()) {
 
-					ProductOptionItem productOption = null;
-
-					if (!StringUtils.isBlank(attr.getOption().getCode())) {
-						productOption = productOptionService.getByCode(store, attr.getOption().getCode());
-					} else {
-						Validate.notNull(attr.getOption().getUuid(), "ProductItem option id is null");
-						productOption = productOptionService.getById(attr.getOption().getUuid());
-					}
-
-					if (productOption == null) {
-						throw new ConversionException("ProductItem option id " + attr.getOption().getUuid() + " does not exist");
-					}
-
-					ProductOptionValueItem productOptionValue = null;
-
-					if (!StringUtils.isBlank(attr.getOptionValue().getCode())) {
-						productOptionValue = productOptionValueService.getByCode(store, attr.getOptionValue().getCode());
-					} else {
-						productOptionValue = productOptionValueService.getById(attr.getOptionValue().getUuid());
-					}
-
-					if (productOptionValue == null) {
-						throw new ConversionException("ProductItem option value id " + attr.getOptionValue().getUuid() + " does not exist");
-					}
-
-					if (!productOption.getMerchantStore().getUuid().equals(store.getUuid())) {
-						throw new ConversionException("Invalid product option id ");
-					}
-
-					if (!productOptionValue.getMerchantStore().getUuid().equals(store.getUuid())) {
-						throw new ConversionException("Invalid product option value id ");
-					}
-
 					ProductAttributeItem attribute = new ProductAttributeItem();
 					attribute.setProduct(target);
-					attribute.setProductOption(productOption);
-					attribute.setProductOptionValue(productOptionValue);
 					attribute.setProductAttributePrice(attr.getProductAttributePrice());
 					attribute.setProductAttributeWeight(attr.getProductAttributeWeight());
 					attribute.setProductAttributePrice(attr.getProductAttributePrice());
@@ -260,7 +209,7 @@ public class PersistableProductPopulator extends
 						c = categoryService.getByCode(store, categ.getCode());
 					} else {
 						Validate.notNull(categ.getUuid(), "CategoryItem id nust not be null");
-						c = categoryService.getById(categ.getUuid());
+						c = categoryService.getByUUID(categ.getUuid());
 					}
 
 					if (c == null) {
@@ -303,24 +252,6 @@ public class PersistableProductPopulator extends
 	public void setLanguageService(LanguageService languageService) {
 		this.languageService = languageService;
 	}
-
-	public ProductOptionService getProductOptionService() {
-		return productOptionService;
-	}
-
-	public void setProductOptionService(ProductOptionService productOptionService) {
-		this.productOptionService = productOptionService;
-	}
-
-	public ProductOptionValueService getProductOptionValueService() {
-		return productOptionValueService;
-	}
-
-	public void setProductOptionValueService(
-			ProductOptionValueService productOptionValueService) {
-		this.productOptionValueService = productOptionValueService;
-	}
-
 
 	@Override
 	protected ProductItem createTarget() {

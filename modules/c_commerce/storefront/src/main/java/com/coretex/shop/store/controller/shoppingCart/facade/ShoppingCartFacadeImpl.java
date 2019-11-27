@@ -16,11 +16,11 @@ import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
-import com.google.api.client.util.Sets;
+import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -116,7 +116,7 @@ public class ShoppingCartFacadeImpl
 
 	@Override
 	public ShoppingCartData addItemsToShoppingCart(final ShoppingCartData shoppingCartData,
-												   final com.coretex.shop.model.shoppingcart.ShoppingCartItem item, final MerchantStoreItem store, final LanguageItem language, final CustomerItem customer)
+												   final com.coretex.shop.model.shoppingcart.ShoppingCartItem item, final MerchantStoreItem store, final LocaleItem language, final CustomerItem customer)
 			throws Exception {
 
 		ShoppingCartItem cartModel = null;
@@ -191,7 +191,7 @@ public class ShoppingCartFacadeImpl
 												 final MerchantStoreItem store)
 			throws Exception {
 
-		ProductItem product = productService.getById(shoppingCartItem.getProductId());
+		ProductItem product = productService.getByUUID(shoppingCartItem.getProductId());
 
 		if (product == null) {
 			throw new Exception("Item with id " + shoppingCartItem.getProductId() + " does not exist");
@@ -240,7 +240,7 @@ public class ShoppingCartFacadeImpl
 		List<ShoppingCartAttribute> cartAttributes = shoppingCartItem.getShoppingCartAttributes();
 		if (!CollectionUtils.isEmpty(cartAttributes)) {
 			for (ShoppingCartAttribute attribute : cartAttributes) {
-				ProductAttributeItem productAttribute = productAttributeService.getById(attribute.getAttributeId());
+				ProductAttributeItem productAttribute = productAttributeService.getByUUID(attribute.getAttributeId());
 				if (productAttribute != null
 						&& productAttribute.getProduct().getUuid().equals(product.getUuid())) {
 					ShoppingCartEntryAttributeItem attributeItem =
@@ -269,7 +269,7 @@ public class ShoppingCartFacadeImpl
 	private ShoppingCartEntryItem createCartItem(ShoppingCartItem cartModel,
 												 PersistableShoppingCartItem shoppingCartItem, MerchantStoreItem store) throws Exception {
 
-		ProductItem product = productService.getById(shoppingCartItem.getProduct());
+		ProductItem product = productService.getByUUID(shoppingCartItem.getProduct());
 
 		if (product == null) {
 			throw new Exception("Item with id " + shoppingCartItem.getProduct() + " does not exist");
@@ -319,7 +319,7 @@ public class ShoppingCartFacadeImpl
 		if (!CollectionUtils.isEmpty(attributes)) {
 			for (com.coretex.shop.model.catalog.product.attribute.ProductAttribute attribute : attributes) {
 
-				ProductAttributeItem productAttribute = productAttributeService.getById(attribute.getUuid());
+				ProductAttributeItem productAttribute = productAttributeService.getByUUID(attribute.getUuid());
 
 				if (productAttribute != null
 						&& productAttribute.getProduct().getUuid().equals(product.getUuid())) {
@@ -388,7 +388,7 @@ public class ShoppingCartFacadeImpl
 
 	@Override
 	public ShoppingCartData getShoppingCartData(final CustomerItem customer, final MerchantStoreItem store,
-												final String shoppingCartId, LanguageItem language)
+												final String shoppingCartId, LocaleItem language)
 			throws Exception {
 
 		ShoppingCartItem cart = null;
@@ -414,7 +414,7 @@ public class ShoppingCartFacadeImpl
 
 		LOG.info("Cart model found.");
 
-		//LanguageItem language = (LanguageItem) getKeyValue( Constants.LANGUAGE );
+		//LocaleItem language = (LocaleItem) getKeyValue( Constants.LANGUAGE );
 		MerchantStoreItem merchantStore = (MerchantStoreItem) getKeyValue(Constants.MERCHANT_STORE);
 
 		ShoppingCartData shoppingCartData = shoppingCartDataPopulator.populate(cart, merchantStore, language);
@@ -441,14 +441,14 @@ public class ShoppingCartFacadeImpl
 	}
 
 	//@Override
-	public ShoppingCartData getShoppingCartData(final ShoppingCartItem shoppingCartModel, LanguageItem language)
+	public ShoppingCartData getShoppingCartData(final ShoppingCartItem shoppingCartModel, LocaleItem language)
 			throws Exception {
 		MerchantStoreItem merchantStore = (MerchantStoreItem) getKeyValue(Constants.MERCHANT_STORE);
 		return shoppingCartDataPopulator.populate(shoppingCartModel, merchantStore, language);
 	}
 
 	@Override
-	public ShoppingCartData removeCartItem(final UUID itemID, final String cartId, final MerchantStoreItem store, final LanguageItem language)
+	public ShoppingCartData removeCartItem(final UUID itemID, final String cartId, final MerchantStoreItem store, final LocaleItem language)
 			throws Exception {
 		if (StringUtils.isNotBlank(cartId)) {
 
@@ -479,7 +479,7 @@ public class ShoppingCartFacadeImpl
 	}
 
 	@Override
-	public ShoppingCartData updateCartItem(final UUID itemID, final String cartId, final long newQuantity, final MerchantStoreItem store, final LanguageItem language)
+	public ShoppingCartData updateCartItem(final UUID itemID, final String cartId, final long newQuantity, final MerchantStoreItem store, final LocaleItem language)
 			throws Exception {
 		if (newQuantity < 1) {
 			throw new CartModificationException("Quantity must not be less than one");
@@ -514,7 +514,7 @@ public class ShoppingCartFacadeImpl
 	}
 
 	@Override
-	public ShoppingCartData updateCartItems(final List<com.coretex.shop.model.shoppingcart.ShoppingCartItem> shoppingCartItems, final MerchantStoreItem store, final LanguageItem language)
+	public ShoppingCartData updateCartItems(final List<com.coretex.shop.model.shoppingcart.ShoppingCartItem> shoppingCartItems, final MerchantStoreItem store, final LocaleItem language)
 			throws Exception {
 
 		Validate.notEmpty(shoppingCartItems, "shoppingCartItems null or empty");
@@ -578,7 +578,7 @@ public class ShoppingCartFacadeImpl
 	}
 
 	@Override
-	public ShoppingCartData getShoppingCartData(String code, MerchantStoreItem store, LanguageItem language) {
+	public ShoppingCartData getShoppingCartData(String code, MerchantStoreItem store, LocaleItem language) {
 		try {
 			ShoppingCartItem cartModel = shoppingCartService.getByCode(code, store);
 			if (cartModel != null) {
@@ -612,7 +612,7 @@ public class ShoppingCartFacadeImpl
 	}
 
 	@Override
-	public ReadableShoppingCart getCart(CustomerItem customer, MerchantStoreItem store, LanguageItem language) throws Exception {
+	public ReadableShoppingCart getCart(CustomerItem customer, MerchantStoreItem store, LocaleItem language) throws Exception {
 
 		Validate.notNull(customer, "CustomerItem cannot be null");
 		Validate.notNull(customer.getUuid(), "CustomerItem.id cannot be null or empty");
@@ -643,7 +643,7 @@ public class ShoppingCartFacadeImpl
 
 	@Override
 	public ReadableShoppingCart addToCart(PersistableShoppingCartItem item, MerchantStoreItem store,
-										  LanguageItem language) throws Exception {
+										  LocaleItem language) throws Exception {
 
 		Validate.notNull(item, "PersistableShoppingCartItem cannot be null");
 
@@ -658,7 +658,7 @@ public class ShoppingCartFacadeImpl
 	}
 
 	private ReadableShoppingCart readableShoppingCart(ShoppingCartItem cartModel, PersistableShoppingCartItem item, MerchantStoreItem store,
-													  LanguageItem language) throws Exception {
+													  LocaleItem language) throws Exception {
 
 
 		ShoppingCartEntryItem itemModel = createCartItem(cartModel, item, store);
@@ -713,7 +713,7 @@ public class ShoppingCartFacadeImpl
 
 
 	private ReadableShoppingCart modifyCart(ShoppingCartItem cartModel, PersistableShoppingCartItem item, MerchantStoreItem store,
-											LanguageItem language) throws Exception {
+											LocaleItem language) throws Exception {
 
 
 		ShoppingCartEntryItem itemModel = createCartItem(cartModel, item, store);
@@ -789,7 +789,7 @@ public class ShoppingCartFacadeImpl
 
 	@Override
 	public ReadableShoppingCart addToCart(CustomerItem customer, PersistableShoppingCartItem item, MerchantStoreItem store,
-										  LanguageItem language) throws Exception {
+										  LocaleItem language) throws Exception {
 
 		Validate.notNull(customer, "CustomerItem cannot be null");
 		Validate.notNull(customer.getUuid(), "CustomerItem.id cannot be null or empty");
@@ -810,7 +810,7 @@ public class ShoppingCartFacadeImpl
 
 	@Override
 	public ReadableShoppingCart addToCart(String cartCode, PersistableShoppingCartItem item, MerchantStoreItem store,
-										  LanguageItem language) throws Exception {
+										  LocaleItem language) throws Exception {
 
 		Validate.notNull(cartCode, "PString cart code cannot be null");
 		Validate.notNull(item, "PersistableShoppingCartItem cannot be null");
@@ -832,9 +832,9 @@ public class ShoppingCartFacadeImpl
 	}
 
 	@Override
-	public ReadableShoppingCart getById(UUID shoppingCartId, MerchantStoreItem store, LanguageItem language) throws Exception {
+	public ReadableShoppingCart getById(UUID shoppingCartId, MerchantStoreItem store, LocaleItem language) throws Exception {
 
-		ShoppingCartItem cart = shoppingCartService.getById(shoppingCartId);
+		ShoppingCartItem cart = shoppingCartService.getByUUID(shoppingCartId);
 
 		ReadableShoppingCart readableCart = null;
 
@@ -857,11 +857,11 @@ public class ShoppingCartFacadeImpl
 
 	@Override
 	public ShoppingCartItem getShoppingCartModel(UUID id, MerchantStoreItem store) throws Exception {
-		return shoppingCartService.getById(id);
+		return shoppingCartService.getByUUID(id);
 	}
 
 	@Override
-	public ReadableShoppingCart getByCode(String code, MerchantStoreItem store, LanguageItem language) throws Exception {
+	public ReadableShoppingCart getByCode(String code, MerchantStoreItem store, LocaleItem language) throws Exception {
 
 		ShoppingCartItem cart = shoppingCartService.getByCode(code, store);
 

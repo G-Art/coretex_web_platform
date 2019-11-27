@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class ZonesLoader {
 	public Map<String, ZoneItem> loadZones(String jsonFilePath) throws Exception {
 
 
-		List<LanguageItem> languages = languageService.list();
+		List<LocaleItem> languages = languageService.list();
 
 		List<CountryItem> countries = countryService.list();
 		Map<String, CountryItem> countriesMap = new HashMap<String, CountryItem>();

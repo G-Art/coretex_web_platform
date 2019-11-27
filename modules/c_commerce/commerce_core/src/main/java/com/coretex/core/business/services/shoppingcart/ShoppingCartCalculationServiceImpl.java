@@ -4,7 +4,7 @@ package com.coretex.core.business.services.shoppingcart;
 import javax.annotation.Resource;
 
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import org.apache.commons.lang3.Validate;
@@ -62,7 +62,7 @@ public class ShoppingCartCalculationServiceImpl implements ShoppingCartCalculati
 	 */
 	@Override
 	public OrderTotalSummary calculate(final ShoppingCartItem cartModel, final CustomerItem customer, final MerchantStoreItem store,
-									   final LanguageItem language) throws ServiceException {
+									   final LocaleItem language) throws ServiceException {
 
 		Validate.notNull(cartModel, "cart cannot be null");
 		Validate.notNull(cartModel.getLineItems(), "Cart should have line items.");
@@ -96,7 +96,7 @@ public class ShoppingCartCalculationServiceImpl implements ShoppingCartCalculati
 	 * @throws ServiceException
 	 */
 	@Override
-	public OrderTotalSummary calculate(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LanguageItem language)
+	public OrderTotalSummary calculate(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LocaleItem language)
 			throws ServiceException {
 
 		Validate.notNull(cartModel, "cart cannot be null");

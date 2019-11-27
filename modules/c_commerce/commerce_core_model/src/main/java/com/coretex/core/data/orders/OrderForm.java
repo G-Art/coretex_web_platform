@@ -1,7 +1,6 @@
 package com.coretex.core.data.orders;
 
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
-import com.coretex.items.commerce_core_model.CreditCardItem;
 import com.coretex.items.commerce_core_model.CurrencyItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
@@ -33,7 +32,6 @@ public class OrderForm implements Serializable {
 	private BigDecimal total;
 
 	private transient CurrencyItem currency;
-	private transient CreditCardItem creditCard;
 	private transient Set<OrderProductItem> orderProducts;
 	private transient Set<OrderTotalItem> orderTotal;
 	private transient Set<OrderStatusHistoryItem> orderHistory;
@@ -94,14 +92,6 @@ public class OrderForm implements Serializable {
 
 	public void setPaymentModuleCode(String paymentModuleCode) {
 		this.paymentModuleCode = paymentModuleCode;
-	}
-
-	public CreditCardItem getCreditCard() {
-		return creditCard;
-	}
-
-	public void setCreditCard(CreditCardItem creditCard) {
-		this.creditCard = creditCard;
 	}
 
 	public String getPaymentType() {

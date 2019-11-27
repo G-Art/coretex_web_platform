@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -44,7 +44,7 @@ public class ReadableMerchantStorePopulator extends
 
 	@Override
 	public ReadableMerchantStore populate(MerchantStoreItem source,
-										  ReadableMerchantStore target, MerchantStoreItem store, LanguageItem language)
+										  ReadableMerchantStore target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 		Validate.notNull(countryService, "Must use setter for countryService");
 		Validate.notNull(zoneService, "Must use setter for zoneService");
@@ -52,7 +52,7 @@ public class ReadableMerchantStorePopulator extends
 		target.setId(source.getUuid());
 		target.setCode(source.getCode());
 		if (source.getDefaultLanguage() != null) {
-			target.setDefaultLanguage(source.getDefaultLanguage().getCode());
+			target.setDefaultLanguage(source.getDefaultLanguage().getIso());
 		}
 
 		target.setCurrency(source.getCurrency().getCode());
@@ -112,12 +112,12 @@ public class ReadableMerchantStorePopulator extends
 		target.setUseCache(source.getUseCache());
 
 
-		List<LanguageItem> languages = source.getLanguages();
+		List<LocaleItem> languages = source.getLanguages();
 		if (!CollectionUtils.isEmpty(languages)) {
 
 			List<String> langs = new ArrayList<String>();
-			for (LanguageItem lang : languages) {
-				langs.add(lang.getCode());
+			for (LocaleItem lang : languages) {
+				langs.add(lang.getIso());
 			}
 
 			target.setSupportedLanguages(langs);

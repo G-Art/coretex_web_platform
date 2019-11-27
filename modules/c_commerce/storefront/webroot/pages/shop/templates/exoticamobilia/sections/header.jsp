@@ -42,14 +42,14 @@
         var searchElements = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
-            <c:if test="${requestScope.CONFIGS['useDefaultSearchConfig'][requestScope.LANGUAGE.code]==true}">
-            <c:if test="${requestScope.CONFIGS['defaultSearchConfigPath'][requestScope.LANGUAGE.code]!=null}">
-            prefetch: '<c:out value="${requestScope.CONFIGS['defaultSearchConfigPath'][requestScope.LANGUAGE.code]}"/>',
+            <c:if test="${requestScope.CONFIGS['useDefaultSearchConfig'][requestScope.LANGUAGE.iso]==true}">
+            <c:if test="${requestScope.CONFIGS['defaultSearchConfigPath'][requestScope.LANGUAGE.iso]!=null}">
+            prefetch: '<c:out value="${requestScope.CONFIGS['defaultSearchConfigPath'][requestScope.LANGUAGE.iso]}"/>',
             </c:if>
             </c:if>
             remote: {
                 wildcard: '%QUERY',
-                url: '<c:url value="/services/public/search/${requestScope.MERCHANT_STORE.code}/${requestScope.LANGUAGE.code}/autocomplete.json"/>?q=%QUERY',
+                url: '<c:url value="/services/public/search/${requestScope.MERCHANT_STORE.code}/${requestScope.LANGUAGE.iso}/autocomplete.json"/>?q=%QUERY',
                 filter: function (parsedResponse) {
                     // parsedResponse is the array returned from your backend
                     console.log(parsedResponse);
@@ -294,8 +294,8 @@
                                                                                    text="Language"/></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right dropdown-animation">
                                     <c:forEach items="${requestScope.MERCHANT_STORE.languages}" var="language">
-                                        <li><a href="<c:url value="/shop?locale=${language.code}"/>"><s:message
-                                                code="lang.${language.code}" text="${language.code}"/></a></li>
+                                        <li><a href="<c:url value="/shop?locale=${language.iso}"/>"><s:message
+                                                code="lang.${language.iso}" text="${language.iso}"/></a></li>
                                     </c:forEach>
                                 </ul>
                             </div>
@@ -338,8 +338,6 @@
                 <div class="header-left clearfix" id="site-branding">
                     <c:choose>
                         <c:when test="${requestScope.CONTENT['logo']!=null}">
-                            <!-- A content logo exist -->
-                            <sm:pageContent contentCode="logo"/>
                         </c:when>
                         <c:otherwise>
                             <c:choose>

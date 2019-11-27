@@ -8,33 +8,26 @@ import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.catalog.product.file.DigitalProductService;
 import com.coretex.core.business.services.customer.CustomerService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionService;
-import com.coretex.core.business.services.customer.attribute.CustomerOptionValueService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.currency.CurrencyService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
-import com.coretex.core.business.services.shipping.DeliveryService;
-import com.coretex.core.business.services.shipping.ShippingQuoteService;
 import com.coretex.core.business.services.shipping.ShippingService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
-import com.coretex.core.business.services.system.EmailService;
 import com.coretex.core.business.services.user.GroupService;
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.model.order.OrderCriteria;
 import com.coretex.core.model.order.OrderList;
 import com.coretex.core.model.order.OrderSummary;
 import com.coretex.core.model.order.OrderTotalSummary;
-import com.coretex.core.model.payments.Payment;
-import com.coretex.core.model.shipping.ShippingProduct;
 import com.coretex.core.model.shipping.ShippingQuote;
 import com.coretex.core.model.shipping.ShippingSummary;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.items.commerce_core_model.BillingItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderAttributeItem;
 import com.coretex.items.commerce_core_model.OrderItem;
@@ -45,7 +38,6 @@ import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
-import com.coretex.items.commerce_core_model.TransactionItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.customer.ReadableCustomer;
@@ -58,7 +50,6 @@ import com.coretex.shop.model.order.ReadableOrderList;
 import com.coretex.shop.model.order.ReadableOrderProduct;
 import com.coretex.shop.model.order.ShopOrder;
 import com.coretex.shop.model.order.total.OrderTotal;
-import com.coretex.shop.model.order.transaction.ReadableTransaction;
 import com.coretex.shop.populator.customer.CustomerPopulator;
 import com.coretex.shop.populator.customer.PersistableCustomerPopulator;
 import com.coretex.shop.populator.order.OrderProductPopulator;
@@ -66,13 +57,10 @@ import com.coretex.shop.populator.order.PersistableOrderApiPopulator;
 import com.coretex.shop.populator.order.ReadableOrderPopulator;
 import com.coretex.shop.populator.order.ReadableOrderProductPopulator;
 import com.coretex.shop.populator.order.ShoppingCartItemPopulator;
-import com.coretex.shop.populator.order.transaction.PersistablePaymentPopulator;
-import com.coretex.shop.populator.order.transaction.ReadableTransactionPopulator;
 import com.coretex.shop.store.controller.customer.facade.CustomerFacade;
 import com.coretex.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
 import com.coretex.shop.utils.EmailTemplatesUtils;
 import com.coretex.shop.utils.ImageFilePath;
-import com.coretex.shop.utils.LabelUtils;
 import com.coretex.shop.utils.LocaleUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -127,16 +115,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	@Resource
 	private CurrencyService currencyService;
 	@Resource
-	private ShippingQuoteService shippingQuoteService;
-	@Resource
 	private CoreConfiguration coreConfiguration;
-
-	@Resource
-	private CustomerOptionValueService customerOptionValueService;
-
-	@Resource
-	private CustomerOptionService customerOptionService;
-
 
 	@Resource
 	private LanguageService languageService;
@@ -161,7 +140,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Override
 	public ShopOrder initializeOrder(MerchantStoreItem store, CustomerItem customer,
-									 ShoppingCartItem shoppingCart, LanguageItem language) throws Exception {
+									 ShoppingCartItem shoppingCart, LocaleItem language) throws Exception {
 
 		//assert not null shopping cart items
 
@@ -187,7 +166,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Override
 	public OrderTotalSummary calculateOrderTotal(MerchantStoreItem store,
-												 ShopOrder order, LanguageItem language) throws Exception {
+												 ShopOrder order, LocaleItem language) throws Exception {
 
 
 		CustomerItem customer = customerFacade.getCustomerModel(order.getCustomer(), store, language);
@@ -198,7 +177,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Override
 	public OrderTotalSummary calculateOrderTotal(MerchantStoreItem store,
-												 PersistableOrder order, LanguageItem language) throws Exception {
+												 PersistableOrder order, LocaleItem language) throws Exception {
 
 		List<PersistableOrderProduct> orderProducts = order.getOrderProductItems();
 
@@ -222,7 +201,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 	@Override
-	public OrderTotalSummary calculateOrderTotal(MerchantStoreItem store, CustomerItem customer, PersistableOrder order, LanguageItem language) throws Exception {
+	public OrderTotalSummary calculateOrderTotal(MerchantStoreItem store, CustomerItem customer, PersistableOrder order, LocaleItem language) throws Exception {
 
 		OrderTotalSummary orderTotalSummary = null;
 
@@ -248,7 +227,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 
-	private PersistableCustomer persistableCustomer(CustomerItem customer, MerchantStoreItem store, LanguageItem language) throws Exception {
+	private PersistableCustomer persistableCustomer(CustomerItem customer, MerchantStoreItem store, LocaleItem language) throws Exception {
 
 		PersistableCustomerPopulator customerPopulator = new PersistableCustomerPopulator();
 		PersistableCustomer persistableCustomer = customerPopulator.populate(customer, new PersistableCustomer(), store, language);
@@ -256,11 +235,9 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	}
 
-	private CustomerItem customer(PersistableCustomer customer, MerchantStoreItem store, LanguageItem language) throws Exception {
+	private CustomerItem customer(PersistableCustomer customer, MerchantStoreItem store, LocaleItem language) throws Exception {
 		CustomerPopulator populator = new CustomerPopulator();
 		populator.setCountryService(countryService);
-		populator.setCustomerOptionService(customerOptionService);
-		populator.setCustomerOptionValueService(customerOptionValueService);
 		populator.setLanguageService(languageService);
 		populator.setZoneService(zoneService);
 		populator.setGroupService(groupService);
@@ -291,22 +268,15 @@ public class OrderFacadeImpl implements OrderFacade {
 	 */
 	@Override
 	public OrderItem processOrder(ShopOrder order, CustomerItem customer, MerchantStoreItem store,
-								  LanguageItem language) throws ServiceException {
+								  LocaleItem language) throws ServiceException {
 
-		return this.processOrderModel(order, customer, null, store, language);
-
-	}
-
-	@Override
-	public OrderItem processOrder(ShopOrder order, CustomerItem customer, TransactionItem transaction, MerchantStoreItem store,
-								  LanguageItem language) throws ServiceException {
-
-		return this.processOrderModel(order, customer, transaction, store, language);
+		return this.processOrderModel(order, customer, store, language);
 
 	}
 
-	private OrderItem processOrderModel(ShopOrder order, CustomerItem customer, TransactionItem transaction, MerchantStoreItem store,
-										LanguageItem language) throws ServiceException {
+
+	private OrderItem processOrderModel(ShopOrder order, CustomerItem customer, MerchantStoreItem store,
+										LocaleItem language) throws ServiceException {
 
 		try {
 
@@ -404,11 +374,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 			modelOrder.setPaymentModuleCode(order.getPaymentModule());
 
-			if (transaction != null) {
-				orderService.processOrder(modelOrder, customer, order.getShoppingCartItems(), summary, null, store);
-			} else {
-				orderService.processOrder(modelOrder, customer, order.getShoppingCartItems(), summary, null, transaction, store);
-			}
+			orderService.processOrder(modelOrder, customer, order.getShoppingCartItems(), summary, store);
 
 
 			return modelOrder;
@@ -421,7 +387,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	}
 
-	private void orderCustomer(CustomerItem customer, OrderItem order, LanguageItem language) throws Exception {
+	private void orderCustomer(CustomerItem customer, OrderItem order, LocaleItem language) throws Exception {
 
 		//populate customer
 		order.setBilling(customer.getBilling());
@@ -459,7 +425,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Override
 	public void refreshOrder(ShopOrder order, MerchantStoreItem store,
-							 CustomerItem customer, ShoppingCartItem shoppingCart, LanguageItem language)
+							 CustomerItem customer, ShoppingCartItem shoppingCart, LocaleItem language)
 			throws Exception {
 		if (customer == null && order.getCustomer() != null) {
 			order.getCustomer().setUuid(null);//reset customer id
@@ -477,7 +443,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 	@Override
-	public List<CountryItem> getShipToCountry(MerchantStoreItem store, LanguageItem language) throws Exception {
+	public List<CountryItem> getShipToCountry(MerchantStoreItem store, LocaleItem language) throws Exception {
 
 		return shippingService.getShipToCountryList(store, language);
 
@@ -490,7 +456,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	 */
 	@Override
 	public ShippingSummary getShippingSummary(ShippingQuote quote,
-											  MerchantStoreItem store, LanguageItem language) {
+											  MerchantStoreItem store, LocaleItem language) {
 
 		ShippingSummary summary = null;
 		if (quote.getSelectedShippingOption() != null) {
@@ -529,7 +495,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Override
 	public ReadableOrderList getReadableOrderList(MerchantStoreItem store,
-												  CustomerItem customer, int start, int maxCount, LanguageItem language) throws Exception {
+												  CustomerItem customer, int start, int maxCount, LocaleItem language) throws Exception {
 
 		OrderCriteria criteria = new OrderCriteria();
 		criteria.setStartIndex(start);
@@ -579,8 +545,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 
-
-	private ReadableOrderList populateOrderList(final OrderList orderList, final MerchantStoreItem store, final LanguageItem language) {
+	private ReadableOrderList populateOrderList(final OrderList orderList, final MerchantStoreItem store, final LocaleItem language) {
 		List<OrderItem> orders = orderList.getOrders();
 		ReadableOrderList returnList = new ReadableOrderList();
 		if (CollectionUtils.isEmpty(orders)) {
@@ -614,7 +579,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	}
 
-	private void setOrderProductList(final OrderItem order, final Locale locale, final MerchantStoreItem store, final LanguageItem language, final ReadableOrder readableOrder) throws ConversionException {
+	private void setOrderProductList(final OrderItem order, final Locale locale, final MerchantStoreItem store, final LocaleItem language, final ReadableOrder readableOrder) throws ConversionException {
 		List<ReadableOrderProduct> orderProducts = new ArrayList<ReadableOrderProduct>();
 		for (OrderProductItem p : order.getOrderProducts()) {
 			ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
@@ -637,7 +602,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 
-	private ReadableOrderList getReadableOrderList(OrderCriteria criteria, MerchantStoreItem store, LanguageItem language) throws Exception {
+	private ReadableOrderList getReadableOrderList(OrderCriteria criteria, MerchantStoreItem store, LocaleItem language) throws Exception {
 
 		OrderList orderList = orderService.listByStore(store, criteria);
 
@@ -671,7 +636,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Override
 	public ReadableOrderList getReadableOrderList(MerchantStoreItem store,
-												  int start, int maxCount, LanguageItem language) throws Exception {
+												  int start, int maxCount, LocaleItem language) throws Exception {
 
 		OrderCriteria criteria = new OrderCriteria();
 		criteria.setStartIndex(start);
@@ -683,10 +648,10 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Override
 	public ReadableOrder getReadableOrder(UUID orderId, MerchantStoreItem store,
-										  LanguageItem language) throws Exception {
+										  LocaleItem language) throws Exception {
 
 
-		OrderItem modelOrder = orderService.getById(orderId);
+		OrderItem modelOrder = orderService.getByUUID(orderId);
 		if (modelOrder == null) {
 			throw new Exception("OrderItem not found with id " + orderId);
 		}
@@ -725,7 +690,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 	@Override
-	public OrderItem processOrder(PersistableOrderApi order, CustomerItem customer, MerchantStoreItem store, LanguageItem language, Locale locale)
+	public OrderItem processOrder(PersistableOrderApi order, CustomerItem customer, MerchantStoreItem store, LocaleItem language, Locale locale)
 			throws ServiceException {
 
 		PersistableOrderApiPopulator populator = new PersistableOrderApiPopulator();
@@ -781,24 +746,9 @@ public class OrderFacadeImpl implements OrderFacade {
 				modelOrder.setOrderAttributes(attrs);
 			}
 
-			//requires Shipping information (need a quote id calculated)
-			ShippingSummary shippingSummary = null;
-
-			//get shipping quote if asked for
-			if (order.getShippingQuote() != null) {
-				shippingSummary = shippingQuoteService.getShippingSummary(order.getShippingQuote(), store);
-				if (shippingSummary != null) {
-					modelOrder.setShippingModuleCode(shippingSummary.getShippingModule());
-				}
-			}
-
-			//requires OrderItem Totals, this needs recalculation and then compare total with the amount sent as part
-			//of process order request. If totals does not match, an error should be thrown.
-
 			OrderTotalSummary orderTotalSummary = null;
 
 			OrderSummary orderSummary = new OrderSummary();
-			orderSummary.setShippingSummary(shippingSummary);
 			List<ShoppingCartEntryItem> itemsSet = new ArrayList<ShoppingCartEntryItem>(cart.getLineItems());
 			orderSummary.setProducts(itemsSet);
 
@@ -831,12 +781,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			}
 			modelOrder.setOrderTotal(set);
 
-			PersistablePaymentPopulator paymentPopulator = new PersistablePaymentPopulator();
-			paymentPopulator.setPricingService(pricingService);
-			Payment paymentModel = new Payment();
-			paymentPopulator.populate(order.getPayment(), paymentModel, store, language);
-
-			modelOrder = orderService.processOrder(modelOrder, customer, items, orderTotalSummary, paymentModel, store);
+			modelOrder = orderService.processOrder(modelOrder, customer, items, orderTotalSummary, store);
 
 
 			//delete cart
@@ -877,7 +822,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Override
 	public ReadableOrderList getCapturableOrderList(MerchantStoreItem store, Date startDate, Date endDate,
-													LanguageItem language) throws Exception {
+													LocaleItem language) throws Exception {
 
 		//get all transactions for the given date
 		List<OrderItem> orders = orderService.getCapturableOrders(store, startDate, endDate);

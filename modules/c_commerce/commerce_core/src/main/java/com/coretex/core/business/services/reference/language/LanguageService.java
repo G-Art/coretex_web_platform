@@ -7,20 +7,20 @@ import java.util.Map;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.core.LocaleItem;
 
-public interface LanguageService extends SalesManagerEntityService<LanguageItem> {
+public interface LanguageService extends SalesManagerEntityService<LocaleItem> {
 
-	LanguageItem getByCode(String code) throws ServiceException;
+	LocaleItem getByCode(String code);
 
-	Map<String, LanguageItem> getLanguagesMap() throws ServiceException;
+	Map<String, LocaleItem> getLanguagesMap() throws ServiceException;
 
-	List<LanguageItem> getLanguages() throws ServiceException;
+	List<LocaleItem> getLanguages() throws ServiceException;
 
-	Locale toLocale(LanguageItem language, MerchantStoreItem store);
+	Locale toLocale(LocaleItem language, MerchantStoreItem store);
 
-	LanguageItem toLanguage(Locale locale);
+	LocaleItem toLanguage(Locale locale);
 
-	LanguageItem defaultLanguage();
+	LocaleItem defaultLanguage();
 }

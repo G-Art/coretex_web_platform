@@ -29,7 +29,7 @@
         $.ajax({
             type: 'POST',
             url: '<c:url value="/shop/reference/provinces.html"/>',
-            data: 'countryCode=' + countryCode + '&lang=${requestScope.LANGUAGE.code}',
+            data: 'countryCode=' + countryCode + '&lang=${requestScope.LANGUAGE.iso}',
             dataType: 'json',
             success: function (response) {
                 var status = response.response.status;

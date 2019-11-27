@@ -5,7 +5,6 @@ import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.order.orderproduct.OrderProductDownloadService;
-import com.coretex.core.business.services.payments.TransactionService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.system.EmailService;
@@ -17,9 +16,8 @@ import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
 import com.coretex.enums.commerce_core_model.PaymentTypeEnum;
-import com.coretex.items.commerce_core_model.TransactionItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
 import com.coretex.core.data.orders.OrderConverterHelper;
@@ -81,9 +79,6 @@ public class OrderControler {
 	PricingService pricingService;
 
 	@Resource
-	TransactionService transactionService;
-
-	@Resource
 	EmailService emailService;
 
 	@Resource
@@ -110,7 +105,7 @@ public class OrderControler {
 		setMenu(model, request);
 
 		OrderForm order = new OrderForm();
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		List<CountryItem> countries = countryService.getCountries(language);
 		if (orderId != null) {        //edit mode
 
@@ -122,7 +117,7 @@ public class OrderControler {
 			Set<OrderTotalItem> orderTotal = null;
 			Set<OrderStatusHistoryItem> orderHistory = null;
 
-			OrderItem dbOrder = orderService.getById(UUID.fromString(orderId));
+			OrderItem dbOrder = orderService.getByUUID(UUID.fromString(orderId));
 
 			if (dbOrder == null) {
 				return "redirect:/admin/orders/list.html";
@@ -146,7 +141,7 @@ public class OrderControler {
 
 				try {
 
-					CustomerItem customer = customerService.getById(customerId);
+					CustomerItem customer = customerService.getByUUID(customerId);
 					if (customer != null) {
 						model.addAttribute("customer", customer);
 					}
@@ -160,7 +155,6 @@ public class OrderControler {
 
 			order.setCustomerId(dbOrder.getCustomerId().toString());
 			order.setCustomerEmailAddress(dbOrder.getCustomerEmailAddress());
-			order.setCreditCard(dbOrder.getCreditCard());
 			order.setPaymentModuleCode(dbOrder.getPaymentModuleCode());
 			order.setStatus(dbOrder.getStatus());
 			order.setShippingModuleCode(dbOrder.getShippingModuleCode());
@@ -215,7 +209,7 @@ public class OrderControler {
 		String email_regEx = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 		Pattern pattern = Pattern.compile(email_regEx);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		List<CountryItem> countries = countryService.getCountries(language);
 		model.addAttribute("countries", countries);
 
@@ -286,27 +280,7 @@ public class OrderControler {
 			result.addError(error);
 		}
 
-		OrderItem newOrder = orderService.getById(UUID.fromString(entityOrder.getUuid()));
-
-
-		//get capturable
-		if (!newOrder.getPaymentType().name().equals(PaymentTypeEnum.MONEYORDER.name())) {
-			TransactionItem capturableTransaction = transactionService.getCapturableTransaction(newOrder);
-			if (capturableTransaction != null) {
-				model.addAttribute("capturableTransaction", capturableTransaction);
-			}
-		}
-
-
-		//get refundable
-		if (!newOrder.getPaymentType().name().equals(PaymentTypeEnum.MONEYORDER.name())) {
-			TransactionItem refundableTransaction = transactionService.getRefundableTransaction(newOrder);
-			if (refundableTransaction != null) {
-				model.addAttribute("capturableTransaction", null);//remove capturable
-				model.addAttribute("refundableTransaction", refundableTransaction);
-			}
-		}
-
+		OrderItem newOrder = orderService.getByUUID(UUID.fromString(entityOrder.getUuid()));
 
 		if (result.hasErrors()) {
 			//  somehow we lose data, so reset OrderItem detail info.
@@ -379,7 +353,7 @@ public class OrderControler {
 
 			try {
 
-				CustomerItem customer = customerService.getById(customerId);
+				CustomerItem customer = customerService.getByUUID(customerId);
 				if (customer != null) {
 					model.addAttribute("customer", customer);
 				}
@@ -406,8 +380,8 @@ public class OrderControler {
 
 			try {
 
-				CustomerItem customer = customerService.getById(newOrder.getCustomerId());
-				LanguageItem lang = store.getDefaultLanguage();
+				CustomerItem customer = customerService.getByUUID(newOrder.getCustomerId());
+				LocaleItem lang = store.getDefaultLanguage();
 				if (customer != null) {
 					lang = customer.getDefaultLanguage();
 				}

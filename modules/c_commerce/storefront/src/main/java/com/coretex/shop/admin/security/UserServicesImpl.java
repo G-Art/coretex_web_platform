@@ -60,10 +60,6 @@ public class UserServicesImpl implements WebUserServices {
 	@Named("passwordEncoder")
 	private PasswordEncoder passwordEncoder;
 
-
-	@Resource
-	protected PermissionService permissionService;
-
 	@Resource
 	protected GroupService groupService;
 
@@ -118,7 +114,7 @@ public class UserServicesImpl implements WebUserServices {
 	}
 
 
-	public void createDefaultAdmin() throws Exception {
+	public void createDefaultAdmin() {
 
 		//TODO create all groups and permissions
 
@@ -132,8 +128,8 @@ public class UserServicesImpl implements WebUserServices {
 		user.setAdminName("admin");
 		user.setPassword(password);
 		user.setEmail("admin@coretex.com");
-		user.setFirstName("Administrator");
-		user.setLastName("UserItem");
+		user.setFirstName("Artem");
+		user.setLastName("Herasymenko");
 		user.setActive(true);
 
 		for (GroupItem group : groups) {

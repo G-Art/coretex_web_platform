@@ -1,6 +1,6 @@
 package com.coretex.shop.populator.user;
 
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.UserItem;
 import org.apache.commons.lang3.Validate;
@@ -21,7 +21,7 @@ public class ReadableUserPopulator extends AbstractDataPopulator<UserItem, Reada
 
 	@Override
 	public ReadableUser populate(UserItem source, ReadableUser target, MerchantStoreItem store,
-								 LanguageItem language) throws ConversionException {
+								 LocaleItem language) throws ConversionException {
 		Validate.notNull(source, "UserItem cannot be null");
 
 		if (target == null) {
@@ -42,7 +42,7 @@ public class ReadableUserPopulator extends AbstractDataPopulator<UserItem, Reada
 		target.setDefaultLanguage(Constants.DEFAULT_LANGUAGE);
 
 		if (source.getLanguage() != null)
-			target.setDefaultLanguage(source.getLanguage().getCode());
+			target.setDefaultLanguage(source.getLanguage().getIso());
 		target.setMerchant(store.getCode());
 		target.setUuid(source.getUuid());
 

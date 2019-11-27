@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import com.coretex.items.commerce_core_model.OrderItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.StringUtils;
 
@@ -44,7 +44,7 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 
 
 	@Override
-	public OrderItem populate(PersistableOrderApi source, OrderItem target, MerchantStoreItem store, LanguageItem language)
+	public OrderItem populate(PersistableOrderApi source, OrderItem target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 
@@ -80,7 +80,7 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 
 			//CustomerItem
 			UUID customerId = source.getCustomerId();
-			CustomerItem customer = customerService.getById(customerId);
+			CustomerItem customer = customerService.getByUUID(customerId);
 
 			if (customer == null) {
 				throw new ConversionException("Curstomer with id " + source.getCustomerId() + " does not exist");

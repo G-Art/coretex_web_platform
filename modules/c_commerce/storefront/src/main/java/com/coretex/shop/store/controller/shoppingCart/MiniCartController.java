@@ -3,7 +3,7 @@ package com.coretex.shop.store.controller.shoppingCart;
 
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.shoppingcart.ShoppingCartData;
 import com.coretex.shop.store.controller.AbstractController;
@@ -36,7 +36,7 @@ public class MiniCartController extends AbstractController {
 	public @ResponseBody
 	ShoppingCartData displayMiniCart(final String shoppingCartCode, HttpServletRequest request, Model model) {
 
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 
 		try {
 			MerchantStoreItem merchantStore = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
@@ -64,7 +64,7 @@ public class MiniCartController extends AbstractController {
 	@RequestMapping(value = {"/removeMiniShoppingCartItem"}, method = {RequestMethod.GET, RequestMethod.POST}, produces = "application/json")
 	public @ResponseBody
 	ShoppingCartData removeShoppingCartItem(String lineItemId, final String shoppingCartCode, HttpServletRequest request, Model model) throws Exception {
-		LanguageItem language = (LanguageItem) request.getAttribute(Constants.LANGUAGE);
+		LocaleItem language = (LocaleItem) request.getAttribute(Constants.LANGUAGE);
 		MerchantStoreItem merchantStore = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
 		ShoppingCartData cart = shoppingCartFacade.getShoppingCartData(null, merchantStore, shoppingCartCode, language);
 		if (cart == null) {

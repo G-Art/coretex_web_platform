@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.coretex.items.core.CountryItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.coretex.core.business.services.reference.country.CountryService;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.core.model.shipping.ShippingConfiguration;
 import com.coretex.core.model.shipping.ShippingType;
 import com.coretex.core.business.services.shipping.ShippingService;
@@ -113,7 +113,7 @@ public class ShippingConfigsController {
 
 		try {
 
-			LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+			LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 			//get list of countries

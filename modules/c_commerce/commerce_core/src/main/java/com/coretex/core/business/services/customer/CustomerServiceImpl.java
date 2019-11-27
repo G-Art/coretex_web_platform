@@ -3,12 +3,8 @@ package com.coretex.core.business.services.customer;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.repositories.customer.CustomerDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
-import com.coretex.core.business.services.customer.attribute.CustomerAttributeService;
-import com.coretex.core.model.common.Address;
 import com.coretex.core.model.customer.CustomerCriteria;
 import com.coretex.core.model.customer.CustomerList;
-import com.coretex.core.business.utils.GeoLocation;
-import com.coretex.items.commerce_core_model.CustomerAttributeItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.slf4j.Logger;
@@ -27,11 +23,6 @@ public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<CustomerI
 
 	private CustomerDao customerDao;
 
-	@Resource
-	private CustomerAttributeService customerAttributeService;
-
-	@Resource
-	private GeoLocation geoLocation;
 
 	public CustomerServiceImpl(CustomerDao customerDao) {
 		super(customerDao);
@@ -65,16 +56,6 @@ public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<CustomerI
 		return customerDao.listByStore(store, criteria);
 	}
 
-	@Override
-	public Address getCustomerAddress(MerchantStoreItem store, String ipAddress) throws ServiceException {
-
-		try {
-			return geoLocation.getAddress(ipAddress);
-		} catch (Exception e) {
-			throw new ServiceException(e);
-		}
-
-	}
 
 	@Override
 	public void saveOrUpdate(CustomerItem customer) throws ServiceException {
@@ -84,17 +65,7 @@ public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<CustomerI
 	}
 
 	public void delete(CustomerItem customer) {
-		customer = getById(customer.getUuid());
-
-		//delete attributes
-		List<CustomerAttributeItem> attributes = customerAttributeService.getByCustomer(customer.getMerchantStore(), customer);
-		if (attributes != null) {
-			for (CustomerAttributeItem attribute : attributes) {
-				customerAttributeService.delete(attribute);
-			}
-		}
 		customerDao.delete(customer);
-
 	}
 
 

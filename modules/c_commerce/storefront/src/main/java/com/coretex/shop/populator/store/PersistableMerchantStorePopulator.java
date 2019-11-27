@@ -5,11 +5,11 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.coretex.items.commerce_core_model.CurrencyItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import org.apache.commons.collections4.CollectionUtils;
-import org.drools.core.util.StringUtils;
-import org.jsoup.helper.Validate;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.springframework.stereotype.Component;
 
 import com.coretex.core.business.constants.Constants;
@@ -39,7 +39,7 @@ public class PersistableMerchantStorePopulator extends AbstractDataPopulator<Per
 
 	@Override
 	public MerchantStoreItem populate(PersistableMerchantStore source, MerchantStoreItem target, MerchantStoreItem store,
-									  LanguageItem language) throws ConversionException {
+									  LocaleItem language) throws ConversionException {
 
 		Validate.notNull(source, "PersistableMerchantStore mst not be null");
 
@@ -65,7 +65,7 @@ public class PersistableMerchantStorePopulator extends AbstractDataPopulator<Per
 		try {
 
 			if (!StringUtils.isEmpty(source.getDefaultLanguage())) {
-				LanguageItem l = languageService.getByCode(source.getDefaultLanguage());
+				LocaleItem l = languageService.getByCode(source.getDefaultLanguage());
 				target.setDefaultLanguage(l);
 			}
 
@@ -79,7 +79,7 @@ public class PersistableMerchantStorePopulator extends AbstractDataPopulator<Per
 			List<String> languages = source.getSupportedLanguages();
 			if (!CollectionUtils.isEmpty(languages)) {
 				for (String lang : languages) {
-					LanguageItem ll = languageService.getByCode(lang);
+					LocaleItem ll = languageService.getByCode(lang);
 					target.getLanguages().add(ll);
 				}
 			}

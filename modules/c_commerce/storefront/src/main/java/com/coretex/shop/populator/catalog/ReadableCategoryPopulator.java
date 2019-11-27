@@ -6,7 +6,7 @@ import org.apache.commons.lang3.Validate;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.category.ReadableCategory;
 
 public class ReadableCategoryPopulator extends
@@ -16,7 +16,7 @@ public class ReadableCategoryPopulator extends
 	public ReadableCategory populate(final CategoryItem source,
 									 final ReadableCategory target,
 									 final MerchantStoreItem store,
-									 final LanguageItem language) throws ConversionException {
+									 final LocaleItem language) throws ConversionException {
 
 		Validate.notNull(source, "CategoryItem must not be null");
 

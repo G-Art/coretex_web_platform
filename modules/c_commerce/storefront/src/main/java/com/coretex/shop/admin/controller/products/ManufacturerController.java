@@ -5,7 +5,7 @@ import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.business.utils.ajax.AjaxPageableResponse;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
@@ -88,9 +88,9 @@ public class ManufacturerController {
 		//display menu
 		setMenu(model, request);
 
-		//List<LanguageItem> languages = languageService.getLanguages();
+		//List<LocaleItem> languages = languageService.getLanguages();
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		List<LanguageItem> languages = store.getLanguages();
+		List<LocaleItem> languages = store.getLanguages();
 
 
 		Manufacturer manufacturer = new Manufacturer();
@@ -99,7 +99,7 @@ public class ManufacturerController {
 		if (manufacturerId != null) {    //edit mode
 
 			ManufacturerItem dbManufacturer;
-			dbManufacturer = manufacturerService.getById(manufacturerId);
+			dbManufacturer = manufacturerService.getByUUID(manufacturerId);
 
 			if (dbManufacturer == null) {
 				return ControllerConstants.Tiles.Product.manufacturerList;
@@ -136,7 +136,7 @@ public class ManufacturerController {
 		//save or edit a manufacturer
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		List<LanguageItem> languages = languageService.getLanguages();
+		List<LocaleItem> languages = languageService.getLanguages();
 
 		//validate image
 		if (manufacturer.getImage() != null && !manufacturer.getImage().isEmpty()) {
@@ -191,7 +191,7 @@ public class ManufacturerController {
 
 		if (manufacturer.getManufacturer().getUuid() != null) {
 
-			newManufacturer = manufacturerService.getById(manufacturer.getManufacturer().getUuid());
+			newManufacturer = manufacturerService.getByUUID(manufacturer.getManufacturer().getUuid());
 
 			if (!newManufacturer.getMerchantStore().getUuid().equals(store.getUuid())) {
 				return ControllerConstants.Tiles.Product.manufacturerList;
@@ -226,7 +226,7 @@ public class ManufacturerController {
 //
 //			List<ManufacturerImageDescription> imagesDescriptions = new ArrayList<ManufacturerImageDescription>();
 //
-//			for(LanguageItem l : languages) {
+//			for(LocaleItem l : languages) {
 //
 //				ManufacturerImageDescription imageDescription = new ManufacturerImageDescription();
 //				imageDescription.setName(imageName);
@@ -270,7 +270,7 @@ public class ManufacturerController {
 		AjaxResponse resp = new AjaxResponse();
 		try {
 
-			LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+			LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 			List<ManufacturerItem> manufacturers = null;
@@ -317,7 +317,7 @@ public class ManufacturerController {
 
 
 		try {
-			ManufacturerItem delManufacturer = manufacturerService.getById(sid);
+			ManufacturerItem delManufacturer = manufacturerService.getByUUID(sid);
 			if (delManufacturer == null || !delManufacturer.getMerchantStore().getUuid().equals(store.getUuid())) {
 				resp.setStatusMessage(messages.getMessage("message.unauthorized", locale));
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);

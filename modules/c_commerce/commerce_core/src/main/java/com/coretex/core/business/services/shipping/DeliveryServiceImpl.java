@@ -6,7 +6,7 @@ import com.coretex.core.model.shipping.ShippingQuote;
 import com.coretex.core.utils.TypeUtil;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.DeliveryServiceItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +47,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 	}
 
 	@Override
-	public ShippingQuote getShippingQuote(UUID shoppingCartId, MerchantStoreItem store, DeliveryItem delivery, List<ShippingProduct> products, LanguageItem language) {
+	public ShippingQuote getShippingQuote(UUID shoppingCartId, MerchantStoreItem store, DeliveryItem delivery, List<ShippingProduct> products, LocaleItem language) {
 		var sq = new ShippingQuote();
 		return sq;
 	}

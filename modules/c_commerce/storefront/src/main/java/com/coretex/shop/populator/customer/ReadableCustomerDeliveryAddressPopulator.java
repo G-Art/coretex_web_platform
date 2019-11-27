@@ -9,7 +9,7 @@ import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.shop.model.customer.ReadableDelivery;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +27,7 @@ public class ReadableCustomerDeliveryAddressPopulator extends AbstractDataPopula
 	private ZoneService zoneService;
 
 	@Override
-	public ReadableDelivery populate(DeliveryItem source, ReadableDelivery target, MerchantStoreItem store, LanguageItem language)
+	public ReadableDelivery populate(DeliveryItem source, ReadableDelivery target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 

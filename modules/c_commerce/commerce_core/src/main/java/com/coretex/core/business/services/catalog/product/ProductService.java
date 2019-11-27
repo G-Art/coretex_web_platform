@@ -5,7 +5,7 @@ import com.coretex.core.business.services.common.generic.SalesManagerEntityServi
 import com.coretex.core.model.catalog.product.ProductCriteria;
 import com.coretex.core.model.catalog.product.ProductList;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 
@@ -17,19 +17,19 @@ import java.util.UUID;
 public interface ProductService extends SalesManagerEntityService<ProductItem> {
 
 
-	ProductItem getProductForLocale(UUID productId, LanguageItem language, Locale locale) throws ServiceException;
+	ProductItem getProductForLocale(UUID productId, LocaleItem language, Locale locale) throws ServiceException;
 
-	List<ProductItem> getProductsForLocale(CategoryItem category, LanguageItem language, Locale locale) throws ServiceException;
+	List<ProductItem> getProductsForLocale(CategoryItem category, LocaleItem language, Locale locale) throws ServiceException;
 
 	List<ProductItem> getProducts(List<UUID> categoryIds);
 
 
-	ProductList listByStore(MerchantStoreItem store, LanguageItem language,
+	ProductList listByStore(MerchantStoreItem store, LocaleItem language,
 							ProductCriteria criteria);
 
 	List<ProductItem> listByStore(MerchantStoreItem store);
 
-	List<ProductItem> getProducts(List<UUID> categoryIds, LanguageItem language)
+	List<ProductItem> getProducts(List<UUID> categoryIds, LocaleItem language)
 			throws ServiceException;
 
 	ProductItem getBySeUrl(MerchantStoreItem store, String seUrl, Locale locale);

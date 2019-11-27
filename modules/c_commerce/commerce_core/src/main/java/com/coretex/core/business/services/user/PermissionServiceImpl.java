@@ -38,7 +38,7 @@ public class PermissionServiceImpl extends
 
 
 	@Override
-	public PermissionItem getById(UUID permissionId) {
+	public PermissionItem getByUUID(UUID permissionId) {
 		return permissionDao.findOne(permissionId);
 
 	}
@@ -46,7 +46,7 @@ public class PermissionServiceImpl extends
 
 	@Override
 	public void deletePermission(PermissionItem permission) throws ServiceException {
-		permission = this.getById(permission.getUuid());//Prevents detached entity error
+		permission = this.getByUUID(permission.getUuid());//Prevents detached entity error
 		permission.setGroups(null);
 
 		this.delete(permission);
@@ -70,7 +70,7 @@ public class PermissionServiceImpl extends
 
 	@Override
 	public void removePermission(PermissionItem permission, GroupItem group) throws ServiceException {
-		permission = this.getById(permission.getUuid());//Prevents detached entity error
+		permission = this.getByUUID(permission.getUuid());//Prevents detached entity error
 
 		permission.getGroups().remove(group);
 

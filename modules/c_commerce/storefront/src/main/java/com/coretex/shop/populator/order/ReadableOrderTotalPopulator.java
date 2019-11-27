@@ -6,7 +6,7 @@ import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.order.total.ReadableOrderTotal;
 import com.coretex.shop.utils.LabelUtils;
 import com.coretex.shop.utils.LocaleUtils;
@@ -27,7 +27,7 @@ public class ReadableOrderTotalPopulator extends
 
 	@Override
 	public ReadableOrderTotal populate(OrderTotalItem source,
-									   ReadableOrderTotal target, MerchantStoreItem store, LanguageItem language)
+									   ReadableOrderTotal target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 		Validate.notNull(pricingService, "PricingService must be set");

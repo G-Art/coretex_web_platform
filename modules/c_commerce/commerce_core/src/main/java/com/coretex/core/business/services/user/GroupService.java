@@ -19,6 +19,6 @@ public interface GroupService extends SalesManagerEntityService<GroupItem> {
 
 	List<GroupItem> listGroupByNames(List<String> names) throws ServiceException;
 
-	GroupItem findByName(String groupName) throws ServiceException;
+	GroupItem findByName(String groupName);
 
 }

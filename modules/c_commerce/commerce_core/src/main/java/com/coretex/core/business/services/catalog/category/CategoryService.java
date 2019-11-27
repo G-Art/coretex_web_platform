@@ -3,7 +3,7 @@ package com.coretex.core.business.services.catalog.category;
 import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 
 import java.util.List;
@@ -23,14 +23,14 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 	List<CategoryItem> listByStoreAndParent(MerchantStoreItem store, CategoryItem category) throws ServiceException;
 
 
-	List<CategoryItem> getByName(MerchantStoreItem store, String name, LanguageItem language) throws ServiceException;
+	List<CategoryItem> getByName(MerchantStoreItem store, String name, LocaleItem language) throws ServiceException;
 
 	List<CategoryItem> listByStore(MerchantStoreItem store) throws ServiceException;
 
 	CategoryItem getByCode(MerchantStoreItem store, String code)
 			throws ServiceException;
 
-	List<CategoryItem> listByStore(MerchantStoreItem store, LanguageItem language)
+	List<CategoryItem> listByStore(MerchantStoreItem store, LocaleItem language)
 			throws ServiceException;
 
 	void saveOrUpdate(CategoryItem category) throws ServiceException;
@@ -45,7 +45,7 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 	 * @param language
 	 * @return
 	 */
-	List<CategoryItem> getListByDepth(MerchantStoreItem store, int depth, LanguageItem language);
+	List<CategoryItem> getListByDepth(MerchantStoreItem store, int depth, LocaleItem language);
 
 	/**
 	 * Returns category hierarchy filter by featured
@@ -55,7 +55,7 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 	 * @param language
 	 * @return
 	 */
-	List<CategoryItem> getListByDepthFilterByFeatured(MerchantStoreItem store, int depth, LanguageItem language);
+	List<CategoryItem> getListByDepthFilterByFeatured(MerchantStoreItem store, int depth, LocaleItem language);
 
 	List<CategoryItem> getListByLineage(String storeCode, String lineage)
 			throws ServiceException;
@@ -64,9 +64,9 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 
 	CategoryItem getBySeUrl(MerchantStoreItem store, String seUrl);
 
-	List<CategoryItem> listByParent(CategoryItem category, LanguageItem language);
+	List<CategoryItem> listByParent(CategoryItem category, LocaleItem language);
 
-	CategoryItem getOneByLanguage(UUID categoryId, LanguageItem language);
+	CategoryItem getOneByLanguage(UUID categoryId, LocaleItem language);
 
 	/**
 	 * Returns a list by category containing the category code and the number of products
@@ -93,7 +93,7 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 	 * @return
 	 */
 	List<CategoryItem> listByCodes(MerchantStoreItem store, List<String> codes,
-								   LanguageItem language);
+								   LocaleItem language);
 
 	/**
 	 * List of CategoryItem by id
@@ -104,7 +104,7 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 	 * @return
 	 */
 	List<CategoryItem> listByIds(MerchantStoreItem store, List<UUID> ids,
-								 LanguageItem language);
+								 LocaleItem language);
 
 
 }

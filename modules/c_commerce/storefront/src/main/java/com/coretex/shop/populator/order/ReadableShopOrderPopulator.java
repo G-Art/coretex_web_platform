@@ -2,7 +2,7 @@ package com.coretex.shop.populator.order;
 
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.customer.ReadableCustomer;
@@ -15,7 +15,7 @@ public class ReadableShopOrderPopulator extends
 
 	@Override
 	public ReadableShopOrder populate(ShopOrder source,
-									  ReadableShopOrder target, MerchantStoreItem store, LanguageItem language)
+									  ReadableShopOrder target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 
 		//not that much is required

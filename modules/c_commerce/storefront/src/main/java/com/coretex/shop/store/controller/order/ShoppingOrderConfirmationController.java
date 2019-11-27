@@ -12,7 +12,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.order.ReadableOrder;
@@ -101,7 +101,7 @@ public class ShoppingOrderConfirmationController extends AbstractController {
 	@RequestMapping("/confirmation.html")
 	public String displayConfirmation(Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
 
 		UUID orderId = super.getSessionAttribute(Constants.ORDER_ID, request);
@@ -110,7 +110,7 @@ public class ShoppingOrderConfirmationController extends AbstractController {
 		}
 
 		//get the order
-		OrderItem order = orderService.getById(orderId);
+		OrderItem order = orderService.getByUUID(orderId);
 		if (order == null) {
 			LOGGER.warn("OrderItem id [" + orderId + "] does not exist");
 			throw new Exception("OrderItem id [" + orderId + "] does not exist");

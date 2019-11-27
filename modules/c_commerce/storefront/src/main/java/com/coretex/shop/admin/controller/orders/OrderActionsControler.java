@@ -3,18 +3,16 @@ package com.coretex.shop.admin.controller.orders;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
-import com.coretex.core.business.services.payments.TransactionService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.system.EmailService;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.core.data.orders.Refund;
 import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
-import com.coretex.items.commerce_core_model.TransactionItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.utils.DateUtil;
 import com.coretex.shop.utils.EmailTemplatesUtils;
@@ -60,20 +58,10 @@ public class OrderActionsControler {
 	private OrderService orderService;
 
 	@Resource
-	CountryService countryService;
-
-	@Resource
-	ZoneService zoneService;
-
-
-	@Resource
 	CustomerService customerService;
 
 	@Resource
 	PricingService pricingService;
-
-	@Resource
-	TransactionService transactionService;
 
 	@Resource
 	EmailService emailService;
@@ -97,7 +85,7 @@ public class OrderActionsControler {
 		try {
 			UUID id = UUID.fromString(sId);
 
-			OrderItem order = orderService.getById(id);
+			OrderItem order = orderService.getByUUID(id);
 
 			if (order == null) {
 
@@ -115,7 +103,7 @@ public class OrderActionsControler {
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
 
-			CustomerItem customer = customerService.getById(order.getCustomerId());
+			CustomerItem customer = customerService.getByUUID(order.getCustomerId());
 
 			if (customer == null) {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
@@ -151,7 +139,7 @@ public class OrderActionsControler {
 
 		try {
 
-			OrderItem order = orderService.getById(refund.getOrderId());
+			OrderItem order = orderService.getByUUID(refund.getOrderId());
 
 			if (order == null) {
 
@@ -202,7 +190,7 @@ public class OrderActionsControler {
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
 
-			CustomerItem customer = customerService.getById(order.getCustomerId());
+			CustomerItem customer = customerService.getByUUID(order.getCustomerId());
 
 			if (customer == null) {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
@@ -233,14 +221,14 @@ public class OrderActionsControler {
 			UUID id = UUID.fromString(sId);
 
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-			OrderItem order = orderService.getById(id);
+			OrderItem order = orderService.getByUUID(id);
 
 			if (!order.getMerchant().getUuid().equals(store.getUuid())) {
 				throw new Exception("Invalid order");
 			}
 
 
-			LanguageItem lang = store.getDefaultLanguage();
+			LocaleItem lang = store.getDefaultLanguage();
 
 
 			ByteArrayOutputStream stream = orderService.generateInvoice(store, order, lang);
@@ -263,81 +251,6 @@ public class OrderActionsControler {
 		} catch (Exception e) {
 			LOGGER.error("Error while printing a report", e);
 		}
-
-
-	}
-
-
-	@SuppressWarnings("unchecked")
-	@PreAuthorize("hasRole('ORDER')")
-	@RequestMapping(value = "/admin/orders/listTransactions.html", method = RequestMethod.GET)
-	public @ResponseBody
-	ResponseEntity<String> listTransactions(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-		String sId = request.getParameter("id");
-
-		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-
-
-		AjaxResponse resp = new AjaxResponse();
-		if (sId == null) {
-			resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
-			String returnString = resp.toJSONString();
-			return new ResponseEntity<String>(returnString, HttpStatus.OK);
-		}
-
-
-		try {
-
-			UUID id = UUID.fromString(sId);
-
-
-			OrderItem dbOrder = orderService.getById(id);
-
-			if (dbOrder == null) {
-				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
-				String returnString = resp.toJSONString();
-				return new ResponseEntity<String>(returnString, HttpStatus.OK);
-			}
-
-
-			if (!dbOrder.getMerchant().getUuid().equals(store.getUuid())) {
-				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
-				String returnString = resp.toJSONString();
-				return new ResponseEntity<String>(returnString, HttpStatus.OK);
-			}
-
-
-			List<TransactionItem> transactions = transactionService.listTransactions(dbOrder);
-
-			if (transactions != null) {
-
-				for (TransactionItem transaction : transactions) {
-					@SuppressWarnings("rawtypes")
-					Map entry = new HashMap();
-					entry.put("transactionId", transaction.getUuid());
-					entry.put("transactionDate", DateUtil.formatLongDate(transaction.getTransactionDate()));
-					entry.put("transactionType", transaction.getTransactionType().name());
-					entry.put("paymentType", transaction.getPaymentType().name());
-					entry.put("transactionAmount", pricingService.getStringAmount(transaction.getAmount(), store));
-//					entry.put("transactionDetails", transaction.getTransactionDetails());
-					resp.addDataEntry(entry);
-				}
-
-
-			}
-
-
-			resp.setStatus(AjaxResponse.RESPONSE_OPERATION_COMPLETED);
-
-		} catch (Exception e) {
-			LOGGER.error("Cannot get transactions for order id " + sId, e);
-			resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
-			resp.setErrorMessage(e);
-		}
-
-		String returnString = resp.toJSONString();
-		return new ResponseEntity<String>(returnString, HttpStatus.OK);
 
 
 	}
@@ -366,7 +279,7 @@ public class OrderActionsControler {
 			UUID id = UUID.fromString(sId);
 
 
-			OrderItem dbOrder = orderService.getById(id);
+			OrderItem dbOrder = orderService.getByUUID(id);
 
 			if (dbOrder == null) {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
@@ -382,7 +295,7 @@ public class OrderActionsControler {
 			}
 
 			//get customer
-			CustomerItem customer = customerService.getById(dbOrder.getCustomerId());
+			CustomerItem customer = customerService.getByUUID(dbOrder.getCustomerId());
 
 			if (customer == null) {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
@@ -434,7 +347,7 @@ public class OrderActionsControler {
 			UUID id = UUID.fromString(sId);
 
 
-			OrderItem dbOrder = orderService.getById(id);
+			OrderItem dbOrder = orderService.getByUUID(id);
 
 			if (dbOrder == null) {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
@@ -450,7 +363,7 @@ public class OrderActionsControler {
 			}
 
 			//get customer
-			CustomerItem customer = customerService.getById(dbOrder.getCustomerId());
+			CustomerItem customer = customerService.getByUUID(dbOrder.getCustomerId());
 
 			if (customer == null) {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
@@ -522,7 +435,7 @@ public class OrderActionsControler {
 			UUID id = UUID.fromString(sId);
 
 
-			OrderItem dbOrder = orderService.getById(id);
+			OrderItem dbOrder = orderService.getByUUID(id);
 
 			if (dbOrder == null) {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
@@ -538,7 +451,7 @@ public class OrderActionsControler {
 			}
 
 			//get customer
-			CustomerItem customer = customerService.getById(dbOrder.getCustomerId());
+			CustomerItem customer = customerService.getByUUID(dbOrder.getCustomerId());
 
 			if (customer == null) {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);

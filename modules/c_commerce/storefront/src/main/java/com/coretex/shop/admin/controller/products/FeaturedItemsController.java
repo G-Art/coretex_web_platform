@@ -10,7 +10,7 @@ import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
 import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.core.data.web.Menu;
 import com.coretex.shop.constants.Constants;
 import org.slf4j.Logger;
@@ -54,7 +54,7 @@ public class FeaturedItemsController {
 
 		setMenu(model, request);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 		List<CategoryItem> categories = categoryService.listByStore(store, language);
@@ -77,7 +77,7 @@ public class FeaturedItemsController {
 		try {
 
 
-			LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+			LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 
@@ -132,7 +132,7 @@ public class FeaturedItemsController {
 
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-			ProductItem product = productService.getById(lProductId);
+			ProductItem product = productService.getByUUID(lProductId);
 
 			if (product == null) {
 				resp.setStatus(AjaxPageableResponse.RESPONSE_STATUS_FAIURE);
@@ -186,7 +186,7 @@ public class FeaturedItemsController {
 
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-			ProductItem product = productService.getById(lproductId);
+			ProductItem product = productService.getByUUID(lproductId);
 
 			if (product == null) {
 				resp.setStatus(AjaxPageableResponse.RESPONSE_STATUS_FAIURE);

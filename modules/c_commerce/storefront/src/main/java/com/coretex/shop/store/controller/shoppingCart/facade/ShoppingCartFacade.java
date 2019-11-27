@@ -3,7 +3,7 @@ package com.coretex.shop.store.controller.shoppingCart.facade;
 
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.shop.model.shoppingcart.PersistableShoppingCartItem;
 import com.coretex.shop.model.shoppingcart.ReadableShoppingCart;
@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public interface ShoppingCartFacade {
 
-	ShoppingCartData addItemsToShoppingCart(ShoppingCartData shoppingCart, final com.coretex.shop.model.shoppingcart.ShoppingCartItem item, final MerchantStoreItem store, final LanguageItem language, final CustomerItem customer) throws Exception;
+	ShoppingCartData addItemsToShoppingCart(ShoppingCartData shoppingCart, final com.coretex.shop.model.shoppingcart.ShoppingCartItem item, final MerchantStoreItem store, final LocaleItem language, final CustomerItem customer) throws Exception;
 
 	ShoppingCartItem createCartModel(final String shoppingCartCode, final MerchantStoreItem store, final CustomerItem customer) throws Exception;
 
@@ -35,20 +35,20 @@ public interface ShoppingCartFacade {
 	 * Method responsible for getting shopping cart from
 	 * either session or from underlying DB.
 	 */
-	ShoppingCartData getShoppingCartData(final CustomerItem customer, final MerchantStoreItem store, final String shoppingCartId, LanguageItem language) throws Exception;
+	ShoppingCartData getShoppingCartData(final CustomerItem customer, final MerchantStoreItem store, final String shoppingCartId, LocaleItem language) throws Exception;
 
-	ShoppingCartData getShoppingCartData(final ShoppingCartItem shoppingCart, LanguageItem language) throws Exception;
+	ShoppingCartData getShoppingCartData(final ShoppingCartItem shoppingCart, LocaleItem language) throws Exception;
 
-	ShoppingCartData getShoppingCartData(String code, MerchantStoreItem store, LanguageItem lnguage) throws Exception;
+	ShoppingCartData getShoppingCartData(String code, MerchantStoreItem store, LocaleItem lnguage) throws Exception;
 
-	ShoppingCartData removeCartItem(final UUID itemID, final String cartId, final MerchantStoreItem store, final LanguageItem language) throws Exception;
+	ShoppingCartData removeCartItem(final UUID itemID, final String cartId, final MerchantStoreItem store, final LocaleItem language) throws Exception;
 
-	ShoppingCartData updateCartItem(final UUID itemID, final String cartId, final long quantity, final MerchantStoreItem store, LanguageItem language) throws Exception;
+	ShoppingCartData updateCartItem(final UUID itemID, final String cartId, final long quantity, final MerchantStoreItem store, LocaleItem language) throws Exception;
 
 	void deleteShoppingCart(final UUID id, final MerchantStoreItem store) throws Exception;
 
 	ShoppingCartData updateCartItems(List<com.coretex.shop.model.shoppingcart.ShoppingCartItem> shoppingCartItems,
-									 MerchantStoreItem store, LanguageItem language) throws Exception;
+									 MerchantStoreItem store, LocaleItem language) throws Exception;
 
 	ShoppingCartItem getShoppingCartModel(final String shoppingCartCode, MerchantStoreItem store) throws Exception;
 
@@ -69,7 +69,7 @@ public interface ShoppingCartFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableShoppingCart getCart(CustomerItem customer, MerchantStoreItem store, LanguageItem language) throws Exception;
+	ReadableShoppingCart getCart(CustomerItem customer, MerchantStoreItem store, LocaleItem language) throws Exception;
 
 	/**
 	 * Modify an item to an existing cart, quantity of line item will reflect item.getQuantity
@@ -81,7 +81,7 @@ public interface ShoppingCartFacade {
 	 * @throws Exception
 	 */
 	ReadableShoppingCart addToCart(String cartCode, PersistableShoppingCartItem item, MerchantStoreItem store,
-								   LanguageItem language) throws Exception;
+								   LocaleItem language) throws Exception;
 
 	/**
 	 * Add item to shopping cart
@@ -92,7 +92,7 @@ public interface ShoppingCartFacade {
 	 * @throws Exception
 	 */
 	ReadableShoppingCart addToCart(PersistableShoppingCartItem item, MerchantStoreItem store,
-								   LanguageItem language) throws Exception;
+								   LocaleItem language) throws Exception;
 
 	/**
 	 * Add product to ShoppingCartItem
@@ -104,7 +104,7 @@ public interface ShoppingCartFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableShoppingCart addToCart(CustomerItem customer, PersistableShoppingCartItem item, MerchantStoreItem store, LanguageItem language) throws Exception;
+	ReadableShoppingCart addToCart(CustomerItem customer, PersistableShoppingCartItem item, MerchantStoreItem store, LocaleItem language) throws Exception;
 
 	/**
 	 * Retrieves a shopping cart by ID
@@ -114,7 +114,7 @@ public interface ShoppingCartFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableShoppingCart getById(UUID shoppingCartId, MerchantStoreItem store, LanguageItem language) throws Exception;
+	ReadableShoppingCart getById(UUID shoppingCartId, MerchantStoreItem store, LocaleItem language) throws Exception;
 
 	/**
 	 * Retrieves a shopping cart
@@ -124,5 +124,5 @@ public interface ShoppingCartFacade {
 	 * @return
 	 * @throws Exception
 	 */
-	ReadableShoppingCart getByCode(String code, MerchantStoreItem store, LanguageItem language) throws Exception;
+	ReadableShoppingCart getByCode(String code, MerchantStoreItem store, LocaleItem language) throws Exception;
 }

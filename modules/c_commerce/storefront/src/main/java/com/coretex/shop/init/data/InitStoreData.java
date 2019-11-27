@@ -4,12 +4,8 @@ import com.coretex.core.business.exception.ServiceException;
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductOptionService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductOptionValueService;
-import com.coretex.core.business.services.catalog.product.availability.ProductAvailabilityService;
 import com.coretex.core.business.services.catalog.product.image.ProductImageService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
-import com.coretex.core.business.services.catalog.product.price.ProductPriceService;
 import com.coretex.core.business.services.catalog.product.relationship.ProductRelationshipService;
 import com.coretex.core.business.services.catalog.product.type.ProductTypeService;
 import com.coretex.core.business.services.customer.CustomerService;
@@ -29,12 +25,10 @@ import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.enums.commerce_core_model.PaymentTypeEnum;
 import com.coretex.items.commerce_core_model.BillingItem;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.core.CountryItem;
 import com.coretex.items.commerce_core_model.CurrencyItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
@@ -50,6 +44,8 @@ import com.coretex.items.commerce_core_model.ProductPriceItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
 import com.coretex.items.commerce_core_model.ProductTypeItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.core.CountryItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.utils.LocaleUtils;
 import org.apache.commons.io.IOUtils;
@@ -130,8 +126,8 @@ public class InitStoreData implements InitData {
 		Date date = new Date(System.currentTimeMillis());
 
 		//2 languages by default
-		LanguageItem en = languageService.getByCode("ru");
-		LanguageItem fr = languageService.getByCode("fr");
+		LocaleItem en = languageService.getByCode("ru");
+		LocaleItem fr = languageService.getByCode("fr");
 
 		CountryItem canada = countryService.getByCode("UA");
 		ZoneItem zone = zoneService.getByCode("Kyiv_R");

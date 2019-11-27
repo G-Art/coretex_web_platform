@@ -3,7 +3,7 @@ package com.coretex.shop.utils;
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.category.ReadableCategory;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
@@ -35,7 +35,7 @@ public class BreadcrumbsUtils {
 	private FilePathUtils filePathUtils;
 
 
-	public Breadcrumb buildCategoryBreadcrumb(ReadableCategory categoryClicked, MerchantStoreItem store, LanguageItem language, String contextPath) throws Exception {
+	public Breadcrumb buildCategoryBreadcrumb(ReadableCategory categoryClicked, MerchantStoreItem store, LocaleItem language, String contextPath) throws Exception {
 
 		/** Rebuild breadcrumb **/
 		BreadcrumbItem home = new BreadcrumbItem();
@@ -84,7 +84,7 @@ public class BreadcrumbsUtils {
 	}
 
 
-	public Breadcrumb buildProductBreadcrumb(String refContent, ReadableProduct productClicked, MerchantStoreItem store, LanguageItem language, String contextPath) throws Exception {
+	public Breadcrumb buildProductBreadcrumb(String refContent, ReadableProduct productClicked, MerchantStoreItem store, LocaleItem language, String contextPath) throws Exception {
 
 		/** Rebuild breadcrumb **/
 		BreadcrumbItem home = new BreadcrumbItem();

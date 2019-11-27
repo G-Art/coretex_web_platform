@@ -3,9 +3,8 @@ package com.coretex.shop.store.controller.store;
 import com.coretex.core.business.services.content.ContentService;
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
-import com.coretex.items.commerce_core_model.ContentItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.ApplicationConstants;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.shop.ContactForm;
@@ -64,30 +63,12 @@ public class ContactController extends AbstractController {
 
 		request.setAttribute(Constants.LINK_CODE, CONTACT_LINK);
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 		ContactForm contact = new ContactForm();
 		model.addAttribute("contact", contact);
 
 		model.addAttribute("recapatcha_public_key", coreConfiguration.getProperty(ApplicationConstants.RECAPTCHA_PUBLIC_KEY));
-
-		ContentItem content = contentService.getByCode(Constants.CONTENT_CONTACT_US, store, language);
-
-		if (content != null) {
-
-			//meta information
-			PageInformation pageInformation = new PageInformation();
-			pageInformation.setPageDescription(content.getMetatagDescription());
-			pageInformation.setPageKeywords(content.getMetatagKeywords());
-			pageInformation.setPageTitle(content.getTitle());
-			pageInformation.setPageUrl(content.getName());
-
-			request.setAttribute(Constants.REQUEST_PAGE_INFORMATION, pageInformation);
-
-			model.addAttribute("content", content);
-
-		}
-
 
 		/** template **/
 		StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Content.contactus).append(".").append(store.getStoreTemplate());

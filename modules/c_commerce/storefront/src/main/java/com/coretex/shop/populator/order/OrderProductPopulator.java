@@ -16,7 +16,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderProductAttributeItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.shop.constants.ApplicationConstants;
@@ -26,7 +26,6 @@ import org.apache.commons.lang3.Validate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class OrderProductPopulator extends
 		AbstractDataPopulator<ShoppingCartEntryItem, OrderProductItem> {
@@ -60,7 +59,7 @@ public class OrderProductPopulator extends
 	 */
 	@Override
 	public OrderProductItem populate(ShoppingCartEntryItem source, OrderProductItem target,
-									 MerchantStoreItem store, LanguageItem language) throws ConversionException {
+									 MerchantStoreItem store, LocaleItem language) throws ConversionException {
 
 		Validate.notNull(productService, "productService must be set");
 		Validate.notNull(digitalProductService, "digitalProductService must be set");
@@ -68,7 +67,7 @@ public class OrderProductPopulator extends
 
 
 		try {
-			ProductItem modelProduct = productService.getById(source.getProduct().getUuid());
+			ProductItem modelProduct = productService.getByUUID(source.getProduct().getUuid());
 			if (modelProduct == null) {
 				throw new ConversionException("Cannot get product with id (productId) " + source.getProduct().getUuid());
 			}
@@ -133,12 +132,8 @@ public class OrderProductPopulator extends
 					}
 
 					orderProductAttribute.setProductAttributeIsFree(attr.getProductAttributeIsFree());
-					orderProductAttribute.setProductAttributeName(attr.getProductOption().getName());
-					orderProductAttribute.setProductAttributeValueName(attr.getProductOptionValue().getName());
 					orderProductAttribute.setProductAttributePrice(attr.getProductAttributePrice());
 					orderProductAttribute.setProductAttributeWeight(attr.getProductAttributeWeight());
-					orderProductAttribute.setProductOptionId(attr.getProductOption().getUuid());
-					orderProductAttribute.setProductOptionValueId(attr.getProductOptionValue().getUuid());
 					attributes.add(orderProductAttribute);
 				}
 				target.setOrderAttributes(attributes);

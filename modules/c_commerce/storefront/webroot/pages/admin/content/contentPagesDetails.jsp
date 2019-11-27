@@ -149,11 +149,11 @@
                             <c:choose>
                                 <c:when test="${boxes!=null}">
                                     <label><s:message code="label.content.boxes.name" text="Box name"/> (<c:out
-                                            value="${description.language.code}"/>)</label>
+                                            value="${description.language.iso}"/>)</label>
                                 </c:when>
                                 <c:otherwise>
                                     <label><s:message code="label.content.pages.page.name" text="Page name"/> (<c:out
-                                            value="${description.language.code}"/>)</label>
+                                            value="${description.language.iso}"/>)</label>
                                 </c:otherwise>
                             </c:choose>
 
@@ -169,7 +169,7 @@
                         <c:if test="${boxes==null}">
                             <div class="control-group">
                                 <label><s:message code="label.sefurl" text="SEF Url"/> (<c:out
-                                        value="${description.language.code}"/>)</label>
+                                        value="${description.language.iso}"/>)</label>
                                 <div class="controls">
                                     <form:input id="seUrl${counter.index}" path="descriptions[${counter.index}].seUrl"/>
                                     <span class="help-inline"><form:errors path="descriptions[${counter.index}].seUrl"
@@ -181,7 +181,7 @@
 
                         <div class="control-group">
                             <label><s:message code="label.content.pages.page.content" text="Page content"/> (<c:out
-                                    value="${description.language.code}"/>)</label>
+                                    value="${description.language.iso}"/>)</label>
                             <div class="controls">
                         
 
@@ -229,7 +229,7 @@
                         <c:if test="${boxes==null}">
                             <div class="control-group">
                                 <label><s:message code="label.generic.title" text="Metatag title"/> (<c:out
-                                        value="${description.language.code}"/>)</label>
+                                        value="${description.language.iso}"/>)</label>
                                 <div class="controls">
                                     <form:input path="descriptions[${counter.index}].metatagTitle"/>
                                     <span class="help-inline"><form:errors
@@ -239,7 +239,7 @@
 
                             <div class="control-group">
                                 <label><s:message code="label.generic.keywords" text="Keywords"/> (<c:out
-                                        value="${description.language.code}"/>)</label>
+                                        value="${description.language.iso}"/>)</label>
                                 <div class="controls">
                                     <form:input path="descriptions[${counter.index}].metatagKeywords"/>
                                     <span class="help-inline"><form:errors
@@ -264,7 +264,7 @@
 
                             <div class="control-group">
                                 <label><s:message code="label.content.metatag.description" text="Metatag description"/>
-                                    (<c:out value="${description.language.code}"/>)</label>
+                                    (<c:out value="${description.language.iso}"/>)</label>
                                 <div class="controls">
                                     <form:input path="descriptions[${counter.index}].metatagDescription"/>
                                     <span class="help-inline"><form:errors
@@ -274,7 +274,7 @@
                             </div>
                         </c:if>
 
-                        <form:hidden path="descriptions[${counter.index}].language.code"/>
+                        <form:hidden path="descriptions[${counter.index}].language.iso"/>
                         <form:hidden path="descriptions[${counter.index}].id"/>
 
                     </c:forEach>

@@ -11,7 +11,7 @@ import com.coretex.core.business.utils.ajax.AjaxPageableResponse;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.core.data.web.Menu;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
@@ -130,7 +130,7 @@ public class ProductController extends AbstractController {
 
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 
 		List<ManufacturerItem> manufacturers = manufacturerService.listByStore(store, language);
@@ -140,7 +140,7 @@ public class ProductController extends AbstractController {
 		var product = new ProductForm();
 		var dbProduct = new ProductItem();
 		if (productId.isPresent()) {
-			dbProduct = productService.getById(productId.get());
+			dbProduct = productService.getByUUID(productId.get());
 		}
 		productFormMapper.updateFromProductItem(dbProduct, product);
 
@@ -158,7 +158,7 @@ public class ProductController extends AbstractController {
 	public String saveProduct(@Valid @ModelAttribute("product") ProductForm product, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
 
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 		//display menu
 		setMenu(model, request);
@@ -242,7 +242,7 @@ public class ProductController extends AbstractController {
 		if (product.getUuid() != null) {
 
 			//get actual product
-			newProduct = productService.getById(product.getUuid());
+			newProduct = productService.getByUUID(product.getUuid());
 			if (newProduct != null && !newProduct.getMerchantStore().getUuid().equals(store.getUuid())) {
 				return "redirect:/admin/products/products.html";
 			}
@@ -279,7 +279,7 @@ public class ProductController extends AbstractController {
 	public String duplicateProduct(@ModelAttribute("productId") String id, BindingResult result, Model model, HttpServletRequest request, Locale locale) throws Exception {
 
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 		//display menu
 		setMenu(model, request);
@@ -292,7 +292,7 @@ public class ProductController extends AbstractController {
 		model.addAttribute("manufacturers", manufacturers);
 		model.addAttribute("productTypes", productTypes);
 
-		ProductItem dbProduct = productService.getById(UUID.fromString(id));
+		ProductItem dbProduct = productService.getByUUID(UUID.fromString(id));
 		ProductItem newProduct = new ProductItem();
 
 		if (dbProduct == null || dbProduct.getMerchantStore().getUuid().equals(store.getUuid())) {
@@ -360,9 +360,7 @@ public class ProductController extends AbstractController {
 			attribute.setProductAttributePrice(pAttribute.getProductAttributePrice());
 			attribute.setProductAttributeIsFree(pAttribute.getProductAttributeIsFree());
 			attribute.setProductAttributeWeight(pAttribute.getProductAttributeWeight());
-			attribute.setProductOption(pAttribute.getProductOption());
 			attribute.setProductOptionSortOrder(pAttribute.getProductOptionSortOrder());
-			attribute.setProductOptionValue(pAttribute.getProductOptionValue());
 			attributes.add(attribute);
 
 		}
@@ -407,7 +405,7 @@ public class ProductController extends AbstractController {
 
 		Set<CategoryItem> categories = dbProduct.getCategories();
 		for (CategoryItem category : categories) {
-			CategoryItem categoryCopy = categoryService.getById(category.getUuid());
+			CategoryItem categoryCopy = categoryService.getByUUID(category.getUuid());
 			newProduct.getCategories().add(categoryCopy);
 			productService.update(newProduct);
 		}
@@ -442,7 +440,7 @@ public class ProductController extends AbstractController {
 		try {
 
 			UUID id = UUID.fromString(iid);
-			ProductImageItem productImage = productImageService.getById(id);
+			ProductImageItem productImage = productImageService.getByUUID(id);
 			if (productImage == null || !productImage.getProduct().getMerchantStore().getUuid().equals(store.getUuid())) {
 
 				resp.setStatusMessage(messages.getMessage("message.unauthorized", locale));
@@ -485,11 +483,11 @@ public class ProductController extends AbstractController {
 
 		setMenu(model, request);
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 
 		//get the product and validate it belongs to the current merchant
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		if (product == null) {
 			return "redirect:/admin/products/products.html";
@@ -548,7 +546,7 @@ public class ProductController extends AbstractController {
 
 		try {
 
-			product = productService.getById(productId);
+			product = productService.getByUUID(productId);
 
 
 			if (product == null) {
@@ -566,7 +564,7 @@ public class ProductController extends AbstractController {
 			}
 
 
-			LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+			LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 
 			Set<CategoryItem> categories = product.getCategories();
@@ -612,8 +610,8 @@ public class ProductController extends AbstractController {
 		try {
 
 
-			CategoryItem category = categoryService.getById(UUID.fromString(sCategoryid));
-			ProductItem product = productService.getById(UUID.fromString(sProductId));
+			CategoryItem category = categoryService.getByUUID(UUID.fromString(sCategoryid));
+			ProductItem product = productService.getByUUID(UUID.fromString(sProductId));
 
 			if (category == null || category.getMerchantStore().getUuid() != store.getUuid()) {
 
@@ -655,11 +653,11 @@ public class ProductController extends AbstractController {
 
 		setMenu(model, request);
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 
 		//get the product and validate it belongs to the current merchant
-		ProductItem product = productService.getById(UUID.fromString(productId));
+		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		if (product == null) {
 			return "redirect:/admin/products/products.html";
@@ -673,7 +671,7 @@ public class ProductController extends AbstractController {
 		//get parent categories
 		List<CategoryItem> categories = categoryService.listByStore(store, language);
 
-		CategoryItem category = categoryService.getById(UUID.fromString(categoryId));
+		CategoryItem category = categoryService.getByUUID(UUID.fromString(categoryId));
 
 		if (category == null) {
 			return "redirect:/admin/products/products.html";

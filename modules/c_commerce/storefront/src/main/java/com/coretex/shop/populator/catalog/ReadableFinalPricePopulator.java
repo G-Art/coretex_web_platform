@@ -1,7 +1,7 @@
 package com.coretex.shop.populator.catalog;
 
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import org.apache.commons.lang3.Validate;
 
 import com.coretex.core.business.exception.ConversionException;
@@ -26,7 +26,7 @@ public class ReadableFinalPricePopulator extends
 
 	@Override
 	public ReadableProductPrice populate(FinalPrice source,
-										 ReadableProductPrice target, MerchantStoreItem store, LanguageItem language)
+										 ReadableProductPrice target, MerchantStoreItem store, LocaleItem language)
 			throws ConversionException {
 		Validate.notNull(pricingService, "pricingService must be set");
 

@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.admin.controller.AbstractController;
 import com.coretex.shop.admin.forms.CategoryForm;
 import com.coretex.shop.admin.mapppers.CategoryFormMapper;
@@ -36,8 +36,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.coretex.core.business.services.catalog.category.CategoryService;
-import com.coretex.core.business.services.reference.country.CountryService;
-import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.core.data.web.Menu;
 import com.coretex.shop.constants.Constants;
@@ -77,7 +75,7 @@ public class CategoryController extends AbstractController {
 		setMenu(model, request);
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 		//get parent categories
 		List<CategoryItem> categories = categoryService.listByStore(store, language);
@@ -85,7 +83,7 @@ public class CategoryController extends AbstractController {
 		CategoryItem category = new CategoryItem();
 
 		if (categoryId != null) {//edit mode
-			category = categoryService.getById(categoryId);
+			category = categoryService.getByUUID(categoryId);
 
 
 			if (category == null || !category.getMerchantStore().getUuid().equals(store.getUuid())) {
@@ -107,7 +105,7 @@ public class CategoryController extends AbstractController {
 	@RequestMapping(value = "/admin/categories/save.html", method = RequestMethod.POST)
 	public String saveCategory(@Valid @ModelAttribute("category") CategoryForm categoryForm, BindingResult result, Model model, HttpServletRequest request) throws Exception {
 
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 		//display menu
 		setMenu(model, request);
@@ -119,7 +117,7 @@ public class CategoryController extends AbstractController {
 		if (category.getUuid() != null) { //edit entry
 
 			//get from DB
-			CategoryItem currentCategory = categoryService.getById(category.getUuid());
+			CategoryItem currentCategory = categoryService.getByUUID(category.getUuid());
 
 			if (currentCategory == null || !currentCategory.getMerchantStore().getUuid().equals(store.getUuid())) {
 				return "catalogue-categories";
@@ -187,7 +185,7 @@ public class CategoryController extends AbstractController {
 
 		try {
 
-			LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+			LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 
 			MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
@@ -245,7 +243,7 @@ public class CategoryController extends AbstractController {
 		setMenu(model, request);
 
 		//get the list of categories
-		LanguageItem language = (LanguageItem) request.getAttribute("LANGUAGE");
+		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 		List<CategoryItem> categories = categoryService.listByStore(store, language);
@@ -270,7 +268,7 @@ public class CategoryController extends AbstractController {
 
 			UUID id = UUID.fromString(sid);
 
-			CategoryItem category = categoryService.getById(id);
+			CategoryItem category = categoryService.getByUUID(id);
 
 			if (category == null || !category.getMerchantStore().getUuid().equals(store.getUuid())) {
 
@@ -310,8 +308,8 @@ public class CategoryController extends AbstractController {
 			UUID parentId = UUID.fromString(parentid);
 			UUID childId = UUID.fromString(childid);
 
-			CategoryItem child = categoryService.getById(childId);
-			CategoryItem parent = categoryService.getById(parentId);
+			CategoryItem child = categoryService.getByUUID(childId);
+			CategoryItem parent = categoryService.getByUUID(parentId);
 
 			if (Objects.nonNull(child) && Objects.nonNull(child.getParent()) && child.getParent().getUuid().equals(parentId)) {
 				resp.setStatus(AjaxResponse.RESPONSE_OPERATION_COMPLETED);

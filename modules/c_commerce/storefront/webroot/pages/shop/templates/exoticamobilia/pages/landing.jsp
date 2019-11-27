@@ -10,24 +10,6 @@
 <%@page pageEncoding="UTF-8" %>
 
 
-<div id="shop" class="">
-
-    <div style="margin-top: 0px;" class="banner center-block">
-
-        <c:if test="${requestScope.CONTENT['banner']!=null}">
-            <sm:pageContent contentCode="banner"/>
-        </c:if>
-
-    </div>
-
-
-</div>
-
-<c:if test="${requestScope.CONTENT['homeMessage']!=null}">
-    <sm:pageContent contentCode="homeMessage"/>
-</c:if>
-
-
 <div class="main">
     <c:if test="${page!=null}">
         <div id="" class="container">

@@ -1,26 +1,14 @@
 package com.coretex.core.business.services.shipping;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-
 import com.coretex.core.business.exception.ServiceException;
-import com.coretex.items.commerce_core_model.DeliveryItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.LanguageItem;
-import com.coretex.core.model.shipping.PackageDetails;
 import com.coretex.core.model.shipping.ShippingConfiguration;
 import com.coretex.core.model.shipping.ShippingMetaData;
-import com.coretex.core.model.shipping.ShippingOption;
-import com.coretex.core.model.shipping.ShippingProduct;
-import com.coretex.core.model.shipping.ShippingQuote;
-import com.coretex.core.model.shipping.ShippingSummary;
-import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
-import com.coretex.core.model.system.CustomIntegrationConfiguration;
 import com.coretex.core.model.system.IntegrationConfiguration;
-import com.coretex.items.commerce_core_model.IntegrationModuleItem;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.core.CountryItem;
+import com.coretex.items.core.LocaleItem;
+
+import java.util.List;
 
 
 public interface ShippingService {
@@ -90,7 +78,7 @@ public interface ShippingService {
 	 * @return
 	 * @throws ServiceException
 	 */
-	List<CountryItem> getShipToCountryList(MerchantStoreItem store, LanguageItem language)
+	List<CountryItem> getShipToCountryList(MerchantStoreItem store, LocaleItem language)
 			throws ServiceException;
 
 	/**

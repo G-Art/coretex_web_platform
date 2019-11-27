@@ -1,6 +1,6 @@
 package com.coretex.core.data.merchant;
 
-import com.coretex.items.commerce_core_model.LanguageItem;
+import com.coretex.items.core.LocaleItem;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ public class StoreLandingDescription implements Serializable {
 	private String homePageContent;
 
 
-	private LanguageItem language;
+	private LocaleItem language;
 
 
 	public void setDescription(String description) {
@@ -53,11 +53,11 @@ public class StoreLandingDescription implements Serializable {
 		return title;
 	}
 
-	public void setLanguage(LanguageItem language) {
+	public void setLanguage(LocaleItem language) {
 		this.language = language;
 	}
 
-	public LanguageItem getLanguage() {
+	public LocaleItem getLanguage() {
 		return language;
 	}
 

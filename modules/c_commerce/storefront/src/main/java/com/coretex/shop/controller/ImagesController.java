@@ -40,7 +40,6 @@ public class ImagesController {
 	/**
 	 * Logo, content image
 	 *
-	 * @param storeId
 	 * @param imageType (LOGO, CONTENT, IMAGE)
 	 * @param imageName
 	 * @return
