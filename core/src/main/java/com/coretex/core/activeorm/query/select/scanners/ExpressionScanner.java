@@ -53,13 +53,14 @@ public class ExpressionScanner<Q> extends Scanner<Expression, Q> {
 
 	@Override
 	public void visit(Function function) {
-		if(expression != function){
-			ExpressionScanner internalExpression = new ExpressionScanner<>(getDeep()+1, expression, this, FUNCTION_EXPRESSION);
-			internalExpressions.add(internalExpression);
-			internalExpression.scan(function);
-		}else{
-			this.isFunction = true;
+		if(!function.isAllColumns()){
+			function.getParameters().getExpressions().forEach(exp -> {
+				ExpressionScanner internalExpression = new ExpressionScanner<>(this.getDeep()+1, expression, this, FUNCTION_EXPRESSION);
+				internalExpressions.add(internalExpression);
+				internalExpression.scan(exp);
+			});
 		}
+		this.isFunction = true;
 	}
 
 	@Override

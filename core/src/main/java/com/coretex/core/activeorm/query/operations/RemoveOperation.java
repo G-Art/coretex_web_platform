@@ -1,7 +1,9 @@
 package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
+import com.coretex.core.activeorm.query.operations.dataholders.InsertValueDataHolder;
 import com.coretex.core.activeorm.query.operations.dataholders.RemoveValueDataHolder;
+import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.RemoveOperationSpec;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.items.core.GenericItem;
@@ -66,28 +68,8 @@ public class RemoveOperation extends ModificationOperation<Delete, RemoveOperati
 
 	@Override
 	public void executeOperation() {
-		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getStatement().toString(), new MapSqlParameterSource(getOperationSpec().getValueDatas()) {
-
-			@Override
-			public MapSqlParameterSource addValue(String paramName, Object value) {
-				Assert.notNull(paramName, "Parameter name must not be a null");
-				if (value instanceof RemoveValueDataHolder) {
-					return super.addValue(paramName, ((RemoveValueDataHolder) value).createSqlParameterValue());
-				}
-
-				return super.addValue(paramName, value);
-			}
-
-			@Override
-			public MapSqlParameterSource addValues(Map<String, ?> values) {
-				if (values != null) {
-					for (Map.Entry<String, ?> entry : values.entrySet()) {
-						this.addValue(entry.getKey(), entry.getValue());
-					}
-				}
-				return this;
-			}
-		}));
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getStatement().toString(),
+				new ModificationSqlParameterSource<RemoveValueDataHolder>(getOperationSpec().getValueDatas())));
 	}
 
 	@Override

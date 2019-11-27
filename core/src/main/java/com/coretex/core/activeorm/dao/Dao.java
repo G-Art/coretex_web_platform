@@ -1,5 +1,6 @@
 package com.coretex.core.activeorm.dao;
 
+import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.meta.AbstractGenericItem;
 
 import java.util.List;
@@ -30,7 +31,24 @@ public interface Dao<I extends AbstractGenericItem> {
 
 	List<I> find(Map<String, ?> var1, SortParameters var2);
 
-	List<I> find(Map<String, ?> var1, SortParameters var2, int var3);
+	List<I> find(Map<String, ?> var1, SortParameters var2, long count);
 
-	List<I> find(Map<String, ?> params, SortParameters sortParameters, int count, int start);
+	List<I> find(Map<String, ?> params, SortParameters sortParameters, long count, long page);
+
+	PageableSearchResult<I> findPageable(Map<String, ?> params, SortParameters sortParameters, long count);
+
+	PageableSearchResult<I> findPageable(Map<String, ?> params, SortParameters sortParameters, long count, long page);
+
+	PageableSearchResult<I> findPageable(Map<String, ?> params, long count, long page);
+
+	PageableSearchResult<I> findPageable(Map<String, ?> params, long count);
+
+	PageableSearchResult<I> findPageable(Map<String, ?> params);
+
+	PageableSearchResult<I> findPageable(long count, long page);
+
+	PageableSearchResult<I> findPageable(long count);
+
+	PageableSearchResult<I> findPageable();
+
 }
