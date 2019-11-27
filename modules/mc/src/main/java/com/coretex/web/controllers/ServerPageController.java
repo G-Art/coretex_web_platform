@@ -1,7 +1,6 @@
 package com.coretex.web.controllers;
 
 import com.coretex.core.activeorm.services.ItemService;
-import com.coretex.core.activeorm.services.SearchService;
 import com.coretex.data.SystemInfo;
 import com.coretex.data.SystemMemoryInfo;
 import com.coretex.server.PluginAccessor;
@@ -21,9 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/")
 public class ServerPageController extends AbstractController {
-
-    @Autowired
-    private SearchService searchService;
 
     @Autowired
     private ItemService itemService;

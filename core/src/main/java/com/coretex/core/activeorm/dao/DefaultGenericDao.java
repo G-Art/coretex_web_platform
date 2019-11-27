@@ -2,8 +2,10 @@ package com.coretex.core.activeorm.dao;
 
 import com.coretex.core.activeorm.dao.SortParameters.SortOrder;
 import com.coretex.core.activeorm.exceptions.AmbiguousResultException;
+import com.coretex.core.activeorm.query.specs.select.PageableSelectOperationSpec;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
 import com.coretex.core.activeorm.services.ItemService;
+import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.core.activeorm.services.SearchResult;
 import com.coretex.core.activeorm.services.SearchService;
 import com.coretex.items.core.GenericItem;
@@ -90,8 +92,7 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 	@Override
 	public List<I> find(Map<String, ?> params) {
 		SelectOperationSpec<I> query = this.createSearchQuery(params);
-		SearchService ss = this.getSearchService();
-		SearchResult<I> searchResult = ss.search(query);
+		SearchResult<I> searchResult = this.getSearchService().search(query);
 		return searchResult.getResult();
 	}
 
@@ -103,20 +104,60 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find(Map<String, ?> params, SortParameters sortParameters) {
-		SelectOperationSpec<I> query = this.createSearchQuery(params, sortParameters, -1);
+		var query = this.createSearchQuery(params, sortParameters);
 		return this.getSearchService().search(query).getResult();
 	}
 
 	@Override
-	public List<I> find(Map<String, ?> params, SortParameters sortParameters, int count) {
-		SelectOperationSpec<I> query = this.createSearchQuery(params, sortParameters, count);
-		return this.getSearchService().search(query).getResult();
+	public List<I> find(Map<String, ?> params, SortParameters sortParameters, long count) {
+		return findPageable(params, sortParameters, count).getResult();
 	}
 
 	@Override
-	public List<I> find(Map<String, ?> params, SortParameters sortParameters, int count, int start) {
-		SelectOperationSpec<I> query = this.createSearchQuery(params, sortParameters, count, start);
-		return this.getSearchService().search(query).getResult();
+	public List<I> find(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
+		return findPageable(params, sortParameters, count, page).getResult();
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(Map<String, ?> params, SortParameters sortParameters, long count) {
+		var query = this.createSearchQuery(params, sortParameters, count);
+		return this.getSearchService().searchPageable(query);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
+		var query = this.createSearchQuery(params, sortParameters, count, page);
+		return this.getSearchService().searchPageable(query);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(Map<String, ?> params, long count) {
+		return findPageable(params, null, count);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(Map<String, ?> params, long count, long page) {
+		return findPageable(params, null, count, page);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(Map<String, ?> params) {
+		return findPageable(params, null, -1);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(long count, long page) {
+		return findPageable(null, count, page);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(long count) {
+		return findPageable(count, -1);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable() {
+		return findPageable(null, null, -1);
 	}
 
 	private SelectOperationSpec<I> createSearchQuery() {
@@ -145,11 +186,23 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 		return new SelectOperationSpec<>(builder.toString());
 	}
 
-	private SelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, int count) {
+	private SelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters) {
 		StringBuilder builder = this.createQueryString();
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
 		SelectOperationSpec<I> query = new SelectOperationSpec<>(builder.toString());
+		if (params != null && !params.isEmpty()) {
+			query.addQueryParameters(params);
+		}
+		return query;
+	}
+
+
+	private PageableSelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count) {
+		StringBuilder builder = this.createQueryString();
+		this.appendWhereClausesToBuilder(builder, params);
+		this.appendOrderByClausesToBuilder(builder, sortParameters);
+		var query = new PageableSelectOperationSpec<I>(builder.toString());
 		if(count > 0){
 			query.setCount(count);
 		}
@@ -161,13 +214,13 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 		return query;
 	}
 
-	private SelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, int count, int start) {
+	private PageableSelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
 		StringBuilder builder = this.createQueryString();
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
-		SelectOperationSpec<I> query = new SelectOperationSpec<>(builder.toString());
+		var query = new PageableSelectOperationSpec<I>(builder.toString());
 		query.setCount(count);
-		query.setStart(start);
+		query.setPage(page);
 
 		if (params != null && !params.isEmpty()) {
 			query.addQueryParameters(params);

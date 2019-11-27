@@ -36,7 +36,9 @@
         <property name="itemContextFactory" ref="defaultItemContextFactory"/>
     </bean>
 
-    <bean id="defaultSearchService" class="com.coretex.core.activeorm.services.impl.DefaultSearchService" parent="abstractJdbcService">
+    <bean id="defaultSearchService"
+          class="com.coretex.core.activeorm.services.impl.DefaultSearchService"
+          parent="abstractJdbcService">
     </bean>
 
     <bean id="specFactory" class="com.coretex.core.activeorm.factories.OperationFactoryImpl" parent="abstractJdbcService">

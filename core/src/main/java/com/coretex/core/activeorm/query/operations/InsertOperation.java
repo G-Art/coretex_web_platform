@@ -2,6 +2,7 @@ package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.dataholders.InsertValueDataHolder;
+import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.InsertOperationSpec;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
@@ -48,28 +49,8 @@ public class InsertOperation extends ModificationOperation<Insert, InsertOperati
 
 	@Override
 	public void executeOperation() {
-		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getStatement().toString(), new MapSqlParameterSource(getOperationSpec().getInsertValueDatas()) {
-
-			@Override
-			public MapSqlParameterSource addValue(String paramName, Object value) {
-				Assert.notNull(paramName, "Parameter name must not be a null");
-				if (value instanceof InsertValueDataHolder) {
-					return super.addValue(paramName, ((InsertValueDataHolder) value).createSqlParameterValue());
-				}
-
-				return super.addValue(paramName, value);
-			}
-
-			@Override
-			public MapSqlParameterSource addValues(Map<String, ?> values) {
-				if (values != null) {
-					for (Map.Entry<String, ?> entry : values.entrySet()) {
-						this.addValue(entry.getKey(), entry.getValue());
-					}
-				}
-				return this;
-			}
-		}));
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getStatement().toString(),
+				new ModificationSqlParameterSource<InsertValueDataHolder>(getOperationSpec().getInsertValueDatas())));
 	}
 
 	@Override

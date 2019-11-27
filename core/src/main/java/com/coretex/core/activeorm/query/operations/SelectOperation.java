@@ -3,6 +3,7 @@ package com.coretex.core.activeorm.query.operations;
 import com.coretex.core.activeorm.extractors.CoretexResultSetExtractor;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.QueryType;
+import com.coretex.core.activeorm.query.operations.sources.SelectSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
 import com.coretex.items.core.GenericItem;
 import com.coretex.meta.AbstractGenericItem;
@@ -32,7 +33,7 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 	private static Cache<Integer, Select> selectCache = CacheBuilder.newBuilder()
 			.softValues()
 			.maximumSize(255)
-			.expireAfterAccess(10, TimeUnit.SECONDS)
+			.expireAfterAccess(20, TimeUnit.SECONDS)
 			.build();
 
 	private List<T> result;
@@ -46,6 +47,10 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 
 	public void setExtractorCreationFunction(Function<SelectOperation, CoretexResultSetExtractor<T>> extractorFunction) {
 		this.extractorFunction = extractorFunction;
+	}
+
+	protected Function<SelectOperation, CoretexResultSetExtractor<T>> getExtractorFunction() {
+		return extractorFunction;
 	}
 
 	@Override
@@ -71,36 +76,16 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 
 	@Override
 	public void execute() {
+		doTransformation(getStatement());
+		result = getJdbcTemplate().query(getStatement().toString(),
+				new SelectSqlParameterSource(getOperationSpec()),
+				extractorFunction.apply(this));
+	}
+
+	protected void doTransformation(Select statement){
 		if(!transformed){
-			transformationProcessor.transform(getStatement());
+			transformationProcessor.transform(statement);
 		}
-		result = getJdbcTemplate().query(getStatement().toString(), new  MapSqlParameterSource(getOperationSpec().getParameters()) {
-
-			@Override
-			public MapSqlParameterSource addValue(String paramName, @Nullable Object value) {
-				if(value instanceof GenericItem){
-					if(Objects.isNull(((GenericItem) value).getUuid())){
-						throw new NullPointerException(String.format("Item type [%s] for parameter [%s] has no uuid", ((GenericItem) value).getMetaType().getTypeCode(), paramName));
-					}
-					return super.addValue(paramName, ((AbstractGenericItem) value).getUuid());
-				}
-				if(value instanceof Enum){
-					var metaEnumValueTypeItem = getOperationSpec().getCortexContext().findMetaEnumValueTypeItem((Enum) value);
-					if(Objects.nonNull(metaEnumValueTypeItem)){
-						return super.addValue(paramName, metaEnumValueTypeItem.getUuid());
-					}
-					return super.addValue(paramName, value.toString());
-				}
-				return super.addValue(paramName, value);
-			}
-
-			public MapSqlParameterSource addValues(@Nullable Map<String, ?> values) {
-				if (values != null) {
-					values.forEach(this::addValue);
-				}
-				return this;
-			}
-		}, extractorFunction.apply(this));
 	}
 
 	public List<T> searchResult(){

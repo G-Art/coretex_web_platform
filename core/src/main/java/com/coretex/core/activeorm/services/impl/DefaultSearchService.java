@@ -2,10 +2,13 @@ package com.coretex.core.activeorm.services.impl;
 
 import com.coretex.core.activeorm.extractors.CoretexResultSetExtractor;
 import com.coretex.core.activeorm.factories.RowMapperFactory;
+import com.coretex.core.activeorm.query.operations.PageableSelectOperation;
 import com.coretex.core.activeorm.query.operations.SelectOperation;
 import com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor;
+import com.coretex.core.activeorm.query.specs.select.PageableSelectOperationSpec;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
 import com.coretex.core.activeorm.services.AbstractJdbcService;
+import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.core.activeorm.services.SearchResult;
 import com.coretex.core.activeorm.services.SearchService;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
@@ -47,7 +50,32 @@ public class DefaultSearchService extends AbstractJdbcService implements SearchS
 		});
 
 		selectOperation.setJdbcTemplateSupplier(this::getJdbcTemplate);
-		return new SearchResult<>(selectOperation, selectOperation::searchResult);
+		return new SearchResult<>(selectOperation::searchResult);
+	}
+
+	@Override
+	public <T> PageableSearchResult<T> searchPageable(String query) {
+		var selectOperationSpec = new PageableSelectOperationSpec<T>(query);
+		return searchPageable(selectOperationSpec);
+	}
+
+	@Override
+	public <T> PageableSearchResult<T> searchPageable(String query, Map<String, Object> parameters) {
+		var selectOperationSpec = new PageableSelectOperationSpec<T>(query, parameters);
+		return searchPageable(selectOperationSpec);
+	}
+
+	@Override
+	public <T> PageableSearchResult<T> searchPageable(PageableSelectOperationSpec<T> spec) {
+		PageableSelectOperation<T> selectOperation = spec.createOperation(transformationProcessor);
+		selectOperation.setExtractorCreationFunction(select -> {
+			CoretexResultSetExtractor<T> extractor = new CoretexResultSetExtractor<>(select, cortexContext);
+			extractor.setMapperFactorySupplier(() -> rowMapperFactory);
+			return extractor;
+		});
+
+		selectOperation.setJdbcTemplateSupplier(this::getJdbcTemplate);
+		return new PageableSearchResult<>(selectOperation, selectOperation::searchResult);
 	}
 
 }
