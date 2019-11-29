@@ -13,10 +13,18 @@
                 <common-nav:subMenuItem name="Stores" link="/store"/>
             </common-nav:subMenuItem>
             <common-nav:subMenuItem name="Content" menuClass="pcoded-hasmenu"
-                                    iconClass="zmdi zmdi-receipt">
-                <common-nav:subMenuItem name="Categories" menuClass="pcoded-hasmenu">
-                    <common-nav:subMenuItem name="Categoy" link=""/>
-                    <common-nav:subMenuItem name="Categoy hierarchy" link=""/>
+                                    iconClass="zmdi zmdi-receipt"
+                                    trigger="${
+                                    cp.concat('/category') eq requestPath ||
+                                    cp.concat('/category/hierarchy') eq requestPath
+                                    }">
+                <common-nav:subMenuItem name="Categories" menuClass="pcoded-hasmenu"
+                                        trigger="${
+                                        cp.concat('/category') eq requestPath ||
+                                        cp.concat('/category/hierarchy') eq requestPath
+                                        }">
+                    <common-nav:subMenuItem name="Category" link="/category"/>
+                    <common-nav:subMenuItem name="Category hierarchy" link="/category/hierarchy"/>
                 </common-nav:subMenuItem>
                 <common-nav:subMenuItem name="Products" menuClass="pcoded-hasmenu">
                     <common-nav:subMenuItem name="Product" link=""/>

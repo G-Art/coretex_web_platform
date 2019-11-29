@@ -1,5 +1,6 @@
 package com.coretex.commerce.admin.facades.impl;
 
+import com.coretex.commerce.admin.controllers.DataTableResults;
 import com.coretex.commerce.admin.data.UserData;
 import com.coretex.commerce.admin.facades.UserFacade;
 import com.coretex.commerce.admin.mapper.UserDataMapper;
@@ -71,5 +72,10 @@ public class DefaultUserFacade implements UserFacade {
 		userService.save(userItem);
 
 		userDataMapper.updateFromItem(userItem, userData);
+	}
+
+	@Override
+	public DataTableResults<UserData> tableResult(String draw, long page, Long length) {
+		return null;
 	}
 }

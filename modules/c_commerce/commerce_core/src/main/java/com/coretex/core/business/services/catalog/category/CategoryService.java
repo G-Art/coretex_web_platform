@@ -18,8 +18,6 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 
 	void addChild(CategoryItem parent, CategoryItem child) throws ServiceException;
 
-	List<CategoryItem> listByParent(CategoryItem category) throws ServiceException;
-
 	List<CategoryItem> listByStoreAndParent(MerchantStoreItem store, CategoryItem category) throws ServiceException;
 
 
@@ -64,7 +62,8 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 
 	CategoryItem getBySeUrl(MerchantStoreItem store, String seUrl);
 
-	List<CategoryItem> listByParent(CategoryItem category, LocaleItem language);
+	List<CategoryItem> listByParent(CategoryItem category);
+	List<CategoryItem> listByParent(UUID categoryUuid);
 
 	CategoryItem getOneByLanguage(UUID categoryId, LocaleItem language);
 

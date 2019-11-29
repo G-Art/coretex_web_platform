@@ -4,7 +4,7 @@ import com.coretex.commerce.admin.data.UserData;
 
 import java.util.UUID;
 
-public interface UserFacade {
+public interface UserFacade extends PageableDataTableFacade<UserData> {
 
 	UserData getCurrentUser();
 

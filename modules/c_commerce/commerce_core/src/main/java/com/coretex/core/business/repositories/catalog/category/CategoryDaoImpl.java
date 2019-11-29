@@ -3,6 +3,7 @@ package com.coretex.core.business.repositories.catalog.category;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -37,6 +38,8 @@ public class CategoryDaoImpl extends DefaultGenericDao<CategoryItem> implements 
 		return getSearchService().<Map<String, Object>>search(qs, Map.of("cid", categoryIds, "dt", new Date(), "availability", true)).getResult();
 
 	}
+
+
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -185,10 +188,20 @@ public class CategoryDaoImpl extends DefaultGenericDao<CategoryItem> implements 
 	}
 
 	@Override
-	public List<CategoryItem> findByParent(UUID parentId, UUID languageId) {
-		String qs = "SELECT * FROM " + CategoryItem.ITEM_TYPE + " AS category " +
-				"JOIN " + CategoryCategoryRelation.ITEM_TYPE + " AS categories ON (categories.source = category.uuid)" +
-				"WHERE categories.target = :cid";
+	public List<CategoryItem> findByParent(UUID parentId) {
+
+		String qs = "SELECT * FROM " + CategoryItem.ITEM_TYPE + " AS category ";
+
+		if(Objects.isNull(parentId)){
+			qs = qs + "LEFT JOIN " + CategoryCategoryRelation.ITEM_TYPE + " AS categories ON (categories.target = category.uuid) " +
+					"WHERE categories.target IS NULL";
+		}else{
+			qs = qs + "LEFT JOIN " + CategoryCategoryRelation.ITEM_TYPE + " AS categories ON (categories.target = category.uuid) " +
+					"WHERE categories.source = :cid";
+		}
+		if(Objects.isNull(parentId)){
+			return getSearchService().<CategoryItem>search(qs).getResult();
+		}
 		return getSearchService().<CategoryItem>search(qs, Map.of("cid", parentId)).getResult();
 	}
 

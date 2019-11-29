@@ -153,17 +153,6 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 	}
 
 	@Override
-	public List<CategoryItem> listByParent(CategoryItem category) throws ServiceException {
-
-		try {
-			return categoryDao.listByStoreAndParent(null, category);
-		} catch (Exception e) {
-			throw new ServiceException(e);
-		}
-
-	}
-
-	@Override
 	public List<CategoryItem> listByStoreAndParent(MerchantStoreItem store, CategoryItem category) throws ServiceException {
 
 		try {
@@ -175,14 +164,15 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 	}
 
 	@Override
-	public List<CategoryItem> listByParent(CategoryItem category, LocaleItem language) {
+	public List<CategoryItem> listByParent(CategoryItem category) {
 		Assert.notNull(category, "CategoryItem cannot be null");
-		Assert.notNull(language, "LocaleItem cannot be null");
-		Assert.notNull(category.getMerchantStore(), "category.merchantStore cannot be null");
-
-		return categoryDao.findByParent(category.getUuid(), language.getUuid());
+		return listByParent(category.getUuid());
 	}
 
+	@Override
+	public List<CategoryItem> listByParent(UUID categoryUuid) {
+		return categoryDao.findByParent(categoryUuid);
+	}
 
 	//@Override
 	public void delete(CategoryItem category) {

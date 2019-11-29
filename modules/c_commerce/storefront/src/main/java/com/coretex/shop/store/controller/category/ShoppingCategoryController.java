@@ -355,7 +355,7 @@ public class ShoppingCategoryController {
 
 
 		//sub categories
-		List<CategoryItem> subCategories = categoryService.listByParent(category, language);
+		List<CategoryItem> subCategories = categoryService.listByParent(category);
 		ReadableCategoryPopulator populator = new ReadableCategoryPopulator();
 		List<ReadableCategory> subCategoryProxies = new ArrayList<ReadableCategory>();
 

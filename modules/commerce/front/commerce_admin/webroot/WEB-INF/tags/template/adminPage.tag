@@ -30,7 +30,10 @@
 	</jsp:attribute>
 
     <jsp:attribute name="pageScripts">
-
+        <script type="text/javascript"
+                src="<c:url value="/resources/bower_components/jquery/js/jquery.min.js"/>"></script>
+        <script type="text/javascript"
+                src="<c:url value="/resources/bower_components/jquery-ui/js/jquery-ui.min.js"/>"></script>
         <script type="text/javascript"
                 src="<c:url value="/resources/bower_components/popper.js/js/popper.min.js"/>"></script>
         <script type="text/javascript"

@@ -29,7 +29,6 @@ public class StoreController extends AbstractController {
 	@Resource
 	private StoreFacade storeFacade;
 
-
 	@RequestMapping(path = "",method = RequestMethod.GET)
 	public String getStores(Model model) {
 		return "store/stores";

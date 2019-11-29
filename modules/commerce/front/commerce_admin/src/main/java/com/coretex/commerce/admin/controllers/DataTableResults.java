@@ -1,6 +1,8 @@
 package com.coretex.commerce.admin.controllers;
 
 import com.coretex.commerce.admin.data.GenericItemData;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,9 +17,10 @@ public class DataTableResults<T extends GenericItemData> {
 	private String recordsTotal;
 
 	@SerializedName("data")
+	@JsonProperty("data")
 	private List<T> listOfDataObjects;
 
-
+    @JsonIgnore
 	public String getJson() {
 		return new Gson().toJson(this);
 	}

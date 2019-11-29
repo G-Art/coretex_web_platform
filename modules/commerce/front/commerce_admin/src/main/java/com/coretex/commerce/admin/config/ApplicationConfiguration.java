@@ -10,9 +10,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.social.UserIdSource;
 import org.springframework.social.security.AuthenticationNameUserIdSource;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -30,6 +32,10 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 		LOG.info("Current working directory : " + workingDir);
 	}
 
+	@Override
+	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+		configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
+	}
 
 	@Bean
 	public ObjectMapper objectMapper() {

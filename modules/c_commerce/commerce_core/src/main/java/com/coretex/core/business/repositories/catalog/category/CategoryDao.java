@@ -53,7 +53,7 @@ public interface CategoryDao extends Dao<CategoryItem>, CategoryRepositoryCustom
 	List<CategoryItem> findByDepthFilterByFeatured(UUID merchantId, int depth, UUID languageId);
 
 	//	@Query("select distinct c from CategoryItem c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.parent cp where cp.id=?1 and cdl.id=?2 order by c.lineage, c.sortOrder asc")
-	List<CategoryItem> findByParent(UUID parentId, UUID languageId);
+	List<CategoryItem> findByParent(UUID parentId);
 
 	//	@Query("select distinct c from CategoryItem c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and cdl.id=?2 order by c.lineage, c.sortOrder asc")
 	List<CategoryItem> findByStore(UUID merchantId, UUID languageId);

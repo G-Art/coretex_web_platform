@@ -1,8 +1,6 @@
 package com.coretex.commerce.admin.controllers.order;
 
 import com.coretex.commerce.admin.controllers.AbstractController;
-import com.coretex.commerce.admin.controllers.DataTableResults;
-import com.coretex.commerce.admin.data.MinimalOrderData;
 import com.coretex.commerce.admin.facades.OrderFacade;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +20,10 @@ public class OrderController extends AbstractController {
 
 	@RequestMapping(path = "/paginated", method = RequestMethod.GET)
 	@ResponseBody
-	public String getPageableOrderList(@RequestParam("draw") String draw, @RequestParam("start") Long start, @RequestParam("length") Long length,  HttpServletRequest request){
+	public String getPageableOrderList(@RequestParam(value = "draw", required = false) String draw,
+									   @RequestParam(value = "start", required = false) Long start,
+									   @RequestParam(value = "length", required = false) Long length,
+									   HttpServletRequest request){
 		var tableResult = orderFacade.tableResult(draw, start / length, length);
 		return tableResult.getJson();
 	}

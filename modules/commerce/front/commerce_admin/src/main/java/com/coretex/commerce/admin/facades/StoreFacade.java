@@ -6,10 +6,8 @@ import com.coretex.commerce.admin.data.MinimalMerchantStoreData;
 
 import java.util.List;
 
-public interface StoreFacade {
+public interface StoreFacade extends PageableDataTableFacade<MinimalMerchantStoreData> {
 
 	MerchantStoreData getByCode(String code);
 	List<MerchantStoreData> getAll();
-
-	DataTableResults<MinimalMerchantStoreData> tableResult(String draw, long page, Long length);
 }
