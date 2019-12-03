@@ -17,7 +17,8 @@
                                     trigger="${
                                     cp.concat('/category') eq requestPath ||
                                     cp.concat('/category/hierarchy') eq requestPath ||
-                                    cp.concat('/product') eq requestPath
+                                    cp.concat('/product') eq requestPath ||
+                                    cp.concat('/manufacturer') eq requestPath
                                     }">
                 <common-nav:subMenuItem name="Categories" menuClass="pcoded-hasmenu"
                                         trigger="${
@@ -29,11 +30,11 @@
                 </common-nav:subMenuItem>
                 <common-nav:subMenuItem name="Products" menuClass="pcoded-hasmenu"
                                         trigger="${
-                                        cp.concat('/product') eq requestPath
+                                        cp.concat('/product') eq requestPath ||
+                                        cp.concat('/manufacturer') eq requestPath
                                         }">
                     <common-nav:subMenuItem name="Product" link="/product"/>
-                    <common-nav:subMenuItem name="Manufacturers" />
-                    <common-nav:subMenuItem name="Brands" />
+                    <common-nav:subMenuItem name="Manufacturers" link="/manufacturer"/>
                 </common-nav:subMenuItem>
             </common-nav:subMenuItem>
         </common-nav:navigationGroup>

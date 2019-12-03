@@ -7,6 +7,7 @@
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <%@ taglib prefix="components" tagdir="/WEB-INF/tags/common/components" %>
+<%@ taglib prefix="content" tagdir="/WEB-INF/tags/content" %>
 
 <%@page contentType="text/html" %>
 <%@page pageEncoding="UTF-8" %>
@@ -80,48 +81,8 @@
         <!-- Page-header end -->
 
         <!-- Page-body start -->
-        <div class="row">
-            <!-- task, page, download counter  start -->
-            <div class="col-xl-4 col-md-8">
-                <div class="card bg-c-blue update-card">
-                    <div class="card-block">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <p class="m-b-5">Categorise</p>
-                                <div class="row">
-                                    <div class="col-sm-3 col-md-4"><h5 class="m-b-0">${categoriesCount}</h5></div>
-                                </div>
-                            </div>
-                            <div class="col col-auto text-right">
-                                <i class="icofont icofont-chart-flow-alt-2 f-50 text-c-blue"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-4 col-md-8">
-                <div class="card bg-c-green update-card">
-                    <div class="card-block">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <p class="m-b-5">Products</p>
-                                <div class="row">
-                                    <div class="col-sm-3 col-md-4"><h5 class="m-b-0">${productsCount}</h5></div>
-                                </div>
-                            </div>
-                            <div class="col col-auto text-right">
-                                <i class="icofont icofont-cubes f-50 text-c-green"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- task, page, download counter  end -->
-        </div>
-
         <div class="page-body">
-
+            <content:contentInfoBlocks/>
             <components:tableComponent title="All products"
                                        description="List of products"
                                        tableId="productTable"
