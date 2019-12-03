@@ -1,10 +1,12 @@
-package com.coretex.commerce.admin.controllers.category;
+package com.coretex.commerce.admin.controllers.content;
 
 import com.coretex.commerce.admin.controllers.AbstractController;
 import com.coretex.commerce.admin.controllers.DataTableResults;
+import com.coretex.commerce.admin.controllers.PageableDataTableAbstractController;
 import com.coretex.commerce.admin.data.CategoryHierarchyData;
 import com.coretex.commerce.admin.data.MinimalCategoryData;
 import com.coretex.commerce.admin.facades.CategoryFacade;
+import com.coretex.commerce.admin.facades.PageableDataTableFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,10 +24,8 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/category")
-public class CategoryController extends AbstractController {
+public class CategoryController extends AbstractContentController {
 
-	@Resource
-	private CategoryFacade categoryFacade;
 
 	@RequestMapping(path = "",method = RequestMethod.GET)
 	public String getCategories() {
@@ -40,26 +40,19 @@ public class CategoryController extends AbstractController {
 	@RequestMapping(path = {"/parent/{parent}", "/parent/"}, method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
 	public void getCategoryHierarchyByUUID(@PathVariable(value = "parent", required = false) UUID parent, @RequestParam("category") UUID category) {
-		categoryFacade.setParent(category, parent);
+		getCategoryFacade().setParent(category, parent);
 	}
 
 	@RequestMapping(path = {"/h/{uuid}", "/h", "/h/"},method = RequestMethod.GET)
 	@ResponseBody
 	public List<CategoryHierarchyData> getCategoryHierarchyByUUID(@PathVariable(value = "uuid",
 			required = false) UUID uuid) {
-		return categoryFacade.categoryHierarchyLeverByNodeUUID(uuid);
+		return getCategoryFacade().categoryHierarchyLeverByNodeUUID(uuid);
 	}
 
-	@RequestMapping(path = "/paginated", method = RequestMethod.GET)
-	@ResponseBody
-	public DataTableResults<MinimalCategoryData> getPageableCategoryList(@RequestParam("draw") String draw, @RequestParam("start") Long start, @RequestParam("length") Long length){
-		var tableResult = categoryFacade.tableResult(draw, start / length, length);
-		return tableResult;
-	}
 
-	@ModelAttribute("categoriesCount")
-	public Long getCategoriesCount() {
-		return categoryFacade.count();
+	@Override
+	protected PageableDataTableFacade getPageableFacade() {
+		return getCategoryFacade();
 	}
-
 }

@@ -6,9 +6,11 @@ import com.coretex.commerce.admin.data.MinimalCategoryData;
 import com.coretex.commerce.admin.data.MinimalOrderData;
 import com.coretex.commerce.admin.facades.CategoryFacade;
 import com.coretex.commerce.admin.facades.OrderFacade;
+import com.coretex.commerce.admin.mapper.GenericDataMapper;
 import com.coretex.commerce.admin.mapper.MinimalCategoryDataMapper;
 import com.coretex.commerce.admin.mapper.MinimalOrderDataMapper;
 import com.coretex.core.business.services.catalog.category.CategoryService;
+import com.coretex.core.business.services.common.generic.PageableEntityService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import org.springframework.stereotype.Component;
@@ -27,20 +29,6 @@ public class DefaultCategoryFacade implements CategoryFacade {
 
 	@Resource
 	private MinimalCategoryDataMapper minimalCategoryDataMapper;
-
-	@Override
-	public DataTableResults<MinimalCategoryData> tableResult(String draw, long page, Long length) {
-		var pageableList = categoryService.pageableList(length, page);
-		DataTableResults dataTableResults = new DataTableResults();
-		dataTableResults.setDraw(draw);
-		dataTableResults.setRecordsTotal(String.valueOf(pageableList.getTotalCount()));
-		dataTableResults.setRecordsFiltered(String.valueOf(pageableList.getCount()));
-		dataTableResults.setListOfDataObjects(pageableList.getResult()
-				.stream()
-				.map(minimalCategoryDataMapper::fromItem)
-				.collect(Collectors.toList()));
-		return dataTableResults;
-	}
 
 	@Override
 	public List<CategoryHierarchyData> categoryHierarchyLeverByNodeUUID(UUID uuid) {
@@ -65,5 +53,15 @@ public class DefaultCategoryFacade implements CategoryFacade {
 			cat.setParent(p);
 		}
 		categoryService.save(cat);
+	}
+
+	@Override
+	public PageableEntityService<CategoryItem> getPageableService() {
+		return categoryService;
+	}
+
+	@Override
+	public GenericDataMapper<CategoryItem, MinimalCategoryData> getDataMapper() {
+		return minimalCategoryDataMapper;
 	}
 }

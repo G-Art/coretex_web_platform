@@ -1,10 +1,12 @@
 package com.coretex.commerce.admin.controllers.store;
 
 import com.coretex.commerce.admin.controllers.AbstractController;
+import com.coretex.commerce.admin.controllers.PageableDataTableAbstractController;
 import com.coretex.commerce.admin.data.GroupData;
 import com.coretex.commerce.admin.data.MerchantStoreData;
 import com.coretex.commerce.admin.data.UserData;
 import com.coretex.commerce.admin.facades.GroupFacade;
+import com.coretex.commerce.admin.facades.PageableDataTableFacade;
 import com.coretex.commerce.admin.facades.StoreFacade;
 import com.coretex.commerce.admin.facades.UserFacade;
 import org.springframework.stereotype.Controller;
@@ -24,7 +26,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/store")
-public class StoreController extends AbstractController {
+public class StoreController extends PageableDataTableAbstractController {
 
 	@Resource
 	private StoreFacade storeFacade;
@@ -39,11 +41,8 @@ public class StoreController extends AbstractController {
 		return "store/store";
 	}
 
-	@RequestMapping(path = "/paginated", method = RequestMethod.GET)
-	@ResponseBody
-	public String getPageableOrderList(@RequestParam("draw") String draw, @RequestParam("start") Long start, @RequestParam("length") Long length){
-		var tableResult = storeFacade.tableResult(draw, start / length, length);
-		return tableResult.getJson();
+	@Override
+	protected PageableDataTableFacade getPageableFacade() {
+		return storeFacade;
 	}
-
 }

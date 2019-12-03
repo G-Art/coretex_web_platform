@@ -3,8 +3,11 @@ package com.coretex.commerce.admin.facades.impl;
 import com.coretex.commerce.admin.controllers.DataTableResults;
 import com.coretex.commerce.admin.data.MinimalOrderData;
 import com.coretex.commerce.admin.facades.OrderFacade;
+import com.coretex.commerce.admin.mapper.GenericDataMapper;
 import com.coretex.commerce.admin.mapper.MinimalOrderDataMapper;
+import com.coretex.core.business.services.common.generic.PageableEntityService;
 import com.coretex.core.business.services.order.OrderService;
+import com.coretex.items.commerce_core_model.OrderItem;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,17 +22,14 @@ public class DefaultOrderFacade implements OrderFacade {
 	@Resource
 	private MinimalOrderDataMapper minimalOrderDataMapper;
 
+
 	@Override
-	public DataTableResults<MinimalOrderData> tableResult(String draw, long page, Long length) {
-		var pageableList = orderService.pageableList(length, page);
-		DataTableResults dataTableResults = new DataTableResults();
-		dataTableResults.setDraw(draw);
-		dataTableResults.setRecordsTotal(String.valueOf(pageableList.getTotalCount()));
-		dataTableResults.setRecordsFiltered(String.valueOf(pageableList.getCount()));
-		dataTableResults.setListOfDataObjects(pageableList.getResult()
-				.stream()
-				.map(minimalOrderDataMapper::fromItem)
-				.collect(Collectors.toList()));
-		return dataTableResults;
+	public PageableEntityService<OrderItem> getPageableService() {
+		return orderService;
+	}
+
+	@Override
+	public GenericDataMapper<OrderItem, MinimalOrderData> getDataMapper() {
+		return minimalOrderDataMapper;
 	}
 }

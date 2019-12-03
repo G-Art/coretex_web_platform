@@ -34,8 +34,6 @@
         <script type="text/javascript"
                 src="<c:url value="/resources/assets/pages/advance-elements/moment-with-locales.min.js"/>"></script>
         <script type="text/javascript"
-                src="<c:url value="/resources/bower_components/jquery-slimscroll/js/jquery.slimscroll.js"/>"></script>
-        <script type="text/javascript"
                 src="<c:url value="/resources/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"/>"></script>
         <script type="text/javascript"
                 src="<c:url value="/resources/assets/pages/advance-elements/bootstrap-datetimepicker.min.js"/>"></script>

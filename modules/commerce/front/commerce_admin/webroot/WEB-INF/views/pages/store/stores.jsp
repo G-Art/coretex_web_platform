@@ -63,17 +63,6 @@
         <script type="text/javascript"
                 src="<c:url value="/resources/bower_components/bootstrap-tagsinput/js/bootstrap-tagsinput.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resources/assets/js/script.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/resources/assets/pages/user-profile.js"/>"></script>
-        <script>
-            let elemprimary = document.querySelector('.js-success');
-            let switchery = new Switchery(elemprimary, { color: '#93BE52', secondaryColor: '#FC4050', jackColor: '#fff' });
-            $(".js-select-store").select2({
-                placeholder: "Select a store"
-            });
-            $(".js-select-group").select2({
-                placeholder: "Select a groups"
-            });
-        </script>
 
 	</jsp:attribute>
     <jsp:body>

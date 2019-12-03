@@ -29,9 +29,9 @@
     <script type="text/javascript"
             src="<c:url value="/resources/bower_components/jquery/js/jquery.min.js"/>"></script>
     <script type="text/javascript"
-            src="<c:url value="/resources/bower_components/jquery-ui/js/jquery-ui.min.js"/>"></script>
-    <script type="text/javascript"
             src="<c:url value="/resources/bower_components/jquery-slimscroll/js/jquery.slimscroll.js"/>"></script>
+    <script type="text/javascript"
+            src="<c:url value="/resources/bower_components/jquery-ui/js/jquery-ui.min.js"/>"></script>
 
     <!-- Meta -->
     <meta charset="utf-8">

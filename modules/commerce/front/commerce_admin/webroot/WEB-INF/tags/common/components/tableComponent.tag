@@ -55,7 +55,6 @@
             </div>
 
             <div class="card-block">
-
                 <script>
                     $(document).ready(function () {
                         $('#${tableId}').DataTable({

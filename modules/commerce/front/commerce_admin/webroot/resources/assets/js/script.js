@@ -44,23 +44,9 @@ $(document).ready(function() {
     });
     // card js end
     $.mCustomScrollbar.defaults.axis = "yx";
-    $("#styleSelector .style-cont").slimScroll({
-        setTop: "10px",
-        height:"calc(100vh - 440px)",
-    });
     $(".main-menu").mCustomScrollbar({
         setTop: "10px",
         setHeight: "calc(100% - 80px)",
-    });
-    /*chatbar js start*/
-
-    /*chat box scroll*/
-    var a = $(window).height() - 80;
-    $(".main-friend-list").slimScroll({
-        height: a,
-        allowPageScroll: false,
-        wheelStep: 5,
-        color: '#1b8bf9'
     });
 
     // search

@@ -11,7 +11,7 @@
 <%@page contentType="text/html" %>
 <%@page pageEncoding="UTF-8" %>
 
-<template:adminPage pageTitle="Categories">
+<template:adminPage pageTitle="Products">
     <jsp:attribute name="pageCss">
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/pages/advance-elements/css/bootstrap-datetimepicker.css"/>"/>
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/bootstrap-daterangepicker/css/daterangepicker.css"/>"/>
@@ -61,6 +61,7 @@
         <script type="text/javascript"
                 src="<c:url value="/resources/bower_components/bootstrap-tagsinput/js/bootstrap-tagsinput.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resources/assets/js/script.js"/>"></script>
+
 	</jsp:attribute>
     <jsp:body>
         <!-- Page-header start -->
@@ -69,84 +70,79 @@
                 <div class="col-lg-8">
                     <div class="page-header-title">
                         <div class="d-inline">
-                            <h4>Categories</h4>
-                            <span>Common categories information</span>
+                            <h4>Products</h4>
+                            <span>Products information</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <!-- Page-header end -->
 
         <!-- Page-body start -->
-        <div class="page-body">
-            <div class="row">
-                <!-- task, page, download counter  start -->
-                <div class="col-xl-4 col-md-8">
-                    <div class="card bg-c-blue update-card">
-                        <div class="card-block">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <p class="m-b-5">Categorise</p>
-                                    <div class="row">
-                                        <div class="col-sm-3 col-md-4"><h5 class="m-b-0">${categoriesCount}</h5></div>
-                                    </div>
+        <div class="row">
+            <!-- task, page, download counter  start -->
+            <div class="col-xl-4 col-md-8">
+                <div class="card bg-c-blue update-card">
+                    <div class="card-block">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <p class="m-b-5">Categorise</p>
+                                <div class="row">
+                                    <div class="col-sm-3 col-md-4"><h5 class="m-b-0">${categoriesCount}</h5></div>
                                 </div>
-                                <div class="col col-auto text-right">
-                                    <i class="icofont icofont-chart-flow-alt-2 f-50 text-c-blue"></i>
-                                </div>
+                            </div>
+                            <div class="col col-auto text-right">
+                                <i class="icofont icofont-chart-flow-alt-2 f-50 text-c-blue"></i>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-8">
-                    <div class="card bg-c-green update-card">
-                        <div class="card-block">
-                            <div class="row align-items-center">
-                                <div class="col">
-                                    <p class="m-b-5">Products</p>
-                                    <div class="row">
-                                        <div class="col-sm-3 col-md-4"><h5 class="m-b-0">${productsCount}</h5></div>
-                                    </div>
-                                </div>
-                                <div class="col col-auto text-right">
-                                    <i class="icofont icofont-cubes f-50 text-c-green"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- task, page, download counter  end -->
             </div>
 
-            <components:tableComponent title="All categories"
-                                       description="List of categories"
-                                       tableId="categoryTable"
-                                       dataSourceLink="/category/paginated"
+            <div class="col-xl-4 col-md-8">
+                <div class="card bg-c-green update-card">
+                    <div class="card-block">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <p class="m-b-5">Products</p>
+                                <div class="row">
+                                    <div class="col-sm-3 col-md-4"><h5 class="m-b-0">${productsCount}</h5></div>
+                                </div>
+                            </div>
+                            <div class="col col-auto text-right">
+                                <i class="icofont icofont-cubes f-50 text-c-green"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- task, page, download counter  end -->
+        </div>
+
+        <div class="page-body">
+
+            <components:tableComponent title="All products"
+                                       description="List of products"
+                                       tableId="productTable"
+                                       dataSourceLink="/product/paginated"
                                        rowId="uuid"
-                                       actionTarget="7" >
+                                       actionTarget="4" >
                 <jsp:attribute name="theader">
                     <tr>
-                        <th>Code</th>
+                        <th>SKU</th>
                         <th>Name</th>
+                        <th>Available</th>
                         <th>Store</th>
-                        <th>Parent</th>
-                        <th>Visible</th>
-                        <th>Products count</th>
-                        <th>Subcategories count</th>
                         <th>Action</th>
                     </tr>
                 </jsp:attribute>
                 <jsp:attribute name="columns">
                     [
-                        {"data": "code"},
+                        {"data": "sku"},
                         {"data": "name"},
-                        {"data": "merchantStore"},
-                        {"data": "parent.name"},
-                        {"data": "visible"},
-                        {"data": "productCount"},
-                        {"data": "subCategoriesCount"}
+                        {"data": "available"},
+                        {"data": "merchantStore"}
                     ]
                 </jsp:attribute>
             </components:tableComponent>

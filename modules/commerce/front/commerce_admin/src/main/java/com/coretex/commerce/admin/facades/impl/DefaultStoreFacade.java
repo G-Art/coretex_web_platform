@@ -4,9 +4,12 @@ import com.coretex.commerce.admin.controllers.DataTableResults;
 import com.coretex.commerce.admin.data.MerchantStoreData;
 import com.coretex.commerce.admin.data.MinimalMerchantStoreData;
 import com.coretex.commerce.admin.facades.StoreFacade;
+import com.coretex.commerce.admin.mapper.GenericDataMapper;
 import com.coretex.commerce.admin.mapper.MerchantStoreDataMapper;
 import com.coretex.commerce.admin.mapper.MinimalMerchantStoreDataMapper;
+import com.coretex.core.business.services.common.generic.PageableEntityService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,18 +45,14 @@ public class DefaultStoreFacade implements StoreFacade {
 				.collect(Collectors.toList());
 	}
 
+
 	@Override
-	public DataTableResults<MinimalMerchantStoreData> tableResult(String draw, long page, Long length) {
-		var pageableList = merchantStoreService.pageableList(length, page);
-		var dataTableResults = new DataTableResults<MinimalMerchantStoreData>();
-		dataTableResults.setDraw(draw);
-		dataTableResults.setRecordsTotal(String.valueOf(pageableList.getTotalCount()));
-		dataTableResults.setRecordsFiltered(String.valueOf(pageableList.getCount()));
-		dataTableResults.setListOfDataObjects(pageableList.getResult()
-				.stream()
-				.map(minimalMerchantStoreDataMapper::fromItem)
-				.collect(Collectors.toList()));
-		return dataTableResults;
+	public PageableEntityService<MerchantStoreItem> getPageableService() {
+		return merchantStoreService;
 	}
 
+	@Override
+	public GenericDataMapper<MerchantStoreItem, MinimalMerchantStoreData> getDataMapper() {
+		return minimalMerchantStoreDataMapper;
+	}
 }
