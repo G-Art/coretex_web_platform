@@ -7,7 +7,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.system.MerchantConfigurationDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.model.system.MerchantConfig;
@@ -32,7 +32,7 @@ public class MerchantConfigurationServiceImpl extends
 	}
 
 	@Override
-	public List<MerchantConfigurationItem> listByStore(MerchantStoreItem store) throws ServiceException {
+	public List<MerchantConfigurationItem> listByStore(MerchantStoreItem store)  {
 		return merchantConfigurationDao.findByMerchantStore(store.getUuid());
 	}
 
@@ -42,7 +42,7 @@ public class MerchantConfigurationServiceImpl extends
 	}
 
 	@Override
-	public void saveOrUpdate(MerchantConfigurationItem entity) throws ServiceException {
+	public void saveOrUpdate(MerchantConfigurationItem entity)  {
 		super.save(entity);
 	}
 
@@ -56,7 +56,7 @@ public class MerchantConfigurationServiceImpl extends
 	}
 
 	@Override
-	public MerchantConfig getMerchantConfig(MerchantStoreItem store) throws ServiceException {
+	public MerchantConfig getMerchantConfig(MerchantStoreItem store)  {
 
 		MerchantConfigurationItem configuration = merchantConfigurationDao.findByMerchantStoreAndKey(store.getUuid(), MerchantConfigurationTypeEnum.CONFIG.name());
 
@@ -68,7 +68,7 @@ public class MerchantConfigurationServiceImpl extends
 			try {
 				config = mapper.readValue(value, MerchantConfig.class);
 			} catch (Exception e) {
-				throw new ServiceException("Cannot parse json string " + value);
+				throw new RuntimeException("Cannot parse json string " + value);
 			}
 		}
 		return config;

@@ -1,6 +1,6 @@
 package com.coretex.core.business.services.content;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.model.content.FileContentType;
 import com.coretex.core.model.content.InputContentFile;
 import com.coretex.core.model.content.OutputContentFile;
@@ -26,15 +26,15 @@ public interface ContentService
 	 *
 	 * @param merchantStoreCode merchant store whose content images are being saved.
 	 * @param contentFile       content image being stored
-	 * @throws ServiceException
+	 * @
 	 */
 	void addContentFile(String merchantStoreCode, InputContentFile contentFile)
-			throws ServiceException;
+			;
 
 
-	void addContentFiles(String merchantStoreCode, List<InputContentFile> contentFilesList) throws ServiceException;
+	void addContentFiles(String merchantStoreCode, List<InputContentFile> contentFilesList) ;
 
-	void removeFile(String merchantStoreCode, FileContentType fileContentType, String fileName) throws ServiceException;
+	void removeFile(String merchantStoreCode, FileContentType fileContentType, String fileName) ;
 
 	/**
 	 * Removes static file
@@ -43,44 +43,44 @@ public interface ContentService
 	 * @param storeCode
 	 * @param filename
 	 */
-	void removeFile(String storeCode, String filename) throws ServiceException;
+	void removeFile(String storeCode, String filename) ;
 
 	/**
 	 * Method to remove all images for a given merchant.It will take merchant store as an input and will
 	 * remove all images associated with given merchant store.
 	 *
 	 * @param merchantStoreCode
-	 * @throws ServiceException
+	 * @
 	 */
-	void removeFiles(String merchantStoreCode) throws ServiceException;
+	void removeFiles(String merchantStoreCode) ;
 
 	OutputContentFile getContentFile(String merchantStoreCode, FileContentType fileContentType, String fileName)
-			throws ServiceException;
+			;
 
 	List<OutputContentFile> getContentFiles(String merchantStoreCode, FileContentType fileContentType)
-			throws ServiceException;
+			;
 
 
 	List<String> getContentFilesNames(String merchantStoreCode,
-									  FileContentType fileContentType) throws ServiceException;
+									  FileContentType fileContentType) ;
 
 	/**
 	 * Add the store logo
 	 *
 	 * @param merchantStoreCode
 	 * @param cmsContentImage
-	 * @throws ServiceException
+	 * @
 	 */
 	void addLogo(String merchantStoreCode, InputContentFile cmsContentImage)
-			throws ServiceException;
+			;
 
 	/**
 	 * Adds a property (option) image
 	 *
 	 * @param cmsContentImage
-	 * @throws ServiceException
+	 * @
 	 */
 	void addOptionImage(String merchantStoreCode, InputContentFile cmsContentImage)
-			throws ServiceException;
+			;
 
 }

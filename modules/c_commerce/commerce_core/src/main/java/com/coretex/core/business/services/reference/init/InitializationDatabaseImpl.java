@@ -3,7 +3,7 @@ package com.coretex.core.business.services.reference.init;
 import com.coretex.core.activeorm.dao.LocaleDao;
 import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
 import com.coretex.core.business.services.catalog.product.type.ProductTypeService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
@@ -81,7 +81,7 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 	}
 
 	@Transactional
-	public void populate(String contextName) throws ServiceException {
+	public void populate(String contextName)  {
 		this.name = contextName;
 
 		createLanguages();
@@ -94,13 +94,13 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 
 	}
 
-	private void createShipping() throws ServiceException {
+	private void createShipping()  {
 		LOGGER.info(String.format("%s : Populating Shipping ", name));
 		try {
 			List<DeliveryServiceItem> serviceItems = shippingLoader.loadShippingConfig("reference/deliveryconfig.json");
 			itemService.saveAll(serviceItems);
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -170,7 +170,7 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 
 	}
 
-	private void createZones() throws ServiceException {
+	private void createZones()  {
 		LOGGER.info(String.format("%s : Populating Zones ", name));
 		try {
 
@@ -185,7 +185,7 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 
 		} catch (Exception e) {
 
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -204,7 +204,7 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 		}
 	}
 
-	private void createMerchant() throws ServiceException {
+	private void createMerchant()  {
 		LOGGER.info(String.format("%s : Creating merchant ", name));
 
 		Date date = new Date(System.currentTimeMillis());

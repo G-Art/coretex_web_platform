@@ -2,7 +2,7 @@ package com.coretex.core.business.services.catalog.product.relationship;
 
 import java.util.List;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductRelationshipItem;
@@ -15,7 +15,7 @@ import com.coretex.items.core.LocaleItem;
 public interface ProductRelationshipService extends
 		SalesManagerEntityService<ProductRelationshipItem> {
 
-	void saveOrUpdate(ProductRelationshipItem relationship) throws ServiceException;
+	void saveOrUpdate(ProductRelationshipItem relationship) ;
 
 	/**
 	 * Get product relationship List for a given type (RELATED, FEATURED...) and language allows
@@ -26,10 +26,10 @@ public interface ProductRelationshipService extends
 	 * @param type
 	 * @param language
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	List<ProductRelationshipItem> getByType(MerchantStoreItem store, ProductItem product,
-											ProductRelationshipType type, LocaleItem language) throws ServiceException;
+											ProductRelationshipType type, LocaleItem language) ;
 
 	/**
 	 * Get product relationship List for a given type (RELATED, FEATURED...) and a given base product
@@ -38,11 +38,11 @@ public interface ProductRelationshipService extends
 	 * @param product
 	 * @param type
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	List<ProductRelationshipItem> getByType(MerchantStoreItem store, ProductItem product,
 											ProductRelationshipType type)
-			throws ServiceException;
+			;
 
 	/**
 	 * Get product relationship List for a given type (RELATED, FEATURED...)
@@ -50,10 +50,10 @@ public interface ProductRelationshipService extends
 	 * @param store
 	 * @param type
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	List<ProductRelationshipItem> getByType(MerchantStoreItem store,
-											ProductRelationshipType type) throws ServiceException;
+											ProductRelationshipType type) ;
 
 	List<ProductRelationshipItem> listByProduct(ProductItem product);
 
@@ -72,23 +72,23 @@ public interface ProductRelationshipService extends
 	 * Creates a product group
 	 *
 	 * @param groupName
-	 * @throws ServiceException
+	 * @
 	 */
-	void addGroup(MerchantStoreItem store, String groupName) throws ServiceException;
+	void addGroup(MerchantStoreItem store, String groupName) ;
 
 	List<ProductRelationshipItem> getByGroup(MerchantStoreItem store, String groupName)
-			throws ServiceException;
+			;
 
 	void deleteGroup(MerchantStoreItem store, String groupName)
-			throws ServiceException;
+			;
 
 	void deactivateGroup(MerchantStoreItem store, String groupName)
-			throws ServiceException;
+			;
 
 	void activateGroup(MerchantStoreItem store, String groupName)
-			throws ServiceException;
+			;
 
 	List<ProductRelationshipItem> getByGroup(MerchantStoreItem store, String groupName,
-											 LocaleItem language) throws ServiceException;
+											 LocaleItem language) ;
 
 }

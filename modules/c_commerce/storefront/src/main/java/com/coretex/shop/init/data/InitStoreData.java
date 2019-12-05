@@ -1,6 +1,6 @@
 package com.coretex.shop.init.data;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
@@ -119,7 +119,7 @@ public class InitStoreData implements InitData {
 	@Resource
 	private ProductRelationshipService productRelationshipService;
 
-	public void initInitialData() throws ServiceException {
+	public void initInitialData()  {
 
 
 		LOGGER.info("Starting the initialization of test data");

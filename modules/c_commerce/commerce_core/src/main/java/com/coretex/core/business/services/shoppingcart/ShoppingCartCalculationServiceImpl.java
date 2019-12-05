@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.order.OrderServiceImpl;
 import com.coretex.items.commerce_core_model.CustomerItem;
@@ -58,11 +58,11 @@ public class ShoppingCartCalculationServiceImpl implements ShoppingCartCalculati
 	 * @param customer
 	 * @param store
 	 * @param language
-	 * @throws ServiceException
+	 * @
 	 */
 	@Override
 	public OrderTotalSummary calculate(final ShoppingCartItem cartModel, final CustomerItem customer, final MerchantStoreItem store,
-									   final LocaleItem language) throws ServiceException {
+									   final LocaleItem language)  {
 
 		Validate.notNull(cartModel, "cart cannot be null");
 		Validate.notNull(cartModel.getLineItems(), "Cart should have line items.");
@@ -93,11 +93,10 @@ public class ShoppingCartCalculationServiceImpl implements ShoppingCartCalculati
 	 * @param cartModel
 	 * @param store
 	 * @param language
-	 * @throws ServiceException
+	 * @
 	 */
 	@Override
-	public OrderTotalSummary calculate(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LocaleItem language)
-			throws ServiceException {
+	public OrderTotalSummary calculate(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LocaleItem language) {
 
 		Validate.notNull(cartModel, "cart cannot be null");
 		Validate.notNull(cartModel.getLineItems(), "Cart should have line items.");
@@ -112,7 +111,7 @@ public class ShoppingCartCalculationServiceImpl implements ShoppingCartCalculati
 		return shoppingCartService;
 	}
 
-	private void updateCartModel(final ShoppingCartItem cartModel) throws ServiceException {
+	private void updateCartModel(final ShoppingCartItem cartModel) {
 		shoppingCartService.saveOrUpdate(cartModel);
 	}
 

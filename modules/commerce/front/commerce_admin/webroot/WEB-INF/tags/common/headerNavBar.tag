@@ -8,7 +8,7 @@
             <a class="mobile-menu" id="mobile-collapse" href="javascript:void(0);">
                 <i class="feather icon-menu"></i>
             </a>
-            <a href="<c:url value="/"/>">
+            <a href="<c:url value="/"/>" class="d-sm-none d-md-none d-xl-inline d-lg-inline">
                 <img class="img-fluid" src="<c:url value="/resources/assets/images/logo.png"/>" alt="Theme-Logo">
             </a>
             <a class="mobile-options">

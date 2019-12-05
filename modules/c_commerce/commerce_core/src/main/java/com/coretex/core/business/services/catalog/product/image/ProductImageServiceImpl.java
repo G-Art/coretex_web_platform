@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.cms.product.ProductFileManager;
 import com.coretex.core.business.repositories.catalog.product.image.ProductImageDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
@@ -42,7 +42,7 @@ public class ProductImageServiceImpl extends SalesManagerEntityServiceImpl<Produ
 
 
 	@Override
-	public void addProductImages(ProductItem product, List<ImageDataHolder<ProductImageItem>> productImages) throws ServiceException {
+	public void addProductImages(ProductItem product, List<ImageDataHolder<ProductImageItem>> productImages)  {
 
 		try {
 			for (ImageDataHolder<ProductImageItem> productImage : productImages) {
@@ -59,14 +59,14 @@ public class ProductImageServiceImpl extends SalesManagerEntityServiceImpl<Produ
 			}
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
 
 
 	@Override
-	public void addProductImage(ProductItem product, ProductImageItem productImage, ImageContentFile inputImage) throws ServiceException {
+	public void addProductImage(ProductItem product, ProductImageItem productImage, ImageContentFile inputImage)  {
 
 
 		productImage.setProduct(product);
@@ -83,7 +83,7 @@ public class ProductImageServiceImpl extends SalesManagerEntityServiceImpl<Produ
 
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 
@@ -100,7 +100,7 @@ public class ProductImageServiceImpl extends SalesManagerEntityServiceImpl<Produ
 	}
 
 	@Override
-	public void saveOrUpdate(ProductImageItem productImage) throws ServiceException {
+	public void saveOrUpdate(ProductImageItem productImage)  {
 
 
 		super.save(productImage);
@@ -112,7 +112,7 @@ public class ProductImageServiceImpl extends SalesManagerEntityServiceImpl<Produ
 
 
 	@Override
-	public OutputContentFile getProductImage(ProductImageItem productImage, ProductImageSize size) throws ServiceException {
+	public OutputContentFile getProductImage(ProductImageItem productImage, ProductImageSize size)  {
 
 
 		ProductImageItem pi = new ProductImageItem();
@@ -135,14 +135,14 @@ public class ProductImageServiceImpl extends SalesManagerEntityServiceImpl<Produ
 	}
 
 	@Override
-	public OutputContentFile getProductImage(final String storeCode, final String productCode, final String fileName, final ProductImageSize size) throws ServiceException {
+	public OutputContentFile getProductImage(final String storeCode, final String productCode, final String fileName, final ProductImageSize size){
 		OutputContentFile outputImage = productFileManager.getProductImage(storeCode, productCode, fileName, size);
 		return outputImage;
 
 	}
 
 	@Override
-	public List<OutputContentFile> getProductImages(ProductItem product) throws ServiceException {
+	public List<OutputContentFile> getProductImages(ProductItem product)  {
 		return productFileManager.getImages(product);
 	}
 

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.coretex.items.commerce_core_model.GroupItem;
 import org.springframework.stereotype.Service;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.user.GroupDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.enums.commerce_core_model.GroupTypeEnum;
@@ -31,11 +31,11 @@ public class GroupServiceImpl extends SalesManagerEntityServiceImpl<GroupItem>
 		return groupDao.findByType(groupType);
 	}
 
-	public List<GroupItem> listGroupByIds(Set<UUID> ids) throws ServiceException {
+	public List<GroupItem> listGroupByIds(Set<UUID> ids)  {
 		try {
 			return groupDao.findByIds(ids);
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 	}
 

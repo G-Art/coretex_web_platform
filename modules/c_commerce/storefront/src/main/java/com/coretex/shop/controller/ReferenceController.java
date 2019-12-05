@@ -3,7 +3,7 @@ package com.coretex.shop.controller;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
@@ -122,22 +122,18 @@ public class ReferenceController {
 	public @ResponseBody
 	String countryName(@RequestParam String countryCode, HttpServletRequest request, HttpServletResponse response) {
 
-		try {
-			LocaleItem language = languageUtils.getRequestLanguage(request, response);
-			if (language == null) {
-				return countryCode;
-			}
-			Map<String, CountryItem> countriesMap = countryService.getCountriesMap(language);
-			if (countriesMap != null) {
-				CountryItem c = countriesMap.get(countryCode);
-				if (c != null) {
-					return c.getName();
-				}
-			}
-
-		} catch (ServiceException e) {
-			LOGGER.error("Error while looking up country " + countryCode);
+		LocaleItem language = languageUtils.getRequestLanguage(request, response);
+		if (language == null) {
+			return countryCode;
 		}
+		Map<String, CountryItem> countriesMap = countryService.getCountriesMap(language);
+		if (countriesMap != null) {
+			CountryItem c = countriesMap.get(countryCode);
+			if (c != null) {
+				return c.getName();
+			}
+		}
+
 		return countryCode;
 	}
 
@@ -145,22 +141,18 @@ public class ReferenceController {
 	public @ResponseBody
 	String zoneName(@RequestParam String zoneCode, HttpServletRequest request, HttpServletResponse response) {
 
-		try {
-			LocaleItem language = languageUtils.getRequestLanguage(request, response);
-			if (language == null) {
-				return zoneCode;
-			}
-			Map<String, ZoneItem> zonesMap = zoneService.getZones(language);
-			if (zonesMap != null) {
-				ZoneItem z = zonesMap.get(zoneCode);
-				if (z != null) {
-					return z.getName();
-				}
-			}
-
-		} catch (ServiceException e) {
-			LOGGER.error("Error while looking up zone " + zoneCode);
+		LocaleItem language = languageUtils.getRequestLanguage(request, response);
+		if (language == null) {
+			return zoneCode;
 		}
+		Map<String, ZoneItem> zonesMap = zoneService.getZones(language);
+		if (zonesMap != null) {
+			ZoneItem z = zonesMap.get(zoneCode);
+			if (z != null) {
+				return z.getName();
+			}
+		}
+
 		return zoneCode;
 	}
 

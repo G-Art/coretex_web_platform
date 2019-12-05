@@ -1,7 +1,7 @@
 package com.coretex.shop.populator.order;
 
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.populators.AbstractDataPopulator;
@@ -73,12 +73,8 @@ public class ReadableOrderProductPopulator extends
 			List<ReadableOrderProductAttribute> attributes = new ArrayList<ReadableOrderProductAttribute>();
 			for (OrderProductAttributeItem attr : source.getOrderAttributes()) {
 				ReadableOrderProductAttribute readableAttribute = new ReadableOrderProductAttribute();
-				try {
-					String price = pricingService.getDisplayAmount(attr.getProductAttributePrice(), store);
-					readableAttribute.setAttributePrice(price);
-				} catch (ServiceException e) {
-					throw new ConversionException("Cannot format price", e);
-				}
+				String price = pricingService.getDisplayAmount(attr.getProductAttributePrice(), store);
+				readableAttribute.setAttributePrice(price);
 
 				readableAttribute.setAttributeName(attr.getProductAttributeName());
 				readableAttribute.setAttributeValue(attr.getProductAttributeValueName());

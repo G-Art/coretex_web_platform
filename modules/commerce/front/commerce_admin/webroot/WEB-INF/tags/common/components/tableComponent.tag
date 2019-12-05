@@ -1,11 +1,11 @@
 <%@ attribute name="title" required="true" rtexprvalue="true" %>
 <%@ attribute name="tableId" required="true" rtexprvalue="true" %>
 <%@ attribute name="dataSourceLink" required="true" rtexprvalue="true" %>
+<%@ attribute name="rowId" required="true" %>
 
 <%@ attribute name="description" required="false" %>
-<%@ attribute name="rowId" required="false" %>
 <%@ attribute name="actionTarget" required="false" %>
-
+<%@ attribute name="actionPath" required="false" %>
 
 <%@ attribute name="fullCardButton" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="minimizeCardButton" required="false" type="java.lang.Boolean" %>
@@ -58,37 +58,57 @@
                 <script>
                     $(document).ready(function () {
                         $('#${tableId}').DataTable({
+                            "responsive": true,
                             "ordering": ${ordering},
                             "searching": ${searching},
                             "processing": true,
                             "serverSide": true,
-                            "ajax": "<c:url value="${dataSourceLink}"/>",
-                            <c:if test="${not empty rowId}">"rowId": '${rowId}',</c:if>
+                            "ajax": {
+                                "url": "<c:url value="${dataSourceLink}"/>",
+                                "type": "POST"
+                            },
+                            "rowId": '${rowId}',
                             "columns": <jsp:invoke fragment="columns"/>
                             <c:if test="${not empty actionTarget}">,
+                            "initComplete": function () {
+                                <c:if test="${not empty actionPath}">
+                                $("button.edit-${tableId}-button").click( edit_${tableId} );
+                                </c:if>
+                            },
                             "columnDefs": [{
                                 "targets": ${actionTarget},
-                                "data": null,
+                                // "data": null,
                                 "searchable": false,
-                                "defaultContent": `<div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
-                                                                    <div class="btn-group btn-group-sm" style="float: none;">
-                                                                        <button type="button"
-                                                                                 class="tabledit-edit-button btn btn-primary waves-effect waves-light"
-                                                                                 style="float: none;margin: 5px;">
-                                                                            <span class="icofont icofont-ui-edit"></span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>`
+                                'render': function (data, type, row) {
+                                    return `<div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
+                                        <div class="btn-group btn-group-sm" style="float: none;">
+                                            <button  type="button" data-item-uuid="\${row['${rowId}']}"
+                                                     class="edit-${tableId}-button tabledit-edit-button btn btn-primary waves-effect waves-light"
+                                                     style="float: none;margin: 5px;">
+                                                <span class="icofont icofont-ui-edit"></span>
+                                            </button>
+                                        </div>
+                                    </div>`
+                                }
                             }]
                             </c:if>
                         });
+                        <c:if test="${not empty actionPath}">
+                        function edit_${tableId}( event ) {
+                            let target = event.currentTarget;
+                            window.location.pathname = "${pageContext.request.contextPath}${actionPath}/" + target.dataset.itemUuid;
+                            console.log("Edit: "+target.dataset.itemUuid);
+                        }
+                        </c:if>
                     });
+
+
                 </script>
 
                 <div class="table-responsive dt-responsive">
                     <table class="table table-striped table-bordered" id="${tableId}">
                         <thead>
-                            <jsp:invoke fragment="theader"/>
+                        <jsp:invoke fragment="theader"/>
                         </thead>
                     </table>
                 </div>

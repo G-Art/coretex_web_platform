@@ -2,7 +2,7 @@
 package com.coretex.shop.store.controller.customer.facade;
 
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.email.Email;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.reference.country.CountryService;

@@ -1,6 +1,6 @@
 package com.coretex.core.business.services.shoppingcart;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.shoppingcart.ShoppingCartAttributeDao;
 import com.coretex.core.business.repositories.shoppingcart.ShoppingCartItemDao;
 import com.coretex.core.business.repositories.shoppingcart.ShoppingCartDao;
@@ -69,7 +69,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	 */
 	@Override
 	@Transactional
-	public ShoppingCartItem getShoppingCart(final CustomerItem customer) throws ServiceException {
+	public ShoppingCartItem getShoppingCart(final CustomerItem customer)  {
 
 		try {
 
@@ -83,7 +83,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 			}
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -92,7 +92,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	 * Save or update a {@link ShoppingCartItem} for a given customer
 	 */
 	@Override
-	public void saveOrUpdate(final ShoppingCartItem shoppingCart) throws ServiceException {
+	public void saveOrUpdate(final ShoppingCartItem shoppingCart)  {
 
 		super.save(shoppingCart);
 	}
@@ -103,7 +103,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	 * method will remove the shopping cart if no items are attached.
 	 */
 	@Override
-	public ShoppingCartItem getById(final UUID id, final MerchantStoreItem store) throws ServiceException {
+	public ShoppingCartItem getById(final UUID id, final MerchantStoreItem store)  {
 
 		try {
 			ShoppingCartItem shoppingCart = shoppingCartDao.findById(store.getUuid(), id);
@@ -120,7 +120,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 			}
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -163,7 +163,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	 */
 	@Override
 	@Transactional
-	public ShoppingCartItem getByCode(final String code, final MerchantStoreItem store) throws ServiceException {
+	public ShoppingCartItem getByCode(final String code, final MerchantStoreItem store)  {
 
 		return shoppingCartDao.findByCode(store.getUuid(), code);
 
@@ -178,7 +178,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public ShoppingCartItem getByCustomer(final CustomerItem customer) throws ServiceException {
+	public ShoppingCartItem getByCustomer(final CustomerItem customer)  {
 
 		try {
 			ShoppingCartItem shoppingCart = shoppingCartDao.findByCustomer(customer.getUuid());
@@ -188,7 +188,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 			return getPopulatedShoppingCart(shoppingCart);
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -242,7 +242,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 		return shoppingCart;
@@ -250,7 +250,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public ShoppingCartEntryItem populateShoppingCartItem(final ProductItem product) throws ServiceException {
+	public ShoppingCartEntryItem populateShoppingCartItem(final ProductItem product) {
 		Validate.notNull(product, "ProductItem should not be null");
 		Validate.notNull(product.getMerchantStore(), "ProductItem.merchantStore should not be null");
 
@@ -350,7 +350,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public List<ShippingProduct> createShippingProduct(final ShoppingCartItem cart) throws ServiceException {
+	public List<ShippingProduct> createShippingProduct(final ShoppingCartItem cart)  {
 		/**
 		 * Determines if products are virtual
 		 */
@@ -375,7 +375,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public boolean isFreeShoppingCart(final ShoppingCartItem cart) throws ServiceException {
+	public boolean isFreeShoppingCart(final ShoppingCartItem cart)  {
 		/**
 		 * Determines if products are free
 		 */
@@ -393,7 +393,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public boolean requiresShipping(final ShoppingCartItem cart) throws ServiceException {
+	public boolean requiresShipping(final ShoppingCartItem cart)  {
 
 		Validate.notNull(cart, "Shopping cart cannot be null");
 		Validate.notNull(cart.getLineItems(), "ShoppingCartItem items cannot be null");
@@ -411,7 +411,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public void removeShoppingCart(final ShoppingCartItem cart) throws ServiceException {
+	public void removeShoppingCart(final ShoppingCartItem cart)  {
 		shoppingCartDao.delete(cart);
 	}
 
@@ -520,7 +520,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public boolean isFreeShoppingCart(List<ShoppingCartEntryItem> items) throws ServiceException {
+	public boolean isFreeShoppingCart(List<ShoppingCartEntryItem> items)  {
 		ShoppingCartItem cart = new ShoppingCartItem();
 		Set<ShoppingCartEntryItem> cartItems = new HashSet<>(items);
 		cart.setLineItems(cartItems);

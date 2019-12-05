@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.email.Email;
 import com.coretex.core.business.modules.email.EmailConfig;
 import com.coretex.core.business.modules.email.HtmlEmailSender;
@@ -32,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public EmailConfig getEmailConfiguration(MerchantStoreItem store) throws ServiceException {
+	public EmailConfig getEmailConfiguration(MerchantStoreItem store)  {
 
 		MerchantConfigurationItem configuration = merchantConfigurationService.getMerchantConfiguration(Constants.EMAIL_CONFIG, store);
 		EmailConfig emailConfig = null;
@@ -43,7 +43,7 @@ public class EmailServiceImpl implements EmailService {
 			try {
 				emailConfig = mapper.readValue(value, EmailConfig.class);
 			} catch (Exception e) {
-				throw new ServiceException("Cannot parse json string " + value);
+				throw new RuntimeException("Cannot parse json string " + value);
 			}
 		}
 		return emailConfig;
@@ -51,7 +51,7 @@ public class EmailServiceImpl implements EmailService {
 
 
 	@Override
-	public void saveEmailConfiguration(EmailConfig emailConfig, MerchantStoreItem store) throws ServiceException {
+	public void saveEmailConfiguration(EmailConfig emailConfig, MerchantStoreItem store)  {
 		MerchantConfigurationItem configuration = merchantConfigurationService.getMerchantConfiguration(Constants.EMAIL_CONFIG, store);
 		if (configuration == null) {
 			configuration = new MerchantConfigurationItem();

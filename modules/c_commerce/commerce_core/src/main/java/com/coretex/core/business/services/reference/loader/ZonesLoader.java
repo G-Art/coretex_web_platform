@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 
@@ -94,7 +94,7 @@ public class ZonesLoader {
 
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 

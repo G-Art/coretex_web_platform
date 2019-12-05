@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.CollectionUtils;
 
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.populators.AbstractDataPopulator;
@@ -62,14 +62,10 @@ public class ReadableMerchantStorePopulator extends
 		address.setAddress(source.getStoreAddress());
 		address.setCity(source.getStoreCity());
 		if (source.getCountry() != null) {
-			try {
-				address.setCountry(source.getCountry().getIsoCode());
-				CountryItem c = countryService.getCountriesMap(language).get(source.getCountry().getIsoCode());
-				if (c != null) {
-					address.setCountry(c.getIsoCode());
-				}
-			} catch (ServiceException e) {
-				logger.error("Cannot get CountryItem", e);
+			address.setCountry(source.getCountry().getIsoCode());
+			CountryItem c = countryService.getCountriesMap(language).get(source.getCountry().getIsoCode());
+			if (c != null) {
+				address.setCountry(c.getIsoCode());
 			}
 		}
 
@@ -78,12 +74,8 @@ public class ReadableMerchantStorePopulator extends
 
 		if (source.getZone() != null) {
 			address.setStateProvince(source.getZone().getCode());
-			try {
-				ZoneItem z = zoneService.getZones(language).get(source.getZone().getCode());
-				address.setStateProvince(z.getCode());
-			} catch (ServiceException e) {
-				logger.error("Cannot get ZoneItem", e);
-			}
+			ZoneItem z = zoneService.getZones(language).get(source.getZone().getCode());
+			address.setStateProvince(z.getCode());
 		}
 
 

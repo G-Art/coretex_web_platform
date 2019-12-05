@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.cms.content.ContentAssetsManager;
 import com.coretex.core.business.modules.cms.impl.CMSManager;
 import com.coretex.core.business.modules.cms.impl.LocalCacheManagerImpl;
@@ -86,15 +86,15 @@ public class CmsStaticContentFileManagerImpl implements ContentAssetsManager {
 	 *
 	 * @param merchantStoreCode merchant store for whom data is being stored
 	 * @param inputStaticContentData data object being stored
-	 * @throws ServiceException
+	 * @
 	 *
 	 */
 	@Override
 	public void addFile(final String merchantStoreCode, final InputContentFile inputStaticContentData)
-			throws ServiceException {
+			 {
 		/*
 		 * if ( cacheManager.getTreeCache() == null ) { LOGGER.error(
-		 * "Unable to find cacheManager.getTreeCache() in Infinispan.." ); throw new ServiceException(
+		 * "Unable to find cacheManager.getTreeCache() in Infinispan.." ); throw new RuntimeException(
 		 * "CmsStaticContentFileManagerInfinispanImpl has a null cacheManager.getTreeCache()" ); }
 		 */
 		try {
@@ -145,7 +145,7 @@ public class CmsStaticContentFileManagerImpl implements ContentAssetsManager {
 			LOGGER.info("ContentItem data added successfully.");
 		} catch (final Exception e) {
 			LOGGER.error("Error while saving static content data", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 
@@ -164,16 +164,16 @@ public class CmsStaticContentFileManagerImpl implements ContentAssetsManager {
 	 * @param merchantStoreCode Merchant store for which files are getting stored in Infinispan.
 	 * @param inputStaticContentDataList input static content file list which will get
 	 *        {@link InputContentImage} stored
-	 * @throws ServiceException if content file storing process fail.
+	 * @ if content file storing process fail.
 	 * @see InputStaticContentData
 	 * @see StaticContentCacheAttribute
 	 */
 	@Override
 	public void addFiles(final String merchantStoreCode,
-						 final List<InputContentFile> inputStaticContentDataList) throws ServiceException {
+						 final List<InputContentFile> inputStaticContentDataList)  {
 		/*
 		 * if ( cacheManager.getTreeCache() == null ) { LOGGER.error(
-		 * "Unable to find cacheManager.getTreeCache() in Infinispan.." ); throw new ServiceException(
+		 * "Unable to find cacheManager.getTreeCache() in Infinispan.." ); throw new RuntimeException(
 		 * "CmsStaticContentFileManagerInfinispanImpl has a null cacheManager.getTreeCache()" ); }
 		 */
 		try {
@@ -224,7 +224,7 @@ public class CmsStaticContentFileManagerImpl implements ContentAssetsManager {
 
 		} catch (final Exception e) {
 			LOGGER.error("Error while saving content image", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 	}
@@ -238,23 +238,23 @@ public class CmsStaticContentFileManagerImpl implements ContentAssetsManager {
 	 * @param store Merchant store
 	 * @param contentFileName name of file being requested
 	 * @return {@link OutputStaticContentData}
-	 * @throws ServiceException
+	 * @
 	 */
 	@Override
 	public OutputContentFile getFile(final String merchantStoreCode,
-									 final FileContentType fileContentType, final String contentFileName) throws ServiceException {
+									 final FileContentType fileContentType, final String contentFileName)  {
 
-		throw new ServiceException("Not implemented for httpd image manager");
+		throw new RuntimeException("Not implemented for httpd image manager");
 
 	}
 
 
 	@Override
 	public List<OutputContentFile> getFiles(final String merchantStoreCode,
-											final FileContentType staticContentType) throws ServiceException {
+											final FileContentType staticContentType)  {
 
 
-		throw new ServiceException("Not implemented for httpd image manager");
+		throw new RuntimeException("Not implemented for httpd image manager");
 
 
 	}
@@ -289,7 +289,7 @@ public class CmsStaticContentFileManagerImpl implements ContentAssetsManager {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void removeFiles(final String merchantStoreCode) throws ServiceException {
+	public void removeFiles(final String merchantStoreCode)  {
 
 		LOGGER.debug("Removing all images for {} merchant ", merchantStoreCode);
 
@@ -306,7 +306,7 @@ public class CmsStaticContentFileManagerImpl implements ContentAssetsManager {
 
 		} catch (final Exception e) {
 			LOGGER.error("Error while deleting content image for {} merchant ", merchantStoreCode);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -318,11 +318,11 @@ public class CmsStaticContentFileManagerImpl implements ContentAssetsManager {
 	 *
 	 * @param merchantStoreCode
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	@Override
 	public List<String> getFileNames(final String merchantStoreCode,
-									 final FileContentType staticContentType) throws ServiceException {
+									 final FileContentType staticContentType)  {
 
 
 		try {
@@ -366,7 +366,7 @@ public class CmsStaticContentFileManagerImpl implements ContentAssetsManager {
 			}
 		} catch (final Exception e) {
 			LOGGER.error("Error while fetching file for {} merchant ", merchantStoreCode);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 		return new ArrayList<>();
 	}

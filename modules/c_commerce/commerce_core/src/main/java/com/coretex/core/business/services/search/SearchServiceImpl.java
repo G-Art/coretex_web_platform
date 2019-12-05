@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.items.commerce_core_model.CategoryItem;
@@ -195,7 +195,7 @@ public class SearchServiceImpl implements com.coretex.core.business.services.sea
 	}
 
 
-	public com.coretex.core.model.search.SearchResponse search(MerchantStoreItem store, String languageCode, String jsonString, int entriesCount, int startIndex) throws ServiceException {
+	public com.coretex.core.model.search.SearchResponse search(MerchantStoreItem store, String languageCode, String jsonString, int entriesCount, int startIndex)  {
 
 
 		try {
@@ -294,7 +294,7 @@ public class SearchServiceImpl implements com.coretex.core.business.services.sea
 
 		} catch (Exception e) {
 			LOGGER.error("Error while searching keywords " + jsonString, e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}

@@ -8,7 +8,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.cms.content.StaticContentFileManager;
 import com.coretex.core.business.repositories.catalog.product.file.DigitalProductDao;
 import com.coretex.core.business.services.catalog.product.ProductService;
@@ -35,7 +35,7 @@ public class DigitalProductServiceImpl extends SalesManagerEntityServiceImpl<Dig
 	}
 
 	@Override
-	public void addProductFile(ProductItem product, DigitalProductItem digitalProduct, InputContentFile inputFile) throws ServiceException {
+	public void addProductFile(ProductItem product, DigitalProductItem digitalProduct, InputContentFile inputFile)  {
 
 		Assert.notNull(digitalProduct, "DigitalProductItem cannot be null");
 		Assert.notNull(product, "ProductItem cannot be null");
@@ -54,7 +54,7 @@ public class DigitalProductServiceImpl extends SalesManagerEntityServiceImpl<Dig
 			productService.update(product);
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		} finally {
 			try {
 
@@ -89,7 +89,7 @@ public class DigitalProductServiceImpl extends SalesManagerEntityServiceImpl<Dig
 
 
 	@Override
-	public void saveOrUpdate(DigitalProductItem digitalProduct) throws ServiceException {
+	public void saveOrUpdate(DigitalProductItem digitalProduct)  {
 
 		Assert.notNull(digitalProduct, "DigitalProductItem cannot be null");
 		Assert.notNull(digitalProduct.getProduct(), "DigitalProductItem.product cannot be null");

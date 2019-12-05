@@ -5,7 +5,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.model.common.GenericEntityList;
 import com.coretex.core.model.merchant.MerchantStoreCriteria;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class MerchantDaoImpl extends DefaultGenericDao<MerchantStoreItem> implem
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public GenericEntityList listByCriteria(MerchantStoreCriteria criteria) throws ServiceException {
+	public GenericEntityList listByCriteria(MerchantStoreCriteria criteria)  {
 		try {
 			StringBuilder req = new StringBuilder();
 			req.append(
@@ -92,7 +92,7 @@ public class MerchantDaoImpl extends DefaultGenericDao<MerchantStoreItem> implem
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 //    return null;
 	}

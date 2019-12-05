@@ -69,7 +69,7 @@ public class UserServicesImpl implements WebUserServices {
 
 		try {
 
-			user = userService.getByUserName(userName);
+			user = userService.findByLoginCredentials(userName);
 
 			if (user == null) {
 				return null;

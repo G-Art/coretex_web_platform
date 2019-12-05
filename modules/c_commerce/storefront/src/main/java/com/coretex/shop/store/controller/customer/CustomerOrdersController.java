@@ -42,12 +42,6 @@ import java.util.UUID;
 public class CustomerOrdersController extends AbstractController {
 
 	@Resource
-	private MerchantStoreService merchantStoreService;
-
-	@Resource
-	private LanguageService languageService;
-
-	@Resource
 	private OrderFacade orderFacade;
 
 	@Resource

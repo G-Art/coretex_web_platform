@@ -1,7 +1,7 @@
 
 package com.coretex.shop.populator.shoppingCart;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
@@ -150,9 +150,6 @@ public class ShoppingCartModelPopulator
 					}
 				}// end for
 			}// end if
-		} catch (ServiceException se) {
-			LOG.error("Error while converting cart data to cart model.." + se);
-			throw new ConversionException("Unable to create cart model", se);
 		} catch (Exception ex) {
 			LOG.error("Error while converting cart data to cart model.." + ex);
 			throw new ConversionException("Unable to create cart model", ex);

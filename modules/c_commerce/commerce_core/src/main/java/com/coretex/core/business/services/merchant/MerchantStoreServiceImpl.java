@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.springframework.stereotype.Service;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.merchant.MerchantDao;
 import com.coretex.core.business.services.catalog.product.type.ProductTypeService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
@@ -30,7 +30,7 @@ public class MerchantStoreServiceImpl extends SalesManagerEntityServiceImpl<Merc
 
 
 	@Override
-	public void saveOrUpdate(MerchantStoreItem store) throws ServiceException {
+	public void saveOrUpdate(MerchantStoreItem store)  {
 
 		super.save(store);
 
@@ -49,13 +49,13 @@ public class MerchantStoreServiceImpl extends SalesManagerEntityServiceImpl<Merc
 
 
 	@Override
-	public GenericEntityList<MerchantStoreItem> getByCriteria(MerchantStoreCriteria criteria) throws ServiceException {
+	public GenericEntityList<MerchantStoreItem> getByCriteria(MerchantStoreCriteria criteria)  {
 		return merchantDao.listByCriteria(criteria);
 	}
 
 	
 /*	@Override
-	public void delete(MerchantStoreItem merchant) throws ServiceException {
+	public void delete(MerchantStoreItem merchant)  {
 		
 		merchant = this.getById(merchant.getUuid());
 		

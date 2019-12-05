@@ -1,20 +1,15 @@
 package com.coretex.shop.admin.controller.orders;
 
-import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
-import com.coretex.core.business.services.reference.country.CountryService;
-import com.coretex.core.business.services.reference.zone.ZoneService;
-import com.coretex.core.business.services.system.EmailService;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.core.data.orders.Refund;
 import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
-import com.coretex.shop.utils.DateUtil;
 import com.coretex.shop.utils.EmailTemplatesUtils;
 import com.coretex.shop.utils.LabelUtils;
 import com.coretex.shop.utils.LocaleUtils;
@@ -34,10 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -59,12 +51,6 @@ public class OrderActionsControler {
 
 	@Resource
 	CustomerService customerService;
-
-	@Resource
-	PricingService pricingService;
-
-	@Resource
-	EmailService emailService;
 
 	@Resource
 	EmailTemplatesUtils emailTemplatesUtils;

@@ -2,7 +2,7 @@
 package com.coretex.shop.populator.customer;
 
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.populators.AbstractDataPopulator;
@@ -82,30 +82,20 @@ public class ReadableCustomerDeliveryAddressPopulator extends AbstractDataPopula
 			target.setCountry(source.getCountry().getIsoCode());
 
 			//resolve country name
-			try {
-				Map<String, CountryItem> countries = countryService.getCountriesMap(language);
-				CountryItem c = countries.get(source.getCountry().getIsoCode());
-				if (c != null) {
-					target.setCountryName(c.getName());
-				}
-			} catch (ServiceException e) {
-				// TODO Auto-generated catch block
-				throw new ConversionException(e);
+			Map<String, CountryItem> countries = countryService.getCountriesMap(language);
+			CountryItem c = countries.get(source.getCountry().getIsoCode());
+			if (c != null) {
+				target.setCountryName(c.getName());
 			}
 		}
 		if (source.getZone() != null) {
 			target.setZone(source.getZone().getCode());
 
 			//resolve zone name
-			try {
-				Map<String, ZoneItem> zones = zoneService.getZones(language);
-				ZoneItem z = zones.get(source.getZone().getCode());
-				if (z != null) {
-					target.setProvinceName(z.getName());
-				}
-			} catch (ServiceException e) {
-				// TODO Auto-generated catch block
-				throw new ConversionException(e);
+			Map<String, ZoneItem> zones = zoneService.getZones(language);
+			ZoneItem z = zones.get(source.getZone().getCode());
+			if (z != null) {
+				target.setProvinceName(z.getName());
 			}
 		}
 

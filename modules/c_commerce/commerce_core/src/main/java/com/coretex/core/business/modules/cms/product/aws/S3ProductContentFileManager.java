@@ -21,7 +21,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.cms.impl.CMSManager;
 import com.coretex.core.business.modules.cms.product.ProductImageGet;
 import com.coretex.core.business.modules.cms.product.ProductImagePut;
@@ -71,7 +71,7 @@ public class S3ProductContentFileManager
 
 	@Override
 	public List<OutputContentFile> getImages(String merchantStoreCode,
-											 FileContentType imageContentType) throws ServiceException {
+											 FileContentType imageContentType)  {
 		try {
 			// get buckets
 			String bucketName = bucketName();
@@ -105,13 +105,13 @@ public class S3ProductContentFileManager
 			return files;
 		} catch (final Exception e) {
 			LOGGER.error("Error while getting files", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 	}
 
 	@Override
-	public void removeImages(String merchantStoreCode) throws ServiceException {
+	public void removeImages(String merchantStoreCode)  {
 		try {
 			// get buckets
 			String bucketName = bucketName();
@@ -122,7 +122,7 @@ public class S3ProductContentFileManager
 			LOGGER.info("Remove folder");
 		} catch (final Exception e) {
 			LOGGER.error("Error while removing folder", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 
@@ -163,32 +163,32 @@ public class S3ProductContentFileManager
 
 	@Override
 	public OutputContentFile getProductImage(String merchantStoreCode, String productCode,
-											 String imageName) throws ServiceException {
+											 String imageName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public OutputContentFile getProductImage(String merchantStoreCode, String productCode,
-											 String imageName, ProductImageSize size) throws ServiceException {
+											 String imageName, ProductImageSize size) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public OutputContentFile getProductImage(ProductImageItem productImage) throws ServiceException {
+	public OutputContentFile getProductImage(ProductImageItem productImage) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<OutputContentFile> getImages(ProductItem product) throws ServiceException {
+	public List<OutputContentFile> getImages(ProductItem product) {
 		return null;
 	}
 
 	@Override
 	public void addProductImage(ProductImageItem productImage, ImageContentFile contentImage)
-			throws ServiceException {
+			 {
 
 
 		try {
@@ -215,7 +215,7 @@ public class S3ProductContentFileManager
 
 		} catch (final Exception e) {
 			LOGGER.error("Error while removing file", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 

@@ -3,7 +3,7 @@ package com.coretex.core.business.services.user;
 import java.util.List;
 import java.util.UUID;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.PermissionItem;
@@ -15,16 +15,16 @@ public interface PermissionService extends SalesManagerEntityService<PermissionI
 
 	List<PermissionItem> getByName();
 
-	List<PermissionItem> listPermission() throws ServiceException;
+	List<PermissionItem> listPermission() ;
 
 	PermissionItem getByUUID(UUID permissionId);
 
-	List<PermissionItem> getPermissions(List<UUID> groupIds) throws ServiceException;
+	List<PermissionItem> getPermissions(List<UUID> groupIds) ;
 
-	void deletePermission(PermissionItem permission) throws ServiceException;
+	void deletePermission(PermissionItem permission) ;
 
-	PermissionList listByCriteria(PermissionCriteria criteria) throws ServiceException;
+	PermissionList listByCriteria(PermissionCriteria criteria) ;
 
-	void removePermission(PermissionItem permission, GroupItem group) throws ServiceException;
+	void removePermission(PermissionItem permission, GroupItem group) ;
 
 }

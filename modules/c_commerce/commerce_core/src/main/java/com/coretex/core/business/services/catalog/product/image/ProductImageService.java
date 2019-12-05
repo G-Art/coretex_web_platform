@@ -2,7 +2,7 @@ package com.coretex.core.business.services.catalog.product.image;
 
 import java.util.List;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.core.model.catalog.product.file.ProductImageSize;
@@ -20,34 +20,34 @@ public interface ProductImageService extends SalesManagerEntityService<ProductIm
 	 * @param product
 	 * @param productImage
 	 * @param file
-	 * @throws ServiceException
+	 * @
 	 */
 	void addProductImage(ProductItem product, ProductImageItem productImage, ImageContentFile inputImage)
-			throws ServiceException;
+			;
 
 	/**
 	 * Get the image ByteArrayOutputStream and content description from CMS
 	 *
 	 * @param productImage
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	OutputContentFile getProductImage(ProductImageItem productImage, ProductImageSize size)
-			throws ServiceException;
+			;
 
 	/**
 	 * Returns all Images for a given product
 	 *
 	 * @param product
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	List<OutputContentFile> getProductImages(ProductItem product)
-			throws ServiceException;
+			;
 
 	void removeProductImage(ProductImageItem productImage);
 
-	void saveOrUpdate(ProductImageItem productImage) throws ServiceException;
+	void saveOrUpdate(ProductImageItem productImage) ;
 
 	/**
 	 * Returns an image file from required identifier. This method is
@@ -58,12 +58,12 @@ public interface ProductImageService extends SalesManagerEntityService<ProductIm
 	 * @param fileName
 	 * @param size
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	OutputContentFile getProductImage(String storeCode, String productCode,
-									  String fileName, final ProductImageSize size) throws ServiceException;
+									  String fileName, final ProductImageSize size);
 
 	void addProductImages(ProductItem product, List<ImageDataHolder<ProductImageItem>> productImages)
-			throws ServiceException;
+			;
 
 }

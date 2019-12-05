@@ -1,6 +1,6 @@
 package com.coretex.core.business.services.catalog.category;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.core.LocaleItem;
@@ -14,24 +14,24 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 
 	List<CategoryItem> getListByLineage(MerchantStoreItem store, String lineage);
 
-	List<CategoryItem> listBySeUrl(MerchantStoreItem store, String seUrl) throws ServiceException;
+	List<CategoryItem> listBySeUrl(MerchantStoreItem store, String seUrl) ;
 
-	void addChild(CategoryItem parent, CategoryItem child) throws ServiceException;
+	void addChild(CategoryItem parent, CategoryItem child) ;
 
-	List<CategoryItem> listByStoreAndParent(MerchantStoreItem store, CategoryItem category) throws ServiceException;
+	List<CategoryItem> listByStoreAndParent(MerchantStoreItem store, CategoryItem category) ;
 
 
-	List<CategoryItem> getByName(MerchantStoreItem store, String name, LocaleItem language) throws ServiceException;
+	List<CategoryItem> getByName(MerchantStoreItem store, String name, LocaleItem language) ;
 
-	List<CategoryItem> listByStore(MerchantStoreItem store) throws ServiceException;
+	List<CategoryItem> listByStore(MerchantStoreItem store) ;
 
 	CategoryItem getByCode(MerchantStoreItem store, String code)
-			throws ServiceException;
+			;
 
 	List<CategoryItem> listByStore(MerchantStoreItem store, LocaleItem language)
-			throws ServiceException;
+			;
 
-	void saveOrUpdate(CategoryItem category) throws ServiceException;
+	void saveOrUpdate(CategoryItem category) ;
 
 	List<CategoryItem> getListByDepth(MerchantStoreItem store, int depth);
 
@@ -56,9 +56,9 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 	List<CategoryItem> getListByDepthFilterByFeatured(MerchantStoreItem store, int depth, LocaleItem language);
 
 	List<CategoryItem> getListByLineage(String storeCode, String lineage)
-			throws ServiceException;
+			;
 
-	CategoryItem getByCode(String storeCode, String code) throws ServiceException;
+	CategoryItem getByCode(String storeCode, String code) ;
 
 	CategoryItem getBySeUrl(MerchantStoreItem store, String seUrl);
 
@@ -78,10 +78,10 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 	 * @param store
 	 * @param categoryIds
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	List<Map<String, Object>> countProductsByCategories(MerchantStoreItem store,
-														List<UUID> categoryIds) throws ServiceException;
+														List<UUID> categoryIds) ;
 
 	/**
 	 * Returns a list of CategoryItem by category code for a given language

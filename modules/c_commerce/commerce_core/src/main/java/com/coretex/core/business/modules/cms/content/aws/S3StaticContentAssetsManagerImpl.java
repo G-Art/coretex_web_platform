@@ -22,7 +22,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.cms.content.ContentAssetsManager;
 import com.coretex.core.business.modules.cms.impl.CMSManager;
 import com.coretex.core.model.content.FileContentType;
@@ -65,7 +65,7 @@ public class S3StaticContentAssetsManagerImpl implements ContentAssetsManager {
 
 	@Override
 	public OutputContentFile getFile(String merchantStoreCode, FileContentType fileContentType,
-									 String contentName) throws ServiceException {
+									 String contentName)  {
 		try {
 			// get buckets
 			String bucketName = bucketName();
@@ -86,14 +86,14 @@ public class S3StaticContentAssetsManagerImpl implements ContentAssetsManager {
 			return ct;
 		} catch (final Exception e) {
 			LOGGER.error("Error while getting file", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 	}
 
 	@Override
 	public List<String> getFileNames(String merchantStoreCode, FileContentType fileContentType)
-			throws ServiceException {
+			 {
 		try {
 			// get buckets
 			String bucketName = bucketName();
@@ -124,14 +124,14 @@ public class S3StaticContentAssetsManagerImpl implements ContentAssetsManager {
 			return fileNames;
 		} catch (final Exception e) {
 			LOGGER.error("Error while getting file names", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 	}
 
 	@Override
 	public List<OutputContentFile> getFiles(String merchantStoreCode, FileContentType fileContentType)
-			throws ServiceException {
+			 {
 		try {
 			// get buckets
 			String bucketName = bucketName();
@@ -165,14 +165,14 @@ public class S3StaticContentAssetsManagerImpl implements ContentAssetsManager {
 			return files;
 		} catch (final Exception e) {
 			LOGGER.error("Error while getting files", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 	}
 
 	@Override
 	public void addFile(String merchantStoreCode, InputContentFile inputStaticContentData)
-			throws ServiceException {
+			 {
 
 		try {
 			// get buckets
@@ -196,7 +196,7 @@ public class S3StaticContentAssetsManagerImpl implements ContentAssetsManager {
 			LOGGER.info("ContentItem add file");
 		} catch (final Exception e) {
 			LOGGER.error("Error while adding file", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 
@@ -205,7 +205,7 @@ public class S3StaticContentAssetsManagerImpl implements ContentAssetsManager {
 
 	@Override
 	public void addFiles(String merchantStoreCode, List<InputContentFile> inputStaticContentDataList)
-			throws ServiceException {
+			 {
 
 		if (CollectionUtils.isNotEmpty(inputStaticContentDataList)) {
 			for (InputContentFile inputFile : inputStaticContentDataList) {
@@ -238,7 +238,7 @@ public class S3StaticContentAssetsManagerImpl implements ContentAssetsManager {
 	}
 
 	@Override
-	public void removeFiles(String merchantStoreCode) throws ServiceException {
+	public void removeFiles(String merchantStoreCode)  {
 
 		try {
 			// get buckets
@@ -250,7 +250,7 @@ public class S3StaticContentAssetsManagerImpl implements ContentAssetsManager {
 			LOGGER.info("Remove folder");
 		} catch (final Exception e) {
 			LOGGER.error("Error while removing folder", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 

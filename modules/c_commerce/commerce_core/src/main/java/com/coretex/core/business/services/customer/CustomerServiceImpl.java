@@ -1,6 +1,6 @@
 package com.coretex.core.business.services.customer;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.customer.CustomerDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.model.customer.CustomerCriteria;
@@ -58,7 +58,7 @@ public class CustomerServiceImpl extends SalesManagerEntityServiceImpl<CustomerI
 
 
 	@Override
-	public void saveOrUpdate(CustomerItem customer) throws ServiceException {
+	public void saveOrUpdate(CustomerItem customer)  {
 
 		LOGGER.debug("Creating CustomerItem");
 		super.save(customer);

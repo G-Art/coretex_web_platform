@@ -50,7 +50,7 @@ public interface ShoppingCartFacade {
 	ShoppingCartData updateCartItems(List<com.coretex.shop.model.shoppingcart.ShoppingCartItem> shoppingCartItems,
 									 MerchantStoreItem store, LocaleItem language) throws Exception;
 
-	ShoppingCartItem getShoppingCartModel(final String shoppingCartCode, MerchantStoreItem store) throws Exception;
+	ShoppingCartItem getShoppingCartModel(final String shoppingCartCode, MerchantStoreItem store);
 
 	ShoppingCartItem getShoppingCartModel(UUID id, MerchantStoreItem store) throws Exception;
 

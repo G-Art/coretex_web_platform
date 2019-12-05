@@ -1,6 +1,6 @@
 package com.coretex.shop.store.controller.customer;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
@@ -89,16 +89,7 @@ public class CustomerAccountController extends AbstractController {
 
 
 	@Resource
-	private ZoneService zoneService;
-
-	@Resource
 	private CustomerFacade customerFacade;
-
-	@Resource
-	private OrderService orderService;
-
-	@Resource
-	private OrderFacade orderFacade;
 
 	@Resource
 	private LabelUtils messages;
@@ -456,22 +447,15 @@ public class CustomerAccountController extends AbstractController {
 	protected List<CountryItem> getCountries(final HttpServletRequest request) {
 
 		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
-		try {
-			if (language == null) {
-				language = (LocaleItem) request.getAttribute("LANGUAGE");
-			}
-
-			if (language == null) {
-				language = languageService.getByCode(Constants.DEFAULT_LANGUAGE);
-			}
-
-			List<CountryItem> countryList = countryService.getCountries(language);
-			return countryList;
-		} catch (ServiceException e) {
-			LOGGER.error("Error while fetching country list ", e);
-
+		if (language == null) {
+			language = (LocaleItem) request.getAttribute("LANGUAGE");
 		}
-		return Collections.emptyList();
+
+		if (language == null) {
+			language = languageService.getByCode(Constants.DEFAULT_LANGUAGE);
+		}
+
+		return countryService.getCountries(language);
 	}
 
 	//@ModelAttribute("zones")

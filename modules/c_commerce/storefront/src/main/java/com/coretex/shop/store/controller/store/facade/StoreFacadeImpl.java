@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.content.ContentService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.reference.country.CountryService;
@@ -243,12 +243,8 @@ public class StoreFacadeImpl implements StoreFacade {
 
 	private GenericEntityList<MerchantStoreItem> getMerchantStoresByCriteria(
 			MerchantStoreCriteria criteria) {
-		try {
-			return Optional.ofNullable(merchantStoreService.getByCriteria(criteria))
-					.orElseThrow(() -> new ResourceNotFoundException("Criteria did not match any store"));
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(e);
-		}
+		return Optional.ofNullable(merchantStoreService.getByCriteria(criteria))
+				.orElseThrow(() -> new ResourceNotFoundException("Criteria did not match any store"));
 
 	}
 
@@ -295,12 +291,7 @@ public class StoreFacadeImpl implements StoreFacade {
 
 	private List<MerchantConfigurationItem> getMergeConfigurationsByStore(
 			MerchantConfigurationTypeEnum configurationType, MerchantStoreItem mStore) {
-		try {
-			return merchantConfigurationService.listByType(configurationType, mStore);
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(
-					"Error wile getting merchantConfigurations " + e.getMessage());
-		}
+		return merchantConfigurationService.listByType(configurationType, mStore);
 	}
 
 	private MerchantConfigEntity convertToMerchantConfigEntity(MerchantConfigurationItem config) {
@@ -337,13 +328,9 @@ public class StoreFacadeImpl implements StoreFacade {
 		String image = store.getStoreLogo();
 		store.setStoreLogo(null);
 
-		try {
-			updateMerchantStore(store);
-			if (!StringUtils.isEmpty(image)) {
-				contentService.removeFile(store.getCode(), image);
-			}
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(e.getMessage());
+		updateMerchantStore(store);
+		if (!StringUtils.isEmpty(image)) {
+			contentService.removeFile(store.getCode(), image);
 		}
 	}
 
@@ -361,11 +348,7 @@ public class StoreFacadeImpl implements StoreFacade {
 	}
 
 	private void addLogoToStore(String code, InputContentFile cmsContentImage) {
-		try {
-			contentService.addLogo(code, cmsContentImage);
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(e);
-		}
+		contentService.addLogo(code, cmsContentImage);
 	}
 
 	private void saveMerchantStore(MerchantStoreItem store) {
@@ -381,22 +364,18 @@ public class StoreFacadeImpl implements StoreFacade {
 		List<MerchantConfigurationItem> configurations = createdConfigs.stream()
 				.map(config -> convertToMerchantConfiguration(config, MerchantConfigurationTypeEnum.SOCIAL))
 				.collect(Collectors.toList());
-		try {
-			for (MerchantConfigurationItem mConfigs : configurations) {
-				mConfigs.setMerchantStore(mStore);
-				if (!StringUtils.isEmpty(mConfigs.getValue())) {
-					mConfigs.setMerchantConfigurationType(MerchantConfigurationTypeEnum.SOCIAL);
-					merchantConfigurationService.saveOrUpdate(mConfigs);
-				} else {// remove if submited blank and exists
-					MerchantConfigurationItem config =
-							merchantConfigurationService.getMerchantConfiguration(mConfigs.getKey(), mStore);
-					if (config != null) {
-						merchantConfigurationService.delete(config);
-					}
+		for (MerchantConfigurationItem mConfigs : configurations) {
+			mConfigs.setMerchantStore(mStore);
+			if (!StringUtils.isEmpty(mConfigs.getValue())) {
+				mConfigs.setMerchantConfigurationType(MerchantConfigurationTypeEnum.SOCIAL);
+				merchantConfigurationService.saveOrUpdate(mConfigs);
+			} else {// remove if submited blank and exists
+				MerchantConfigurationItem config =
+						merchantConfigurationService.getMerchantConfiguration(mConfigs.getKey(), mStore);
+				if (config != null) {
+					merchantConfigurationService.delete(config);
 				}
 			}
-		} catch (ServiceException se) {
-			throw new ServiceRuntimeException(se);
 		}
 
 	}

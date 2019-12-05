@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.reference.zone.ZoneDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.business.utils.CacheUtils;
@@ -46,7 +46,7 @@ public class ZoneServiceImpl extends SalesManagerEntityServiceImpl<ZoneItem> imp
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ZoneItem> getZones(CountryItem country, LocaleItem language) throws ServiceException {
+	public List<ZoneItem> getZones(CountryItem country, LocaleItem language)  {
 
 		//Validate.notNull(country,"CountryItem cannot be null");
 		Validate.notNull(language, "LocaleItem cannot be null");
@@ -81,7 +81,7 @@ public class ZoneServiceImpl extends SalesManagerEntityServiceImpl<ZoneItem> imp
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ZoneItem> getZones(String countryCode, LocaleItem language) throws ServiceException {
+	public List<ZoneItem> getZones(String countryCode, LocaleItem language) {
 
 		Validate.notNull(countryCode, "countryCode cannot be null");
 		Validate.notNull(language, "LocaleItem cannot be null");

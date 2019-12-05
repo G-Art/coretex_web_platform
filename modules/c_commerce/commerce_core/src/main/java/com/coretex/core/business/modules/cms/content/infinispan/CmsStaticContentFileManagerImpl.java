@@ -16,7 +16,7 @@ import org.infinispan.tree.Fqn;
 import org.infinispan.tree.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.cms.content.ContentAssetsManager;
 import com.coretex.core.business.modules.cms.impl.CMSManager;
 import com.coretex.core.business.modules.cms.impl.CacheManager;
@@ -95,16 +95,14 @@ public class CmsStaticContentFileManagerImpl
 	 *
 	 * @param merchantStoreCode merchant store for whom data is being stored
 	 * @param inputStaticContentData data object being stored
-	 * @throws ServiceException
+	 * @
 	 *
 	 */
 	@Override
 	public void addFile(final String merchantStoreCode, final InputContentFile inputStaticContentData)
-			throws ServiceException {
+			 {
 		if (cacheManager.getTreeCache() == null) {
 			LOGGER.error("Unable to find cacheManager.getTreeCache() in Infinispan..");
-			throw new ServiceException(
-					"CmsStaticContentFileManagerInfinispanImpl has a null cacheManager.getTreeCache()");
 		}
 		try {
 
@@ -119,7 +117,7 @@ public class CmsStaticContentFileManagerImpl
 			LOGGER.info("ContentItem data added successfully.");
 		} catch (final Exception e) {
 			LOGGER.error("Error while saving static content data", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 
@@ -138,16 +136,16 @@ public class CmsStaticContentFileManagerImpl
 	 * @param merchantStoreCode Merchant store for which files are getting stored in Infinispan.
 	 * @param inputStaticContentDataList input static content file list which will get
 	 *        {@link InputContentImage} stored
-	 * @throws ServiceException if content file storing process fail.
+	 * @ if content file storing process fail.
 	 * @see InputStaticContentData
 	 * @see StaticContentCacheAttribute
 	 */
 	@Override
 	public void addFiles(final String merchantStoreCode,
-						 final List<InputContentFile> inputStaticContentDataList) throws ServiceException {
+						 final List<InputContentFile> inputStaticContentDataList)  {
 		if (cacheManager.getTreeCache() == null) {
 			LOGGER.error("Unable to find cacheManager.getTreeCache() in Infinispan..");
-			throw new ServiceException(
+			throw new RuntimeException(
 					"CmsStaticContentFileManagerInfinispanImpl has a null cacheManager.getTreeCache()");
 		}
 		try {
@@ -169,7 +167,7 @@ public class CmsStaticContentFileManagerImpl
 
 		} catch (final Exception e) {
 			LOGGER.error("Error while saving content image", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 	}
@@ -183,14 +181,14 @@ public class CmsStaticContentFileManagerImpl
 	 * @param store Merchant store
 	 * @param contentFileName name of file being requested
 	 * @return {@link OutputStaticContentData}
-	 * @throws ServiceException
+	 * @
 	 */
 	@Override
 	public OutputContentFile getFile(final String merchantStoreCode,
-									 final FileContentType fileContentType, final String contentFileName) throws ServiceException {
+									 final FileContentType fileContentType, final String contentFileName)  {
 
 		if (cacheManager.getTreeCache() == null) {
-			throw new ServiceException(
+			throw new RuntimeException(
 					"CmsStaticContentFileManagerInfinispan has a null cacheManager.getTreeCache()");
 		}
 		OutputContentFile outputStaticContentData = new OutputContentFile();
@@ -223,7 +221,7 @@ public class CmsStaticContentFileManagerImpl
 
 		} catch (final Exception e) {
 			LOGGER.error("Error while fetching file for {} merchant ", merchantStoreCode);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 		return outputStaticContentData;
 	}
@@ -231,11 +229,11 @@ public class CmsStaticContentFileManagerImpl
 
 	@Override
 	public List<OutputContentFile> getFiles(final String merchantStoreCode,
-											final FileContentType staticContentType) throws ServiceException {
+											final FileContentType staticContentType)  {
 
 
 		if (cacheManager.getTreeCache() == null) {
-			throw new ServiceException(
+			throw new RuntimeException(
 					"CmsStaticContentFileManagerInfinispan has a null cacheManager.getTreeCache()");
 		}
 		List<OutputContentFile> images = new ArrayList<OutputContentFile>();
@@ -270,7 +268,7 @@ public class CmsStaticContentFileManagerImpl
 
 		} catch (final Exception e) {
 			LOGGER.error("Error while fetching file for {} merchant ", merchantStoreCode);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 
@@ -310,12 +308,12 @@ public class CmsStaticContentFileManagerImpl
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public void removeFiles(final String merchantStoreCode) throws ServiceException {
+	public void removeFiles(final String merchantStoreCode)  {
 
 		LOGGER.info("Removing all images for {} merchant ", merchantStoreCode);
 		if (cacheManager.getTreeCache() == null) {
 			LOGGER.error("Unable to find cacheManager.getTreeCache() in Infinispan..");
-			throw new ServiceException(
+			throw new RuntimeException(
 					"CmsImageFileManagerInfinispan has a null cacheManager.getTreeCache()");
 		}
 
@@ -329,7 +327,7 @@ public class CmsStaticContentFileManagerImpl
 
 		} catch (final Exception e) {
 			LOGGER.error("Error while deleting content image for {} merchant ", merchantStoreCode);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -380,15 +378,15 @@ public class CmsStaticContentFileManagerImpl
 	 *
 	 * @param merchantStoreCode
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	@Override
 	public List<String> getFileNames(final String merchantStoreCode,
-									 final FileContentType staticContentType) throws ServiceException {
+									 final FileContentType staticContentType)  {
 
 
 		if (cacheManager.getTreeCache() == null) {
-			throw new ServiceException(
+			throw new RuntimeException(
 					"CmsStaticContentFileManagerInfinispan has a null cacheManager.getTreeCache()");
 		}
 
@@ -406,7 +404,7 @@ public class CmsStaticContentFileManagerImpl
 
 		} catch (final Exception e) {
 			LOGGER.error("Error while fetching file for {} merchant ", merchantStoreCode);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}

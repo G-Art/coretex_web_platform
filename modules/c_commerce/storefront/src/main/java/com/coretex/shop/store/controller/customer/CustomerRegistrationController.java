@@ -1,7 +1,7 @@
 package com.coretex.shop.store.controller.customer;
 
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
@@ -300,22 +300,15 @@ public class CustomerRegistrationController extends AbstractController {
 	public List<CountryItem> getCountries(final HttpServletRequest request) {
 
 		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
-		try {
-			if (language == null) {
-				language = (LocaleItem) request.getAttribute("LANGUAGE");
-			}
-
-			if (language == null) {
-				language = languageService.getByCode(Constants.DEFAULT_LANGUAGE);
-			}
-
-			List<CountryItem> countryList = countryService.getCountries(language);
-			return countryList;
-		} catch (ServiceException e) {
-			LOGGER.error("Error while fetching country list ", e);
-
+		if (language == null) {
+			language = (LocaleItem) request.getAttribute("LANGUAGE");
 		}
-		return Collections.emptyList();
+
+		if (language == null) {
+			language = languageService.getByCode(Constants.DEFAULT_LANGUAGE);
+		}
+
+		return countryService.getCountries(language);
 	}
 
 	@ModelAttribute("zoneList")

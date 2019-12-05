@@ -8,7 +8,7 @@ import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
@@ -46,11 +46,7 @@ public class ShoppingCartItemPopulator extends
 			}
 		}
 
-		try {
-			return shoppingCartService.populateShoppingCartItem(product);
-		} catch (ServiceException e) {
-			throw new ConversionException(e);
-		}
+		return shoppingCartService.populateShoppingCartItem(product);
 
 	}
 

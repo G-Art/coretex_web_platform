@@ -31,8 +31,6 @@ import java.util.Locale;
 @Controller
 public class ListItemsController {
 
-	@Resource
-	ManufacturerService manufacturerService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ListItemsController.class);
 

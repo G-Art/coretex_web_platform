@@ -7,10 +7,12 @@
             <common-nav:subMenuItem name="Main" menuClass="pcoded-hasmenu" iconClass="feather icon-home"
                                     trigger="${
                                     cp.concat('/home') eq requestPath ||
-                                    cp.concat('/store') eq requestPath
+                                    cp.concat('/store') eq requestPath ||
+                                    cp.concat('/order') eq requestPath
                                     }">
                 <common-nav:subMenuItem name="Home" link="/home"/>
                 <common-nav:subMenuItem name="Stores" link="/store"/>
+                <common-nav:subMenuItem name="Orders" link="/order"/>
             </common-nav:subMenuItem>
             <common-nav:subMenuItem name="Content" menuClass="pcoded-hasmenu"
                                     iconClass="zmdi zmdi-receipt"
@@ -40,7 +42,8 @@
         </common-nav:navigationGroup>
 
         <common-nav:navigationGroup name="Users">
-            <common-nav:subMenuItem name="Employees" iconClass="icofont icofont-support"/>
+            <common-nav:subMenuItem name="Employees" iconClass="icofont icofont-support"
+                                    link="/user"/>
             <common-nav:subMenuItem name="Customers" iconClass="zmdi zmdi-accounts-alt"/>
         </common-nav:navigationGroup>
 

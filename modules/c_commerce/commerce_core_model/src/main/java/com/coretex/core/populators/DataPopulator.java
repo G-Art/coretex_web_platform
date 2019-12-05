@@ -1,7 +1,6 @@
 
 package com.coretex.core.populators;
 
-import com.coretex.core.business.exception.ConversionException;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
 

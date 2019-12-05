@@ -1,6 +1,6 @@
 package com.coretex.core.business.services.content;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.cms.content.StaticContentFileManager;
 import com.coretex.core.model.content.FileContentType;
 import com.coretex.core.model.content.InputContentFile;
@@ -32,11 +32,11 @@ public class ContentServiceImpl
 	 *
 	 * @param merchantStoreCode Merchant store
 	 * @param contentFile       {@link InputContentFile} being stored
-	 * @throws ServiceException service exception
+	 * @ service exception
 	 */
 	@Override
 	public void addContentFile(String merchantStoreCode, InputContentFile contentFile)
-			throws ServiceException {
+			 {
 		Assert.notNull(merchantStoreCode, "Merchant store Id can not be null");
 		Assert.notNull(contentFile, "InputContentFile image can not be null");
 		Assert.notNull(contentFile.getFileName(), "InputContentFile.fileName can not be null");
@@ -58,7 +58,7 @@ public class ContentServiceImpl
 
 	@Override
 	public void addLogo(String merchantStoreCode, InputContentFile cmsContentImage)
-			throws ServiceException {
+			 {
 
 
 		Assert.notNull(merchantStoreCode, "Merchant store Id can not be null");
@@ -73,7 +73,7 @@ public class ContentServiceImpl
 
 	@Override
 	public void addOptionImage(String merchantStoreCode, InputContentFile cmsContentImage)
-			throws ServiceException {
+			 {
 
 
 		Assert.notNull(merchantStoreCode, "Merchant store Id can not be null");
@@ -86,7 +86,7 @@ public class ContentServiceImpl
 
 
 	private void addImage(String merchantStoreCode, InputContentFile contentImage)
-			throws ServiceException {
+			 {
 
 		try {
 			LOG.info("Adding content image for merchant id {}", merchantStoreCode);
@@ -94,7 +94,7 @@ public class ContentServiceImpl
 
 		} catch (Exception e) {
 			LOG.error("Error while trying to convert input stream to buffered image", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		} finally {
 
@@ -110,7 +110,7 @@ public class ContentServiceImpl
 	}
 
 	private void addFile(final String merchantStoreCode, InputContentFile contentImage)
-			throws ServiceException {
+			 {
 
 		try {
 			LOG.info("Adding content file for merchant id {}", merchantStoreCode);
@@ -119,7 +119,7 @@ public class ContentServiceImpl
 
 		} catch (Exception e) {
 			LOG.error("Error while trying to convert input stream to buffered image", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		} finally {
 
@@ -135,7 +135,7 @@ public class ContentServiceImpl
 
 	@Override
 	public void addContentFiles(String merchantStoreCode, List<InputContentFile> contentFilesList)
-			throws ServiceException {
+			 {
 
 		Assert.notNull(merchantStoreCode, "Merchant store ID can not be null");
 		Assert.notEmpty(contentFilesList, "File list can not be empty");
@@ -152,14 +152,14 @@ public class ContentServiceImpl
 				}
 			}
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
 
 	@Override
 	public void removeFile(String merchantStoreCode, FileContentType fileContentType, String fileName)
-			throws ServiceException {
+			 {
 		Assert.notNull(merchantStoreCode, "Merchant Store Id can not be null");
 		Assert.notNull(fileContentType, "ContentItem file type can not be null");
 		Assert.notNull(fileName, "ContentItem Image type can not be null");
@@ -171,7 +171,7 @@ public class ContentServiceImpl
 	}
 
 	@Override
-	public void removeFile(String storeCode, String fileName) throws ServiceException {
+	public void removeFile(String storeCode, String fileName)  {
 
 		String fileType = "IMAGE";
 		String mimetype = URLConnection.guessContentTypeFromName(fileName);
@@ -188,10 +188,10 @@ public class ContentServiceImpl
 	 * will remove all images associated with given merchant store.
 	 *
 	 * @param merchantStoreCode
-	 * @throws ServiceException
+	 * @
 	 */
 	@Override
-	public void removeFiles(String merchantStoreCode) throws ServiceException {
+	public void removeFiles(String merchantStoreCode)  {
 		Assert.notNull(merchantStoreCode, "Merchant Store Id can not be null");
 
 
@@ -203,7 +203,7 @@ public class ContentServiceImpl
 
 	@Override
 	public OutputContentFile getContentFile(String merchantStoreCode, FileContentType fileContentType,
-											String fileName) throws ServiceException {
+											String fileName)  {
 		Assert.notNull(merchantStoreCode, "Merchant store ID can not be null");
 		Assert.notNull(fileName, "File name can not be null");
 
@@ -220,7 +220,7 @@ public class ContentServiceImpl
 
 	@Override
 	public List<OutputContentFile> getContentFiles(String merchantStoreCode,
-												   FileContentType fileContentType) throws ServiceException {
+												   FileContentType fileContentType)  {
 		Assert.notNull(merchantStoreCode, "Merchant store Id can not be null");
 		// return staticContentFileManager.getFiles(merchantStoreCode, fileContentType);
 		return contentFileManager.getFiles(merchantStoreCode, fileContentType);
@@ -228,7 +228,7 @@ public class ContentServiceImpl
 
 	@Override
 	public List<String> getContentFilesNames(String merchantStoreCode,
-											 FileContentType fileContentType) throws ServiceException {
+											 FileContentType fileContentType)  {
 		Assert.notNull(merchantStoreCode, "Merchant store Id can not be null");
 
 		return contentFileManager.getFileNames(merchantStoreCode, fileContentType);

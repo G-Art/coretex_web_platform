@@ -1,7 +1,7 @@
 package com.coretex.shop.store.controller.order;
 
 import com.coretex.core.activeorm.services.ItemService;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.area.CityDao;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
@@ -392,7 +392,7 @@ public class ShoppingOrderController extends AbstractController {
 		CustomerItem modelCustomer = customerService.getByEmail(order.getEmail());
 		if (authCustomer == null) {//not authenticated, create a new volatile user
 
-			if(Objects.isNull(modelCustomer)){
+			if (Objects.isNull(modelCustomer)) {
 				modelCustomer = orderFacade.initEmptyCustomer(store);
 				customerFacade.setCustomerModelDefaultProperties(modelCustomer, store);
 			}
@@ -419,7 +419,7 @@ public class ShoppingOrderController extends AbstractController {
 
 		OrderItem modelOrder = null;
 
-			modelOrder = orderFacade.processOrder(order, modelCustomer, store, language);
+		modelOrder = orderFacade.processOrder(order, modelCustomer, store, language);
 
 		//save order id in session
 		super.setSessionAttribute(Constants.ORDER_ID, modelOrder.getUuid(), request);
@@ -430,12 +430,9 @@ public class ShoppingOrderController extends AbstractController {
 		//get cart
 		String cartCode = super.getSessionAttribute(Constants.SHOPPING_CART, request);
 		if (StringUtils.isNotBlank(cartCode)) {
-			try {
-				shoppingCartFacade.deleteShoppingCart(cartCode, store);
-			} catch (Exception e) {
-				LOGGER.error("Cannot delete cart " + cartCode, e);
-				throw new ServiceException(e);
-			}
+
+			shoppingCartFacade.deleteShoppingCart(cartCode, store);
+
 		}
 
 
@@ -559,8 +556,8 @@ public class ShoppingOrderController extends AbstractController {
 			order.setShoppingCartItems(cartItems);
 
 
-				List<CountryItem> countries = countryService.getCountries(language);
-				model.addAttribute("countries", countries);
+			List<CountryItem> countries = countryService.getCountries(language);
+			model.addAttribute("countries", countries);
 
 			//set shipping summary
 			if (order.getSelectedShippingOption() != null) {
@@ -637,37 +634,9 @@ public class ShoppingOrderController extends AbstractController {
 			OrderItem modelOrder = this.commitOrder(order, request, locale);
 
 
-		} catch (ServiceException se) {
-
-
-			LOGGER.error("Error while creating an order ", se);
-
-			String defaultMessage = messages.getMessage("message.error", locale);
-			model.addAttribute("errorMessages", defaultMessage);
-
-			if (se.getExceptionType() == ServiceException.EXCEPTION_VALIDATION) {
-				if (!StringUtils.isBlank(se.getMessageCode())) {
-					String messageLabel = messages.getMessage(se.getMessageCode(), locale, defaultMessage);
-					model.addAttribute("errorMessages", messageLabel);
-				}
-			} else if (se.getExceptionType() == ServiceException.EXCEPTION_PAYMENT_DECLINED) {
-				String paymentDeclinedMessage = messages.getMessage("message.payment.declined", locale);
-				if (!StringUtils.isBlank(se.getMessageCode())) {
-					String messageLabel = messages.getMessage(se.getMessageCode(), locale, paymentDeclinedMessage);
-					model.addAttribute("errorMessages", messageLabel);
-				} else {
-					model.addAttribute("errorMessages", paymentDeclinedMessage);
-				}
-			}
-
-
-			StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Checkout.checkout).append(".").append(store.getStoreTemplate());
-			return template.toString();
-
 		} catch (Exception e) {
 			LOGGER.error("Error while commiting order", e);
 			throw e;
-
 		}
 
 		//redirect to completd

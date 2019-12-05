@@ -1,7 +1,7 @@
 package com.coretex.shop.store.controller.category.facade;
 
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.items.commerce_core_model.CategoryItem;
@@ -93,27 +93,23 @@ public class CategoryFacadeImpl implements CategoryFacade {
 
 	@Override
 	public PersistableCategory saveCategory(MerchantStoreItem store, PersistableCategory category) {
-		try {
 
       /*		PersistableCategoryPopulator populator = new PersistableCategoryPopulator();
       populator.setCategoryService(categoryService);
       populator.setLanguageService(languageService);*/
 
-			CategoryItem target =
-					Optional.ofNullable(category.getUuid())
-							.map(categoryService::getByUUID)
-							.orElse(new CategoryItem());
+		CategoryItem target =
+				Optional.ofNullable(category.getUuid())
+						.map(categoryService::getByUUID)
+						.orElse(new CategoryItem());
 
-			CategoryItem dbCategory = populateCategory(store, category, target);
+		CategoryItem dbCategory = populateCategory(store, category, target);
 
-			saveCategory(store, dbCategory, null);
+		saveCategory(store, dbCategory, null);
 
-			// set category id
-			category.setUuid(dbCategory.getUuid());
-			return category;
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException("Error while updating category", e);
-		}
+		// set category id
+		category.setUuid(dbCategory.getUuid());
+		return category;
 	}
 
 	private CategoryItem populateCategory(
@@ -127,7 +123,7 @@ public class CategoryFacadeImpl implements CategoryFacade {
 	}
 
 	private void saveCategory(MerchantStoreItem store, CategoryItem category, CategoryItem parent)
-			throws ServiceException {
+			 {
 
 		/**
 		 * c.children1

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
@@ -26,7 +26,7 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	Map getStaticForPeriod(Date from);
 
 	void addOrderStatusHistory(OrderItem order, OrderStatusHistoryItem history)
-			throws ServiceException;
+			;
 
 	/**
 	 * Can be used to calculates the final prices of all items contained in checkout page
@@ -36,11 +36,11 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	 * @param store
 	 * @param language
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	OrderTotalSummary caculateOrderTotal(OrderSummary orderSummary,
 										 CustomerItem customer, MerchantStoreItem store, LocaleItem language)
-			throws ServiceException;
+			;
 
 	/**
 	 * Can be used to calculates the final prices of all items contained in a ShoppingCartItem
@@ -49,10 +49,10 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	 * @param store
 	 * @param language
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	OrderTotalSummary caculateOrderTotal(OrderSummary orderSummary,
-										 MerchantStoreItem store, LocaleItem language) throws ServiceException;
+										 MerchantStoreItem store, LocaleItem language) ;
 
 
 	/**
@@ -63,9 +63,9 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	 * @param store
 	 * @param language
 	 * @return @return {@link OrderTotalSummary}
-	 * @throws ServiceException
+	 * @
 	 */
-	OrderTotalSummary calculateShoppingCartTotal(final ShoppingCartItem shoppingCart, final CustomerItem customer, final MerchantStoreItem store, final LocaleItem language) throws ServiceException;
+	OrderTotalSummary calculateShoppingCartTotal(final ShoppingCartItem shoppingCart, final CustomerItem customer, final MerchantStoreItem store, final LocaleItem language) ;
 
 	/**
 	 * Can be used to calculates the final prices of all items contained in a ShoppingCartItem
@@ -74,12 +74,12 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	 * @param store
 	 * @param language
 	 * @return {@link OrderTotalSummary}
-	 * @throws ServiceException
+	 * @
 	 */
-	OrderTotalSummary calculateShoppingCartTotal(final ShoppingCartItem shoppingCart, final MerchantStoreItem store, final LocaleItem language) throws ServiceException;
+	OrderTotalSummary calculateShoppingCartTotal(final ShoppingCartItem shoppingCart, final MerchantStoreItem store, final LocaleItem language);
 
 	ByteArrayOutputStream generateInvoice(MerchantStoreItem store, OrderItem order,
-										  LocaleItem language) throws ServiceException;
+										  LocaleItem language) ;
 
 	OrderItem getOrder(UUID id);
 
@@ -102,19 +102,19 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	 */
 	OrderList getOrders(OrderCriteria criteria);
 
-	void saveOrUpdate(OrderItem order) throws ServiceException;
+	void saveOrUpdate(OrderItem order) ;
 
 	OrderItem processOrder(OrderItem order, CustomerItem customer,
-						   List<ShoppingCartEntryItem> items, OrderTotalSummary summary, MerchantStoreItem store) throws ServiceException;
+						   List<ShoppingCartEntryItem> items, OrderTotalSummary summary, MerchantStoreItem store) ;
 
 	/**
 	 * Determines if an OrderItem has download files
 	 *
 	 * @param order
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
-	boolean hasDownloadFiles(OrderItem order) throws ServiceException;
+	boolean hasDownloadFiles(OrderItem order) ;
 
 	/**
 	 * List all orders that have been pre-authorized but not captured
@@ -123,8 +123,8 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	 * @param startDate
 	 * @param endDate
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
-	List<OrderItem> getCapturableOrders(MerchantStoreItem store, Date startDate, Date endDate) throws ServiceException;
+	List<OrderItem> getCapturableOrders(MerchantStoreItem store, Date startDate, Date endDate) ;
 
 }

@@ -1,6 +1,6 @@
 package com.coretex.core.business.services.catalog.product.manufacturer;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.catalog.product.manufacturer.ManufacturerDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.items.core.LocaleItem;
@@ -30,29 +30,29 @@ public class ManufacturerServiceImpl extends
 
 
 	@Override
-	public Long getCountManufAttachedProducts(ManufacturerItem manufacturer) throws ServiceException {
+	public Long getCountManufAttachedProducts(ManufacturerItem manufacturer)  {
 		return manufacturerDao.countByProduct(manufacturer.getUuid());
 		//.getCountManufAttachedProducts( manufacturer );
 	}
 
 
 	@Override
-	public List<ManufacturerItem> listByStore(MerchantStoreItem store, LocaleItem language) throws ServiceException {
+	public List<ManufacturerItem> listByStore(MerchantStoreItem store, LocaleItem language)  {
 		return manufacturerDao.findByStoreAndLanguage(store.getUuid(), language.getUuid());
 	}
 
 	@Override
-	public List<ManufacturerItem> listByStore(MerchantStoreItem store) throws ServiceException {
+	public List<ManufacturerItem> listByStore(MerchantStoreItem store)  {
 		return manufacturerDao.findByStore(store.getUuid());
 	}
 
 	@Override
-	public List<ManufacturerItem> listByProductsByCategoriesId(MerchantStoreItem store, List<UUID> ids, LocaleItem language) throws ServiceException {
+	public List<ManufacturerItem> listByProductsByCategoriesId(MerchantStoreItem store, List<UUID> ids, LocaleItem language)  {
 		return manufacturerDao.findByCategoriesAndLanguage(ids, language.getUuid());
 	}
 
 	@Override
-	public void saveOrUpdate(ManufacturerItem manufacturer) throws ServiceException {
+	public void saveOrUpdate(ManufacturerItem manufacturer)  {
 
 		LOGGER.debug("Creating ManufacturerItem");
 		super.save(manufacturer);

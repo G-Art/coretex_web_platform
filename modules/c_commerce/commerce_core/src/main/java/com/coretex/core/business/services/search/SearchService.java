@@ -1,6 +1,6 @@
 package com.coretex.core.business.services.search;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
@@ -15,7 +15,7 @@ public interface SearchService {
 	 *
 	 * @param store
 	 * @param product
-	 * @throws ServiceException
+	 * @
 	 */
 	void index(MerchantStoreItem store, ProductItem product);
 
@@ -24,7 +24,7 @@ public interface SearchService {
 	 *
 	 * @param store
 	 * @param product
-	 * @throws ServiceException
+	 * @
 	 */
 	void deleteIndex(MerchantStoreItem store, ProductItem product);
 
@@ -36,7 +36,7 @@ public interface SearchService {
 	 * @param jsonString
 	 * @param entriesCount
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	SearchKeywords searchForKeywords(String collectionName,
 									 String jsonString, int entriesCount);
@@ -49,10 +49,10 @@ public interface SearchService {
 	 * @param jsonString
 	 * @param entriesCount
 	 * @param startIndex
-	 * @throws ServiceException
+	 * @
 	 */
 	SearchResponse search(MerchantStoreItem store, String languageCode, String jsonString,
-						  int entriesCount, int startIndex) throws ServiceException;
+						  int entriesCount, int startIndex) ;
 
 	/**
 	 * Initializes search service in order to avoid lazy initialization

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 public abstract class PageableDataTableAbstractController<D extends GenericItemData> extends AbstractController {
 
-	@RequestMapping(path = "/paginated", method = RequestMethod.GET)
+	@RequestMapping(path = "/paginated", method = {RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
 	public  DataTableResults<D> getPageableList(@RequestParam("draw") String draw, @RequestParam("start") Long start, @RequestParam("length") Long length){
 		return getPageableFacade().tableResult(draw, start / length, length);

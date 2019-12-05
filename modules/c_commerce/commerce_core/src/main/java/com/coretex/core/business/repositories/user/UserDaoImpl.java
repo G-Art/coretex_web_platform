@@ -1,7 +1,7 @@
 package com.coretex.core.business.repositories.user;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.model.common.Criteria;
 import com.coretex.core.model.common.GenericEntityList;
 import com.coretex.items.commerce_core_model.UserItem;
@@ -25,7 +25,7 @@ public class UserDaoImpl extends DefaultGenericDao<UserItem> implements UserDao 
 
 	@Override
 	public UserItem findByCredentials(String loginOrEmail) {
-		String query = "SELECT u.* FROM " + UserItem.ITEM_TYPE +" AS p " +
+		String query = "SELECT u.* FROM " + UserItem.ITEM_TYPE +" AS u " +
 				"WHERE u."+UserItem.ADMIN_NAME+" = :login OR u."+UserItem.EMAIL+" = :email";
 		var result = getSearchService().<UserItem>search(query, Map.of("login", loginOrEmail, "email", loginOrEmail)).getResult();
 		if(result.isEmpty()){

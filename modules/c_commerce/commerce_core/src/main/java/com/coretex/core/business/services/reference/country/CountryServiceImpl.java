@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.reference.country.CountryDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.business.utils.CacheUtils;
@@ -41,7 +41,7 @@ public class CountryServiceImpl extends SalesManagerEntityServiceImpl<CountryIte
 	}
 
 	@Override
-	public Map<String, CountryItem> getCountriesMap(LocaleItem language) throws ServiceException {
+	public Map<String, CountryItem> getCountriesMap(LocaleItem language) {
 
 		List<CountryItem> countries = this.getCountries(language);
 
@@ -56,7 +56,7 @@ public class CountryServiceImpl extends SalesManagerEntityServiceImpl<CountryIte
 
 
 	@Override
-	public List<CountryItem> getCountries(final List<String> isoCodes, final LocaleItem language) throws ServiceException {
+	public List<CountryItem> getCountries(final List<String> isoCodes, final LocaleItem language) {
 		List<CountryItem> countryList = getCountries(language);
 		List<CountryItem> requestedCountryList = new ArrayList<CountryItem>();
 		if (!CollectionUtils.isEmpty(countryList)) {
@@ -72,7 +72,7 @@ public class CountryServiceImpl extends SalesManagerEntityServiceImpl<CountryIte
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CountryItem> getCountries(LocaleItem language) throws ServiceException {
+	public List<CountryItem> getCountries(LocaleItem language) {
 
 		List<CountryItem> countries = null;
 		try {
@@ -97,14 +97,8 @@ public class CountryServiceImpl extends SalesManagerEntityServiceImpl<CountryIte
 	}
 
 	@Override
-	public List<CountryItem> listCountryZones(LocaleItem language) throws ServiceException {
-		try {
-			return countryDao.listCountryZonesByLanguage(language.getUuid());
-		} catch (Exception e) {
-			LOGGER.error("listCountryZones", e);
-			throw new ServiceException(e);
-		}
-
+	public List<CountryItem> listCountryZones(LocaleItem language) {
+		return countryDao.listCountryZonesByLanguage(language.getUuid());
 	}
 
 

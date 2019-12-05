@@ -183,9 +183,8 @@ public class ProductPriceUtils {
 	 * @param store
 	 * @param amount
 	 * @return String
-	 * @throws Exception
 	 */
-	public String getStoreFormatedAmountWithCurrency(MerchantStoreItem store, BigDecimal amount) throws Exception {
+	public String getStoreFormatedAmountWithCurrency(MerchantStoreItem store, BigDecimal amount) {
 		if (amount == null) {
 			return "";
 		}
@@ -220,7 +219,7 @@ public class ProductPriceUtils {
 	}
 
 
-	public String getFormatedAmountWithCurrency(Locale locale, CurrencyItem currency, BigDecimal amount) throws Exception {
+	public String getFormatedAmountWithCurrency(Locale locale, CurrencyItem currency, BigDecimal amount) {
 		if (amount == null) {
 			return "";
 		}

@@ -32,7 +32,7 @@ dependencies {
         exclude group: 'commons-codec', module: 'commons-codec'
     }
 
-    // https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch
+    // https://mvnrepository.com/artifact/org.elasticsearch/elasticsearchUserDetailsService
     compile group: 'org.elasticsearch', name: 'elasticsearch', version: '7.2.0'
 
     // https://mvnrepository.com/artifact/javax.validation/validation-api

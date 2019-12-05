@@ -1,7 +1,7 @@
 package com.coretex.shop.store.controller.search.facade;
 
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
@@ -101,11 +101,7 @@ public class SearchFacadeImpl implements SearchFacade {
 
 	private SearchResponse search(
 			MerchantStoreItem store, String languageCode, String query, Integer count, Integer start) {
-		try {
-			return searchService.search(store, languageCode, query, count, start);
-		} catch (ServiceException e) {
-			throw new ServiceRuntimeException(e);
-		}
+		return searchService.search(store, languageCode, query, count, start);
 	}
 
 	@Override

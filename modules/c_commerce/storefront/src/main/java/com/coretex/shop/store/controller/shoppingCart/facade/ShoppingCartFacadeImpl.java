@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
@@ -392,20 +392,16 @@ public class ShoppingCartFacadeImpl
 			throws Exception {
 
 		ShoppingCartItem cart = null;
-		try {
-			if (customer != null) {
-				LOG.info("Reteriving customer shopping cart...");
+		if (customer != null) {
+			LOG.info("Reteriving customer shopping cart...");
 
-				cart = shoppingCartService.getShoppingCart(customer);
+			cart = shoppingCartService.getShoppingCart(customer);
 
-			} else {
-				if (StringUtils.isNotBlank(shoppingCartId) && cart == null) {
-					cart = shoppingCartService.getByCode(shoppingCartId, store);
-				}
-
+		} else {
+			if (StringUtils.isNotBlank(shoppingCartId) && cart == null) {
+				cart = shoppingCartService.getByCode(shoppingCartId, store);
 			}
-		} catch (ServiceException ex) {
-			LOG.error("Error while retriving cart from customer", ex);
+
 		}
 
 		if (cart == null) {
@@ -565,14 +561,7 @@ public class ShoppingCartFacadeImpl
 
 	private ShoppingCartItem getCartModel(final String cartId, final MerchantStoreItem store) {
 		if (StringUtils.isNotBlank(cartId)) {
-			try {
-				return shoppingCartService.getByCode(cartId, store);
-			} catch (ServiceException e) {
-				LOG.error("unable to find any cart asscoiated with this Id: " + cartId);
-				LOG.error("error while fetching cart model...", e);
-				return null;
-			}
-
+			return shoppingCartService.getByCode(cartId, store);
 		}
 		return null;
 	}
@@ -595,7 +584,7 @@ public class ShoppingCartFacadeImpl
 
 	@Override
 	public ShoppingCartItem getShoppingCartModel(String shoppingCartCode,
-												 MerchantStoreItem store) throws Exception {
+												 MerchantStoreItem store) {
 		return shoppingCartService.getByCode(shoppingCartCode, store);
 	}
 

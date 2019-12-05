@@ -14,7 +14,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.support.RequestContextUtils;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;

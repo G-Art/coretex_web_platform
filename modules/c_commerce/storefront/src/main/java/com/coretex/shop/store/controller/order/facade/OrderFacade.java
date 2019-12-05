@@ -11,7 +11,7 @@ import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import org.springframework.validation.BindingResult;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.core.model.order.OrderTotalSummary;
@@ -47,12 +47,12 @@ public interface OrderFacade {
 	/**
 	 * process a valid order
 	 **/
-	OrderItem processOrder(ShopOrder order, CustomerItem customer, MerchantStoreItem store, LocaleItem language) throws ServiceException;
+	OrderItem processOrder(ShopOrder order, CustomerItem customer, MerchantStoreItem store, LocaleItem language) ;
 
 	/**
 	 * process a valid order submitted from the API
 	 **/
-	OrderItem processOrder(PersistableOrderApi order, CustomerItem customer, MerchantStoreItem store, LocaleItem language, Locale locale) throws ServiceException;
+	OrderItem processOrder(PersistableOrderApi order, CustomerItem customer, MerchantStoreItem store, LocaleItem language, Locale locale) ;
 
 
 	/**
@@ -81,11 +81,11 @@ public interface OrderFacade {
 	 * @param messagesResult
 	 * @param store
 	 * @param locale
-	 * @throws ServiceException
+	 * @
 	 */
 	void validateOrder(ShopOrder order, BindingResult bindingResult,
 					   Map<String, String> messagesResult, MerchantStoreItem store,
-					   Locale locale) throws ServiceException;
+					   Locale locale) ;
 
 	/**
 	 * Creates a ReadableOrder object from an orderId

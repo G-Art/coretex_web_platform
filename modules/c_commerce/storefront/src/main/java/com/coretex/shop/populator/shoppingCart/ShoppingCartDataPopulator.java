@@ -1,7 +1,7 @@
 
 package com.coretex.shop.populator.shoppingCart;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartCalculationService;
@@ -97,84 +97,79 @@ public class ShoppingCartDataPopulator extends AbstractDataPopulator<ShoppingCar
 			cart.setDeliveryMethod(shoppingCart.getDeliveryType().getCode());
 		}
 
-		try {
-			cart.setEmail(shoppingCart.getEmail());
-			cart.setUserName(shoppingCart.getUserName());
-			cart.setPhone(shoppingCart.getPhone());
+		cart.setEmail(shoppingCart.getEmail());
+		cart.setUserName(shoppingCart.getUserName());
+		cart.setPhone(shoppingCart.getPhone());
 
-			if (items != null) {
-				shoppingCartItemsList = new ArrayList<>();
-				for (ShoppingCartEntryItem item : items) {
+		if (items != null) {
+			shoppingCartItemsList = new ArrayList<>();
+			for (ShoppingCartEntryItem item : items) {
 
-					com.coretex.shop.model.shoppingcart.ShoppingCartItem shoppingCartItem = new com.coretex.shop.model.shoppingcart.ShoppingCartItem();
-					shoppingCartItem.setCode(cart.getCode());
-					shoppingCartItem.setProductCode(item.getProduct().getSku());
-					shoppingCartItem.setProductVirtual(item.getProductVirtual() != null ? item.getProductVirtual() : false);
+				com.coretex.shop.model.shoppingcart.ShoppingCartItem shoppingCartItem = new com.coretex.shop.model.shoppingcart.ShoppingCartItem();
+				shoppingCartItem.setCode(cart.getCode());
+				shoppingCartItem.setProductCode(item.getProduct().getSku());
+				shoppingCartItem.setProductVirtual(item.getProductVirtual() != null ? item.getProductVirtual() : false);
 
-					shoppingCartItem.setProductId(item.getProduct().getUuid());
-					shoppingCartItem.setUuid(item.getUuid());
+				shoppingCartItem.setProductId(item.getProduct().getUuid());
+				shoppingCartItem.setUuid(item.getUuid());
 
-					String itemName = item.getProduct().getName();
+				String itemName = item.getProduct().getName();
 
-					shoppingCartItem.setName(itemName);
+				shoppingCartItem.setName(itemName);
 
-					shoppingCartItem.setPrice(pricingService.getDisplayAmount(item.getItemPrice(), store));
-					shoppingCartItem.setQuantity(item.getQuantity() != null ? item.getQuantity() : 1 );
+				shoppingCartItem.setPrice(pricingService.getDisplayAmount(item.getItemPrice(), store));
+				shoppingCartItem.setQuantity(item.getQuantity() != null ? item.getQuantity() : 1 );
 
-					cartQuantity = cartQuantity + (item.getQuantity() != null ? item.getQuantity() : 1) ;
+				cartQuantity = cartQuantity + (item.getQuantity() != null ? item.getQuantity() : 1) ;
 
-					shoppingCartItem.setProductPrice(item.getItemPrice());
-					shoppingCartItem.setSubTotal(pricingService.getDisplayAmount(item.getSubTotal(), store));
-					Optional<ProductImageItem> image = item.getProduct().getImages().stream().filter(ProductImageItem::getDefaultImage).findAny();
-					if (image.isPresent() && imageUtils != null) {
-						String imagePath = imageUtils.buildProductImageUtils(store, item.getProduct().getSku(), image.get().getProductImage());
-						shoppingCartItem.setImage(imagePath);
-					}
-					Set<ShoppingCartEntryAttributeItem> attributes = item.getAttributes();
-					if (attributes != null) {
-						List<ShoppingCartAttribute> cartAttributes = new ArrayList<ShoppingCartAttribute>();
-						for (ShoppingCartEntryAttributeItem attribute : attributes) {
-							ShoppingCartAttribute cartAttribute = new ShoppingCartAttribute();
-							cartAttribute.setUuid(attribute.getUuid());
-							cartAttribute.setAttributeId(attribute.getProductAttribute().getUuid());
-
-							cartAttributes.add(cartAttribute);
-
-						}
-						shoppingCartItem.setShoppingCartAttributes(cartAttributes);
-					}
-					shoppingCartItemsList.add(shoppingCartItem);
+				shoppingCartItem.setProductPrice(item.getItemPrice());
+				shoppingCartItem.setSubTotal(pricingService.getDisplayAmount(item.getSubTotal(), store));
+				Optional<ProductImageItem> image = item.getProduct().getImages().stream().filter(ProductImageItem::getDefaultImage).findAny();
+				if (image.isPresent() && imageUtils != null) {
+					String imagePath = imageUtils.buildProductImageUtils(store, item.getProduct().getSku(), image.get().getProductImage());
+					shoppingCartItem.setImage(imagePath);
 				}
-			}
-			if (CollectionUtils.isNotEmpty(shoppingCartItemsList)) {
-				cart.setShoppingCartItems(shoppingCartItemsList);
-			}
+				Set<ShoppingCartEntryAttributeItem> attributes = item.getAttributes();
+				if (attributes != null) {
+					List<ShoppingCartAttribute> cartAttributes = new ArrayList<ShoppingCartAttribute>();
+					for (ShoppingCartEntryAttributeItem attribute : attributes) {
+						ShoppingCartAttribute cartAttribute = new ShoppingCartAttribute();
+						cartAttribute.setUuid(attribute.getUuid());
+						cartAttribute.setAttributeId(attribute.getProductAttribute().getUuid());
 
-			OrderSummary summary = new OrderSummary();
-			List<ShoppingCartEntryItem> productsList = new ArrayList<ShoppingCartEntryItem>();
-			productsList.addAll(shoppingCart.getLineItems());
-			summary.setProducts(productsList);
-			OrderTotalSummary orderSummary = shoppingCartCalculationService.calculate(shoppingCart, store, language);
+						cartAttributes.add(cartAttribute);
 
-			if (CollectionUtils.isNotEmpty(orderSummary.getTotals())) {
-				List<OrderTotal> totals = new ArrayList<OrderTotal>();
-				for (OrderTotalItem t : orderSummary.getTotals()) {
-					OrderTotal total = new OrderTotal();
-					total.setCode(t.getOrderTotalCode());
-					total.setValue(t.getValue());
-					totals.add(total);
+					}
+					shoppingCartItem.setShoppingCartAttributes(cartAttributes);
 				}
-				cart.setTotals(totals);
+				shoppingCartItemsList.add(shoppingCartItem);
 			}
-
-			cart.setSubTotal(pricingService.getDisplayAmount(orderSummary.getSubTotal(), store));
-			cart.setTotal(pricingService.getDisplayAmount(orderSummary.getTotal(), store));
-			cart.setQuantity(cartQuantity);
-			cart.setUuid(shoppingCart.getUuid());
-		} catch (ServiceException ex) {
-			LOG.error("Error while converting cart Model to cart Data.." + ex);
-			throw new ConversionException("Unable to create cart data", ex);
 		}
+		if (CollectionUtils.isNotEmpty(shoppingCartItemsList)) {
+			cart.setShoppingCartItems(shoppingCartItemsList);
+		}
+
+		OrderSummary summary = new OrderSummary();
+		List<ShoppingCartEntryItem> productsList = new ArrayList<ShoppingCartEntryItem>();
+		productsList.addAll(shoppingCart.getLineItems());
+		summary.setProducts(productsList);
+		OrderTotalSummary orderSummary = shoppingCartCalculationService.calculate(shoppingCart, store, language);
+
+		if (CollectionUtils.isNotEmpty(orderSummary.getTotals())) {
+			List<OrderTotal> totals = new ArrayList<OrderTotal>();
+			for (OrderTotalItem t : orderSummary.getTotals()) {
+				OrderTotal total = new OrderTotal();
+				total.setCode(t.getOrderTotalCode());
+				total.setValue(t.getValue());
+				totals.add(total);
+			}
+			cart.setTotals(totals);
+		}
+
+		cart.setSubTotal(pricingService.getDisplayAmount(orderSummary.getSubTotal(), store));
+		cart.setTotal(pricingService.getDisplayAmount(orderSummary.getTotal(), store));
+		cart.setQuantity(cartQuantity);
+		cart.setUuid(shoppingCart.getUuid());
 		return cart;
 
 

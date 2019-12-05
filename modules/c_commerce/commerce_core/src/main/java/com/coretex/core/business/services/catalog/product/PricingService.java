@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
@@ -26,7 +26,7 @@ public interface PricingService {
 	 *
 	 * @param product
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	FinalPrice calculateProductPrice(ProductItem product);
 
@@ -38,10 +38,10 @@ public interface PricingService {
 	 * @param product
 	 * @param customer
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	FinalPrice calculateProductPrice(ProductItem product, CustomerItem customer)
-			throws ServiceException;
+			;
 
 	/**
 	 * Calculates the FinalPrice of a ProductItem taking into account
@@ -51,10 +51,10 @@ public interface PricingService {
 	 * @param product
 	 * @param attributes
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	FinalPrice calculateProductPrice(ProductItem product,
-									 List<ProductAttributeItem> attributes) throws ServiceException;
+									 List<ProductAttributeItem> attributes) ;
 
 	/**
 	 * Calculates the FinalPrice of a ProductItem taking into account
@@ -66,11 +66,10 @@ public interface PricingService {
 	 * @param attributes
 	 * @param customer
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	FinalPrice calculateProductPrice(ProductItem product,
-									 List<ProductAttributeItem> attributes, CustomerItem customer)
-			throws ServiceException;
+									 List<ProductAttributeItem> attributes, CustomerItem customer);
 
 	/**
 	 * Method to be used to print a displayable formated amount to the end user
@@ -78,10 +77,9 @@ public interface PricingService {
 	 * @param amount
 	 * @param store
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
-	String getDisplayAmount(BigDecimal amount, MerchantStoreItem store)
-			throws ServiceException;
+	String getDisplayAmount(BigDecimal amount, MerchantStoreItem store);
 
 	/**
 	 * Method to be used when building an amount formatted with the appropriate currency
@@ -91,10 +89,9 @@ public interface PricingService {
 	 * @param currency
 	 * @param store
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
-	String getDisplayAmount(BigDecimal amount, Locale locale, CurrencyItem currency, MerchantStoreItem store)
-			throws ServiceException;
+	String getDisplayAmount(BigDecimal amount, Locale locale, CurrencyItem currency, MerchantStoreItem store);
 
 	/**
 	 * Converts a String amount to BigDecimal
@@ -102,9 +99,9 @@ public interface PricingService {
 	 *
 	 * @param amount
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
-	BigDecimal getAmount(String amount) throws ServiceException;
+	BigDecimal getAmount(String amount);
 
 	/**
 	 * String format of the money amount without currency symbol
@@ -112,10 +109,9 @@ public interface PricingService {
 	 * @param amount
 	 * @param store
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
-	String getStringAmount(BigDecimal amount, MerchantStoreItem store)
-			throws ServiceException;
+	String getStringAmount(BigDecimal amount, MerchantStoreItem store);
 
 	/**
 	 * Method for calculating sub total

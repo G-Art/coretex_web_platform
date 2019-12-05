@@ -32,8 +32,7 @@ public class ZoneDaoImpl extends DefaultGenericDao<ZoneItem> implements ZoneDao 
 				"JOIN " + CountryItem.ITEM_TYPE + " AS zc ON (zcr.target = zc.uuid) " +
 				"JOIN " + LocaleCountryRelation.ITEM_TYPE + " AS lcr ON (lcr.target = zc.uuid) " +
 				"JOIN " + LocaleItem.ITEM_TYPE + " AS l ON (lcr.source = l.uuid) " +
-				"JOIN " + LocaleItem.ITEM_TYPE + " AS lng ON (l.iso = lng.code) " +
-				"WHERE lng.uuid=:localeId";
+				"WHERE l.uuid=:localeId";
 		return find(query, Map.of("localeId", id));
 	}
 

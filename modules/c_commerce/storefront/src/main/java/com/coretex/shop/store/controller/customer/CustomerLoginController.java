@@ -42,9 +42,6 @@ import javax.servlet.http.HttpServletResponse;
 public class CustomerLoginController extends AbstractController {
 
 	@Resource
-	private AuthenticationManager customerAuthenticationManager;
-
-	@Resource
 	private LanguageService languageService;
 
 	@Resource
@@ -60,10 +57,6 @@ public class CustomerLoginController extends AbstractController {
 	private PricingService pricingService;
 
 	private ShoppingCartDataPopulator shoppingCartDataPopulator;
-
-	@Resource
-	@Qualifier("img")
-	private ImageFilePath imageUtils;
 
 
 	private static final Logger LOG = LoggerFactory.getLogger(CustomerLoginController.class);

@@ -2,7 +2,7 @@ package com.coretex.shop.store.controller.order.facade;
 
 import com.coretex.core.business.constants.Constants;
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
@@ -268,7 +268,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	 */
 	@Override
 	public OrderItem processOrder(ShopOrder order, CustomerItem customer, MerchantStoreItem store,
-								  LocaleItem language) throws ServiceException {
+								  LocaleItem language)  {
 
 		return this.processOrderModel(order, customer, store, language);
 
@@ -276,118 +276,110 @@ public class OrderFacadeImpl implements OrderFacade {
 
 
 	private OrderItem processOrderModel(ShopOrder order, CustomerItem customer, MerchantStoreItem store,
-										LocaleItem language) throws ServiceException {
+										LocaleItem language)  {
 
-		try {
+		OrderItem modelOrder = new OrderItem();
+		modelOrder.setDatePurchased(new Date());
+		modelOrder.setBilling(customer.getBilling());
+		modelOrder.setDelivery(customer.getDelivery());
+		modelOrder.setPaymentModuleCode(order.getPaymentModule());
+		modelOrder.setCustomerAgreement(order.isCustomerAgreed());
+		modelOrder.setLocale(LocaleUtils.getLocale(store).toString());//set the store locale based on the country for order $ formatting
 
-			OrderItem modelOrder = new OrderItem();
-			modelOrder.setDatePurchased(new Date());
-			modelOrder.setBilling(customer.getBilling());
-			modelOrder.setDelivery(customer.getDelivery());
-			modelOrder.setPaymentModuleCode(order.getPaymentModule());
-			modelOrder.setCustomerAgreement(order.isCustomerAgreed());
-			modelOrder.setLocale(LocaleUtils.getLocale(store).toString());//set the store locale based on the country for order $ formatting
+		List<ShoppingCartEntryItem> shoppingCartItems = order.getShoppingCartItems();
+		Set<OrderProductItem> orderProducts = new LinkedHashSet<OrderProductItem>();
 
-			List<ShoppingCartEntryItem> shoppingCartItems = order.getShoppingCartItems();
-			Set<OrderProductItem> orderProducts = new LinkedHashSet<OrderProductItem>();
+		if (!StringUtils.isBlank(order.getComments())) {
+			OrderStatusHistoryItem statusHistory = new OrderStatusHistoryItem();
+			statusHistory.setStatus(OrderStatusEnum.ORDERED);
+			statusHistory.setOrder(modelOrder);
+			statusHistory.setDateAdded(new Date());
+			statusHistory.setComments(order.getComments());
+			modelOrder.getOrderHistory().add(statusHistory);
+		}
 
-			if (!StringUtils.isBlank(order.getComments())) {
-				OrderStatusHistoryItem statusHistory = new OrderStatusHistoryItem();
-				statusHistory.setStatus(OrderStatusEnum.ORDERED);
-				statusHistory.setOrder(modelOrder);
-				statusHistory.setDateAdded(new Date());
-				statusHistory.setComments(order.getComments());
-				modelOrder.getOrderHistory().add(statusHistory);
+		OrderProductPopulator orderProductPopulator = new OrderProductPopulator();
+		orderProductPopulator.setDigitalProductService(digitalProductService);
+		orderProductPopulator.setProductAttributeService(productAttributeService);
+		orderProductPopulator.setProductService(productService);
+		orderProductPopulator.setPricingService(pricingService);
+
+		for (ShoppingCartEntryItem item : shoppingCartItems) {
+
+			/**
+			 * Before processing order quantity of item must be > 0
+			 */
+
+			ProductItem product = item.getProduct();
+			if (product == null) {
+
 			}
 
-			OrderProductPopulator orderProductPopulator = new OrderProductPopulator();
-			orderProductPopulator.setDigitalProductService(digitalProductService);
-			orderProductPopulator.setProductAttributeService(productAttributeService);
-			orderProductPopulator.setProductService(productService);
-			orderProductPopulator.setPricingService(pricingService);
+			for (ProductAvailabilityItem availability : product.getAvailabilities()) {
+				if (availability.getRegion().equals(Constants.ALL_REGIONS)) {
+					int qty = availability.getProductQuantity();
+					if (qty < item.getQuantity()) {
 
-			for (ShoppingCartEntryItem item : shoppingCartItems) {
-
-				/**
-				 * Before processing order quantity of item must be > 0
-				 */
-
-				ProductItem product = item.getProduct();
-				if (product == null) {
-					throw new ServiceException(ServiceException.EXCEPTION_INVENTORY_MISMATCH);
-				}
-
-				for (ProductAvailabilityItem availability : product.getAvailabilities()) {
-					if (availability.getRegion().equals(Constants.ALL_REGIONS)) {
-						int qty = availability.getProductQuantity();
-						if (qty < item.getQuantity()) {
-							throw new ServiceException(ServiceException.EXCEPTION_INVENTORY_MISMATCH);
-						}
 					}
 				}
-
-
-				OrderProductItem orderProduct = new OrderProductItem();
-				orderProduct = orderProductPopulator.populate(item, orderProduct, store, language);
-				orderProduct.setOrder(modelOrder);
-				orderProducts.add(orderProduct);
 			}
 
-			modelOrder.setOrderProducts(orderProducts);
 
-			OrderTotalSummary summary = order.getOrderTotalSummary();
-			List<OrderTotalItem> totals = summary.getTotals();
-
-			//re-order totals
-			Collections.sort(
-					totals,
-					new Comparator<OrderTotalItem>() {
-						public int compare(OrderTotalItem x, OrderTotalItem y) {
-							if (x.getSortOrder() == y.getSortOrder())
-								return 0;
-							return x.getSortOrder() < y.getSortOrder() ? -1 : 1;
-						}
-
-					});
-
-			Set<OrderTotalItem> modelTotals = new LinkedHashSet<OrderTotalItem>();
-			for (OrderTotalItem total : totals) {
-				total.setOrder(modelOrder);
-				modelTotals.add(total);
-			}
-
-			modelOrder.setOrderTotal(modelTotals);
-			modelOrder.setTotal(order.getOrderTotalSummary().getTotal());
-
-			//order misc objects
-			modelOrder.setCurrency(store.getCurrency());
-			modelOrder.setMerchant(store);
-
-
-			//customer object
-			orderCustomer(customer, modelOrder, language);
-
-			//populate shipping information
-			if (!StringUtils.isBlank(order.getShippingModule())) {
-				modelOrder.setShippingModuleCode(order.getShippingModule());
-			}
-
-			modelOrder.setPaymentModuleCode(order.getPaymentModule());
-
-			orderService.processOrder(modelOrder, customer, order.getShoppingCartItems(), summary, store);
-
-
-			return modelOrder;
-
-		} catch (ServiceException se) {//may be invalid credit card
-			throw se;
-		} catch (Exception e) {
-			throw new ServiceException(e);
+			OrderProductItem orderProduct = new OrderProductItem();
+			orderProduct = orderProductPopulator.populate(item, orderProduct, store, language);
+			orderProduct.setOrder(modelOrder);
+			orderProducts.add(orderProduct);
 		}
+
+		modelOrder.setOrderProducts(orderProducts);
+
+		OrderTotalSummary summary = order.getOrderTotalSummary();
+		List<OrderTotalItem> totals = summary.getTotals();
+
+		//re-order totals
+		Collections.sort(
+				totals,
+				new Comparator<OrderTotalItem>() {
+					public int compare(OrderTotalItem x, OrderTotalItem y) {
+						if (x.getSortOrder() == y.getSortOrder())
+							return 0;
+						return x.getSortOrder() < y.getSortOrder() ? -1 : 1;
+					}
+
+				});
+
+		Set<OrderTotalItem> modelTotals = new LinkedHashSet<OrderTotalItem>();
+		for (OrderTotalItem total : totals) {
+			total.setOrder(modelOrder);
+			modelTotals.add(total);
+		}
+
+		modelOrder.setOrderTotal(modelTotals);
+		modelOrder.setTotal(order.getOrderTotalSummary().getTotal());
+
+		//order misc objects
+		modelOrder.setCurrency(store.getCurrency());
+		modelOrder.setMerchant(store);
+
+
+		//customer object
+		orderCustomer(customer, modelOrder, language);
+
+		//populate shipping information
+		if (!StringUtils.isBlank(order.getShippingModule())) {
+			modelOrder.setShippingModuleCode(order.getShippingModule());
+		}
+
+		modelOrder.setPaymentModuleCode(order.getPaymentModule());
+
+		orderService.processOrder(modelOrder, customer, order.getShoppingCartItems(), summary, store);
+
+
+		return modelOrder;
 
 	}
 
-	private void orderCustomer(CustomerItem customer, OrderItem order, LocaleItem language) throws Exception {
+	private void orderCustomer(CustomerItem customer, OrderItem order, LocaleItem language) {
 
 		//populate customer
 		order.setBilling(customer.getBilling());
@@ -485,7 +477,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 	@Override
-	public void validateOrder(ShopOrder order, BindingResult bindingResult, Map<String, String> messagesResult, MerchantStoreItem store, Locale locale) throws ServiceException {
+	public void validateOrder(ShopOrder order, BindingResult bindingResult, Map<String, String> messagesResult, MerchantStoreItem store, Locale locale)  {
 
 
 		Validate.notNull(messagesResult, "messagesResult should not be null");
@@ -691,7 +683,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Override
 	public OrderItem processOrder(PersistableOrderApi order, CustomerItem customer, MerchantStoreItem store, LocaleItem language, Locale locale)
-			throws ServiceException {
+			 {
 
 		PersistableOrderApiPopulator populator = new PersistableOrderApiPopulator();
 		populator.setCurrencyService(currencyService);
@@ -711,7 +703,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			ShoppingCartItem cart = shoppingCartService.getById(shoppingCartId, store);
 
 			if (cart == null) {
-				throw new ServiceException("Shopping cart with id " + shoppingCartId + " does not exist");
+				throw new RuntimeException("Shopping cart with id " + shoppingCartId + " does not exist");
 			}
 
 			Set<ShoppingCartEntryItem> shoppingCartItems = cart.getLineItems();
@@ -814,7 +806,7 @@ public class OrderFacadeImpl implements OrderFacade {
 			return modelOrder;
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}

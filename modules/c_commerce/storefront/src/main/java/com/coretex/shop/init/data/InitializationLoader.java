@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.coretex.core.business.constants.SystemConstants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.reference.init.InitializationDatabase;
 import com.coretex.core.business.services.system.MerchantConfigurationService;
@@ -174,7 +174,7 @@ public class InitializationLoader {
 
 	}
 
-	private void loadData() throws ServiceException {
+	private void loadData()  {
 
 		String loadTestData = configuration.getProperty(ApplicationConstants.POPULATE_TEST_DATA);
 		boolean loadData = !StringUtils.isBlank(loadTestData) && loadTestData.equals(SystemConstants.CONFIG_VALUE_TRUE);

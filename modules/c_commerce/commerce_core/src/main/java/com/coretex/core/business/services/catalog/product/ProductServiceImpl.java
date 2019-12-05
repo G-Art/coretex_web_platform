@@ -1,6 +1,6 @@
 package com.coretex.core.business.services.catalog.product;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.catalog.product.ProductDao;
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.image.ProductImageService;
@@ -82,7 +82,7 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 
 	@Override
 	public ProductItem getProductForLocale(UUID productId, LocaleItem language, Locale locale)
-			throws ServiceException {
+			 {
 		ProductItem product = productDao.getProductForLocale(productId, language, locale);
 		if (product == null) {
 			return null;
@@ -94,10 +94,10 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 
 	@Override
 	public List<ProductItem> getProductsForLocale(CategoryItem category,
-												  LocaleItem language, Locale locale) throws ServiceException {
+												  LocaleItem language, Locale locale)  {
 
 		if (category == null) {
-			throw new ServiceException("The category is null");
+			throw new RuntimeException("The category is null");
 		}
 
 		//Get the category list

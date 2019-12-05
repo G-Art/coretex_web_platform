@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.catalog.product.image.ProductImageService;
 import com.coretex.core.business.services.content.ContentService;
 import com.coretex.core.model.catalog.product.file.ProductImageSize;
@@ -44,11 +44,11 @@ public class ImagesController {
 	 * @param imageName
 	 * @return
 	 * @throws IOException
-	 * @throws ServiceException
+	 * @
 	 */
 	@RequestMapping("/static/files/{storeCode}/{imageType}/{imageName}.{extension}")
 	public @ResponseBody
-	byte[] printImage(@PathVariable final String storeCode, @PathVariable final String imageType, @PathVariable final String imageName, @PathVariable final String extension) throws IOException, ServiceException {
+	byte[] printImage(@PathVariable final String storeCode, @PathVariable final String imageType, @PathVariable final String imageName, @PathVariable final String extension) throws IOException {
 
 		// example -> /static/files/DEFAULT/CONTENT/myImage.png
 
@@ -115,11 +115,7 @@ public class ImagesController {
 
 
 		OutputContentFile image = null;
-		try {
-			image = productImageService.getProductImage(storeCode, productCode, new StringBuilder().append(imageName).append(".").append(extension).toString(), size);
-		} catch (ServiceException e) {
-			LOGGER.error("Cannot retrieve image " + imageName, e);
-		}
+		image = productImageService.getProductImage(storeCode, productCode, new StringBuilder().append(imageName).append(".").append(extension).toString(), size);
 		if (image != null) {
 			return image.getFile().toByteArray();
 		} else {
@@ -164,11 +160,7 @@ public class ImagesController {
 
 
 		OutputContentFile image = null;
-		try {
-			image = productImageService.getProductImage(storeCode, productCode, new StringBuilder().append(imageName).append(".").append(extension).toString(), size);
-		} catch (ServiceException e) {
-			LOGGER.error("Cannot retrieve image " + imageName, e);
-		}
+		image = productImageService.getProductImage(storeCode, productCode, new StringBuilder().append(imageName).append(".").append(extension).toString(), size);
 		if (image != null) {
 			return image.getFile().toByteArray();
 		} else {
@@ -219,11 +211,7 @@ public class ImagesController {
 
 
 		OutputContentFile image = null;
-		try {
-			image = productImageService.getProductImage(storeCode, productCode, new StringBuilder().append(imageName).append(".").append(extension).toString(), size);
-		} catch (ServiceException e) {
-			LOGGER.error("Cannot retrieve image " + imageName, e);
-		}
+		image = productImageService.getProductImage(storeCode, productCode, new StringBuilder().append(imageName).append(".").append(extension).toString(), size);
 		if (image != null) {
 			return image.getFile().toByteArray();
 		} else {

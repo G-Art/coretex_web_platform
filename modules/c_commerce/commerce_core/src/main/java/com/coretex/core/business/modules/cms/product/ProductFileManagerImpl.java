@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.business.utils.ProductImageCropUtils;
 import com.coretex.core.business.utils.ProductImageSizeUtils;
@@ -64,7 +64,7 @@ public class ProductFileManagerImpl extends ProductFileManager {
 
 
 	public void addProductImage(ProductImageItem productImage, ImageContentFile contentImage)
-			throws ServiceException {
+			 {
 
 
 		try {
@@ -163,7 +163,7 @@ public class ProductFileManagerImpl extends ProductFileManager {
 							"Image configuration set to an invalid value [PRODUCT_IMAGE_HEIGHT_SIZE] "
 									+ largeImageHeight + " , [PRODUCT_IMAGE_WIDTH_SIZE] " + largeImageWidth;
 					LOGGER.error(sizeMsg);
-					throw new ServiceException(sizeMsg);
+					throw new RuntimeException(sizeMsg);
 				}
 
 				if (!StringUtils.isBlank(configuration.getProperty(CROP_UPLOADED_IMAGES))
@@ -255,18 +255,13 @@ public class ProductFileManagerImpl extends ProductFileManager {
 
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
-		} finally {
-			try {
-//        productImage.getImage().close();
-			} catch (Exception ignore) {
-			}
+			throw new RuntimeException(e);
 		}
 
 	}
 
 
-	public OutputContentFile getProductImage(ProductImageItem productImage) throws ServiceException {
+	public OutputContentFile getProductImage(ProductImageItem productImage)  {
 		// will return original
 		return getImage.getProductImage(productImage);
 	}
@@ -274,13 +269,13 @@ public class ProductFileManagerImpl extends ProductFileManager {
 
 	@Override
 	public List<OutputContentFile> getImages(final String merchantStoreCode,
-											 FileContentType imageContentType) throws ServiceException {
+											 FileContentType imageContentType)  {
 		// will return original
 		return getImage.getImages(merchantStoreCode, FileContentType.PRODUCT);
 	}
 
 	@Override
-	public List<OutputContentFile> getImages(ProductItem product) throws ServiceException {
+	public List<OutputContentFile> getImages(ProductItem product)  {
 		return getImage.getImages(product);
 	}
 
@@ -314,7 +309,7 @@ public class ProductFileManagerImpl extends ProductFileManager {
 
 
 	@Override
-	public void removeImages(final String merchantStoreCode) throws ServiceException {
+	public void removeImages(final String merchantStoreCode)  {
 
 		this.removeImage.removeImages(merchantStoreCode);
 
@@ -343,14 +338,14 @@ public class ProductFileManagerImpl extends ProductFileManager {
 
 	@Override
 	public OutputContentFile getProductImage(String merchantStoreCode, String productCode,
-											 String imageName) throws ServiceException {
+											 String imageName) {
 		return getImage.getProductImage(merchantStoreCode, productCode, imageName);
 	}
 
 
 	@Override
 	public OutputContentFile getProductImage(String merchantStoreCode, String productCode,
-											 String imageName, ProductImageSize size) throws ServiceException {
+											 String imageName, ProductImageSize size){
 		return getImage.getProductImage(merchantStoreCode, productCode, imageName, size);
 	}
 

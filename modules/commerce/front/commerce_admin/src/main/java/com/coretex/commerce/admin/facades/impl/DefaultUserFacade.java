@@ -1,9 +1,11 @@
 package com.coretex.commerce.admin.facades.impl;
 
 import com.coretex.commerce.admin.controllers.DataTableResults;
+import com.coretex.commerce.admin.data.MinimalUserData;
 import com.coretex.commerce.admin.data.UserData;
 import com.coretex.commerce.admin.facades.UserFacade;
 import com.coretex.commerce.admin.mapper.GenericDataMapper;
+import com.coretex.commerce.admin.mapper.MinimalUserDataMapper;
 import com.coretex.commerce.admin.mapper.UserDataMapper;
 import com.coretex.commerce.admin.security.PrincipalUser;
 import com.coretex.core.business.services.common.generic.PageableEntityService;
@@ -16,7 +18,7 @@ import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.UUID;
 
-@Component
+@Component("userFacade")
 public class DefaultUserFacade implements UserFacade {
 
 	@Resource
@@ -24,6 +26,9 @@ public class DefaultUserFacade implements UserFacade {
 
 	@Resource
 	private UserService userService;
+
+	@Resource
+	private MinimalUserDataMapper minimalUserDataMapper;
 
 	@Override
 	public UserData getCurrentUser() {
@@ -82,7 +87,7 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public GenericDataMapper<UserItem, UserData> getDataMapper() {
-		return userDataMapper;
+	public GenericDataMapper<UserItem, MinimalUserData> getDataMapper() {
+		return minimalUserDataMapper;
 	}
 }

@@ -1,7 +1,7 @@
 package com.coretex.core.business.services.shipping;
 
 import com.coretex.core.business.constants.ShippingConstants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.loader.ConfigurationModulesLoader;
 import com.coretex.core.business.services.system.MerchantConfigurationService;
@@ -55,7 +55,7 @@ public class ShippingServiceImpl implements ShippingService {
 
 
 	@Override
-	public ShippingConfiguration getShippingConfiguration(MerchantStoreItem store) throws ServiceException {
+	public ShippingConfiguration getShippingConfiguration(MerchantStoreItem store)  {
 
 		MerchantConfigurationItem configuration = merchantConfigurationService.getMerchantConfiguration(ShippingConstants.SHIPPING_CONFIGURATION, store);
 
@@ -68,7 +68,7 @@ public class ShippingServiceImpl implements ShippingService {
 			try {
 				shippingConfiguration = mapper.readValue(value, ShippingConfiguration.class);
 			} catch (Exception e) {
-				throw new ServiceException("Cannot parse json string " + value);
+				throw new RuntimeException("Cannot parse json string " + value);
 			}
 		}
 		return shippingConfiguration;
@@ -76,7 +76,7 @@ public class ShippingServiceImpl implements ShippingService {
 	}
 
 	@Override
-	public void saveShippingConfiguration(ShippingConfiguration shippingConfiguration, MerchantStoreItem store) throws ServiceException {
+	public void saveShippingConfiguration(ShippingConfiguration shippingConfiguration, MerchantStoreItem store)  {
 
 		MerchantConfigurationItem configuration = merchantConfigurationService.getMerchantConfiguration(ShippingConstants.SHIPPING_CONFIGURATION, store);
 
@@ -94,7 +94,7 @@ public class ShippingServiceImpl implements ShippingService {
 
 
 	@Override
-	public void saveShippingQuoteModuleConfiguration(IntegrationConfiguration configuration, MerchantStoreItem store) throws ServiceException {
+	public void saveShippingQuoteModuleConfiguration(IntegrationConfiguration configuration, MerchantStoreItem store)  {
 
 		try {
 			Map<String, IntegrationConfiguration> modules = new HashMap<String, IntegrationConfiguration>();
@@ -119,13 +119,13 @@ public class ShippingServiceImpl implements ShippingService {
 			merchantConfigurationService.saveOrUpdate(merchantConfiguration);
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
 
 	@Override
-	public void removeShippingQuoteModuleConfiguration(String moduleCode, MerchantStoreItem store) throws ServiceException {
+	public void removeShippingQuoteModuleConfiguration(String moduleCode, MerchantStoreItem store)  {
 
 
 		try {
@@ -155,13 +155,13 @@ public class ShippingServiceImpl implements ShippingService {
 
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
 
 	@Override
-	public List<String> getSupportedCountries(MerchantStoreItem store) throws ServiceException {
+	public List<String> getSupportedCountries(MerchantStoreItem store)  {
 
 		List<String> supportedCountries = new ArrayList<String>();
 		MerchantConfigurationItem configuration = merchantConfigurationService.getMerchantConfiguration(SUPPORTED_COUNTRIES, store);
@@ -186,7 +186,7 @@ public class ShippingServiceImpl implements ShippingService {
 	}
 
 	@Override
-	public List<CountryItem> getShipToCountryList(MerchantStoreItem store, LocaleItem language) throws ServiceException {
+	public List<CountryItem> getShipToCountryList(MerchantStoreItem store, LocaleItem language)  {
 
 
 		ShippingConfiguration shippingConfiguration = getShippingConfiguration(store);
@@ -233,7 +233,7 @@ public class ShippingServiceImpl implements ShippingService {
 
 
 	@Override
-	public void setSupportedCountries(MerchantStoreItem store, List<String> countryCodes) throws ServiceException {
+	public void setSupportedCountries(MerchantStoreItem store, List<String> countryCodes)  {
 
 
 		//transform a list of string to json entry
@@ -256,7 +256,7 @@ public class ShippingServiceImpl implements ShippingService {
 			merchantConfigurationService.saveOrUpdate(configuration);
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -279,7 +279,7 @@ public class ShippingServiceImpl implements ShippingService {
 
 	@Override
 	public ShippingMetaData getShippingMetaData(MerchantStoreItem store)
-			throws ServiceException {
+			 {
 
 		ShippingMetaData metaData = new ShippingMetaData();
 
@@ -291,7 +291,7 @@ public class ShippingServiceImpl implements ShippingService {
 	}
 
 	@Override
-	public boolean hasTaxOnShipping(MerchantStoreItem store) throws ServiceException {
+	public boolean hasTaxOnShipping(MerchantStoreItem store)  {
 		ShippingConfiguration shippingConfiguration = getShippingConfiguration(store);
 		return shippingConfiguration.isTaxOnShipping();
 	}

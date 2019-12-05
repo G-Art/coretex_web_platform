@@ -13,7 +13,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.cms.impl.CMSManager;
 import com.coretex.core.business.modules.cms.impl.LocalCacheManagerImpl;
 import com.coretex.core.business.modules.cms.product.ProductAssetsManager;
@@ -81,7 +81,7 @@ public class CmsImageFileManagerImpl
 
 	@Override
 	public void addProductImage(ProductImageItem productImage, ImageContentFile contentImage)
-			throws ServiceException {
+			 {
 
 
 		try {
@@ -126,14 +126,14 @@ public class CmsImageFileManagerImpl
 
 		} catch (Exception e) {
 
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 
 		}
 
 	}
 
 	@Override
-	public OutputContentFile getProductImage(ProductImageItem productImage) throws ServiceException {
+	public OutputContentFile getProductImage(ProductImageItem productImage)  {
 
 		// the web server takes care of the images
 		return null;
@@ -142,7 +142,7 @@ public class CmsImageFileManagerImpl
 
 
 	public List<OutputContentFile> getImages(MerchantStoreItem store, FileContentType imageContentType)
-			throws ServiceException {
+			 {
 
 		// the web server takes care of the images
 
@@ -151,7 +151,7 @@ public class CmsImageFileManagerImpl
 	}
 
 	@Override
-	public List<OutputContentFile> getImages(ProductItem product) throws ServiceException {
+	public List<OutputContentFile> getImages(ProductItem product)  {
 
 		// the web server takes care of the images
 
@@ -160,7 +160,7 @@ public class CmsImageFileManagerImpl
 
 
 	@Override
-	public void removeImages(final String merchantStoreCode) throws ServiceException {
+	public void removeImages(final String merchantStoreCode)  {
 
 		try {
 
@@ -174,7 +174,7 @@ public class CmsImageFileManagerImpl
 
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 
@@ -243,7 +243,7 @@ public class CmsImageFileManagerImpl
 
 	@Override
 	public List<OutputContentFile> getImages(final String merchantStoreCode,
-											 FileContentType imageContentType) throws ServiceException {
+											 FileContentType imageContentType)  {
 
 		// the web server taks care of the images
 
@@ -252,19 +252,19 @@ public class CmsImageFileManagerImpl
 
 	@Override
 	public OutputContentFile getProductImage(String merchantStoreCode, String productCode,
-											 String imageName) throws ServiceException {
+											 String imageName)  {
 		return getProductImage(merchantStoreCode, productCode, imageName,
 				ProductImageSize.SMALL.name());
 	}
 
 	@Override
 	public OutputContentFile getProductImage(String merchantStoreCode, String productCode,
-											 String imageName, ProductImageSize size) throws ServiceException {
+											 String imageName, ProductImageSize size)  {
 		return getProductImage(merchantStoreCode, productCode, imageName, size.name());
 	}
 
 	private OutputContentFile getProductImage(String merchantStoreCode, String productCode,
-											  String imageName, String size) throws ServiceException {
+											  String imageName, String size)  {
 
 		return null;
 

@@ -2,7 +2,7 @@ package com.coretex.core.business.services.system;
 
 import org.springframework.stereotype.Service;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.system.SystemConfigurationDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.items.commerce_core_model.SystemConfigurationItem;
@@ -21,7 +21,7 @@ public class SystemConfigurationServiceImpl extends
 		this.systemConfigurationReposotory = systemConfigurationReposotory;
 	}
 
-	public SystemConfigurationItem getByKey(String key) throws ServiceException {
+	public SystemConfigurationItem getByKey(String key)  {
 		return systemConfigurationReposotory.findByKey(key);
 	}
 

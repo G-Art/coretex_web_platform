@@ -8,7 +8,7 @@ import java.util.UUID;
 import com.coretex.items.commerce_core_model.PermissionItem;
 import org.springframework.stereotype.Service;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.user.PermissionDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.items.commerce_core_model.GroupItem;
@@ -45,7 +45,7 @@ public class PermissionServiceImpl extends
 
 
 	@Override
-	public void deletePermission(PermissionItem permission) throws ServiceException {
+	public void deletePermission(PermissionItem permission)  {
 		permission = this.getByUUID(permission.getUuid());//Prevents detached entity error
 		permission.setGroups(null);
 
@@ -56,7 +56,7 @@ public class PermissionServiceImpl extends
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PermissionItem> getPermissions(List<UUID> groupIds)
-			throws ServiceException {
+			 {
 		@SuppressWarnings({"unchecked", "rawtypes"})
 		Set ids = new HashSet(groupIds);
 		return permissionDao.findByGroups(ids);
@@ -64,12 +64,12 @@ public class PermissionServiceImpl extends
 
 	@Override
 	public PermissionList listByCriteria(PermissionCriteria criteria)
-			throws ServiceException {
+			 {
 		return permissionDao.listByCriteria(criteria);
 	}
 
 	@Override
-	public void removePermission(PermissionItem permission, GroupItem group) throws ServiceException {
+	public void removePermission(PermissionItem permission, GroupItem group)  {
 		permission = this.getByUUID(permission.getUuid());//Prevents detached entity error
 
 		permission.getGroups().remove(group);
@@ -78,7 +78,7 @@ public class PermissionServiceImpl extends
 	}
 
 	@Override
-	public List<PermissionItem> listPermission() throws ServiceException {
+	public List<PermissionItem> listPermission()  {
 		return permissionDao.findAll();
 	}
 

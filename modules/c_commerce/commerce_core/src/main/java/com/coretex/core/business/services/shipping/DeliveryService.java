@@ -1,6 +1,6 @@
 package com.coretex.core.business.services.shipping;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.model.shipping.ShippingProduct;
 import com.coretex.core.model.shipping.ShippingQuote;
 import com.coretex.items.commerce_core_model.DeliveryItem;

@@ -3,7 +3,7 @@ package com.coretex.core.business.services.user;
 import java.util.List;
 import java.util.UUID;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.user.UserDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.model.common.Criteria;
@@ -30,20 +30,20 @@ public class UserServiceImpl extends SalesManagerEntityServiceImpl<UserItem>
 	}
 
 	@Override
-	public List<UserItem> listUser() throws ServiceException {
+	public List<UserItem> listUser()  {
 		try {
 			return userDao.findAll();
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public List<UserItem> listByStore(MerchantStoreItem store) throws ServiceException {
+	public List<UserItem> listByStore(MerchantStoreItem store)  {
 		try {
 			return userDao.findByStore(store.getUuid());
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 	}
 

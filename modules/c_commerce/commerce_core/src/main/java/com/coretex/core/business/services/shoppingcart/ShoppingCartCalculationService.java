@@ -1,7 +1,7 @@
 
 package com.coretex.core.business.services.shoppingcart;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.core.model.order.OrderTotalSummary;
@@ -26,10 +26,10 @@ public interface ShoppingCartCalculationService {
 	 * @param customer
 	 * @param store
 	 * @param language
-	 * @throws ServiceException
+	 * @
 	 */
 	OrderTotalSummary calculate(final ShoppingCartItem cartModel, final CustomerItem customer, final MerchantStoreItem store,
-								final LocaleItem language) throws ServiceException;
+								final LocaleItem language) ;
 
 	/**
 	 * Method which will be used to calculate price for each line items as well
@@ -39,8 +39,7 @@ public interface ShoppingCartCalculationService {
 	 *            ShoopingCart mode representing underlying DB object
 	 * @param store
 	 * @param language
-	 * @throws ServiceException
+	 * @
 	 */
-	OrderTotalSummary calculate(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LocaleItem language)
-			throws ServiceException;
+	OrderTotalSummary calculate(final ShoppingCartItem cartModel, final MerchantStoreItem store, final LocaleItem language);
 }

@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.utils.ProductPriceUtils;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
 import com.coretex.items.commerce_core_model.CustomerItem;
@@ -61,49 +61,25 @@ public class PricingServiceImpl implements PricingService {
 	}
 
 	@Override
-	public String getDisplayAmount(BigDecimal amount, MerchantStoreItem store) throws ServiceException {
-		try {
-			String price = priceUtil.getStoreFormatedAmountWithCurrency(store, amount);
-			return price;
-		} catch (Exception e) {
-			LOGGER.error("An error occured when trying to format an amount " + amount.toString());
-			throw new ServiceException(e);
-		}
+	public String getDisplayAmount(BigDecimal amount, MerchantStoreItem store) {
+		return priceUtil.getStoreFormatedAmountWithCurrency(store, amount);
 	}
 
 	@Override
 	public String getDisplayAmount(BigDecimal amount, Locale locale,
-								   CurrencyItem currency, MerchantStoreItem store) throws ServiceException {
-		try {
-			String price = priceUtil.getFormatedAmountWithCurrency(locale, currency, amount);
-			return price;
-		} catch (Exception e) {
-			LOGGER.error("An error occured when trying to format an amunt " + amount.toString() + " using locale " + locale.toString() + " and currency " + currency.toString());
-			throw new ServiceException(e);
-		}
+								   CurrencyItem currency, MerchantStoreItem store) {
+		return priceUtil.getFormatedAmountWithCurrency(locale, currency, amount);
 	}
 
 	@Override
-	public String getStringAmount(BigDecimal amount, MerchantStoreItem store)
-			throws ServiceException {
-		try {
-			String price = priceUtil.getAdminFormatedAmount(amount);
-			return price;
-		} catch (Exception e) {
-			LOGGER.error("An error occured when trying to format an amount " + amount.toString());
-			throw new ServiceException(e);
-		}
+	public String getStringAmount(BigDecimal amount, MerchantStoreItem store) {
+		return priceUtil.getAdminFormatedAmount(amount);
 	}
 
 	@Override
-	public BigDecimal getAmount(String amount) throws ServiceException {
+	public BigDecimal getAmount(String amount) {
 
-		try {
-			return priceUtil.getAmount(amount);
-		} catch (Exception e) {
-			LOGGER.error("An error occured when trying to format an amount " + amount);
-			throw new ServiceException(e);
-		}
+		return priceUtil.getAmount(amount);
 
 	}
 

@@ -1,6 +1,6 @@
 package com.coretex.core.business.services.catalog.product.relationship;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.catalog.product.relationship.ProductRelationshipDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
@@ -27,7 +27,7 @@ public class ProductRelationshipServiceImpl extends
 	}
 
 	@Override
-	public void saveOrUpdate(ProductRelationshipItem relationship) throws ServiceException {
+	public void saveOrUpdate(ProductRelationshipItem relationship)  {
 
 		this.save(relationship);
 
@@ -35,7 +35,7 @@ public class ProductRelationshipServiceImpl extends
 
 
 	@Override
-	public void addGroup(MerchantStoreItem store, String groupName) throws ServiceException {
+	public void addGroup(MerchantStoreItem store, String groupName)  {
 		ProductRelationshipItem relationship = new ProductRelationshipItem();
 		relationship.setCode(groupName);
 		relationship.setStore(store);
@@ -49,7 +49,7 @@ public class ProductRelationshipServiceImpl extends
 	}
 
 	@Override
-	public void deleteGroup(MerchantStoreItem store, String groupName) throws ServiceException {
+	public void deleteGroup(MerchantStoreItem store, String groupName)  {
 		List<ProductRelationshipItem> entities = productRelationshipDao.getByGroup(store, groupName);
 		for (ProductRelationshipItem relation : entities) {
 			this.delete(relation);
@@ -57,7 +57,7 @@ public class ProductRelationshipServiceImpl extends
 	}
 
 	@Override
-	public void deactivateGroup(MerchantStoreItem store, String groupName) throws ServiceException {
+	public void deactivateGroup(MerchantStoreItem store, String groupName)  {
 		List<ProductRelationshipItem> entities = productRelationshipDao.getByGroup(store, groupName);
 		for (ProductRelationshipItem relation : entities) {
 			relation.setActive(false);
@@ -66,7 +66,7 @@ public class ProductRelationshipServiceImpl extends
 	}
 
 	@Override
-	public void activateGroup(MerchantStoreItem store, String groupName) throws ServiceException {
+	public void activateGroup(MerchantStoreItem store, String groupName)  {
 		List<ProductRelationshipItem> entities = this.getByGroup(store, groupName);
 		for (ProductRelationshipItem relation : entities) {
 			relation.setActive(true);
@@ -118,14 +118,14 @@ public class ProductRelationshipServiceImpl extends
 	}
 
 	@Override
-	public List<ProductRelationshipItem> getByGroup(MerchantStoreItem store, String groupName, LocaleItem language) throws ServiceException {
+	public List<ProductRelationshipItem> getByGroup(MerchantStoreItem store, String groupName, LocaleItem language)  {
 
 		return productRelationshipDao.getByType(store, groupName, language);
 
 	}
 
 	@Override
-	public List<ProductRelationshipItem> getByType(MerchantStoreItem store, ProductItem product, ProductRelationshipType type) throws ServiceException {
+	public List<ProductRelationshipItem> getByType(MerchantStoreItem store, ProductItem product, ProductRelationshipType type)  {
 
 
 		return productRelationshipDao.getByType(store, type.name(), product);

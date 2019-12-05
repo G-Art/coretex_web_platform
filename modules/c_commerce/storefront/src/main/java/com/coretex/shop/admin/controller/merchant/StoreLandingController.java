@@ -1,8 +1,5 @@
 package com.coretex.shop.admin.controller.merchant;
 
-import com.coretex.core.business.services.merchant.MerchantStoreService;
-import com.coretex.core.business.services.reference.language.LanguageService;
-import com.coretex.core.data.merchant.StoreLanding;
 import com.coretex.core.data.web.Menu;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.shop.constants.Constants;
@@ -12,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -20,12 +16,6 @@ import java.util.Map;
 
 @Controller
 public class StoreLandingController {
-
-	@Resource
-	MerchantStoreService merchantStoreService;
-
-	@Resource
-	LanguageService languageService;
 
 	@PreAuthorize("hasRole('STORE')")
 	@RequestMapping(value = "/admin/store/storeLanding.html", method = RequestMethod.GET)
@@ -35,12 +25,8 @@ public class StoreLandingController {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		StoreLanding landing = new StoreLanding();
-
 
 		model.addAttribute("store", store);
-		model.addAttribute("storeLanding", landing);
-
 
 		return "admin-store-landing";
 	}

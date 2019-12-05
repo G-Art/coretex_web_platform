@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.model.system.IntegrationConfiguration;
 
 /**
@@ -96,7 +96,7 @@ public class ConfigurationModulesLoader {
 			return modules;
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 

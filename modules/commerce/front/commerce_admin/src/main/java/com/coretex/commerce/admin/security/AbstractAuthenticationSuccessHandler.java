@@ -39,7 +39,7 @@ public abstract class AbstractAuthenticationSuccessHandler extends
 		session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
 
 		try {
-			UserItem user = userService.getByUserName(userName);
+			UserItem user = userService.findByLoginCredentials(userName);
 
 			Date lastAccess = user.getLoginTime();
 			if (lastAccess == null) {
@@ -50,6 +50,7 @@ public abstract class AbstractAuthenticationSuccessHandler extends
 
 			userService.save(user);
 
+			LOGGER.info("User [{}] logged in", user.getEmail());
 			redirectAfterSuccess(request, response);
 
 

@@ -2,7 +2,7 @@ package com.coretex.core.business.modules.cms.product;
 
 import java.util.List;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.cms.common.ImageGet;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.core.model.catalog.product.file.ProductImageSize;
@@ -18,17 +18,17 @@ public interface ProductImageGet extends ImageGet {
 	 * @param product
 	 * @param imageName
 	 * @return
-	 * @throws ServiceException
+	 * @
 	 */
 	OutputContentFile getProductImage(final String merchantStoreCode, final String productCode,
-									  final String imageName) throws ServiceException;
+									  final String imageName);
 
 	OutputContentFile getProductImage(final String merchantStoreCode, final String productCode,
-									  final String imageName, final ProductImageSize size) throws ServiceException;
+									  final String imageName, final ProductImageSize size);
 
-	OutputContentFile getProductImage(ProductImageItem productImage) throws ServiceException;
+	OutputContentFile getProductImage(ProductImageItem productImage) ;
 
-	List<OutputContentFile> getImages(ProductItem product) throws ServiceException;
+	List<OutputContentFile> getImages(ProductItem product) ;
 
 
 }

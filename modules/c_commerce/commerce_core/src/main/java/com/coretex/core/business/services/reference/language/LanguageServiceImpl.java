@@ -2,7 +2,7 @@ package com.coretex.core.business.services.reference.language;
 
 import com.coretex.core.activeorm.dao.LocaleDao;
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.business.utils.CacheUtils;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
@@ -68,7 +68,7 @@ public class LanguageServiceImpl extends SalesManagerEntityServiceImpl<LocaleIte
 	}
 
 	@Override
-	public Map<String, LocaleItem> getLanguagesMap() throws ServiceException {
+	public Map<String, LocaleItem> getLanguagesMap()  {
 
 		List<LocaleItem> langs = this.getLanguages();
 		Map<String, LocaleItem> returnMap = new LinkedHashMap<String, LocaleItem>();
@@ -83,7 +83,7 @@ public class LanguageServiceImpl extends SalesManagerEntityServiceImpl<LocaleIte
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LocaleItem> getLanguages() throws ServiceException {
+	public List<LocaleItem> getLanguages()  {
 
 
 		List<LocaleItem> langs = null;
@@ -97,7 +97,7 @@ public class LanguageServiceImpl extends SalesManagerEntityServiceImpl<LocaleIte
 
 		} catch (Exception e) {
 			LOGGER.error("getCountries()", e);
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 		return langs;

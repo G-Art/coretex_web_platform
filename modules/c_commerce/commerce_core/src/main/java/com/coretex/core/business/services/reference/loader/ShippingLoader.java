@@ -1,7 +1,7 @@
 package com.coretex.core.business.services.reference.loader;
 
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.country.CountryServiceImpl;
@@ -37,7 +37,7 @@ public class ShippingLoader {
 	private MerchantStoreService merchantStoreService;
 
 
-	public List<DeliveryServiceItem> loadShippingConfig(String jsonFilePath) throws ServiceException {
+	public List<DeliveryServiceItem> loadShippingConfig(String jsonFilePath)  {
 
 
 		List<DeliveryServiceItem> deliveryItems = new ArrayList<>();
@@ -61,7 +61,7 @@ public class ShippingLoader {
 			return deliveryItems;
 
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 

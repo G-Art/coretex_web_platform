@@ -3,7 +3,7 @@ package com.coretex.core.business.modules.cms.content;
 
 import java.util.List;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.modules.cms.content.infinispan.CmsStaticContentFileManagerImpl;
 import com.coretex.core.model.content.FileContentType;
 import com.coretex.core.model.content.InputContentFile;
@@ -22,7 +22,7 @@ public class StaticContentFileManagerImpl extends StaticContentFileManager {
 
 	@Override
 	public void addFile(final String merchantStoreCode, final InputContentFile inputStaticContentData)
-			throws ServiceException {
+			 {
 		uploadFile.addFile(merchantStoreCode, inputStaticContentData);
 
 	}
@@ -35,11 +35,11 @@ public class StaticContentFileManagerImpl extends StaticContentFileManager {
 	 *
 	 * @param merchantStoreCode merchant store.
 	 * @param inputStaticContentDataList Input content images
-	 * @throws ServiceException
+	 * @
 	 */
 	@Override
 	public void addFiles(final String merchantStoreCode,
-						 final List<InputContentFile> inputStaticContentDataList) throws ServiceException {
+						 final List<InputContentFile> inputStaticContentDataList)  {
 		uploadFile.addFiles(merchantStoreCode, inputStaticContentDataList);
 	}
 
@@ -53,24 +53,24 @@ public class StaticContentFileManagerImpl extends StaticContentFileManager {
 
 	@Override
 	public OutputContentFile getFile(String merchantStoreCode, FileContentType fileContentType,
-									 String contentName) throws ServiceException {
+									 String contentName)  {
 		return getFile.getFile(merchantStoreCode, fileContentType, contentName);
 	}
 
 	@Override
 	public List<String> getFileNames(String merchantStoreCode, FileContentType fileContentType)
-			throws ServiceException {
+			 {
 		return getFile.getFileNames(merchantStoreCode, fileContentType);
 	}
 
 	@Override
 	public List<OutputContentFile> getFiles(String merchantStoreCode, FileContentType fileContentType)
-			throws ServiceException {
+			 {
 		return getFile.getFiles(merchantStoreCode, fileContentType);
 	}
 
 	@Override
-	public void removeFiles(String merchantStoreCode) throws ServiceException {
+	public void removeFiles(String merchantStoreCode)  {
 		removeFile.removeFiles(merchantStoreCode);
 	}
 

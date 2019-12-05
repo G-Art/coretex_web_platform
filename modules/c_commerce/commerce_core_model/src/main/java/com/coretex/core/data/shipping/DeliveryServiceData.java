@@ -1,7 +1,6 @@
 package com.coretex.core.data.shipping;
 
 import com.coretex.core.data.GenericData;
-import com.coretex.core.data.merchant.MerchantStoreData;
 import com.coretex.core.data.orders.Country;
 
 import java.util.Map;
@@ -13,7 +12,6 @@ public class DeliveryServiceData extends GenericData {
 	private String code;
 	private String image;
 	private Boolean active = false;
-	private MerchantStoreData store;
 	private Set<Country> countries;
 
 	public Map<String, String> getName() {
@@ -46,14 +44,6 @@ public class DeliveryServiceData extends GenericData {
 
 	public void setActive(Boolean active) {
 		this.active = active;
-	}
-
-	public MerchantStoreData getStore() {
-		return store;
-	}
-
-	public void setStore(MerchantStoreData store) {
-		this.store = store;
 	}
 
 	public Set<Country> getCountries() {

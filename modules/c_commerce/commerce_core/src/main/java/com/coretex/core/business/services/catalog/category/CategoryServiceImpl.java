@@ -1,7 +1,7 @@
 package com.coretex.core.business.services.catalog.category;
 
 import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.catalog.category.CategoryDao;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
@@ -80,7 +80,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 	}
 
 	@Override
-	public void saveOrUpdate(CategoryItem category) throws ServiceException {
+	public void saveOrUpdate(CategoryItem category)  {
 
 
 		//save or update (persist and attach entities
@@ -102,11 +102,11 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 	}
 
 	@Override
-	public List<CategoryItem> getListByLineage(String storeCode, String lineage) throws ServiceException {
+	public List<CategoryItem> getListByLineage(String storeCode, String lineage)  {
 		try {
 			return categoryDao.findByLineage(storeCode, lineage);
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 
@@ -114,12 +114,12 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 
 	@Override
-	public List<CategoryItem> listBySeUrl(MerchantStoreItem store, String seUrl) throws ServiceException {
+	public List<CategoryItem> listBySeUrl(MerchantStoreItem store, String seUrl)  {
 
 		try {
 			return categoryDao.listByFriendlyUrl(store.getUuid(), seUrl);
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -131,34 +131,34 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 
 	@Override
-	public CategoryItem getByCode(MerchantStoreItem store, String code) throws ServiceException {
+	public CategoryItem getByCode(MerchantStoreItem store, String code)  {
 
 		try {
 			return categoryDao.findByCode(store.getUuid(), code);
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
 
 	@Override
-	public CategoryItem getByCode(String storeCode, String code) throws ServiceException {
+	public CategoryItem getByCode(String storeCode, String code)  {
 
 		try {
 			return categoryDao.findByCode(storeCode, code);
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
 
 	@Override
-	public List<CategoryItem> listByStoreAndParent(MerchantStoreItem store, CategoryItem category) throws ServiceException {
+	public List<CategoryItem> listByStoreAndParent(MerchantStoreItem store, CategoryItem category)  {
 
 		try {
 			return categoryDao.listByStoreAndParent(store, category);
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 	}
@@ -231,11 +231,11 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 
 	@Override
-	public void addChild(CategoryItem parent, CategoryItem child) throws ServiceException {
+	public void addChild(CategoryItem parent, CategoryItem child)  {
 
 
 		if (child == null || child.getMerchantStore() == null) {
-			throw new ServiceException("Child category and merchant store should not be null");
+			throw new RuntimeException("Child category and merchant store should not be null");
 		}
 
 		try {
@@ -280,7 +280,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 			}
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 
@@ -302,12 +302,12 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 	}
 
 	@Override
-	public List<CategoryItem> getByName(MerchantStoreItem store, String name, LocaleItem language) throws ServiceException {
+	public List<CategoryItem> getByName(MerchantStoreItem store, String name, LocaleItem language)  {
 
 		try {
 			return categoryDao.findByName(store.getUuid(), name, language.getUuid());
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 
 
@@ -316,23 +316,23 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 	@Override
 	public List<CategoryItem> listByStore(MerchantStoreItem store)
-			throws ServiceException {
+			 {
 
 		try {
 			return categoryDao.findByStore(store.getUuid());
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
 	public List<CategoryItem> listByStore(MerchantStoreItem store, LocaleItem language)
-			throws ServiceException {
+			 {
 
 		try {
 			return categoryDao.findByStore(store.getUuid(), language.getUuid());
 		} catch (Exception e) {
-			throw new ServiceException(e);
+			throw new RuntimeException(e);
 		}
 	}
 

@@ -2,7 +2,7 @@ package com.coretex.core.business.modules.cms.content;
 
 import java.util.List;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.model.content.FileContentType;
 import com.coretex.core.model.content.OutputContentFile;
 
@@ -15,11 +15,11 @@ import com.coretex.core.model.content.OutputContentFile;
 public interface FileGet {
 
 	OutputContentFile getFile(final String merchantStoreCode, FileContentType fileContentType,
-							  String contentName) throws ServiceException;
+							  String contentName) ;
 
 	List<String> getFileNames(final String merchantStoreCode, FileContentType fileContentType)
-			throws ServiceException;
+			;
 
 	List<OutputContentFile> getFiles(final String merchantStoreCode,
-									 FileContentType fileContentType) throws ServiceException;
+									 FileContentType fileContentType) ;
 }

@@ -3,6 +3,7 @@ package com.coretex.commerce.admin.controllers.user;
 import com.coretex.commerce.admin.controllers.PageableDataTableAbstractController;
 import com.coretex.commerce.admin.data.GroupData;
 import com.coretex.commerce.admin.data.MerchantStoreData;
+import com.coretex.commerce.admin.data.MinimalUserData;
 import com.coretex.commerce.admin.data.UserData;
 import com.coretex.commerce.admin.facades.GroupFacade;
 import com.coretex.commerce.admin.facades.PageableDataTableFacade;
@@ -21,7 +22,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/user/account")
+@RequestMapping("/user")
 public class UserController extends PageableDataTableAbstractController {
 
 	@Resource
@@ -31,19 +32,25 @@ public class UserController extends PageableDataTableAbstractController {
 	@Resource
 	private GroupFacade groupFacade;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(path = "", method = RequestMethod.GET)
+	public String getUsers() {
+		return "user/users";
+	}
+
+	@RequestMapping(path = "/account", method = RequestMethod.GET)
 	public String getUserData(Model model) {
 		model.addAttribute("user", getCurrentUser());
 		return "account/profile";
 	}
 
-	@RequestMapping(path = "/{uuid}", method = RequestMethod.GET)
+	@RequestMapping(path = "/account/{uuid}", method = RequestMethod.GET)
 	public String getUserData(@PathVariable("uuid") UUID uuid, Model model) {
 		var userByUUID = userFacade.getUserByUUID(uuid);
 		model.addAttribute("user", userByUUID);
 		return "account/profile";
 	}
-	@RequestMapping(path = "/save", method = RequestMethod.POST)
+
+	@RequestMapping(path = "/account/save", method = RequestMethod.POST)
 	public String saveUserData(@ModelAttribute("userForm") UserData userData, Model model){
 		userFacade.saveUser(userData);
 
@@ -54,7 +61,6 @@ public class UserController extends PageableDataTableAbstractController {
 		}
 		return redirect("/user/account");
 	}
-
 
 	@ModelAttribute("stores")
 	public Collection<MerchantStoreData> getStores() {

@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.user.GroupService;
 import com.coretex.core.business.services.user.PermissionService;

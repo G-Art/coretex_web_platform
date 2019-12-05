@@ -7,7 +7,7 @@ import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.springframework.stereotype.Service;
 
-import com.coretex.core.business.exception.ServiceException;
+
 import com.coretex.core.business.repositories.catalog.product.attribute.ProductAttributeDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.items.commerce_core_model.ProductItem;
@@ -62,7 +62,7 @@ public class ProductAttributeServiceImpl extends
 
 	@Override
 	public void saveOrUpdate(ProductAttributeItem productAttribute)
-			throws ServiceException {
+			 {
 		//if(productAttribute.getUuid()!=null && productAttribute.getUuid()>0) {
 		//	productAttributeDao.update(productAttribute);
 		//} else {
