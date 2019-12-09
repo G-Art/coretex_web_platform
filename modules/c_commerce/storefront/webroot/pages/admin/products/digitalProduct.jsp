@@ -93,17 +93,6 @@
                     </label>
                     <div class="controls" id="fileControl">
 
-                        <c:choose>
-                            <c:when test="${digitalProduct==null}">
-                                <input class="input-file" id="file" name="file" type="file" multiple="multiple">
-                                <br/>
-                            </c:when>
-                            <c:otherwise>
-                                <a id="fileLink"
-                                   href="<sm:adminProductDownload digitalProduct="${digitalProduct}" />">${digitalProduct.productFileName}</a>
-                            </c:otherwise>
-                        </c:choose>
-
                     </div>
                 </div>
                 <div class="form-actions">

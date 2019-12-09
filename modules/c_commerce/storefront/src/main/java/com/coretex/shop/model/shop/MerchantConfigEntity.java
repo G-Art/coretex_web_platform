@@ -1,6 +1,5 @@
 package com.coretex.shop.model.shop;
 
-import com.coretex.enums.commerce_core_model.MerchantConfigurationTypeEnum;
 import com.coretex.shop.model.entity.Entity;
 
 public class MerchantConfigEntity extends Entity {
@@ -8,7 +7,6 @@ public class MerchantConfigEntity extends Entity {
 
 	private static final long serialVersionUID = 1L;
 	private String key;
-	private MerchantConfigurationTypeEnum type;
 	private String value;
 	private boolean active;
 
@@ -18,14 +16,6 @@ public class MerchantConfigEntity extends Entity {
 
 	public void setKey(String key) {
 		this.key = key;
-	}
-
-	public MerchantConfigurationTypeEnum getType() {
-		return type;
-	}
-
-	public void setType(MerchantConfigurationTypeEnum type) {
-		this.type = type;
 	}
 
 	public String getValue() {

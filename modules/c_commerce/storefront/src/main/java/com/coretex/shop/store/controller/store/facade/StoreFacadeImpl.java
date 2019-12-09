@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.coretex.core.business.constants.Constants;
-import com.coretex.enums.commerce_core_model.MerchantConfigurationTypeEnum;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
@@ -276,40 +275,14 @@ public class StoreFacadeImpl implements StoreFacade {
 			ReadableImage image = createReadableImage(mStore.getStoreLogo(), imagePath);
 			readableBrand.setLogo(image);
 		}
-		List<MerchantConfigEntity> merchantConfigTOs = getMerchantConfigEntities(mStore);
-		readableBrand.getSocialNetworks().addAll(merchantConfigTOs);
 		return readableBrand;
 	}
 
-	private List<MerchantConfigEntity> getMerchantConfigEntities(MerchantStoreItem mStore) {
-		List<MerchantConfigurationItem> configurations =
-				getMergeConfigurationsByStore(MerchantConfigurationTypeEnum.SOCIAL, mStore);
 
-		return configurations.stream().map(config -> convertToMerchantConfigEntity(config))
-				.collect(Collectors.toList());
-	}
-
-	private List<MerchantConfigurationItem> getMergeConfigurationsByStore(
-			MerchantConfigurationTypeEnum configurationType, MerchantStoreItem mStore) {
-		return merchantConfigurationService.listByType(configurationType, mStore);
-	}
-
-	private MerchantConfigEntity convertToMerchantConfigEntity(MerchantConfigurationItem config) {
-		MerchantConfigEntity configTO = new MerchantConfigEntity();
-		configTO.setUuid(config.getUuid());
-		configTO.setKey(config.getKey());
-		configTO.setType(config.getMerchantConfigurationType());
-		configTO.setValue(config.getValue());
-		configTO.setActive(config.getActive() != null ? config.getActive() : false);
-		return configTO;
-	}
-
-	private MerchantConfigurationItem convertToMerchantConfiguration(MerchantConfigEntity config,
-																	 MerchantConfigurationTypeEnum configurationType) {
+	private MerchantConfigurationItem convertToMerchantConfiguration(MerchantConfigEntity config) {
 		MerchantConfigurationItem configTO = new MerchantConfigurationItem();
 		configTO.setUuid(config.getUuid());
 		configTO.setKey(config.getKey());
-		configTO.setMerchantConfigurationType(configurationType);
 		configTO.setValue(config.getValue());
 		configTO.setActive(new Boolean(config.isActive()));
 		return configTO;
@@ -362,12 +335,11 @@ public class StoreFacadeImpl implements StoreFacade {
 		List<MerchantConfigEntity> createdConfigs = brand.getSocialNetworks();
 
 		List<MerchantConfigurationItem> configurations = createdConfigs.stream()
-				.map(config -> convertToMerchantConfiguration(config, MerchantConfigurationTypeEnum.SOCIAL))
+				.map(config -> convertToMerchantConfiguration(config))
 				.collect(Collectors.toList());
 		for (MerchantConfigurationItem mConfigs : configurations) {
 			mConfigs.setMerchantStore(mStore);
 			if (!StringUtils.isEmpty(mConfigs.getValue())) {
-				mConfigs.setMerchantConfigurationType(MerchantConfigurationTypeEnum.SOCIAL);
 				merchantConfigurationService.saveOrUpdate(mConfigs);
 			} else {// remove if submited blank and exists
 				MerchantConfigurationItem config =

@@ -190,14 +190,6 @@
                                     <span class="help-inline"></span>
                                 </div>
                             </div>
-                            <div class="control-group">
-                                <label><s:message code="label.productedit.producttype" text="Product type"/></label>
-                                <div class="controls">
-                                    <form:select items="${productTypes}" itemValue="uuid" itemLabel="code"
-                                                 path="type.uuid"/>
-                                    <span class="help-inline"></span>
-                                </div>
-                            </div>
 
                             <div class="control-group">
 

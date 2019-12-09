@@ -1,20 +1,17 @@
 package com.coretex.shop.store.controller;
 
 import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.relationship.ProductRelationshipService;
 import com.coretex.core.business.services.content.ContentService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductRelationshipItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
 import com.coretex.shop.model.shop.Breadcrumb;
 import com.coretex.shop.model.shop.BreadcrumbItem;
 import com.coretex.shop.model.shop.BreadcrumbItemType;
-import com.coretex.shop.model.shop.PageInformation;
 import com.coretex.shop.populator.catalog.ReadableProductPopulator;
 import com.coretex.shop.utils.DateUtil;
 import com.coretex.shop.utils.ImageFilePath;
@@ -43,14 +40,6 @@ public class LandingController {
 
 
 	private final static String LANDING_PAGE = "LANDING_PAGE";
-
-
-	@Resource
-	private ContentService contentService;
-
-	@Resource
-	private ProductRelationshipService productRelationshipService;
-
 
 	@Resource
 	private LabelUtils messages;
@@ -100,25 +89,11 @@ public class LandingController {
 		populator.setimageUtils(imageUtils);
 
 
-		//featured items
-		List<ProductRelationshipItem> relationships = productRelationshipService.getByType(store, ProductRelationshipType.FEATURED_ITEM, language);
-		List<ReadableProduct> featuredItems = new ArrayList<ReadableProduct>();
-		Date today = new Date();
-		for (ProductRelationshipItem relationship : relationships) {
-			ProductItem product = relationship.getRelatedProduct();
-			if (product.getAvailable() && DateUtil.dateBeforeEqualsDate(product.getDateAvailable(), today)) {
-				ReadableProduct proxyProduct = populator.populate(product, new ReadableProduct(), store, language);
-				featuredItems.add(proxyProduct);
-			}
-		}
-
 		String tmpl = store.getStoreTemplate();
 		if (StringUtils.isBlank(tmpl)) {
 			tmpl = "exoticamobilia";
 		}
 
-
-		model.addAttribute("featuredItems", featuredItems);
 
 		/** template **/
 		StringBuilder template = new StringBuilder().append("landing.").append(tmpl);

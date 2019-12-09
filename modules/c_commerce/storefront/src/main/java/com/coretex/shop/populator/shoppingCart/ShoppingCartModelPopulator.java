@@ -11,7 +11,6 @@ import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.shop.model.shoppingcart.ShoppingCartAttribute;
@@ -116,23 +115,7 @@ public class ShoppingCartModelPopulator
 						for (ShoppingCartEntryItem dbItem : cartItems) {
 							if (dbItem.getUuid().equals(item.getUuid())) {
 								dbItem.setQuantity(item.getQuantity());
-								// compare attributes
-								Set<ShoppingCartEntryAttributeItem> attributes =
-										dbItem.getAttributes();
-								Set<ShoppingCartEntryAttributeItem> newAttributes =
-										new HashSet<>();
-								List<ShoppingCartAttribute> cartAttributes = item.getShoppingCartAttributes();
-								if (!CollectionUtils.isEmpty(cartAttributes)) {
-									for (ShoppingCartAttribute attribute : cartAttributes) {
-										for (ShoppingCartEntryAttributeItem dbAttribute : attributes) {
-											if (dbAttribute.getUuid().equals(attribute.getUuid())) {
-												newAttributes.add(dbAttribute);
-											}
-										}
-									}
 
-									dbItem.setAttributes(newAttributes);
-								}
 								newItems.add(dbItem);
 							}
 						}
@@ -181,35 +164,6 @@ public class ShoppingCartModelPopulator
 		item.setQuantity(shoppingCartItem.getQuantity());
 		item.setItemPrice(shoppingCartItem.getProductPrice());
 		item.setShoppingCart(cart);
-
-		// attributes
-		List<ShoppingCartAttribute> cartAttributes = shoppingCartItem.getShoppingCartAttributes();
-		if (!CollectionUtils.isEmpty(cartAttributes)) {
-			for (ShoppingCartAttribute attribute : cartAttributes) {
-				ProductAttributeItem productAttribute = productAttributeService.getByUUID(attribute.getAttributeId());
-				if (productAttribute != null
-						&& productAttribute.getProduct().getUuid().equals(product.getUuid())) {
-					ShoppingCartEntryAttributeItem attributeItem = new ShoppingCartEntryAttributeItem();
-					attributeItem.setShoppingCartItem(item);
-					attributeItem.setProductAttribute(productAttribute);
-
-					attributeItem.setUuid(attribute.getUuid());
-
-					var attributes = item.getAttributes();
-
-					if (CollectionUtils.isEmpty(attributes)) {
-						attributes = Sets.newHashSet();
-					}
-
-					attributes.add(attributeItem);
-
-					item.setAttributes(attributes);
-					//newAttributes.add( attributeItem );
-				}
-			}
-
-			//item.setAttributes( newAttributes );
-		}
 
 		return item;
 

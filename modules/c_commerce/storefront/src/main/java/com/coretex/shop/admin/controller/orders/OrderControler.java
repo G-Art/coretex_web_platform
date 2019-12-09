@@ -4,7 +4,6 @@ import com.coretex.core.business.modules.email.Email;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
-import com.coretex.core.business.services.order.orderproduct.OrderProductDownloadService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.system.EmailService;
@@ -12,10 +11,8 @@ import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
-import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
-import com.coretex.enums.commerce_core_model.PaymentTypeEnum;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
@@ -76,16 +73,11 @@ public class OrderControler {
 	CustomerService customerService;
 
 	@Resource
-	PricingService pricingService;
-
-	@Resource
 	EmailService emailService;
 
 	@Resource
 	private EmailUtils emailUtils;
 
-	@Resource
-	OrderProductDownloadService orderProdctDownloadService;
 
 	private final static String ORDER_STATUS_TMPL = "email_template_order_status.ftl";
 
@@ -162,35 +154,6 @@ public class OrderControler {
 			order.setOrderProducts(dbOrder.getOrderProducts());
 			order.setOrderTotal(dbOrder.getOrderTotal());
 			order.setTotal(dbOrder.getTotal());
-
-
-			orderProducts = dbOrder.getOrderProducts();
-			orderTotal = dbOrder.getOrderTotal();
-			orderHistory = dbOrder.getOrderHistory();
-
-			//get capturable
-//			if (dbOrder.getPaymentType() != PaymentTypeEnum.MONEYORDER) {
-//				TransactionItem capturableTransaction = transactionService.getCapturableTransaction(dbOrder);
-//				if (capturableTransaction != null) {
-//					model.addAttribute("capturableTransaction", capturableTransaction);
-//				}
-//			}
-
-
-			//get refundable
-//			if (!dbOrder.getPaymentType().name().equals(PaymentTypeEnum.MONEYORDER.name())) {
-//				TransactionItem refundableTransaction = transactionService.getRefundableTransaction(dbOrder);
-//				if (refundableTransaction != null) {
-//					model.addAttribute("capturableTransaction", null);//remove capturable
-//					model.addAttribute("refundableTransaction", refundableTransaction);
-//				}
-//			}
-
-
-			List<OrderProductDownloadItem> orderProductDownloads = orderProdctDownloadService.getByOrderId(UUID.fromString(order.getUuid()));
-			if (CollectionUtils.isNotEmpty(orderProductDownloads)) {
-				model.addAttribute("downloads", orderProductDownloads);
-			}
 
 		}
 
@@ -363,16 +326,6 @@ public class OrderControler {
 
 		}
 
-		List<OrderProductDownloadItem> orderProductDownloads = orderProdctDownloadService.getByOrderId(newOrder.getUuid());
-		if (CollectionUtils.isNotEmpty(orderProductDownloads)) {
-			model.addAttribute("downloads", orderProductDownloads);
-		}
-
-
-		/**
-		 * send email if admin posted orderHistoryComment
-		 *
-		 * **/
 
 		if (StringUtils.isBlank(entityOrder.getOrderHistoryComment())) {
 

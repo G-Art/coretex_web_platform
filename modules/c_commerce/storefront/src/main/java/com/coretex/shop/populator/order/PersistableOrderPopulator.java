@@ -3,13 +3,11 @@ package com.coretex.shop.populator.order;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
-import com.coretex.core.business.services.catalog.product.file.DigitalProductService;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.currency.CurrencyService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.core.business.utils.CreditCardUtils;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
@@ -44,7 +42,6 @@ public class PersistableOrderPopulator extends
 
 	private ZoneService zoneService;
 	private ProductService productService;
-	private DigitalProductService digitalProductService;
 	private ProductAttributeService productAttributeService;
 
 	@Override
@@ -53,7 +50,6 @@ public class PersistableOrderPopulator extends
 
 
 		Validate.notNull(productService, "productService must be set");
-		Validate.notNull(digitalProductService, "digitalProductService must be set");
 		Validate.notNull(productAttributeService, "productAttributeService must be set");
 		Validate.notNull(customerService, "customerService must be set");
 		Validate.notNull(countryService, "countryService must be set");
@@ -103,7 +99,6 @@ public class PersistableOrderPopulator extends
 			target.setCurrencyValue(new BigDecimal(0));
 			target.setMerchant(store);
 			target.setStatus(source.getOrderStatus());
-			target.setPaymentType(source.getPaymentType());
 			target.setCustomerAgreement(source.isCustomerAgreed());
 			target.setConfirmedAddress(source.isConfirmedAddress());
 			if (source.getPreviousOrderStatus() != null) {
@@ -131,7 +126,6 @@ public class PersistableOrderPopulator extends
 			com.coretex.shop.populator.order.PersistableOrderProductPopulator orderProductPopulator = new PersistableOrderProductPopulator();
 			orderProductPopulator.setProductAttributeService(productAttributeService);
 			orderProductPopulator.setProductService(productService);
-			orderProductPopulator.setDigitalProductService(digitalProductService);
 
 			for (PersistableOrderProduct orderProduct : products) {
 				OrderProductItem modelOrderProduct = new OrderProductItem();
@@ -170,14 +164,6 @@ public class PersistableOrderPopulator extends
 
 	public ProductService getProductService() {
 		return productService;
-	}
-
-	public void setDigitalProductService(DigitalProductService digitalProductService) {
-		this.digitalProductService = digitalProductService;
-	}
-
-	public DigitalProductService getDigitalProductService() {
-		return digitalProductService;
 	}
 
 	public void setProductAttributeService(ProductAttributeService productAttributeService) {

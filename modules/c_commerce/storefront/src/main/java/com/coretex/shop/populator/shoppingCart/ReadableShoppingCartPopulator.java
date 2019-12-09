@@ -9,7 +9,6 @@ import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
@@ -90,20 +89,6 @@ public class ReadableShoppingCartPopulator extends AbstractDataPopulator<Shoppin
 
 					shoppingCartItem.setDisplaySubTotal(pricingService.getDisplayAmount(subTotal, store));
 
-
-					Set<ShoppingCartEntryAttributeItem> attributes = item.getAttributes();
-					if (attributes != null) {
-						for (ShoppingCartEntryAttributeItem attribute : attributes) {
-
-							ProductAttributeItem productAttribute = productAttributeService.getByUUID(attribute.getProductAttribute().getUuid());
-
-							if (productAttribute == null) {
-								LOGGER.warn("ProductItem attribute with ID " + attribute.getUuid() + " not found, skipping cart attribute " + attribute.getUuid());
-								continue;
-							}
-						}
-
-					}
 					target.getProducts().add(shoppingCartItem);
 				}
 			}

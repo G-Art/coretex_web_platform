@@ -14,7 +14,6 @@ import com.coretex.shop.admin.forms.ProductForm;
 import com.coretex.shop.admin.mapppers.dto.ManufacturerDtoMapper;
 import com.coretex.shop.admin.mapppers.dto.ProductAvailabilityDtoMapper;
 import com.coretex.shop.admin.mapppers.dto.ProductPriceDtoMapper;
-import com.coretex.shop.admin.mapppers.dto.ProductTypeDtoMapper;
 import com.coretex.shop.admin.mapppers.dto.ReferenceMapper;
 import com.coretex.shop.constants.Constants;
 import org.apache.commons.io.IOUtils;
@@ -41,7 +40,7 @@ import java.util.UUID;
 import static com.coretex.core.business.constants.Constants.ALL_REGIONS;
 import static com.coretex.core.business.constants.Constants.DEFAULT_PRICE_DESCRIPTION;
 
-@Mapper(componentModel = "spring", imports = UUID.class, uses = {ManufacturerDtoMapper.class, ProductTypeDtoMapper.class, ReferenceMapper.class})
+@Mapper(componentModel = "spring", imports = UUID.class, uses = {ManufacturerDtoMapper.class, ReferenceMapper.class})
 public abstract class ProductFormMapper implements LocalizedFieldMapper<ProductItem, ProductForm> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProductFormMapper.class);

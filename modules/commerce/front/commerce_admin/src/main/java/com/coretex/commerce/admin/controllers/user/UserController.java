@@ -4,10 +4,12 @@ import com.coretex.commerce.admin.controllers.PageableDataTableAbstractControlle
 import com.coretex.commerce.admin.data.GroupData;
 import com.coretex.commerce.admin.data.MerchantStoreData;
 import com.coretex.commerce.admin.data.UserData;
+import com.coretex.commerce.admin.data.minimal.MinimalUserData;
 import com.coretex.commerce.admin.facades.GroupFacade;
 import com.coretex.commerce.admin.facades.PageableDataTableFacade;
 import com.coretex.commerce.admin.facades.StoreFacade;
 import com.coretex.commerce.admin.facades.UserFacade;
+import com.coretex.items.commerce_core_model.UserItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,7 +24,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/user")
-public class UserController extends PageableDataTableAbstractController {
+public class UserController extends PageableDataTableAbstractController<MinimalUserData> {
 
 	@Resource
 	private UserFacade userFacade;
@@ -72,7 +74,7 @@ public class UserController extends PageableDataTableAbstractController {
 	}
 
 	@Override
-	protected PageableDataTableFacade getPageableFacade() {
+	protected PageableDataTableFacade<UserItem, MinimalUserData> getPageableFacade() {
 		return userFacade;
 	}
 }

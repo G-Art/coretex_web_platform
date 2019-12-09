@@ -5,7 +5,6 @@ import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.core.business.constants.Constants;
 
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
-import com.coretex.core.business.services.catalog.product.type.ProductTypeService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.currency.CurrencyService;
@@ -19,10 +18,8 @@ import com.coretex.items.commerce_core_model.DeliveryServiceItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ProductTypeItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.core.LocaleItem;
 import org.apache.commons.lang3.LocaleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,9 +60,6 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 	protected MerchantStoreService merchantService;
 
 	@Resource
-	protected ProductTypeService productTypeService;
-
-	@Resource
 	private ZonesLoader zonesLoader;
 
 	@Resource
@@ -88,7 +82,6 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 		createCountries();
 		createZones();
 		createCurrencies();
-		createSubReferences();
 		createMerchant();
 		createShipping();
 
@@ -253,16 +246,5 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 
 
 	}
-
-	private void createSubReferences()  {
-
-		LOGGER.info(String.format("%s : Loading catalog sub references ", name));
-
-		ProductTypeItem productType = new ProductTypeItem();
-		productType.setCode(Constants.GENERAL_TYPE);
-		productTypeService.create(productType);
-
-	}
-
 
 }

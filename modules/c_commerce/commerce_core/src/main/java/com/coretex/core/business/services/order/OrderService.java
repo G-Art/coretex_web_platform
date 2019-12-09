@@ -107,24 +107,4 @@ public interface OrderService extends SalesManagerEntityService<OrderItem> {
 	OrderItem processOrder(OrderItem order, CustomerItem customer,
 						   List<ShoppingCartEntryItem> items, OrderTotalSummary summary, MerchantStoreItem store) ;
 
-	/**
-	 * Determines if an OrderItem has download files
-	 *
-	 * @param order
-	 * @return
-	 * @
-	 */
-	boolean hasDownloadFiles(OrderItem order) ;
-
-	/**
-	 * List all orders that have been pre-authorized but not captured
-	 *
-	 * @param store
-	 * @param startDate
-	 * @param endDate
-	 * @return
-	 * @
-	 */
-	List<OrderItem> getCapturableOrders(MerchantStoreItem store, Date startDate, Date endDate) ;
-
 }

@@ -19,8 +19,6 @@
 
 
     <br/>
-    <sm:shopProductGroup groupName="FEATURED_ITEM"/>
-    <sm:shopProductGroup groupName="SPECIALS"/>
 
     <div id="" class="container">
         <c:if test="${requestScope.FEATURED_ITEM!=null || requestScope.SPECIALS!=null}">

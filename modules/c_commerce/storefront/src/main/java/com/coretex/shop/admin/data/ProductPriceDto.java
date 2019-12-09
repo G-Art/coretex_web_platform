@@ -1,7 +1,5 @@
 package com.coretex.shop.admin.data;
 
-import com.coretex.enums.commerce_core_model.ProductPriceTypeEnum;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
@@ -20,7 +18,6 @@ public class ProductPriceDto extends GenericDto {
 	private BigDecimal productPriceSpecialAmount;
 	private Boolean defaultPrice;
 
-	private ProductPriceTypeEnum productPriceType;
 
 	public String getCode() {
 		return code;
@@ -94,11 +91,4 @@ public class ProductPriceDto extends GenericDto {
 		this.defaultPrice = defaultPrice;
 	}
 
-	public ProductPriceTypeEnum getProductPriceType() {
-		return productPriceType;
-	}
-
-	public void setProductPriceType(ProductPriceTypeEnum productPriceType) {
-		this.productPriceType = productPriceType;
-	}
 }

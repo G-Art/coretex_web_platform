@@ -9,7 +9,6 @@ import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
-import com.coretex.items.commerce_core_model.OrderProductAttributeItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
 import com.coretex.shop.model.order.ReadableOrderProduct;
@@ -67,20 +66,6 @@ public class ReadableOrderProductPopulator extends
 			target.setSubTotal(subTotalPrice);
 		} catch (Exception e) {
 			throw new ConversionException("Cannot format price", e);
-		}
-
-		if (source.getOrderAttributes() != null) {
-			List<ReadableOrderProductAttribute> attributes = new ArrayList<ReadableOrderProductAttribute>();
-			for (OrderProductAttributeItem attr : source.getOrderAttributes()) {
-				ReadableOrderProductAttribute readableAttribute = new ReadableOrderProductAttribute();
-				String price = pricingService.getDisplayAmount(attr.getProductAttributePrice(), store);
-				readableAttribute.setAttributePrice(price);
-
-				readableAttribute.setAttributeName(attr.getProductAttributeName());
-				readableAttribute.setAttributeValue(attr.getProductAttributeValueName());
-				attributes.add(readableAttribute);
-			}
-			target.setAttributes(attributes);
 		}
 
 

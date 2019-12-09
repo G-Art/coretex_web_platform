@@ -6,8 +6,6 @@ import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.catalog.product.image.ProductImageService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
-import com.coretex.core.business.services.catalog.product.relationship.ProductRelationshipService;
-import com.coretex.core.business.services.catalog.product.type.ProductTypeService;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.order.OrderService;
@@ -22,7 +20,6 @@ import com.coretex.core.model.content.ImageContentFile;
 import com.coretex.enums.commerce_core_model.CustomerGenderEnum;
 import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
-import com.coretex.enums.commerce_core_model.PaymentTypeEnum;
 import com.coretex.items.commerce_core_model.BillingItem;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.CurrencyItem;
@@ -32,7 +29,6 @@ import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
-import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderProductPriceItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
@@ -41,8 +37,6 @@ import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductPriceItem;
-import com.coretex.items.commerce_core_model.ProductRelationshipItem;
-import com.coretex.items.commerce_core_model.ProductTypeItem;
 import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
@@ -87,9 +81,6 @@ public class InitStoreData implements InitData {
 	protected MerchantStoreService merchantService;
 
 	@Resource
-	protected ProductTypeService productTypeService;
-
-	@Resource
 	protected LanguageService languageService;
 
 	@Resource
@@ -116,9 +107,6 @@ public class InitStoreData implements InitData {
 	@Resource
 	protected GroupService groupService;
 
-	@Resource
-	private ProductRelationshipService productRelationshipService;
-
 	public void initInitialData()  {
 
 
@@ -134,8 +122,6 @@ public class InitStoreData implements InitData {
 
 		//create a merchant
 		MerchantStoreItem store = merchantService.getByCode(DEFAULT_STORE);
-		ProductTypeItem generalType = productTypeService.getProductType(GENERAL_TYPE);
-
 
 		CategoryItem book = new CategoryItem();
 		book.setMerchantStore(store);
@@ -284,7 +270,6 @@ public class InitStoreData implements InitData {
 		product.setProductWidth(new BigDecimal(6));
 		product.setSku("TB12345");
 		product.setManufacturer(manning);
-		product.setType(generalType);
 		product.setMerchantStore(store);
 		product.setProductShippable(true);
 		product.setAvailable(true);
@@ -335,7 +320,6 @@ public class InitStoreData implements InitData {
 		product2.setProductWidth(new BigDecimal(1));
 		product2.setSku("TB2468");
 		product2.setManufacturer(packt);
-		product2.setType(generalType);
 		product2.setMerchantStore(store);
 		product2.setProductShippable(true);
 		product2.setAvailable(true);
@@ -385,7 +369,6 @@ public class InitStoreData implements InitData {
 		product3.setProductWidth(new BigDecimal(1));
 		product3.setSku("NB1111");
 		product3.setManufacturer(oreilley);
-		product3.setType(generalType);
 		product3.setMerchantStore(store);
 		product3.setProductShippable(true);
 		product3.setAvailable(true);
@@ -433,7 +416,6 @@ public class InitStoreData implements InitData {
 		product4.setProductWidth(new BigDecimal(1));
 		product4.setSku("SF333345");
 		product4.setManufacturer(sams);
-		product4.setType(generalType);
 		product4.setMerchantStore(store);
 		product4.setProductShippable(true);
 		product4.setAvailable(true);
@@ -481,7 +463,6 @@ public class InitStoreData implements InitData {
 		product5.setProductWidth(new BigDecimal(1));
 		product5.setSku("SF333346");
 		product5.setManufacturer(packt);
-		product5.setType(generalType);
 		product5.setMerchantStore(store);
 		product5.setProductShippable(true);
 		product5.setAvailable(true);
@@ -532,7 +513,6 @@ public class InitStoreData implements InitData {
 		product6.setProductWidth(new BigDecimal(1));
 		product6.setSku("LL333444");
 		product6.setManufacturer(novells);
-		product6.setType(generalType);
 		product6.setMerchantStore(store);
 		product6.setProductShippable(true);
 		product6.setAvailable(true);
@@ -574,48 +554,13 @@ public class InitStoreData implements InitData {
 			LOGGER.error("Error while reading demo file google.jpg", e);
 		}
 
-		//featured items
-
-		ProductRelationshipItem relationship = new ProductRelationshipItem();
-		relationship.setActive(true);
-		relationship.setCode(ProductRelationshipType.FEATURED_ITEM.name());
-		relationship.setStore(store);
-		relationship.setRelatedProduct(product);
-
-		productRelationshipService.saveOrUpdate(relationship);
-
-		relationship = new ProductRelationshipItem();
-		relationship.setActive(true);
-		relationship.setCode(ProductRelationshipType.FEATURED_ITEM.name());
-		relationship.setStore(store);
-		relationship.setRelatedProduct(product6);
-
-		productRelationshipService.saveOrUpdate(relationship);
-
-
-		relationship = new ProductRelationshipItem();
-		relationship.setActive(true);
-		relationship.setCode(ProductRelationshipType.FEATURED_ITEM.name());
-		relationship.setStore(store);
-		relationship.setRelatedProduct(product5);
-
-		productRelationshipService.saveOrUpdate(relationship);
-
-
-		relationship = new ProductRelationshipItem();
-		relationship.setActive(true);
-		relationship.setCode(ProductRelationshipType.FEATURED_ITEM.name());
-		relationship.setStore(store);
-		relationship.setRelatedProduct(product2);
-
-		productRelationshipService.saveOrUpdate(relationship);
-
-
 		//Create a customer (user name[nick] : shopizer password : password)
 
 		CustomerItem customer = new CustomerItem();
 		customer.setMerchantStore(store);
 		customer.setEmail("test@shopizer.com");
+		customer.setFirstName("Leonardo");
+		customer.setLastName("DiCaprio");
 		customer.setGender(CustomerGenderEnum.MALE);
 		customer.setAnonymous(false);
 		customer.setCompany("CSTI Consulting");
@@ -693,17 +638,8 @@ public class InitStoreData implements InitData {
 		orderStatusHistory.setOrder(order);
 		order.getOrderHistory().add(orderStatusHistory);
 
-
-		order.setPaymentType(PaymentTypeEnum.PAYPAL);
 		order.setStatus(com.coretex.enums.commerce_core_model.OrderStatusEnum.DELIVERED);
 		order.setTotal(new BigDecimal(23.99));
-
-
-		//OrderProductDownloadItem - Digital download
-		OrderProductDownloadItem orderProductDownload = new OrderProductDownloadItem();
-		orderProductDownload.setDownloadCount(1);
-		orderProductDownload.setMaxdays(31);
-		orderProductDownload.setOrderProductFilename("Your digital file name");
 
 		//OrderProductPriceItem
 		OrderProductPriceItem oproductprice = new OrderProductPriceItem();
@@ -716,7 +652,6 @@ public class InitStoreData implements InitData {
 
 		//OrderProductItem
 		OrderProductItem oproduct = new OrderProductItem();
-		oproduct.getDownloads().add(orderProductDownload);
 		oproduct.setOneTimeCharge(new BigDecimal(19.99));
 		oproduct.setOrder(order);
 		oproduct.setProductName("ProductItem name");
@@ -725,7 +660,6 @@ public class InitStoreData implements InitData {
 		oproduct.getPrices().add(oproductprice);
 
 		oproductprice.setOrderProduct(oproduct);
-		orderProductDownload.setOrderProduct(oproduct);
 		order.getOrderProducts().add(oproduct);
 
 		//OrderTotalItem

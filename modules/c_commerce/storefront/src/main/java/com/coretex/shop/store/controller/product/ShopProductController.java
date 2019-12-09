@@ -3,14 +3,12 @@ package com.coretex.shop.store.controller.product;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
-import com.coretex.core.business.services.catalog.product.relationship.ProductRelationshipService;
 import com.coretex.core.business.utils.CacheUtils;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
 import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductRelationshipItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
@@ -67,9 +65,6 @@ public class ShopProductController {
 
 	@Resource
 	private ProductAttributeService productAttributeService;
-
-	@Resource
-	private ProductRelationshipService productRelationshipService;
 
 	@Resource
 	private PricingService pricingService;
@@ -312,21 +307,9 @@ public class ShopProductController {
 
 	private List<ReadableProduct> relatedItems(MerchantStoreItem store, ProductItem product, LocaleItem language) throws Exception {
 
-
 		ReadableProductPopulator populator = new ReadableProductPopulator();
 		populator.setPricingService(pricingService);
 		populator.setimageUtils(imageUtils);
-
-		List<ProductRelationshipItem> relatedItems = productRelationshipService.getByType(store, product, ProductRelationshipType.RELATED_ITEM);
-		if (relatedItems != null && relatedItems.size() > 0) {
-			List<ReadableProduct> items = new ArrayList<ReadableProduct>();
-			for (ProductRelationshipItem relationship : relatedItems) {
-				ProductItem relatedProduct = relationship.getRelatedProduct();
-				ReadableProduct proxyProduct = populator.populate(relatedProduct, new ReadableProduct(), store, language);
-				items.add(proxyProduct);
-			}
-			return items;
-		}
 
 		return null;
 	}

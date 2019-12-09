@@ -10,7 +10,6 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.enums.commerce_core_model.OrderTotalTypeEnum;
-import com.coretex.items.commerce_core_model.OrderAttributeItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.customer.ReadableDelivery;
 import com.coretex.shop.model.customer.address.Address;
@@ -29,8 +28,6 @@ public class ReadableOrderPopulator extends
 		target.setOrderStatus(source.getStatus());
 		target.setCurrency(source.getCurrency().getCode());
 		target.setCurrencyModel(source.getCurrency());
-
-		target.setPaymentType(source.getPaymentType());
 
 
 		if (source.getCustomerAgreement() != null) {
@@ -61,15 +58,6 @@ public class ReadableOrderPopulator extends
 			}
 
 			target.setBilling(address);
-		}
-
-		if (source.getOrderAttributes() != null && source.getOrderAttributes().size() > 0) {
-			for (OrderAttributeItem attr : source.getOrderAttributes()) {
-				com.coretex.shop.model.order.OrderAttribute a = new com.coretex.shop.model.order.OrderAttribute();
-				a.setKey(attr.getKey());
-				a.setValue(attr.getValue());
-				target.getAttributes().add(a);
-			}
 		}
 
 		if (source.getDelivery() != null) {

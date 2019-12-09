@@ -1,19 +1,14 @@
 package com.coretex.shop.store.controller.product.facade;
 
-import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
-import com.coretex.core.business.services.catalog.product.relationship.ProductRelationshipService;
-import com.coretex.core.business.services.customer.CustomerService;
-import com.coretex.core.business.services.reference.language.LanguageService;
-import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
-import com.coretex.shop.populator.catalog.PersistableProductPopulator;
 import com.coretex.shop.populator.catalog.ReadableProductPopulator;
 import com.coretex.shop.populator.manufacturer.ReadableManufacturerPopulator;
 import com.coretex.shop.utils.ImageFilePath;

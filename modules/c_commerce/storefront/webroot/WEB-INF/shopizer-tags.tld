@@ -136,23 +136,6 @@
 
 
     <tag>
-        <!-- Builds the product image URL -->
-        <name>shopProductGroup</name>
-        <tag-class>com.coretex.shop.tags.ShopProductRelationshipTag</tag-class>
-        <body-content>scriptless</body-content>
-
-
-        <attribute>
-            <name>groupName</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>java.lang.String</type>
-        </attribute>
-
-
-    </tag>
-
-    <tag>
         <!-- Product price utility -->
         <name>monetary</name>
         <tag-class>com.coretex.shop.tags.ShopProductPriceFormatTag</tag-class>
@@ -176,21 +159,7 @@
 
     </tag>
 
-    <tag>
-        <!-- Builds the admin product download URL -->
-        <name>adminProductDownload</name>
-        <tag-class>com.coretex.shop.tags.AdminProductDownloadUrlTag</tag-class>
-        <body-content>scriptless</body-content>
 
-        <attribute>
-            <name>digitalProduct</name>
-            <required>true</required>
-            <rtexprvalue>true</rtexprvalue>
-            <type>com.coretex.items.commerce_core_model.DigitalProductItem</type>
-        </attribute>
-
-
-    </tag>
 
     <tag>
         <!-- Builds the order product download URL -->

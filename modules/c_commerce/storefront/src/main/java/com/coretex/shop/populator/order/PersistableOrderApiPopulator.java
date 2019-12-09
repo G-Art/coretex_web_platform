@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
-import com.coretex.core.business.services.catalog.product.file.DigitalProductService;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.reference.currency.CurrencyService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
@@ -24,10 +23,8 @@ import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.enums.commerce_core_model.OrderChannelEnum;
-import com.coretex.items.commerce_core_model.OrderAttributeItem;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
-import com.coretex.enums.commerce_core_model.PaymentTypeEnum;
 import com.coretex.items.commerce_core_model.CurrencyItem;
 import com.coretex.shop.model.order.PersistableOrderApi;
 import com.coretex.shop.utils.LocaleUtils;
@@ -40,7 +37,6 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 	private ShoppingCartService shoppingCartService;
 	private ProductService productService;
 	private ProductAttributeService productAttributeService;
-	private DigitalProductService digitalProductService;
 
 
 	@Override
@@ -53,7 +49,6 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 		Validate.notNull(shoppingCartService, "shoppingCartService must be set");
 		Validate.notNull(productService, "productService must be set");
 		Validate.notNull(productAttributeService, "productAttributeService must be set");
-		Validate.notNull(digitalProductService, "digitalProductService must be set");
 		Validate.notNull(source.getPayment(), "Payment cannot be null");
 
 		try {
@@ -95,17 +90,6 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			BillingItem billing = customer.getBilling();
 			target.setBilling(billing);
 
-			if (source.getAttributes() != null && source.getAttributes().size() > 0) {
-				Set<OrderAttributeItem> attrs = new HashSet<OrderAttributeItem>();
-				for (com.coretex.shop.model.order.OrderAttribute attribute : source.getAttributes()) {
-					OrderAttributeItem attr = new OrderAttributeItem();
-					attr.setKey(attribute.getKey());
-					attr.setValue(attribute.getValue());
-					attr.setOrder(target);
-					attrs.add(attr);
-				}
-				target.setOrderAttributes(attrs);
-			}
 
 			target.setDatePurchased(new Date());
 			target.setCurrency(currency);
@@ -114,7 +98,6 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			target.setChannel(OrderChannelEnum.API);
 			//need this
 			target.setStatus(OrderStatusEnum.ORDERED);
-			target.setPaymentType(PaymentTypeEnum.valueOf(source.getPayment().getPaymentType()));
 
 			target.setCustomerAgreement(source.isCustomerAgreement());
 			target.setConfirmedAddress(true);//force this to true, cannot perform this activity from the API
@@ -181,14 +164,5 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 	public void setProductAttributeService(ProductAttributeService productAttributeService) {
 		this.productAttributeService = productAttributeService;
 	}
-
-	public DigitalProductService getDigitalProductService() {
-		return digitalProductService;
-	}
-
-	public void setDigitalProductService(DigitalProductService digitalProductService) {
-		this.digitalProductService = digitalProductService;
-	}
-
 
 }

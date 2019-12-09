@@ -2,7 +2,6 @@ package com.coretex.core.business.services.system;
 
 import java.util.List;
 
-import com.coretex.enums.commerce_core_model.MerchantConfigurationTypeEnum;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
 import org.springframework.stereotype.Service;
@@ -37,11 +36,6 @@ public class MerchantConfigurationServiceImpl extends
 	}
 
 	@Override
-	public List<MerchantConfigurationItem> listByType(MerchantConfigurationTypeEnum type, MerchantStoreItem store) {
-		return merchantConfigurationDao.findByMerchantStoreAndType(store.getUuid(), type);
-	}
-
-	@Override
 	public void saveOrUpdate(MerchantConfigurationItem entity)  {
 		super.save(entity);
 	}
@@ -58,7 +52,7 @@ public class MerchantConfigurationServiceImpl extends
 	@Override
 	public MerchantConfig getMerchantConfig(MerchantStoreItem store)  {
 
-		MerchantConfigurationItem configuration = merchantConfigurationDao.findByMerchantStoreAndKey(store.getUuid(), MerchantConfigurationTypeEnum.CONFIG.name());
+		MerchantConfigurationItem configuration = merchantConfigurationDao.findByMerchantStoreAndKey(store.getUuid(), "config");
 
 		MerchantConfig config = null;
 		if (configuration != null) {
@@ -78,13 +72,12 @@ public class MerchantConfigurationServiceImpl extends
 	@Override
 	public void saveMerchantConfig(MerchantConfig config, MerchantStoreItem store) {
 
-		MerchantConfigurationItem configuration = merchantConfigurationDao.findByMerchantStoreAndKey(store.getUuid(), MerchantConfigurationTypeEnum.CONFIG.name());
+		MerchantConfigurationItem configuration = merchantConfigurationDao.findByMerchantStoreAndKey(store.getUuid(), "config");
 
 		if (configuration == null) {
 			configuration = new MerchantConfigurationItem();
 			configuration.setMerchantStore(store);
-			configuration.setKey(MerchantConfigurationTypeEnum.CONFIG.name());
-			configuration.setMerchantConfigurationType(MerchantConfigurationTypeEnum.CONFIG);
+			configuration.setKey("config");
 			configuration.setActive(true);
 		}
 

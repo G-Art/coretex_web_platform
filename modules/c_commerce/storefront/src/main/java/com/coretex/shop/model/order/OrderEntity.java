@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
-import com.coretex.enums.commerce_core_model.PaymentTypeEnum;
 import com.coretex.shop.model.order.total.OrderTotal;
 
 public class OrderEntity extends Order implements Serializable {
@@ -16,7 +15,6 @@ public class OrderEntity extends Order implements Serializable {
 	private List<OrderTotal> totals;
 	private List<OrderAttribute> attributes = new ArrayList<OrderAttribute>();
 
-	private PaymentTypeEnum paymentType;
 	private String paymentModule;
 	private String shippingModule;
 	private List<OrderStatusEnum> previousOrderStatus;
@@ -33,14 +31,6 @@ public class OrderEntity extends Order implements Serializable {
 
 	public List<OrderTotal> getTotals() {
 		return totals;
-	}
-
-	public PaymentTypeEnum getPaymentType() {
-		return paymentType;
-	}
-
-	public void setPaymentType(PaymentTypeEnum paymentType) {
-		this.paymentType = paymentType;
 	}
 
 	public String getPaymentModule() {

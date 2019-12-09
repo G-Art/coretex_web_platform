@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
-import com.coretex.items.commerce_core_model.DigitalProductItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -27,19 +26,8 @@ public class AdminProductDownloadUrlTag extends RequestContextAwareTag {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdminProductDownloadUrlTag.class);
 
-	private DigitalProductItem digitalProduct;
-
 	@Resource
 	private FilePathUtils filePathUtils;
-
-
-	public DigitalProductItem getDigitalProduct() {
-		return digitalProduct;
-	}
-
-	public void setDigitalProduct(DigitalProductItem digitalProduct) {
-		this.digitalProduct = digitalProduct;
-	}
 
 	public int doStartTagInternal() throws JspException {
 		try {
@@ -77,9 +65,6 @@ public class AdminProductDownloadUrlTag extends RequestContextAwareTag {
 					.append(merchantStore.getDomainName())
 					//.append("/")
 					.append(request.getContextPath());
-
-			filePath
-					.append(filePathUtils.buildAdminDownloadProductFilePath(merchantStore, digitalProduct)).toString();
 
 
 			pageContext.getOut().print(filePath.toString());

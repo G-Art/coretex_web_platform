@@ -63,16 +63,6 @@ elements {
             }
         }
 
-        ProductRelationshipProductRelation(source: Product, target: ProductRelationship) {
-            source(relationships) {
-                description = "Product relationship "
-                containerType = Set
-            }
-            target(product) {
-                description = "Product"
-            }
-        }
-
         CategoryCategoryRelation(source: 'Category', target: 'Category') {
             source(categories) {
                 description = "Categories"
@@ -147,16 +137,6 @@ elements {
             }
         }
 
-        OrderAttributeOrderRelation(source: OrderAttribute, target: Order){
-            source(order) {
-                description = "Order"
-            }
-            target(orderAttributes) {
-                description = "Order attribute"
-                containerType = Set
-            }
-        }
-
         OrderProductOrderRelation(source: OrderProduct, target: Order){
             source(order) {
                  description = "Order"
@@ -167,29 +147,9 @@ elements {
             }
         }
 
-        OrderProductOrderProductAttributeRelation(source: OrderProduct, target: OrderProductAttribute){
-            source(orderAttributes) {
-                description = "Order attributes"
-                containerType = Set
-            }
-            target(orderProduct) {
-                description = "Order products"
-            }
-        }
-
         OrderProductOrderProductPriceRelation(source: OrderProduct, target: OrderProductPrice){
             source(prices) {
                 description = "Order product prices"
-                containerType = Set
-            }
-            target(orderProduct) {
-                description = "Order products"
-            }
-        }
-
-        OrderProductOrderProductDownloadRelation(source: OrderProduct, target: OrderProductDownload){
-            source(downloads) {
-                description = "Order product downloads"
                 containerType = Set
             }
             target(orderProduct) {
@@ -214,26 +174,6 @@ elements {
             }
             target(shoppingCart) {
                 description = "Shopping cart"
-            }
-        }
-
-        ShoppingCartEntryAttributeShoppingCartEntryRelation(source: ShoppingCartEntryAttribute, target: ShoppingCartEntry){
-            source(shoppingCartItem) {
-                description = "Shopping cart entry"
-            }
-            target('attributes') {
-                description = "Shopping cart entry attributes"
-                containerType = Set
-            }
-        }
-
-        MarketPlaceCatalogRelation(source: MarketPlace, target: Catalog){
-            source(catalogs) {
-                description = "Catalogs"
-                containerType = Set
-            }
-            target(marketPlace) {
-                description = "Market place"
             }
         }
 
@@ -365,19 +305,6 @@ elements {
             }
         }
 
-        ShippingOrigin {
-            attributes {
-                merchantStore(MerchantStore)
-                active(Boolean)
-                address(String)
-                city(String)
-                postalCode(String)
-                state(String)
-                country(Country)
-                zone(Zone)
-            }
-        }
-
         Zone {
             attributes {
                 code(String){
@@ -448,26 +375,6 @@ elements {
              }
         }
 
-        MarketPlace {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                store(MerchantStore)
-            }
-        }
-
-        Catalog {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                store(MerchantStore)
-            }
-        }
-
         OrderAccountProduct {
             attributes {
                 orderProduct(OrderProduct)
@@ -515,16 +422,6 @@ elements {
             }
         }
 
-        ProductType {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                allowAddToCart(Boolean)
-            }
-        }
-
         ProductPrice {
             attributes {
                 code(String){
@@ -547,8 +444,6 @@ elements {
                 defaultPrice(Boolean){
                     defaultValue = false
                 }
-
-                productPriceType(ProductPriceType)
 
             }
         }
@@ -591,19 +486,6 @@ elements {
                     localized = true
                 }
                 productImageUrl(String)
-            }
-        }
-
-        ProductRelationship {
-            attributes {
-                code(String){
-                    optional = false
-                }
-                active(Boolean){
-                    defaultValue = false
-                }
-                store(MerchantStore)
-                relatedProduct(Product)
             }
         }
 
@@ -766,7 +648,6 @@ elements {
                     defaultValue = false
                 }
                 manufacturer(Manufacturer)
-                type(ProductType)
                 merchantStore(MerchantStore)
                 condition(ProductCondition)
                 rentalStatus(RentalStatus)
@@ -779,7 +660,6 @@ elements {
                 key(String)
                 value(String)
                 merchantStore(MerchantStore)
-                merchantConfigurationType(MerchantConfigurationType)
                 active(Boolean){
                     defaultValue = true
                 }
@@ -836,25 +716,6 @@ elements {
             }
         }
 
-        OrderAttribute {
-            attributes {
-                key(String)
-                value(String)
-            }
-        }
-
-        OrderProductAttribute {
-            attributes {
-                productAttributeIsFree(Boolean)
-                productAttributeWeight(BigDecimal)
-                productAttributeName(String)
-                productAttributeValueName(String)
-                productAttributePrice(BigDecimal)
-                productOptionId(UUID)
-                productOptionValueId(UUID)
-            }
-        }
-
         OrderProductPrice {
             attributes {
                 defaultPrice(Boolean)
@@ -864,14 +725,6 @@ elements {
                 productPriceSpecialEndDate(Date)
                 productPriceSpecial(BigDecimal)
                 productPrice(BigDecimal)
-            }
-        }
-
-        OrderProductDownload {
-            attributes{
-                orderProductFilename(String)
-                maxdays(Integer)
-                downloadCount(Integer)
             }
         }
 
@@ -915,7 +768,6 @@ elements {
                 customerAgreement(Boolean)
                 confirmedAddress(Boolean)
                 orderType(OrderType)
-                paymentType(PaymentType)
                 channel(OrderChannel)
             }
         }
@@ -926,12 +778,6 @@ elements {
                 dateAdded(Date)
                 customerNotified(Integer)
                 comments(String)
-            }
-        }
-
-        ShoppingCartEntryAttribute {
-            attributes {
-                productAttribute(ProductAttribute)
             }
         }
 
@@ -961,20 +807,9 @@ elements {
                 merchantStore(MerchantStore)
             }
         }
-
-        DigitalProduct {
-            attributes {
-                productFileName(String)
-                product(Product)
-            }
-        }
     }
 
     enums {
-
-        OptinType {
-            newsletter
-        }
 
         OrderTotalType {
             shipping
@@ -992,24 +827,9 @@ elements {
             monthly
         }
 
-        CreditCardType {
-            amex
-            visa
-            mastercard
-            diners
-            discovery
-        }
-
         OrderChannel {
             online
             api
-        }
-
-        PaymentType {
-            free
-            cod
-            moneyorder
-            paypal
         }
 
         OrderType {
@@ -1023,13 +843,6 @@ elements {
             delivered
             refunded
             canceled
-        }
-
-        MerchantConfigurationType {
-            integration
-            shop
-            config
-            social
         }
 
         GroupType {
@@ -1050,11 +863,6 @@ elements {
         ProductCondition {
             new_product
             used
-        }
-
-        ProductPriceType {
-            one_time
-            monthly
         }
 
     }

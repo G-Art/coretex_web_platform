@@ -1,23 +1,21 @@
 package com.coretex.core.business.services.shoppingcart;
 
 
-import com.coretex.core.business.repositories.shoppingcart.ShoppingCartAttributeDao;
-import com.coretex.core.business.repositories.shoppingcart.ShoppingCartItemDao;
 import com.coretex.core.business.repositories.shoppingcart.ShoppingCartDao;
+import com.coretex.core.business.repositories.shoppingcart.ShoppingCartItemDao;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
+import com.coretex.core.model.shipping.ShippingProduct;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.core.model.shipping.ShippingProduct;
-import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
-import com.coretex.items.commerce_core_model.ShoppingCartItem;
+import com.coretex.items.commerce_core_model.ProductAttributeItem;
+import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
-import com.google.common.collect.Sets;
+import com.coretex.items.commerce_core_model.ShoppingCartItem;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -32,7 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service("shoppingCartService")
 public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<ShoppingCartItem>
@@ -45,9 +42,6 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 
 	@Resource
 	private ShoppingCartItemDao shoppingCartItemDao;
-
-	@Resource
-	private ShoppingCartAttributeDao shoppingCartAttributeItemRepository;
 
 	@Resource
 	private PricingService pricingService;
@@ -301,44 +295,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 			item.setProductVirtual(true);
 		}
 
-		Set<ShoppingCartEntryAttributeItem> cartAttributes = item.getAttributes();
-		Set<ProductAttributeItem> productAttributes = product.getAttributes();
 		List<ProductAttributeItem> attributesList = new ArrayList<ProductAttributeItem>();//attributes maintained
-		List<ShoppingCartEntryAttributeItem> removeAttributesList = new ArrayList<ShoppingCartEntryAttributeItem>();//attributes to remove
-		//DELETE ORPHEANS MANUALLY
-		if ((productAttributes != null && productAttributes.size() > 0) || (cartAttributes != null && cartAttributes.size() > 0)) {
-			for (ShoppingCartEntryAttributeItem attribute : cartAttributes) {
-				UUID attributeId = attribute.getProductAttribute().getUuid();
-				boolean existingAttribute = false;
-				for (ProductAttributeItem productAttribute : productAttributes) {
-
-					if (productAttribute.getUuid().equals(attributeId)) {
-						attribute.setProductAttribute(productAttribute);
-						attributesList.add(productAttribute);
-						existingAttribute = true;
-						break;
-					}
-				}
-
-				if (!existingAttribute) {
-					removeAttributesList.add(attribute);
-				}
-
-			}
-		}
-
-		//cleanup orphean item
-		if (CollectionUtils.isNotEmpty(removeAttributesList)) {
-			for (ShoppingCartEntryAttributeItem attr : removeAttributesList) {
-				shoppingCartAttributeItemRepository.delete(attr);
-			}
-		}
-
-		//cleanup detached attributes
-		if (CollectionUtils.isEmpty(attributesList)) {
-			item.getAttributes().clear();
-		}
-
 
 		// set item price
 		FinalPrice price = pricingService.calculateProductPrice(product, attributesList);
@@ -364,7 +321,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 				}
 				ShippingProduct shippingProduct = new ShippingProduct(product);
 				shippingProduct.setQuantity(item.getQuantity());
-				var finalPrice = pricingService.calculateProductPrice(item.getProduct(), item.getAttributes().stream().map(ShoppingCartEntryAttributeItem::getProductAttribute).collect(Collectors.toList()));
+				var finalPrice = pricingService.calculateProductPrice(item.getProduct(), Lists.newArrayList());
 				shippingProduct.setFinalPrice(finalPrice);
 				shippingProducts.add(shippingProduct);
 			}
@@ -426,37 +383,6 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 			}
 		}
 
-		LOGGER.info("Starting merging shopping carts");
-		if (CollectionUtils.isNotEmpty(sessionCart.getLineItems())) {
-			Set<ShoppingCartEntryItem> shoppingCartItemsSet = getShoppingCartItems(sessionCart, store, userShoppingModel);
-			boolean duplicateFound = false;
-			if (CollectionUtils.isNotEmpty(shoppingCartItemsSet)) {
-				for (ShoppingCartEntryItem sessionShoppingCartItem : shoppingCartItemsSet) {
-					if (CollectionUtils.isNotEmpty(userShoppingModel.getLineItems())) {
-						for (ShoppingCartEntryItem cartItem : userShoppingModel.getLineItems()) {
-							if (cartItem.getProduct().getUuid().equals(sessionShoppingCartItem.getProduct()
-									.getUuid())) {
-								if (CollectionUtils.isNotEmpty(cartItem.getAttributes())) {
-									if (!duplicateFound) {
-										LOGGER.info("Dupliate item found..updating exisitng product quantity");
-										cartItem.setQuantity(
-												cartItem.getQuantity() + sessionShoppingCartItem.getQuantity());
-										duplicateFound = true;
-										break;
-									}
-								}
-							}
-						}
-					}
-					if (!duplicateFound) {
-						LOGGER.info("New item found..adding item to Shopping cart");
-						userShoppingModel.getLineItems().add(sessionShoppingCartItem);
-					}
-				}
-
-			}
-
-		}
 		LOGGER.info("Shopping Cart merged successfully.....");
 		saveOrUpdate(userShoppingModel);
 		removeShoppingCart(sessionCart);
@@ -484,33 +410,6 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 				ShoppingCartEntryItem item = populateShoppingCartItem(product);
 				item.setQuantity(shoppingCartItem.getQuantity());
 				item.setShoppingCart(cartModel);
-
-				List<ShoppingCartEntryAttributeItem> cartAttributes = new ArrayList<>(
-						shoppingCartItem.getAttributes());
-				if (CollectionUtils.isNotEmpty(cartAttributes)) {
-					for (ShoppingCartEntryAttributeItem shoppingCartAttributeItem : cartAttributes) {
-						ProductAttributeItem productAttribute = productAttributeService
-								.getByUUID(shoppingCartAttributeItem.getUuid());
-						if (productAttribute != null
-								&& productAttribute.getProduct().getUuid().equals(product.getUuid())) {
-
-							ShoppingCartEntryAttributeItem attributeItem = new ShoppingCartEntryAttributeItem();
-							attributeItem.setShoppingCartItem(item);
-							attributeItem.setProductAttribute(productAttribute);
-							if (shoppingCartAttributeItem.getUuid() != null) {
-								attributeItem.setUuid(shoppingCartAttributeItem.getUuid());
-							}
-							var attributes = item.getAttributes();
-
-							if (CollectionUtils.isEmpty(attributes)) {
-								attributes = Sets.newHashSet();
-							}
-							attributes.add(attributeItem);
-							item.setAttributes(attributes);
-
-						}
-					}
-				}
 
 				shoppingCartItemsSet.add(item);
 			}

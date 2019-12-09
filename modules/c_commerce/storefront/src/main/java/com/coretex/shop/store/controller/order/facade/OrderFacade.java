@@ -126,19 +126,6 @@ public interface OrderFacade {
 	ReadableOrderList getReadableOrderList(int start, int maxCount, String draw) throws Exception;
 
 
-	/**
-	 * Get a list of OrderItem on which payment capture must be done
-	 *
-	 * @param store
-	 * @param startDate
-	 * @param endDate
-	 * @param language
-	 * @return
-	 * @throws Exception
-	 */
-	ReadableOrderList getCapturableOrderList(MerchantStoreItem store, Date startDate, Date endDate,
-											 LocaleItem language) throws Exception;
-
 
 	/**
 	 * Get orders for a given store

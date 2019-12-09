@@ -10,7 +10,6 @@ import com.coretex.core.business.services.system.MerchantConfigurationService;
 import com.coretex.core.business.utils.CacheUtils;
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.model.system.MerchantConfig;
-import com.coretex.enums.commerce_core_model.MerchantConfigurationTypeEnum;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
@@ -442,34 +441,6 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 		Map<String, Object> configs = new HashMap<String, Object>();
 		try {
-
-			List<MerchantConfigurationItem> merchantConfiguration =
-					merchantConfigurationService.listByType(MerchantConfigurationTypeEnum.CONFIG, store);
-
-			//get social
-			List<MerchantConfigurationItem> socialConfigs = merchantConfigurationService.listByType(MerchantConfigurationTypeEnum.SOCIAL, store);
-
-
-			if (!CollectionUtils.isEmpty(socialConfigs)) {
-				if (CollectionUtils.isEmpty(merchantConfiguration)) {
-					merchantConfiguration = new ArrayList<MerchantConfigurationItem>();
-				}
-				merchantConfiguration.addAll(socialConfigs);
-			}
-
-
-			if (CollectionUtils.isEmpty(merchantConfiguration)) {
-				return configs;
-			}
-
-
-			for (MerchantConfigurationItem configuration : merchantConfiguration) {
-				configs.put(configuration.getKey(), configuration.getValue());
-			}
-
-			configs.put(Constants.SHOP_SCHEME, coreConfiguration.getProperty(Constants.SHOP_SCHEME));
-			configs.put(Constants.FACEBOOK_APP_ID,
-					coreConfiguration.getProperty(Constants.FACEBOOK_APP_ID));
 
 			// get MerchantConfig
 			MerchantConfig merchantConfig = merchantConfigurationService.getMerchantConfig(store);

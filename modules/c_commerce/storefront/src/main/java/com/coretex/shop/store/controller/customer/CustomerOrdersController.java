@@ -1,17 +1,12 @@
 package com.coretex.shop.store.controller.customer;
 
-import com.coretex.core.business.services.merchant.MerchantStoreService;
-import com.coretex.core.business.services.order.orderproduct.OrderProductDownloadService;
-import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.order.ReadableOrder;
 import com.coretex.shop.model.order.ReadableOrderList;
 import com.coretex.shop.model.order.ReadableOrderProductDownload;
-import com.coretex.shop.populator.order.ReadableOrderProductDownloadPopulator;
 import com.coretex.shop.store.controller.AbstractController;
 import com.coretex.shop.store.controller.ControllerConstants;
 import com.coretex.shop.store.controller.customer.facade.CustomerFacade;
@@ -46,10 +41,6 @@ public class CustomerOrdersController extends AbstractController {
 
 	@Resource
 	private CustomerFacade customerFacade;
-
-	@Resource
-	private OrderProductDownloadService orderProdctDownloadService;
-
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerOrdersController.class);
 
@@ -128,19 +119,6 @@ public class CustomerOrdersController extends AbstractController {
 		ReadableOrder order = orderFacade.getReadableOrder(lOrderId, store, customer.getDefaultLanguage());
 
 		model.addAttribute("order", order);
-
-		//check if any downloads exist for this order
-		List<OrderProductDownloadItem> orderProductDownloads = orderProdctDownloadService.getByOrderId(order.getUuid());
-		if (CollectionUtils.isNotEmpty(orderProductDownloads)) {
-			ReadableOrderProductDownloadPopulator populator = new ReadableOrderProductDownloadPopulator();
-			List<ReadableOrderProductDownload> downloads = new ArrayList<ReadableOrderProductDownload>();
-			for (OrderProductDownloadItem download : orderProductDownloads) {
-				ReadableOrderProductDownload view = new ReadableOrderProductDownload();
-				populator.populate(download, view, store, language);
-				downloads.add(view);
-			}
-			model.addAttribute("downloads", downloads);
-		}
 
 		StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Customer.customerOrder).append(".").append(store.getStoreTemplate());
 		return template.toString();

@@ -4,7 +4,6 @@ import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.image.ProductImageService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
-import com.coretex.core.business.services.catalog.product.type.ProductTypeService;
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.business.utils.ProductPriceUtils;
 import com.coretex.core.business.utils.ajax.AjaxPageableResponse;
@@ -19,8 +18,6 @@ import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductPriceItem;
-import com.coretex.items.commerce_core_model.ProductRelationshipItem;
-import com.coretex.items.commerce_core_model.ProductTypeItem;
 import com.coretex.shop.admin.controller.AbstractController;
 import com.coretex.shop.admin.forms.ProductForm;
 import com.coretex.shop.admin.mapppers.ProductFormMapper;
@@ -75,9 +72,6 @@ public class ProductController extends AbstractController {
 
 	@Resource
 	private ManufacturerService manufacturerService;
-
-	@Resource
-	private ProductTypeService productTypeService;
 
 	@Resource
 	private ProductImageService productImageService;
@@ -135,8 +129,6 @@ public class ProductController extends AbstractController {
 
 		List<ManufacturerItem> manufacturers = manufacturerService.listByStore(store, language);
 
-		List<ProductTypeItem> productTypes = productTypeService.list();
-
 		var product = new ProductForm();
 		var dbProduct = new ProductItem();
 		if (productId.isPresent()) {
@@ -148,7 +140,6 @@ public class ProductController extends AbstractController {
 		model.addAttribute("product", product);
 		model.addAttribute("productItem", dbProduct);
 		model.addAttribute("manufacturers", manufacturers);
-		model.addAttribute("productTypes", productTypes);
 		return "admin-products-edit";
 	}
 
@@ -167,12 +158,8 @@ public class ProductController extends AbstractController {
 
 		List<ManufacturerItem> manufacturers = manufacturerService.listByStore(store, language);
 
-		List<ProductTypeItem> productTypes = productTypeService.list();
-
-
 
 		model.addAttribute("manufacturers", manufacturers);
-		model.addAttribute("productTypes", productTypes);
 
 		var date = new Date();
 		if (!StringUtils.isBlank(product.getDateAvailable())) {
@@ -287,10 +274,8 @@ public class ProductController extends AbstractController {
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
 		List<ManufacturerItem> manufacturers = manufacturerService.listByStore(store, language);
-		List<ProductTypeItem> productTypes = productTypeService.list();
 
 		model.addAttribute("manufacturers", manufacturers);
-		model.addAttribute("productTypes", productTypes);
 
 		ProductItem dbProduct = productService.getByUUID(UUID.fromString(id));
 		ProductItem newProduct = new ProductItem();
@@ -327,7 +312,6 @@ public class ProductController extends AbstractController {
 				price.setProductPriceSpecialAmount(pPrice.getProductPriceSpecialAmount());
 				price.setProductPriceSpecialEndDate(pPrice.getProductPriceSpecialEndDate());
 				price.setProductPriceSpecialStartDate(pPrice.getProductPriceSpecialStartDate());
-				price.setProductPriceType(pPrice.getProductPriceType());
 
 				if (price.getDefaultPrice()) {
 					product.setPrice(price);
@@ -366,21 +350,6 @@ public class ProductController extends AbstractController {
 		}
 		newProduct.setAttributes(attributes);
 
-		//relationships
-		Set<ProductRelationshipItem> relationships = new HashSet<ProductRelationshipItem>();
-		for (ProductRelationshipItem pRelationship : dbProduct.getRelationships()) {
-
-			ProductRelationshipItem relationship = new ProductRelationshipItem();
-			relationship.setActive(pRelationship.getActive());
-			relationship.setCode(pRelationship.getCode());
-			relationship.setRelatedProduct(pRelationship.getRelatedProduct());
-			relationship.setStore(store);
-			relationships.add(relationship);
-
-		}
-
-		newProduct.setRelationships(relationships);
-
 		newProduct.setAvailable(dbProduct.getAvailable());
 
 
@@ -396,7 +365,6 @@ public class ProductController extends AbstractController {
 		newProduct.setProductWeight(dbProduct.getProductWeight());
 		newProduct.setProductWidth(dbProduct.getProductWidth());
 		newProduct.setSortOrder(dbProduct.getSortOrder());
-		newProduct.setType(dbProduct.getType());
 		newProduct.setSku(UUID.randomUUID().toString().replace("-", ""));
 		newProduct.setProductVirtual(dbProduct.getProductVirtual());
 		newProduct.setProductShippable(dbProduct.getProductShippable());

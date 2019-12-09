@@ -27,9 +27,9 @@ import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -78,27 +78,27 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 	@Override
 	public Map getStaticForPeriod(Date from) {
-		if(Objects.isNull(from)){
+		if (Objects.isNull(from)) {
 			return orderDao.getOrderStatistic();
 		}
 		return orderDao.getOrderStatistic(from);
 	}
 
 	@Override
-	public void addOrderStatusHistory(OrderItem order, OrderStatusHistoryItem history)  {
+	public void addOrderStatusHistory(OrderItem order, OrderStatusHistoryItem history) {
 		order.getOrderHistory().add(history);
 		history.setOrder(order);
 		save(order);
 	}
 
 	@Override
-	public OrderItem processOrder(OrderItem order, CustomerItem customer, List<ShoppingCartEntryItem> items, OrderTotalSummary summary, MerchantStoreItem store)  {
+	public OrderItem processOrder(OrderItem order, CustomerItem customer, List<ShoppingCartEntryItem> items, OrderTotalSummary summary, MerchantStoreItem store) {
 
 		return this.process(order, customer, items, summary, store);
 	}
 
 
-	private OrderItem process(OrderItem order, CustomerItem customer, List<ShoppingCartEntryItem> items, OrderTotalSummary summary, MerchantStoreItem store)  {
+	private OrderItem process(OrderItem order, CustomerItem customer, List<ShoppingCartEntryItem> items, OrderTotalSummary summary, MerchantStoreItem store) {
 
 
 		Validate.notNull(order, "OrderItem cannot be null");
@@ -180,7 +180,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 			item.setSubTotal(st);
 			subTotal = subTotal.add(st);
 			//Other prices
-			FinalPrice finalPrice = pricingService.calculateProductPrice(item.getProduct(), item.getAttributes().stream().map(ShoppingCartEntryAttributeItem::getProductAttribute).collect(Collectors.toList()), customer);
+			FinalPrice finalPrice = pricingService.calculateProductPrice(item.getProduct(), Lists.newArrayList(), customer);
 			if (finalPrice != null) {
 				List<FinalPrice> otherPrices = finalPrice.getAdditionalPrices();
 				if (otherPrices != null) {
@@ -206,9 +206,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 							orderTotalValue = orderTotalValue.add(price.getFinalPrice());
 							itemSubTotal.setValue(orderTotalValue);
-							if (price.getProductPrice().getProductPriceType().name().equals(OrderValueType.ONE_TIME)) {
-								subTotal = subTotal.add(price.getFinalPrice());
-							}
+							subTotal = subTotal.add(price.getFinalPrice());
 						}
 					}
 				}
@@ -319,7 +317,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 
 	@Override
-	public OrderTotalSummary caculateOrderTotal(final OrderSummary orderSummary, final CustomerItem customer, final MerchantStoreItem store, final LocaleItem language)  {
+	public OrderTotalSummary caculateOrderTotal(final OrderSummary orderSummary, final CustomerItem customer, final MerchantStoreItem store, final LocaleItem language) {
 		Validate.notNull(orderSummary, "OrderItem summary cannot be null");
 		Validate.notNull(orderSummary.getProducts(), "OrderItem summary.products cannot be null");
 		Validate.notNull(store, "MerchantStoreItem cannot be null");
@@ -335,7 +333,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 
 	@Override
-	public OrderTotalSummary caculateOrderTotal(final OrderSummary orderSummary, final MerchantStoreItem store, final LocaleItem language)  {
+	public OrderTotalSummary caculateOrderTotal(final OrderSummary orderSummary, final MerchantStoreItem store, final LocaleItem language) {
 		Validate.notNull(orderSummary, "OrderItem summary cannot be null");
 		Validate.notNull(orderSummary.getProducts(), "OrderItem summary.products cannot be null");
 		Validate.notNull(store, "MerchantStoreItem cannot be null");
@@ -348,7 +346,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 	}
 
-	private OrderTotalSummary caculateShoppingCart(final ShoppingCartItem shoppingCart, final CustomerItem customer, final MerchantStoreItem store, final LocaleItem language){
+	private OrderTotalSummary caculateShoppingCart(final ShoppingCartItem shoppingCart, final CustomerItem customer, final MerchantStoreItem store, final LocaleItem language) {
 
 
 		OrderSummary orderSummary = new OrderSummary();
@@ -378,7 +376,7 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 	@Override
 	public OrderTotalSummary calculateShoppingCartTotal(
 			final ShoppingCartItem shoppingCart, final CustomerItem customer, final MerchantStoreItem store,
-			final LocaleItem language)  {
+			final LocaleItem language) {
 		Validate.notNull(shoppingCart, "OrderItem summary cannot be null");
 		Validate.notNull(customer, "Customery cannot be null");
 		Validate.notNull(store, "MerchantStoreItem cannot be null.");
@@ -405,15 +403,15 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 	 */
 	@Override
 	public OrderTotalSummary calculateShoppingCartTotal(
-			final ShoppingCartItem shoppingCart, final MerchantStoreItem store, final LocaleItem language){
+			final ShoppingCartItem shoppingCart, final MerchantStoreItem store, final LocaleItem language) {
 		Validate.notNull(shoppingCart, "OrderItem summary cannot be null");
 		Validate.notNull(store, "MerchantStoreItem cannot be null");
 
-			return caculateShoppingCart(shoppingCart, null, store, language);
+		return caculateShoppingCart(shoppingCart, null, store, language);
 	}
 
 	@Override
-	public ByteArrayOutputStream generateInvoice(final MerchantStoreItem store, final OrderItem order, final LocaleItem language)  {
+	public ByteArrayOutputStream generateInvoice(final MerchantStoreItem store, final OrderItem order, final LocaleItem language) {
 
 		Validate.notNull(order.getOrderProducts(), "OrderItem products cannot be null");
 		Validate.notNull(order.getOrderTotal(), "OrderItem totals cannot be null");
@@ -453,33 +451,8 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 
 	@Override
-	public void saveOrUpdate(final OrderItem order)  {
+	public void saveOrUpdate(final OrderItem order) {
 		super.save(order);
-	}
-
-	@Override
-	public boolean hasDownloadFiles(OrderItem order)  {
-
-		Validate.notNull(order, "OrderItem cannot be null");
-		Validate.notNull(order.getOrderProducts(), "OrderItem products cannot be null");
-		Validate.notEmpty(order.getOrderProducts(), "OrderItem products cannot be empty");
-
-		boolean hasDownloads = false;
-		for (OrderProductItem orderProduct : order.getOrderProducts()) {
-
-			if (CollectionUtils.isNotEmpty(orderProduct.getDownloads())) {
-				hasDownloads = true;
-				break;
-			}
-		}
-
-		return hasDownloads;
-	}
-
-	@Override
-	public List<OrderItem> getCapturableOrders(MerchantStoreItem store, Date startDate, Date endDate)  {
-
-		return null;
 	}
 
 

@@ -5,7 +5,6 @@ import com.coretex.core.business.services.catalog.product.price.ProductPriceServ
 import com.coretex.core.business.utils.ProductPriceUtils;
 import com.coretex.core.business.utils.ajax.AjaxPageableResponse;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
-import com.coretex.enums.commerce_core_model.ProductPriceTypeEnum;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
@@ -277,7 +276,6 @@ public class ProductPriceController {
 
 		if (productPrice == null) {
 			productPrice = new ProductPriceItem();
-			productPrice.setProductPriceType(ProductPriceTypeEnum.ONE_TIME);
 		}
 
 

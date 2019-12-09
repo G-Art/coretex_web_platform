@@ -1,33 +1,25 @@
 package com.coretex.shop.store.controller.order;
 
-import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.order.OrderService;
-import com.coretex.core.business.services.order.orderproduct.OrderProductDownloadService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.shipping.ShippingService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
-import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
+import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.order.ReadableOrder;
-import com.coretex.shop.model.order.ReadableOrderProductDownload;
-import com.coretex.shop.populator.order.ReadableOrderProductDownloadPopulator;
 import com.coretex.shop.store.controller.AbstractController;
 import com.coretex.shop.store.controller.ControllerConstants;
-import com.coretex.shop.store.controller.customer.facade.CustomerFacade;
 import com.coretex.shop.store.controller.order.facade.OrderFacade;
 import com.coretex.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
 import com.coretex.shop.utils.LabelUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,8 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -75,18 +65,6 @@ public class ShoppingOrderConfirmationController extends AbstractController {
 
 	@Resource
 	private LabelUtils messages;
-
-	@Resource
-	private PricingService pricingService;
-
-	@Resource
-	private CustomerFacade customerFacade;
-
-	@Resource
-	private AuthenticationManager customerAuthenticationManager;
-
-	@Resource
-	private OrderProductDownloadService orderProdctDownloadService;
 
 	/**
 	 * Invoked once the payment is complete and order is fulfilled
@@ -162,20 +140,6 @@ public class ShoppingOrderConfirmationController extends AbstractController {
 
 
 		model.addAttribute("order", readableOrder);
-
-		//check if any downloads exist for this order
-		List<OrderProductDownloadItem> orderProductDownloads = orderProdctDownloadService.getByOrderId(order.getUuid());
-		if (CollectionUtils.isNotEmpty(orderProductDownloads)) {
-			ReadableOrderProductDownloadPopulator populator = new ReadableOrderProductDownloadPopulator();
-			List<ReadableOrderProductDownload> downloads = new ArrayList<ReadableOrderProductDownload>();
-			for (OrderProductDownloadItem download : orderProductDownloads) {
-				ReadableOrderProductDownload view = new ReadableOrderProductDownload();
-				populator.populate(download, view, store, language);
-				downloads.add(view);
-			}
-			model.addAttribute("downloads", downloads);
-		}
-
 
 		/** template **/
 		StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Checkout.confirmation).append(".").append(store.getStoreTemplate());

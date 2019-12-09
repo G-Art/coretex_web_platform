@@ -44,7 +44,8 @@
         <common-nav:navigationGroup name="Users">
             <common-nav:subMenuItem name="Employees" iconClass="icofont icofont-support"
                                     link="/user"/>
-            <common-nav:subMenuItem name="Customers" iconClass="zmdi zmdi-accounts-alt"/>
+            <common-nav:subMenuItem name="Customers" iconClass="zmdi zmdi-accounts-alt"
+                                    link="/customer"/>
         </common-nav:navigationGroup>
 
     </div>

@@ -4,7 +4,6 @@ package com.coretex.core.business.services.catalog.product;
 import com.coretex.core.business.repositories.catalog.product.ProductDao;
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.image.ProductImageService;
-import com.coretex.core.business.services.catalog.product.relationship.ProductRelationshipService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.business.services.search.SearchService;
 import com.coretex.core.business.utils.CatalogServiceHelper;
@@ -16,7 +15,6 @@ import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductRelationshipItem;
 import com.coretex.items.core.LocaleItem;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -40,9 +38,6 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 
 	@Resource
 	CategoryService categoryService;
-
-	@Resource
-	ProductRelationshipService productRelationshipService;
 
 	@Resource
 	SearchService searchService;
@@ -154,12 +149,6 @@ public class ProductServiceImpl extends SalesManagerEntityServiceImpl<ProductIte
 		}
 
 		product.setImages(null);
-
-		//related - featured
-		List<ProductRelationshipItem> relationships = productRelationshipService.listByProduct(product);
-		for (ProductRelationshipItem relationship : relationships) {
-			productRelationshipService.delete(relationship);
-		}
 
 		super.delete(product);
 		searchService.deleteIndex(product.getMerchantStore(), product);

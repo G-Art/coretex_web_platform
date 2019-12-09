@@ -10,7 +10,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.coretex.enums.commerce_core_model.MerchantConfigurationTypeEnum;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
 import org.apache.commons.lang3.StringUtils;
@@ -60,7 +59,6 @@ public class ConfigurationController {
 		if (null == merchantFBConfiguration) {
 			merchantFBConfiguration = new MerchantConfigurationItem();
 			merchantFBConfiguration.setKey(Constants.KEY_FACEBOOK_PAGE_URL);
-			merchantFBConfiguration.setMerchantConfigurationType(MerchantConfigurationTypeEnum.SOCIAL);
 		}
 		configs.add(merchantFBConfiguration);
 
@@ -68,7 +66,6 @@ public class ConfigurationController {
 		if (null == merchantGoogleAnalyticsConfiguration) {
 			merchantGoogleAnalyticsConfiguration = new MerchantConfigurationItem();
 			merchantGoogleAnalyticsConfiguration.setKey(Constants.KEY_GOOGLE_ANALYTICS_URL);
-			merchantGoogleAnalyticsConfiguration.setMerchantConfigurationType(MerchantConfigurationTypeEnum.SOCIAL);
 		}
 		configs.add(merchantGoogleAnalyticsConfiguration);
 
@@ -76,7 +73,6 @@ public class ConfigurationController {
 		if (null == merchantInstagramConfiguration) {
 			merchantInstagramConfiguration = new MerchantConfigurationItem();
 			merchantInstagramConfiguration.setKey(Constants.KEY_INSTAGRAM_URL);
-			merchantInstagramConfiguration.setMerchantConfigurationType(MerchantConfigurationTypeEnum.SOCIAL);
 		}
 		configs.add(merchantInstagramConfiguration);
 
@@ -84,7 +80,6 @@ public class ConfigurationController {
 		if (null == merchantPinterestConfiguration) {
 			merchantPinterestConfiguration = new MerchantConfigurationItem();
 			merchantPinterestConfiguration.setKey(Constants.KEY_PINTEREST_PAGE_URL);
-			merchantPinterestConfiguration.setMerchantConfigurationType(MerchantConfigurationTypeEnum.SOCIAL);
 		}
 		configs.add(merchantPinterestConfiguration);
 
@@ -103,7 +98,6 @@ public class ConfigurationController {
 		if (null == twitterConfiguration) {
 			twitterConfiguration = new MerchantConfigurationItem();
 			twitterConfiguration.setKey(Constants.KEY_TWITTER_HANDLE);
-			twitterConfiguration.setMerchantConfigurationType(MerchantConfigurationTypeEnum.SOCIAL);
 		}
 		configs.add(twitterConfiguration);
 
@@ -123,7 +117,6 @@ public class ConfigurationController {
 		for (MerchantConfigurationItem mConfigs : configs) {
 			mConfigs.setMerchantStore(store);
 			if (!StringUtils.isBlank(mConfigs.getValue())) {
-				mConfigs.setMerchantConfigurationType(MerchantConfigurationTypeEnum.SOCIAL);
 				merchantConfigurationService.saveOrUpdate(mConfigs);
 			} else {//remove if submited blank and exists
 				MerchantConfigurationItem config = merchantConfigurationService.getMerchantConfiguration(mConfigs.getKey(), store);

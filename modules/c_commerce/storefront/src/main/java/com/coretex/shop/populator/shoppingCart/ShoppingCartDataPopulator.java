@@ -12,15 +12,12 @@ import com.coretex.core.model.order.OrderSummary;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.core.model.order.OrderTotalSummary;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.SettlementItem;
-import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.shop.model.order.total.OrderTotal;
 import com.coretex.shop.model.shoppingcart.ShoppingCartAttribute;
 import com.coretex.shop.model.shoppingcart.ShoppingCartData;
 import com.coretex.shop.utils.ImageFilePath;
-import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -29,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -128,19 +124,6 @@ public class ShoppingCartDataPopulator extends AbstractDataPopulator<ShoppingCar
 				if (image.isPresent() && imageUtils != null) {
 					String imagePath = imageUtils.buildProductImageUtils(store, item.getProduct().getSku(), image.get().getProductImage());
 					shoppingCartItem.setImage(imagePath);
-				}
-				Set<ShoppingCartEntryAttributeItem> attributes = item.getAttributes();
-				if (attributes != null) {
-					List<ShoppingCartAttribute> cartAttributes = new ArrayList<ShoppingCartAttribute>();
-					for (ShoppingCartEntryAttributeItem attribute : attributes) {
-						ShoppingCartAttribute cartAttribute = new ShoppingCartAttribute();
-						cartAttribute.setUuid(attribute.getUuid());
-						cartAttribute.setAttributeId(attribute.getProductAttribute().getUuid());
-
-						cartAttributes.add(cartAttribute);
-
-					}
-					shoppingCartItem.setShoppingCartAttributes(cartAttributes);
 				}
 				shoppingCartItemsList.add(shoppingCartItem);
 			}

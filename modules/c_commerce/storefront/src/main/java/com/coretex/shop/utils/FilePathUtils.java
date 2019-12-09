@@ -5,7 +5,6 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import com.coretex.items.commerce_core_model.DigitalProductItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,10 +62,6 @@ public class FilePathUtils {
 	public String buildStaticFilePath(MerchantStoreItem store) {
 		StringBuilder sb = new StringBuilder().append(Constants.STATIC_URI).append(Constants.FILES_URI).append(Constants.SLASH).append(store.getCode()).append(Constants.SLASH);
 		return sb.toString();
-	}
-
-	public String buildAdminDownloadProductFilePath(MerchantStoreItem store, DigitalProductItem digitalProduct) {
-		return new StringBuilder().append(Constants.ADMIN_URI).append(Constants.FILES_URI).append(DOWNLOADS).append(store.getCode()).append(Constants.SLASH).append(digitalProduct.getProductFileName()).toString();
 	}
 
 	public String buildOrderDownloadProductFilePath(MerchantStoreItem store, ReadableOrderProductDownload digitalProduct, Long orderId) {

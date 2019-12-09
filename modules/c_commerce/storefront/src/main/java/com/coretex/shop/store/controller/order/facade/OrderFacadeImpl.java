@@ -6,7 +6,6 @@ import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
-import com.coretex.core.business.services.catalog.product.file.DigitalProductService;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
@@ -29,7 +28,6 @@ import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.OrderAttributeItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
@@ -100,8 +98,6 @@ public class OrderFacadeImpl implements OrderFacade {
 	private ProductAttributeService productAttributeService;
 	@Resource
 	private ShoppingCartService shoppingCartService;
-	@Resource
-	private DigitalProductService digitalProductService;
 	@Resource
 	private CustomerService customerService;
 	@Resource
@@ -298,7 +294,6 @@ public class OrderFacadeImpl implements OrderFacade {
 		}
 
 		OrderProductPopulator orderProductPopulator = new OrderProductPopulator();
-		orderProductPopulator.setDigitalProductService(digitalProductService);
 		orderProductPopulator.setProductAttributeService(productAttributeService);
 		orderProductPopulator.setProductService(productService);
 		orderProductPopulator.setPricingService(pricingService);
@@ -680,7 +675,6 @@ public class OrderFacadeImpl implements OrderFacade {
 		PersistableOrderApiPopulator populator = new PersistableOrderApiPopulator();
 		populator.setCurrencyService(currencyService);
 		populator.setCustomerService(customerService);
-		populator.setDigitalProductService(digitalProductService);
 		populator.setProductAttributeService(productAttributeService);
 		populator.setProductService(productService);
 		populator.setShoppingCartService(shoppingCartService);
@@ -705,7 +699,6 @@ public class OrderFacadeImpl implements OrderFacade {
 			Set<OrderProductItem> orderProducts = new LinkedHashSet<OrderProductItem>();
 
 			OrderProductPopulator orderProductPopulator = new OrderProductPopulator();
-			orderProductPopulator.setDigitalProductService(digitalProductService);
 			orderProductPopulator.setProductAttributeService(productAttributeService);
 			orderProductPopulator.setProductService(productService);
 
@@ -717,18 +710,6 @@ public class OrderFacadeImpl implements OrderFacade {
 			}
 
 			modelOrder.setOrderProducts(orderProducts);
-
-			if (order.getAttributes() != null && order.getAttributes().size() > 0) {
-				Set<OrderAttributeItem> attrs = new HashSet<OrderAttributeItem>();
-				for (com.coretex.shop.model.order.OrderAttribute attribute : order.getAttributes()) {
-					OrderAttributeItem attr = new OrderAttributeItem();
-					attr.setKey(attribute.getKey());
-					attr.setValue(attribute.getValue());
-					attr.setOrder(modelOrder);
-					attrs.add(attr);
-				}
-				modelOrder.setOrderAttributes(attrs);
-			}
 
 			OrderTotalSummary orderTotalSummary = null;
 
@@ -782,10 +763,6 @@ public class OrderFacadeImpl implements OrderFacade {
 					//send order confirmation email to customer
 					emailTemplatesUtils.sendOrderEmail(customer.getEmail(), customer, modelOrder, locale, language, store, coreConfiguration.getProperty("CONTEXT_PATH"));
 
-					if (orderService.hasDownloadFiles(modelOrder)) {
-						emailTemplatesUtils.sendOrderDownloadEmail(customer, modelOrder, store, locale, coreConfiguration.getProperty("CONTEXT_PATH"));
-					}
-
 					//send order confirmation email to merchant
 					emailTemplatesUtils.sendOrderEmail(store.getStoreEmailAddress(), customer, modelOrder, locale, language, store, coreConfiguration.getProperty("CONTEXT_PATH"));
 
@@ -801,40 +778,6 @@ public class OrderFacadeImpl implements OrderFacade {
 			throw new RuntimeException(e);
 		}
 
-	}
-
-
-	@Override
-	public ReadableOrderList getCapturableOrderList(MerchantStoreItem store, Date startDate, Date endDate,
-													LocaleItem language) throws Exception {
-
-		//get all transactions for the given date
-		List<OrderItem> orders = orderService.getCapturableOrders(store, startDate, endDate);
-
-		ReadableOrderPopulator orderPopulator = new ReadableOrderPopulator();
-		Locale locale = LocaleUtils.getLocale(language);
-		orderPopulator.setLocale(locale);
-
-		ReadableOrderList returnList = new ReadableOrderList();
-
-		if (CollectionUtils.isEmpty(orders)) {
-			returnList.setTotal(0);
-			//returnList.setMessage("No results for store code " + store);
-			return null;
-		}
-
-		List<ReadableOrder> readableOrders = new ArrayList<ReadableOrder>();
-		for (OrderItem order : orders) {
-			ReadableOrder readableOrder = new ReadableOrder();
-			orderPopulator.populate(order, readableOrder, store, language);
-			readableOrders.add(readableOrder);
-
-		}
-
-		returnList.setTotal(orders.size());
-		returnList.setOrders(readableOrders);
-
-		return returnList;
 	}
 
 

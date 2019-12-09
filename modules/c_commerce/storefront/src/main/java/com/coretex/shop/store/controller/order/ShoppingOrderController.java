@@ -7,7 +7,6 @@ import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
-import com.coretex.core.business.services.order.orderproduct.OrderProductDownloadService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
@@ -26,7 +25,6 @@ import com.coretex.items.commerce_core_model.DeliveryServiceItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
-import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
@@ -114,10 +112,6 @@ public class ShoppingOrderController extends AbstractController {
 	private ShoppingCartFacade shoppingCartFacade;
 
 	@Resource
-	private ShoppingCartService shoppingCartService;
-
-
-	@Resource
 	private CustomerService customerService;
 
 	@Resource
@@ -158,9 +152,6 @@ public class ShoppingOrderController extends AbstractController {
 
 	@Resource
 	private DeliveryService deliveryService;
-
-	@Resource
-	private OrderProductDownloadService orderProdctDownloadService;
 
 	@Resource
 	private NewPostDeliveryServiceDataPopulator newPostDeliveryServiceDataPopulator;
@@ -447,29 +438,10 @@ public class ShoppingOrderController extends AbstractController {
 
 		try {
 
-			//check if any downloads exist for this order6
-			List<OrderProductDownloadItem> orderProductDownloads = orderProdctDownloadService.getByOrderId(modelOrder.getUuid());
-			if (CollectionUtils.isNotEmpty(orderProductDownloads)) {
-
-				LOGGER.debug("Is user authenticated ? ", auth.isAuthenticated());
-				if (auth != null &&
-						request.isUserInRole("AUTH_CUSTOMER")) {
-					//already authenticated
-				} else {
-					//authenticate
-					customerFacade.authenticate(modelCustomer, userName, password);
-					super.setSessionAttribute(Constants.CUSTOMER, modelCustomer, request);
-				}
-
-			}
 
 			//send order confirmation email to customer
 			emailTemplatesUtils.sendOrderEmail(modelCustomer.getEmail(), modelCustomer, modelOrder, locale, language, store, request.getContextPath());
 
-			if (orderService.hasDownloadFiles(modelOrder)) {
-				emailTemplatesUtils.sendOrderDownloadEmail(modelCustomer, modelOrder, store, locale, request.getContextPath());
-
-			}
 
 			//send order confirmation email to merchant
 			emailTemplatesUtils.sendOrderEmail(store.getStoreEmailAddress(), modelCustomer, modelOrder, locale, language, store, request.getContextPath());

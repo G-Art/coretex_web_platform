@@ -17,7 +17,6 @@ import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ShoppingCartEntryAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.google.common.collect.Sets;
@@ -147,31 +146,7 @@ public class ShoppingCartFacadeImpl
 			cartModel = createCartModel(shoppingCartCode, store, customer);
 
 		}
-		ShoppingCartEntryItem shoppingCartItem =
-				createCartItem(cartModel, item, store);
 
-		boolean duplicateFound = false;
-		if (CollectionUtils.isEmpty(item.getShoppingCartAttributes())) {//increment quantity
-			//get duplicate item from the cart
-			Set<ShoppingCartEntryItem> cartModelItems = cartModel.getLineItems();
-			for (ShoppingCartEntryItem cartItem : cartModelItems) {
-				if (cartItem.getProduct().getUuid().equals(shoppingCartItem.getProduct().getUuid())) {
-					if (CollectionUtils.isEmpty(cartItem.getAttributes())) {
-						if (!duplicateFound) {
-							if (!(shoppingCartItem.getProductVirtual() != null ? shoppingCartItem.getProductVirtual() : false )) {
-								cartItem.setQuantity(cartItem.getQuantity() + shoppingCartItem.getQuantity());
-							}
-							duplicateFound = true;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		if (!duplicateFound) {
-			cartModel.getLineItems().add(shoppingCartItem);
-		}
 
 		/** Update cart in database with line items **/
 		shoppingCartService.saveOrUpdate(cartModel);
@@ -236,30 +211,6 @@ public class ShoppingCartFacadeImpl
 		item.setQuantity(shoppingCartItem.getQuantity());
 		item.setShoppingCart(cartModel);
 
-		// attributes
-		List<ShoppingCartAttribute> cartAttributes = shoppingCartItem.getShoppingCartAttributes();
-		if (!CollectionUtils.isEmpty(cartAttributes)) {
-			for (ShoppingCartAttribute attribute : cartAttributes) {
-				ProductAttributeItem productAttribute = productAttributeService.getByUUID(attribute.getAttributeId());
-				if (productAttribute != null
-						&& productAttribute.getProduct().getUuid().equals(product.getUuid())) {
-					ShoppingCartEntryAttributeItem attributeItem =
-							new ShoppingCartEntryAttributeItem();
-					attributeItem.setShoppingCartItem(item);
-					attributeItem.setProductAttribute(productAttribute);
-
-					var attributes = item.getAttributes();
-
-					if (CollectionUtils.isEmpty(attributes)) {
-						attributes = Sets.newHashSet();
-					}
-
-					attributes.add(attributeItem);
-
-					item.setAttributes(attributes);
-				}
-			}
-		}
 		return item;
 
 	}
@@ -313,34 +264,6 @@ public class ShoppingCartFacadeImpl
 
 		item.setQuantity(shoppingCartItem.getQuantity());
 		item.setShoppingCart(cartModel);
-
-		//set attributes
-		List<com.coretex.shop.model.catalog.product.attribute.ProductAttribute> attributes = shoppingCartItem.getAttributes();
-		if (!CollectionUtils.isEmpty(attributes)) {
-			for (com.coretex.shop.model.catalog.product.attribute.ProductAttribute attribute : attributes) {
-
-				ProductAttributeItem productAttribute = productAttributeService.getByUUID(attribute.getUuid());
-
-				if (productAttribute != null
-						&& productAttribute.getProduct().getUuid().equals(product.getUuid())) {
-
-					ShoppingCartEntryAttributeItem attributeItem =
-							new ShoppingCartEntryAttributeItem();
-					attributeItem.setShoppingCartItem(item);
-					attributeItem.setProductAttribute(productAttribute);
-
-					var attr = item.getAttributes();
-
-					if (CollectionUtils.isEmpty(attributes)) {
-						attr = Sets.newHashSet();
-					}
-
-					attr.add(attributeItem);
-
-					item.setAttributes(attr);
-				}
-			}
-		}
 
 		return item;
 
@@ -648,34 +571,6 @@ public class ShoppingCartFacadeImpl
 
 	private ReadableShoppingCart readableShoppingCart(ShoppingCartItem cartModel, PersistableShoppingCartItem item, MerchantStoreItem store,
 													  LocaleItem language) throws Exception {
-
-
-		ShoppingCartEntryItem itemModel = createCartItem(cartModel, item, store);
-
-		//need to check if the item is already in the cart
-		boolean duplicateFound = false;
-		//only if item has no attributes
-		if (CollectionUtils.isEmpty(item.getAttributes())) {//increment quantity
-			//get duplicate item from the cart
-			Set<ShoppingCartEntryItem> cartModelItems = cartModel.getLineItems();
-			for (ShoppingCartEntryItem cartItem : cartModelItems) {
-				if (cartItem.getProduct().getUuid().equals(item.getProduct())) {
-					if (CollectionUtils.isEmpty(cartItem.getAttributes())) {
-						if (!duplicateFound) {
-							if (!itemModel.getProductVirtual()) {
-								cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
-							}
-							duplicateFound = true;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		if (!duplicateFound) {
-			cartModel.getLineItems().add(itemModel);
-		}
 
 		saveShoppingCart(cartModel);
 

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 
 import com.coretex.core.business.repositories.merchant.MerchantDao;
-import com.coretex.core.business.services.catalog.product.type.ProductTypeService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.model.common.GenericEntityList;
 import com.coretex.core.model.merchant.MerchantStoreCriteria;
@@ -15,11 +14,6 @@ import com.coretex.core.model.merchant.MerchantStoreCriteria;
 @Service("merchantService")
 public class MerchantStoreServiceImpl extends SalesManagerEntityServiceImpl<MerchantStoreItem>
 		implements MerchantStoreService {
-
-
-	@Resource
-	protected ProductTypeService productTypeService;
-
 
 	private MerchantDao merchantDao;
 

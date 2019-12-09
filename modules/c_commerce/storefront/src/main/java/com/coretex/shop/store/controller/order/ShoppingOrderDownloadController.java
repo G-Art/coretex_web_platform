@@ -2,13 +2,10 @@ package com.coretex.shop.store.controller.order;
 
 import com.coretex.core.business.services.content.ContentService;
 import com.coretex.core.business.services.order.OrderService;
-import com.coretex.core.business.services.order.orderproduct.OrderProductDownloadService;
 import com.coretex.core.model.content.FileContentType;
-import com.coretex.core.model.content.OutputContentFile;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
-import com.coretex.items.commerce_core_model.OrderProductDownloadItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.store.controller.AbstractController;
 import org.slf4j.Logger;
@@ -39,8 +36,6 @@ public class ShoppingOrderDownloadController extends AbstractController {
 	@Resource
 	private OrderService orderService;
 
-	@Resource
-	private OrderProductDownloadService orderProductDownloadService;
 
 	/**
 	 * Virtual product(s) download link
@@ -80,32 +75,9 @@ public class ShoppingOrderDownloadController extends AbstractController {
 		}
 
 
-		String fileName = null;//get it from OrderProductDownlaod
-		OrderProductDownloadItem download = orderProductDownloadService.getByUUID(UUID.fromString(id));
-		if (download == null) {
-			LOGGER.warn("OrderProductDownloadItem is null for id " + id);
-			response.sendError(404, "Image not found");
+
+
 			return null;
-		}
-
-		fileName = download.getOrderProductFilename();
-
-		// needs to query the new API
-		OutputContentFile file = contentService.getContentFile(store.getCode(), fileType, fileName);
-
-
-		if (file != null) {
-			response.setHeader("ContentItem-Disposition", "attachment; filename=\"" + fileName + "\"");
-			return file.getFile().toByteArray();
-		} else {
-			LOGGER.warn("Image not found for OrderProductDownloadItem id " + id);
-			response.sendError(404, "Image not found");
-			return null;
-		}
-
-
-		// product image
-		// example -> /download/12345/120.html
 
 
 	}
