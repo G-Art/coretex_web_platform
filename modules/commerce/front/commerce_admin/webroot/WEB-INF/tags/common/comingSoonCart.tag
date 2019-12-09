@@ -1,16 +1,10 @@
-<div class="card">
-    <div class="card-header">
-        <h5>Coming Soon</h5>
-        <span>This block will be implemented soon</span>
-        <div class="card-header-right">
-            <ul class="list-unstyled card-option">
-                <li><i class="feather icon-maximize full-card"></i></li>
-                <li><i class="feather icon-minus minimize-card"></i></li>
-                <li><i class="feather icon-trash-2 close-card"></i></li>
-            </ul>
-        </div>
-    </div>
-    <div class="card-block">
+<%@ taglib prefix="common-components" tagdir="/WEB-INF/tags/common/components" %>
+
+<common-components:cardBlock title="Coming Soon"
+                             description="This block will be implemented soon"
+                             fullCardButton="false"
+                             minimizeCardButton="false">
+    <jsp:attribute name="cardBlock">
         <p>
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -20,5 +14,6 @@
             nulla pariatur. Excepteur sint occaecat cupidatat non proident,
             sunt in culpa qui officia deserunt mollit anim id est laborum."
         </p>
-    </div>
-</div>
+    </jsp:attribute>
+
+</common-components:cardBlock>

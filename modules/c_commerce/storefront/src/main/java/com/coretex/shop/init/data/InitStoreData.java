@@ -695,7 +695,6 @@ public class InitStoreData implements InitData {
 
 
 		order.setPaymentType(PaymentTypeEnum.PAYPAL);
-		order.setPaymentModuleCode("paypal");
 		order.setStatus(com.coretex.enums.commerce_core_model.OrderStatusEnum.DELIVERED);
 		order.setTotal(new BigDecimal(23.99));
 
@@ -731,7 +730,6 @@ public class InitStoreData implements InitData {
 
 		//OrderTotalItem
 		OrderTotalItem subtotal = new OrderTotalItem();
-		subtotal.setModule("summary");
 		subtotal.setSortOrder(0);
 		subtotal.setText("Summary");
 		subtotal.setTitle("Summary");
@@ -742,7 +740,6 @@ public class InitStoreData implements InitData {
 		order.getOrderTotal().add(subtotal);
 
 		OrderTotalItem tax = new OrderTotalItem();
-		tax.setModule("tax");
 		tax.setSortOrder(1);
 		tax.setText("Tax");
 		tax.setTitle("Tax");
@@ -753,7 +750,6 @@ public class InitStoreData implements InitData {
 		order.getOrderTotal().add(tax);
 
 		OrderTotalItem total = new OrderTotalItem();
-		total.setModule("total");
 		total.setSortOrder(2);
 		total.setText("Total");
 		total.setTitle("Total");

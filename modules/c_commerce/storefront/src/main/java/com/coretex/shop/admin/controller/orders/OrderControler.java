@@ -155,9 +155,7 @@ public class OrderControler {
 
 			order.setCustomerId(dbOrder.getCustomerId().toString());
 			order.setCustomerEmailAddress(dbOrder.getCustomerEmailAddress());
-			order.setPaymentModuleCode(dbOrder.getPaymentModuleCode());
 			order.setStatus(dbOrder.getStatus());
-			order.setShippingModuleCode(dbOrder.getShippingModuleCode());
 			order.setDelivery(OrderConverterHelper.convertDelivery(dbOrder.getDelivery()));
 
 			order.setOrderHistory(dbOrder.getOrderHistory());

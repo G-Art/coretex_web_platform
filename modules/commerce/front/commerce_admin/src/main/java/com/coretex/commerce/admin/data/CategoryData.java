@@ -1,5 +1,7 @@
 package com.coretex.commerce.admin.data;
 
+import com.coretex.commerce.admin.data.minimal.MinimalCategoryData;
+
 public class CategoryData extends MinimalCategoryData {
 
 	private String categoryHighlight;

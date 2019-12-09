@@ -282,7 +282,6 @@ public class OrderFacadeImpl implements OrderFacade {
 		modelOrder.setDatePurchased(new Date());
 		modelOrder.setBilling(customer.getBilling());
 		modelOrder.setDelivery(customer.getDelivery());
-		modelOrder.setPaymentModuleCode(order.getPaymentModule());
 		modelOrder.setCustomerAgreement(order.isCustomerAgreed());
 		modelOrder.setLocale(LocaleUtils.getLocale(store).toString());//set the store locale based on the country for order $ formatting
 
@@ -364,13 +363,6 @@ public class OrderFacadeImpl implements OrderFacade {
 
 		//customer object
 		orderCustomer(customer, modelOrder, language);
-
-		//populate shipping information
-		if (!StringUtils.isBlank(order.getShippingModule())) {
-			modelOrder.setShippingModuleCode(order.getShippingModule());
-		}
-
-		modelOrder.setPaymentModuleCode(order.getPaymentModule());
 
 		orderService.processOrder(modelOrder, customer, order.getShoppingCartItems(), summary, store);
 

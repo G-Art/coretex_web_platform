@@ -31,8 +31,6 @@ public class ReadableOrderPopulator extends
 		target.setCurrencyModel(source.getCurrency());
 
 		target.setPaymentType(source.getPaymentType());
-		target.setPaymentModule(source.getPaymentModuleCode());
-		target.setShippingModule(source.getShippingModuleCode());
 
 
 		if (source.getCustomerAgreement() != null) {
@@ -154,7 +152,6 @@ public class ReadableOrderPopulator extends
 		com.coretex.shop.model.order.total.OrderTotal totalTotal = new com.coretex.shop.model.order.total.OrderTotal();
 		totalTotal.setCode(t.getOrderTotalCode());
 		totalTotal.setUuid(t.getUuid());
-		totalTotal.setModule(t.getModule());
 		totalTotal.setOrder(t.getSortOrder());
 		totalTotal.setValue(t.getValue());
 		return totalTotal;

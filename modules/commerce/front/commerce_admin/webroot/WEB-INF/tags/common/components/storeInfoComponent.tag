@@ -1,22 +1,12 @@
 <%--@elvariable id="currentUser" type="com.coretex.commerce.admin.data.UserData"--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="common-components" tagdir="/WEB-INF/tags/common/components" %>
 <div class="row">
     <div class="col-sm-12">
-        <div class="card">
-            <div class="card-header">
-                <h5>Store Info</h5>
-                <span>Information about current store</span>
-                <div class="card-header-right">
-                    <ul class="list-unstyled card-option">
-                        <li><i class="feather icon-maximize full-card"></i></li>
-                        <li><i class="feather icon-minus minimize-card"></i></li>
-                        <%--                                    <li><i class="feather icon-trash-2 close-card"></i></li>--%>
-                    </ul>
-                </div>
-            </div>
-
-            <c:set var="store" value="${currentUser.merchantStore}"/>
-            <div class="card-block">
+        <common-components:cardBlock title="Store Info"
+                                     description="Information about current store">
+            <jsp:attribute name="cardBlock">
+                <c:set var="store" value="${currentUser.merchantStore}"/>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="general-info">
@@ -77,7 +67,8 @@
                     </div>
                     <!-- end of col-lg-12 -->
                 </div>
-            </div>
-        </div>
+            </jsp:attribute>
+
+        </common-components:cardBlock>
     </div>
 </div>

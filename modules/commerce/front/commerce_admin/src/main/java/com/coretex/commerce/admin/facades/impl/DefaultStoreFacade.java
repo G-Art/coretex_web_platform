@@ -1,12 +1,11 @@
 package com.coretex.commerce.admin.facades.impl;
 
-import com.coretex.commerce.admin.controllers.DataTableResults;
 import com.coretex.commerce.admin.data.MerchantStoreData;
-import com.coretex.commerce.admin.data.MinimalMerchantStoreData;
+import com.coretex.commerce.admin.data.minimal.MinimalMerchantStoreData;
 import com.coretex.commerce.admin.facades.StoreFacade;
 import com.coretex.commerce.admin.mapper.GenericDataMapper;
 import com.coretex.commerce.admin.mapper.MerchantStoreDataMapper;
-import com.coretex.commerce.admin.mapper.MinimalMerchantStoreDataMapper;
+import com.coretex.commerce.admin.mapper.minimal.MinimalMerchantStoreDataMapper;
 import com.coretex.core.business.services.common.generic.PageableEntityService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;

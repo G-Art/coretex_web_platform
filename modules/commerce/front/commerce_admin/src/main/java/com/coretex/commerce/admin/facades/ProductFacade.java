@@ -1,6 +1,6 @@
 package com.coretex.commerce.admin.facades;
 
-import com.coretex.commerce.admin.data.MinimalProductData;
+import com.coretex.commerce.admin.data.minimal.MinimalProductData;
 import com.coretex.commerce.admin.data.ProductData;
 import com.coretex.items.commerce_core_model.ProductItem;
 

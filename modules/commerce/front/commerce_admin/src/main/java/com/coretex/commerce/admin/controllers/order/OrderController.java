@@ -1,7 +1,7 @@
 package com.coretex.commerce.admin.controllers.order;
 
 import com.coretex.commerce.admin.controllers.PageableDataTableAbstractController;
-import com.coretex.commerce.admin.data.MinimalOrderData;
+import com.coretex.commerce.admin.data.minimal.MinimalOrderData;
 import com.coretex.commerce.admin.facades.OrderFacade;
 import com.coretex.commerce.admin.facades.PageableDataTableFacade;
 import com.coretex.items.commerce_core_model.OrderItem;

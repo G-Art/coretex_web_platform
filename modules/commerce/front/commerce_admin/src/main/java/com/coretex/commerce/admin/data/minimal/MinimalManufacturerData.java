@@ -1,4 +1,6 @@
-package com.coretex.commerce.admin.data;
+package com.coretex.commerce.admin.data.minimal;
+
+import com.coretex.commerce.admin.data.GenericItemData;
 
 public class MinimalManufacturerData extends GenericItemData {
 

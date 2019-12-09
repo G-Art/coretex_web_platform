@@ -1,6 +1,9 @@
-package com.coretex.commerce.admin.mapper;
+package com.coretex.commerce.admin.mapper.minimal;
 
-import com.coretex.commerce.admin.data.MinimalUserData;
+import com.coretex.commerce.admin.data.minimal.MinimalUserData;
+import com.coretex.commerce.admin.mapper.GenericDataMapper;
+import com.coretex.commerce.admin.mapper.LocaleDataMapper;
+import com.coretex.commerce.admin.mapper.ReferenceMapper;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.UserItem;
@@ -14,17 +17,6 @@ import org.mapstruct.Mappings;
 		uses = {ReferenceMapper.class,
 				LocaleDataMapper.class})
 public interface MinimalUserDataMapper extends GenericDataMapper<UserItem, MinimalUserData> {
-
-	@Override
-	@Mappings({
-			@Mapping(target = "merchantStore", ignore = true),
-			@Mapping(target = "groups", ignore = true)
-	})
-	UserItem toItem(MinimalUserData source);
-
-	@Override
-	@InheritConfiguration(name = "toItem")
-	void updateToItem(MinimalUserData source, @MappingTarget UserItem target);
 
 	default String mapStore(MerchantStoreItem value) {
 		return value.getStoreName();

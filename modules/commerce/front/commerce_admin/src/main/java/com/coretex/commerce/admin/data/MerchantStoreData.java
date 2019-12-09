@@ -1,5 +1,7 @@
 package com.coretex.commerce.admin.data;
 
+import com.coretex.commerce.admin.data.minimal.MinimalMerchantStoreData;
+
 import java.util.Date;
 
 public class MerchantStoreData extends MinimalMerchantStoreData {

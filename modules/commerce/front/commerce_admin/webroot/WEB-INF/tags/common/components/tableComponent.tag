@@ -17,6 +17,7 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="common-components" tagdir="/WEB-INF/tags/common/components" %>
 
 <c:if test="${empty fullCardButton}">
     <c:set var="fullCardButton" value="true"/>
@@ -35,52 +36,37 @@
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="card">
-            <div class="card-header">
-                <h5>${title}</h5>
-                <span>${description}</span>
-                <c:if test="${fullCardButton || minimizeCardButton}">
-                    <div class="card-header-right">
-                        <ul class="list-unstyled card-option">
-                            <c:if test="${fullCardButton}">
-                                <li><i class="feather icon-maximize full-card"></i></li>
-                            </c:if>
-                            <c:if test="${minimizeCardButton}">
-                                <li><i class="feather icon-minus minimize-card"></i></li>
-                            </c:if>
-                                <%--                                    <li><i class="feather icon-trash-2 close-card"></i></li>--%>
-                        </ul>
-                    </div>
-                </c:if>
-            </div>
-
-            <div class="card-block">
-                <script>
-                    $(document).ready(function () {
-                        $('#${tableId}').DataTable({
-                            "responsive": true,
-                            "ordering": ${ordering},
-                            "searching": ${searching},
-                            "processing": true,
-                            "serverSide": true,
-                            "ajax": {
-                                "url": "<c:url value="${dataSourceLink}"/>",
-                                "type": "POST"
-                            },
-                            "rowId": '${rowId}',
-                            "columns": <jsp:invoke fragment="columns"/>
-                            <c:if test="${not empty actionTarget}">,
-                            "initComplete": function () {
-                                <c:if test="${not empty actionPath}">
-                                $("button.edit-${tableId}-button").click( edit_${tableId} );
-                                </c:if>
-                            },
-                            "columnDefs": [{
-                                "targets": ${actionTarget},
-                                // "data": null,
-                                "searchable": false,
-                                'render': function (data, type, row) {
-                                    return `<div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
+        <common-components:cardBlock title="${title}"
+                                     description="${description}"
+                                     minimizeCardButton="${fullCardButton}"
+                                     fullCardButton="${fullCardButton}">
+                <jsp:attribute name="cardBlock">
+                    <script>
+                        $(document).ready(function () {
+                            $('#${tableId}').DataTable({
+                                "responsive": true,
+                                "ordering": ${ordering},
+                                "searching": ${searching},
+                                "processing": true,
+                                "serverSide": true,
+                                "ajax": {
+                                    "url": "<c:url value="${dataSourceLink}"/>",
+                                    "type": "POST"
+                                },
+                                "rowId": '${rowId}',
+                                "columns": <jsp:invoke fragment="columns"/>
+                                <c:if test="${not empty actionTarget}">,
+                                "initComplete": function () {
+                                    <c:if test="${not empty actionPath}">
+                                    $("button.edit-${tableId}-button").click( edit_${tableId} );
+                                    </c:if>
+                                },
+                                "columnDefs": [{
+                                    "targets": ${actionTarget},
+                                    // "data": null,
+                                    "searchable": false,
+                                    'render': function (data, type, row) {
+                                        return `<div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
                                         <div class="btn-group btn-group-sm" style="float: none;">
                                             <button  type="button" data-item-uuid="\${row['${rowId}']}"
                                                      class="edit-${tableId}-button tabledit-edit-button btn btn-primary waves-effect waves-light"
@@ -89,21 +75,21 @@
                                             </button>
                                         </div>
                                     </div>`
-                                }
-                            }]
+                                    }
+                                }]
+                                </c:if>
+                            });
+                            <c:if test="${not empty actionPath}">
+                            function edit_${tableId}( event ) {
+                                let target = event.currentTarget;
+                                window.location.pathname = "${pageContext.request.contextPath}${actionPath}/" + target.dataset.itemUuid;
+                                console.log("Edit: "+target.dataset.itemUuid);
+                            }
                             </c:if>
                         });
-                        <c:if test="${not empty actionPath}">
-                        function edit_${tableId}( event ) {
-                            let target = event.currentTarget;
-                            window.location.pathname = "${pageContext.request.contextPath}${actionPath}/" + target.dataset.itemUuid;
-                            console.log("Edit: "+target.dataset.itemUuid);
-                        }
-                        </c:if>
-                    });
 
 
-                </script>
+                    </script>
 
                 <div class="table-responsive dt-responsive">
                     <table class="table table-striped table-bordered" id="${tableId}">
@@ -112,7 +98,9 @@
                         </thead>
                     </table>
                 </div>
-            </div>
-        </div>
+                </jsp:attribute>
+
+    </common-components:cardBlock>
+
     </div>
 </div>

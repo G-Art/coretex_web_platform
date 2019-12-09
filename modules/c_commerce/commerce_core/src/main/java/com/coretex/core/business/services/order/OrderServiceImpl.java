@@ -190,7 +190,6 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 							if (itemSubTotal == null) {
 								itemSubTotal = new OrderTotalItem();
-								itemSubTotal.setModule(Constants.OT_ITEM_PRICE_MODULE_CODE);
 								//itemSubTotal.setText(Constants.OT_ITEM_PRICE_MODULE_CODE);
 								itemSubTotal.setTitle(Constants.OT_ITEM_PRICE_MODULE_CODE);
 								itemSubTotal.setOrderTotalCode(price.getProductPrice().getCode());
@@ -241,7 +240,6 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 		grandTotal = grandTotal.add(subTotal);
 
 		OrderTotalItem orderTotalSubTotal = new OrderTotalItem();
-		orderTotalSubTotal.setModule(Constants.OT_SUBTOTAL_MODULE_CODE);
 		orderTotalSubTotal.setOrderTotalType(OrderTotalTypeEnum.SUBTOTAL);
 		orderTotalSubTotal.setOrderTotalCode("order.total.subtotal");
 		orderTotalSubTotal.setTitle(Constants.OT_SUBTOTAL_MODULE_CODE);
@@ -257,7 +255,6 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 
 			OrderTotalItem shippingSubTotal = new OrderTotalItem();
-			shippingSubTotal.setModule(Constants.OT_SHIPPING_MODULE_CODE);
 			shippingSubTotal.setOrderTotalType(OrderTotalTypeEnum.SHIPPING);
 			shippingSubTotal.setOrderTotalCode("order.total.shipping");
 			shippingSubTotal.setTitle(Constants.OT_SHIPPING_MODULE_CODE);
@@ -306,7 +303,6 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 		// grand total
 		OrderTotalItem orderTotal = new OrderTotalItem();
-		orderTotal.setModule(Constants.OT_TOTAL_MODULE_CODE);
 		orderTotal.setOrderTotalType(OrderTotalTypeEnum.TOTAL);
 		orderTotal.setOrderTotalCode("order.total.total");
 		orderTotal.setTitle(Constants.OT_TOTAL_MODULE_CODE);

@@ -9,11 +9,19 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
+@Mapper(componentModel = "spring",
+		uses = {ReferenceMapper.class,
+				MerchantStoreDataMapper.class,
+				AddressDataMapper.class,
+				OrderProductDataMapper.class,
+				OrderTotalDataMapper.class,
+				CurrencyDataMapper.class})
 public interface OrderDataMapper extends GenericDataMapper<OrderItem, OrderData> {
 	@Override
 	@Mappings({
 			@Mapping(target = "name", source = "delivery.firstName"),
+			@Mapping(target = "phone", source = "delivery.telephone"),
+			@Mapping(target = "email", source = "customerEmailAddress"),
 			@Mapping(target = "date", source = "createDate", dateFormat = "dd-MM-yyyy HH:mm")
 	})
 	OrderData fromItem(OrderItem source);
@@ -22,15 +30,6 @@ public interface OrderDataMapper extends GenericDataMapper<OrderItem, OrderData>
 	@InheritConfiguration(name = "fromItem")
 	void updateFromItem(OrderItem source, @MappingTarget OrderData target);
 
-	@Override
-	@Mappings({
-			@Mapping(target = "merchant", ignore = true)
-	})
-	OrderItem toItem(OrderData source);
-
-	@Override
-	@InheritConfiguration(name = "toItem")
-	void updateToItem(OrderData source, @MappingTarget OrderItem target);
 
 	default String mapStore(MerchantStoreItem value) {
 		return value.getStoreName();

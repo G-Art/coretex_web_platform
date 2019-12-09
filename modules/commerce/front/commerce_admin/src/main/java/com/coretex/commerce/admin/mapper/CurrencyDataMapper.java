@@ -25,11 +25,4 @@ public interface CurrencyDataMapper extends GenericDataMapper<CurrencyItem, Curr
 	@InheritConfiguration(name = "fromItem")
 	void updateFromItem(CurrencyItem currencyItem, @MappingTarget CurrencyData currencyData);
 
-	@Override
-	@InheritInverseConfiguration(name = "fromItem")
-	CurrencyItem toItem(CurrencyData source);
-
-	@Override
-	@InheritConfiguration(name = "toItem")
-	void updateToItem(CurrencyData source, @MappingTarget CurrencyItem target);
 }

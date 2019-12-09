@@ -1,7 +1,7 @@
 package com.coretex.commerce.admin.facades;
 
 import com.coretex.commerce.admin.data.CategoryHierarchyData;
-import com.coretex.commerce.admin.data.MinimalCategoryData;
+import com.coretex.commerce.admin.data.minimal.MinimalCategoryData;
 import com.coretex.items.commerce_core_model.CategoryItem;
 
 import java.util.List;

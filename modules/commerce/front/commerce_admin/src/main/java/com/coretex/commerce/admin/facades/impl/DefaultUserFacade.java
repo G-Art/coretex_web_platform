@@ -1,11 +1,10 @@
 package com.coretex.commerce.admin.facades.impl;
 
-import com.coretex.commerce.admin.controllers.DataTableResults;
-import com.coretex.commerce.admin.data.MinimalUserData;
+import com.coretex.commerce.admin.data.minimal.MinimalUserData;
 import com.coretex.commerce.admin.data.UserData;
 import com.coretex.commerce.admin.facades.UserFacade;
 import com.coretex.commerce.admin.mapper.GenericDataMapper;
-import com.coretex.commerce.admin.mapper.MinimalUserDataMapper;
+import com.coretex.commerce.admin.mapper.minimal.MinimalUserDataMapper;
 import com.coretex.commerce.admin.mapper.UserDataMapper;
 import com.coretex.commerce.admin.security.PrincipalUser;
 import com.coretex.core.business.services.common.generic.PageableEntityService;

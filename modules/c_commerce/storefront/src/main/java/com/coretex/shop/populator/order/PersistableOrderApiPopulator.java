@@ -114,7 +114,6 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 			target.setChannel(OrderChannelEnum.API);
 			//need this
 			target.setStatus(OrderStatusEnum.ORDERED);
-			target.setPaymentModuleCode(source.getPayment().getPaymentModule());
 			target.setPaymentType(PaymentTypeEnum.valueOf(source.getPayment().getPaymentType()));
 
 			target.setCustomerAgreement(source.isCustomerAgreement());

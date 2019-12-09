@@ -39,7 +39,6 @@ public class ReadableOrderTotalPopulator extends
 
 			target.setCode(source.getOrderTotalCode());
 			target.setUuid(source.getUuid());
-			target.setModule(source.getModule());
 			target.setOrder(source.getSortOrder());
 
 

@@ -151,11 +151,6 @@ public class EmailTemplatesUtils {
 				shipping.append(order.getDelivery().getPostalCode());
 			}
 
-			if (shipping == null && StringUtils.isNotBlank(order.getShippingModuleCode())) {
-				//TODO IF HAS NO SHIPPING
-				shipping = billing;
-			}
-
 			//format order
 			//String storeUri = FilePathUtils.buildStoreUri(merchantStore, contextPath);
 			StringBuilder orderTable = new StringBuilder();
@@ -178,17 +173,8 @@ public class EmailTemplatesUtils {
 				orderTable.append(CLOSING_TD);
 				orderTable.append(TD);
 				orderTable.append("<strong>");
-				if (total.getModule().equals("tax")) {
-					orderTable.append(total.getText()).append(": ");
 
-				} else {
-					//if(total.getModule().equals("total") || total.getModule().equals("subtotal")) {
-					//}
 					orderTable.append(messages.getMessage(total.getOrderTotalCode(), customerLocale)).append(": ");
-					//if(total.getModule().equals("total") || total.getModule().equals("subtotal")) {
-
-					//}
-				}
 				orderTable.append("</strong>");
 				orderTable.append(CLOSING_TD);
 				orderTable.append(TD);
@@ -219,19 +205,12 @@ public class EmailTemplatesUtils {
 			templateTokens.put(EmailConstants.ADDRESS_BILLING_TITLE, messages.getMessage("label.customer.billinginformation", customerLocale));
 			templateTokens.put(EmailConstants.PAYMENT_METHOD_TITLE, messages.getMessage("label.order.paymentmode", customerLocale));
 
-			if (StringUtils.isNotBlank(order.getShippingModuleCode())) {
-				templateTokens.put(EmailConstants.SHIPPING_METHOD_DETAILS, messages.getMessage(new StringBuilder().append("module.shipping.").append(order.getShippingModuleCode()).toString(), customerLocale, order.getShippingModuleCode()));
-				templateTokens.put(EmailConstants.ADDRESS_SHIPPING_TITLE, messages.getMessage("label.order.shippingmethod", customerLocale));
-				templateTokens.put(EmailConstants.ADDRESS_DELIVERY_TITLE, messages.getMessage("label.customer.shippinginformation", customerLocale));
-				templateTokens.put(EmailConstants.SHIPPING_METHOD_TITLE, messages.getMessage("label.customer.shippinginformation", customerLocale));
-				templateTokens.put(EmailConstants.ADDRESS_DELIVERY, shipping.toString());
-			} else {
-				templateTokens.put(EmailConstants.SHIPPING_METHOD_DETAILS, "");
-				templateTokens.put(EmailConstants.ADDRESS_SHIPPING_TITLE, "");
-				templateTokens.put(EmailConstants.ADDRESS_DELIVERY_TITLE, "");
-				templateTokens.put(EmailConstants.SHIPPING_METHOD_TITLE, "");
-				templateTokens.put(EmailConstants.ADDRESS_DELIVERY, "");
-			}
+
+			templateTokens.put(EmailConstants.SHIPPING_METHOD_DETAILS, "");
+			templateTokens.put(EmailConstants.ADDRESS_SHIPPING_TITLE, "");
+			templateTokens.put(EmailConstants.ADDRESS_DELIVERY_TITLE, "");
+			templateTokens.put(EmailConstants.SHIPPING_METHOD_TITLE, "");
+			templateTokens.put(EmailConstants.ADDRESS_DELIVERY, "");
 
 			String status = messages.getMessage("label.order." + order.getStatus().name(), customerLocale, order.getStatus().name());
 			String[] statusMessage = {DateUtil.formatDate(order.getDatePurchased()), status};

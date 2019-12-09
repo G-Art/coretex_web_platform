@@ -103,9 +103,7 @@ public class PersistableOrderPopulator extends
 			target.setCurrencyValue(new BigDecimal(0));
 			target.setMerchant(store);
 			target.setStatus(source.getOrderStatus());
-			target.setPaymentModuleCode(source.getPaymentModule());
 			target.setPaymentType(source.getPaymentType());
-			target.setShippingModuleCode(source.getShippingModule());
 			target.setCustomerAgreement(source.isCustomerAgreed());
 			target.setConfirmedAddress(source.isConfirmedAddress());
 			if (source.getPreviousOrderStatus() != null) {
@@ -145,7 +143,6 @@ public class PersistableOrderPopulator extends
 			if (CollectionUtils.isNotEmpty(orderTotals)) {
 				for (OrderTotal total : orderTotals) {
 					OrderTotalItem totalModel = new OrderTotalItem();
-					totalModel.setModule(total.getModule());
 					totalModel.setOrder(target);
 					totalModel.setOrderTotalCode(total.getCode());
 					totalModel.setTitle(total.getTitle());

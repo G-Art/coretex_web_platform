@@ -1,6 +1,8 @@
-package com.coretex.commerce.admin.mapper;
+package com.coretex.commerce.admin.mapper.minimal;
 
-import com.coretex.commerce.admin.data.MinimalCategoryData;
+import com.coretex.commerce.admin.data.minimal.MinimalCategoryData;
+import com.coretex.commerce.admin.mapper.GenericDataMapper;
+import com.coretex.commerce.admin.mapper.ReferenceMapper;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.mapstruct.InheritConfiguration;
@@ -27,16 +29,6 @@ public interface MinimalCategoryDataMapper extends GenericDataMapper<CategoryIte
 	@Override
 	@InheritConfiguration(name = "fromItem")
 	void updateFromItem(CategoryItem source, @MappingTarget MinimalCategoryData target);
-
-	@Override
-	@Mappings({
-			@Mapping(target = "merchantStore", ignore = true)
-	})
-	CategoryItem toItem(MinimalCategoryData source);
-
-	@Override
-	@InheritConfiguration(name = "toItem")
-	void updateToItem(MinimalCategoryData source, @MappingTarget CategoryItem target);
 
 	default String mapStore(MerchantStoreItem value) {
 		return value.getStoreName();

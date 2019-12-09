@@ -9,6 +9,4 @@ public interface GenericDataMapper<SOURCE extends GenericItem, TARGET extends Ge
 	TARGET fromItem(SOURCE source);
 	void updateFromItem(SOURCE source, @MappingTarget TARGET target);
 
-	SOURCE toItem(TARGET source);
-	void updateToItem(TARGET source, @MappingTarget SOURCE target);
 }

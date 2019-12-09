@@ -1,13 +1,10 @@
 package com.coretex.commerce.admin.facades.impl;
 
-import com.coretex.commerce.admin.controllers.DataTableResults;
-import com.coretex.commerce.admin.data.MinimalMerchantStoreData;
-import com.coretex.commerce.admin.data.MinimalProductData;
+import com.coretex.commerce.admin.data.minimal.MinimalProductData;
 import com.coretex.commerce.admin.data.ProductData;
 import com.coretex.commerce.admin.facades.ProductFacade;
 import com.coretex.commerce.admin.mapper.GenericDataMapper;
-import com.coretex.commerce.admin.mapper.MinimalProductDataMapper;
-import com.coretex.commerce.admin.mapper.MerchantStoreDataMapper;
+import com.coretex.commerce.admin.mapper.minimal.MinimalProductDataMapper;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.common.generic.PageableEntityService;
 import com.coretex.items.commerce_core_model.ProductItem;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service("productFacade")
 public class DefaultProductFacade implements ProductFacade {

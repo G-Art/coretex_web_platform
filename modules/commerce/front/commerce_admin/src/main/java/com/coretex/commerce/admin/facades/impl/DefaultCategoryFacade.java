@@ -1,17 +1,12 @@
 package com.coretex.commerce.admin.facades.impl;
 
-import com.coretex.commerce.admin.controllers.DataTableResults;
 import com.coretex.commerce.admin.data.CategoryHierarchyData;
-import com.coretex.commerce.admin.data.MinimalCategoryData;
-import com.coretex.commerce.admin.data.MinimalOrderData;
+import com.coretex.commerce.admin.data.minimal.MinimalCategoryData;
 import com.coretex.commerce.admin.facades.CategoryFacade;
-import com.coretex.commerce.admin.facades.OrderFacade;
 import com.coretex.commerce.admin.mapper.GenericDataMapper;
-import com.coretex.commerce.admin.mapper.MinimalCategoryDataMapper;
-import com.coretex.commerce.admin.mapper.MinimalOrderDataMapper;
+import com.coretex.commerce.admin.mapper.minimal.MinimalCategoryDataMapper;
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.common.generic.PageableEntityService;
-import com.coretex.core.business.services.order.OrderService;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import org.springframework.stereotype.Component;
 

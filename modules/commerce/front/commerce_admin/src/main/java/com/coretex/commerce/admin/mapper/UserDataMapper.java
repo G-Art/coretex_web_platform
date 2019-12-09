@@ -9,6 +9,6 @@ import org.mapstruct.Mapper;
 				LocaleDataMapper.class,
 				GroupDataMapper.class,
 				MerchantStoreDataMapper.class})
-public interface UserDataMapper extends GenericDataMapper<UserItem, UserData> {
+public interface UserDataMapper extends GenericDataMapper<UserItem, UserData>, GenericItemMapper<UserData, UserItem> {
 
 }

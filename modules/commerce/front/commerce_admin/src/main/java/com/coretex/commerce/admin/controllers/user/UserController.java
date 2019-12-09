@@ -3,7 +3,6 @@ package com.coretex.commerce.admin.controllers.user;
 import com.coretex.commerce.admin.controllers.PageableDataTableAbstractController;
 import com.coretex.commerce.admin.data.GroupData;
 import com.coretex.commerce.admin.data.MerchantStoreData;
-import com.coretex.commerce.admin.data.MinimalUserData;
 import com.coretex.commerce.admin.data.UserData;
 import com.coretex.commerce.admin.facades.GroupFacade;
 import com.coretex.commerce.admin.facades.PageableDataTableFacade;
