@@ -92,4 +92,9 @@ public final class MetaItemContext extends ItemContext {
 	public void flush() {
 		throw new UnsupportedOperationException(UPDATE_INITIAL_TYPE_ERROR_MSG);
 	}
+
+	@Override
+	public void refresh() {
+		throw new UnsupportedOperationException(UPDATE_INITIAL_TYPE_ERROR_MSG);
+	}
 }

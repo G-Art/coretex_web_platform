@@ -52,6 +52,8 @@ public abstract class ItemContext {
 
 	public abstract void flush();
 
+	public abstract void refresh();
+
 	public String getTypeCode() {
 		return typeCode;
 	}

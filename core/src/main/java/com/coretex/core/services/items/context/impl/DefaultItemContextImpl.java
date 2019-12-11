@@ -201,6 +201,17 @@ public class DefaultItemContextImpl extends ItemContext {
 				.forEach(LocalizedAttributeValueHolder::flush);
 	}
 
+	@Override
+	public void refresh() {
+		attributeHolders.values().stream()
+				.filter(AttributeValueHolder::isLoaded)
+				.forEach(AttributeValueHolder::refresh);
+
+		localizedAttributeHolders.values().stream()
+				.filter(LocalizedAttributeValueHolder::isLoaded)
+				.forEach(LocalizedAttributeValueHolder::refresh);
+	}
+
 
 
 	private final class HolderProcessor<H, T> {
