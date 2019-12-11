@@ -121,7 +121,9 @@ public class LocalizedAttributeValueHolder implements AttributeValueHolderState 
 
 	@Override
 	public void refresh() {
-		value.putAll(originalValue);
+		value = null;
+		originalValue = null;
+		loaded = false;
 		dirty = false;
 	}
 

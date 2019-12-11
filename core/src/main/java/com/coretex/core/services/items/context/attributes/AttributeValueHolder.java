@@ -115,13 +115,9 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 
 	@Override
 	public void refresh() {
-		if(originalValue instanceof Collection){
-			var collection = originalValue instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
-			Collections.addAll(collection, ((Collection) originalValue).toArray());
-			value = collection;
-		}else{
-			value = originalValue;
-		}
+		value = null;
+		originalValue = null;
+		loaded = false;
 		dirty = false;
 	}
 
