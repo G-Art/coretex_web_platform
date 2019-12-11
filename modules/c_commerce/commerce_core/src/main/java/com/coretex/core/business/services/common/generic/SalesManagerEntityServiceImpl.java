@@ -38,6 +38,10 @@ public abstract class SalesManagerEntityServiceImpl<E extends AbstractGenericIte
 		repository.save(entity);
 	}
 
+	@Override
+	public void refresh(E entity) {
+		entity.getItemContext().refresh();
+	}
 
 	public void create(E entity) {
 		save(entity);

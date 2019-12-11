@@ -7,7 +7,7 @@
 <%@ taglib prefix="tags-account" tagdir="/WEB-INF/tags/account" %>
 <%@ taglib prefix="tags-common" tagdir="/WEB-INF/tags/common" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"  %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
 <!-- end of view-info -->
@@ -23,12 +23,16 @@
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="icofont icofont-user"></i>
-                                            </span>
-                                            <input type="text" name="firstName" class="form-control" value="${user.firstName}"
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icofont icofont-user"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" name="firstName" class="form-control"
+                                                   value="${user.firstName}"
                                                    placeholder="First Name">
-                                            <input type="text" name="lastName" class="form-control" value="${user.lastName}"
+                                            <input type="text" name="lastName" class="form-control"
+                                                   value="${user.lastName}"
                                                    placeholder="Last Name">
                                         </div>
                                     </td>
@@ -36,9 +40,11 @@
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="icofont icofont-ui-email"></i>
-                                            </span>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icofont icofont-ui-email"></i>
+                                                </span>
+                                            </div>
                                             <input type="email" name="email" class="form-control" value="${user.email}"
                                                    placeholder="Email">
                                         </div>
@@ -47,10 +53,13 @@
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="icofont icofont-id-card"></i>
-                                            </span>
-                                            <input type="text" name="adminName" class="form-control" value="${user.adminName}"
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icofont icofont-id-card"></i>
+                                                </span>
+                                            </div>
+                                            <input type="text" name="adminName" class="form-control"
+                                                   value="${user.adminName}"
                                                    placeholder="Login">
                                         </div>
                                     </td>
@@ -58,13 +67,16 @@
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="icofont icofont-globe-alt"></i>
-                                            </span>
-                                            <select name="language" class="form-control" >
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icofont icofont-globe-alt"></i>
+                                                </span>
+                                            </div>
+                                            <select name="language" class="form-control">
                                                 <option value=""></option>
                                                 <c:forEach var="lang" items="${languages}">
-                                                    <option ${user.language.uuid eq lang.uuid ? 'selected' : ''} value="${lang.uuid}">${lang.name}</option>
+                                                    <option ${user.language.uuid eq lang.uuid ? 'selected' : ''}
+                                                            value="${lang.uuid}">${lang.name}</option>
                                                 </c:forEach>
                                             </select>
                                         </div>
@@ -83,11 +95,14 @@
                                         <div class="input-group">
                                             <c:choose>
                                                 <c:when test="${user.uuid == currentUser.uuid}">
-                                                    <input name="active" type="checkbox" class="js-success" ${user.active ? 'checked' : ''}>
+                                                    <input name="active" type="checkbox"
+                                                           class="js-success" ${user.active ? 'checked' : ''}>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <sec:authorize access="hasRole('SUPERADMIN') and fullyAuthenticated">
-                                                        <input name="active" type="checkbox" class="js-success" ${user.active ? 'checked' : ''}>
+                                                    <sec:authorize
+                                                            access="hasRole('SUPERADMIN') and fullyAuthenticated">
+                                                        <input name="active" type="checkbox"
+                                                               class="js-success" ${user.active ? 'checked' : ''}>
                                                     </sec:authorize>
                                                     <sec:authorize access="!hasRole('SUPERADMIN')">
                                                         <tags-common:permissionDenninLable/>
@@ -100,37 +115,51 @@
                                 <tr>
                                     <td>
                                         <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="zmdi zmdi-store"></i>
-                                            </span>
-                                            <select name="merchantStore" class="form-control js-select-store">
-                                                <c:forEach var="store" items="${stores}">
-                                                    <option ${store.uuid == user.merchantStore.uuid ? 'selected' : ''} value="${store.uuid}">${store.storeName}</option>
-                                                </c:forEach>
-                                            </select>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="zmdi zmdi-store"></i>
+                                                </span>
+                                            </div>
+                                            <div class="d-flex flex-grow-1">
+                                                <select name="merchantStore" class="form-control js-select-store">
+                                                    <c:forEach var="store" items="${stores}">
+                                                        <option ${store.uuid == user.merchantStore.uuid ? 'selected' : ''}
+                                                                value="${store.uuid}">${store.storeName}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="icofont icofont-ui-user-group"></i>
-                                            </span>
-                                            <select name="groups" class="js-select-group" multiple="multiple">
-                                                <c:forEach var="group" items="${groups}">
-                                                    <sec:authorize access="hasRole('SUPERADMIN')">
-                                                        <c:if test="${group.groupName eq 'SUPERADMIN'}">
-                                                            <c:set var="selected" value="${user.groups.stream().anyMatch(g -> g.uuid.equals(group.uuid)).get() }"/>
-                                                            <option ${selected ? 'selected' : ''} value="${group.uuid}">${group.groupName}</option>
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="icofont icofont-ui-user-group"></i>
+                                                </span>
+                                            </div>
+                                            <div class="d-flex flex-grow-1">
+                                                <select name="groups" class="custom-select js-select-group" multiple="multiple">
+                                                    <c:forEach var="group" items="${groups}">
+                                                        <sec:authorize access="hasRole('SUPERADMIN')">
+                                                            <c:if test="${group.groupName eq 'SUPERADMIN'}">
+                                                                <c:set var="selected"
+                                                                       value="${user.groups.stream().anyMatch(g -> g.uuid.equals(group.uuid)).get() }"/>
+                                                                <option ${selected ? 'selected' : ''}
+                                                                        value="${group.uuid}">${group.groupName}</option>
+                                                            </c:if>
+                                                        </sec:authorize>
+                                                        <c:if test="${group.groupName ne 'SUPERADMIN'}">
+                                                            <c:set var="selected"
+                                                                   value="${user.groups.stream().anyMatch(g -> g.uuid.equals(group.uuid)).get() }"/>
+                                                            <option ${selected ? 'selected' : ''}
+                                                                    value="${group.uuid}">${group.groupName}</option>
                                                         </c:if>
-                                                    </sec:authorize>
-                                                    <c:if test="${group.groupName ne 'SUPERADMIN'}">
-                                                        <c:set var="selected" value="${user.groups.stream().anyMatch(g -> g.uuid.equals(group.uuid)).get() }"/>
-                                                        <option ${selected ? 'selected' : ''} value="${group.uuid}">${group.groupName}</option>
-                                                    </c:if>
-                                                </c:forEach>
-                                            </select>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -142,7 +171,8 @@
                     <!-- end of row -->
                     <div class="text-center">
                         <button type="submit"
-                           class="btn btn-primary waves-effect waves-light m-r-20">Save</button>
+                                class="btn btn-primary waves-effect waves-light m-r-20">Save
+                        </button>
                         <a href="javascript:void(0);" id="edit-cancel"
                            class="btn btn-default waves-effect">Cancel</a>
                     </div>

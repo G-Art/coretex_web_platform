@@ -90,7 +90,7 @@ public class ShoppingCartFacadeImpl
 	private ShoppingCartDataPopulator shoppingCartDataPopulator;
 
 	@PostConstruct
-	private void init(){
+	private void init() {
 		shoppingCartDataPopulator = new ShoppingCartDataPopulator();
 		shoppingCartDataPopulator.setLanguageService(languageService);
 		shoppingCartDataPopulator.setShoppingCartCalculationService(shoppingCartCalculationService);
@@ -147,16 +147,35 @@ public class ShoppingCartFacadeImpl
 
 		}
 
+		ShoppingCartEntryItem shoppingCartItem =
+				createCartItem(cartModel, item, store);
+
+		boolean duplicateFound = false;
+		if (CollectionUtils.isEmpty(item.getShoppingCartAttributes())) {//increment quantity
+			//get duplicate item from the cart
+			Set<ShoppingCartEntryItem> cartModelItems = cartModel.getLineItems();
+			for (ShoppingCartEntryItem cartItem : cartModelItems) {
+				if (cartItem.getProduct().getUuid().equals(shoppingCartItem.getProduct().getUuid())) {
+					if (!duplicateFound) {
+						if (!(shoppingCartItem.getProductVirtual() != null ? shoppingCartItem.getProductVirtual() : false)) {
+							cartItem.setQuantity(cartItem.getQuantity() + shoppingCartItem.getQuantity());
+						}
+						duplicateFound = true;
+						break;
+					}
+				}
+			}
+		}
+
+		if (!duplicateFound) {
+			cartModel.getLineItems().add(shoppingCartItem);
+		}
 
 		/** Update cart in database with line items **/
 		shoppingCartService.saveOrUpdate(cartModel);
-
-		//refresh cart
-		cartModel = shoppingCartService.getById(cartModel.getUuid(), store);
+		shoppingCartService.refresh(cartModel);
 
 		shoppingCartCalculationService.calculate(cartModel, store, language);
-
-
 
 		return shoppingCartDataPopulator.populate(cartModel, store, language);
 	}

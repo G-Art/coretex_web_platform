@@ -416,7 +416,7 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 				// load categories
 				loadedCategories = categoryFacade.getCategoryHierarchy(store, 0, language, null);// null
 				// filter
-				objects = new ConcurrentHashMap<String, List<ReadableCategory>>();
+				objects = new ConcurrentHashMap<>();
 				objects.put(language.getIso(), loadedCategories);
 				webApplicationCache.putInCache(categoriesKey.toString(), objects);
 

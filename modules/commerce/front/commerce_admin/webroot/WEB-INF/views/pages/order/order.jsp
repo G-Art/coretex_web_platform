@@ -16,7 +16,17 @@
           href="<c:url value="/resources/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/icon/feather/css/feather.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/css/jquery.mCustomScrollbar.css"/>">
-	</jsp:attribute>
+	<style>
+        .table tr {
+            cursor: pointer;
+        }
+        .hiddenRow {
+            padding: 0 4px !important;
+            /*background-color: #eeeeee;*/
+            /*font-size: 13px;*/
+        }
+    </style>
+    </jsp:attribute>
 
     <jsp:attribute name="pageScripts">
 

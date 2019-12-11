@@ -8,6 +8,7 @@ public class OrderProductData extends GenericItemData {
 	private String productName;
 	private Integer productQuantity;
 	private BigDecimal oneTimeCharge;
+	private ProductData originalProduct;
 
 	public String getSku() {
 		return sku;
@@ -39,5 +40,13 @@ public class OrderProductData extends GenericItemData {
 
 	public void setOneTimeCharge(BigDecimal oneTimeCharge) {
 		this.oneTimeCharge = oneTimeCharge;
+	}
+
+	public ProductData getOriginalProduct() {
+		return originalProduct;
+	}
+
+	public void setOriginalProduct(ProductData originalProduct) {
+		this.originalProduct = originalProduct;
 	}
 }

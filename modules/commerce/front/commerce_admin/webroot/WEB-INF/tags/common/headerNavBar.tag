@@ -2,7 +2,7 @@
 
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <nav class="navbar header-navbar pcoded-header" >
-    <div class="navbar-wrapper">
+    <div class="navbar-wrapper d-flex">
 
         <div class="navbar-logo" >
             <a class="mobile-menu" id="mobile-collapse" href="javascript:void(0);">

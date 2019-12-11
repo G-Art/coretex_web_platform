@@ -6,6 +6,7 @@ import java.util.UUID;
 public interface SalesManagerEntityService<E> extends PageableEntityService<E> {
 
 	void save(E entity);
+	void refresh(E entity);
 
 	@Deprecated
 	void update(E entity);
