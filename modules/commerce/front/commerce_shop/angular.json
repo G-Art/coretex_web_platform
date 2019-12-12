@@ -37,7 +37,6 @@
 
               "webSrc/assets/revolution/js/jquery.themepunch.revolution.min.js",
               "webSrc/assets/revolution/js/jquery.themepunch.tools.min.js",
-              "webSrc/assets/revolution/revolution-active.js",
 
               "webSrc/assets/revolution/js/extensions/revolution.extension.kenburn.min.js",
               "webSrc/assets/revolution/js/extensions/revolution.extension.slideanims.min.js",
@@ -121,7 +120,6 @@
 
               "webSrc/assets/revolution/js/jquery.themepunch.revolution.min.js",
               "webSrc/assets/revolution/js/jquery.themepunch.tools.min.js",
-              "webSrc/assets/revolution/revolution-active.js",
 
               "webSrc/assets/revolution/js/extensions/revolution.extension.kenburn.min.js",
               "webSrc/assets/revolution/js/extensions/revolution.extension.slideanims.min.js",
