@@ -15,7 +15,7 @@ import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
@@ -210,7 +210,7 @@ public class CustomerController {
 			result.addError(error);
 		}
 
-		if (StringUtils.isBlank(customer.getBilling().getAddress())) {
+		if (StringUtils.isBlank(customer.getBilling().getAddressLine1())) {
 			ObjectError error = new ObjectError("billingAddress", messages.getMessage("NotEmpty.customer.billingStreetAddress", locale));
 			result.addError(error);
 		}

@@ -15,7 +15,7 @@ import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductPriceItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
-import com.coretex.items.commerce_core_model.CurrencyItem;
+import com.coretex.items.cx_core.CurrencyItem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.validator.routines.BigDecimalValidator;

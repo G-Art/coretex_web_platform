@@ -6,7 +6,7 @@ import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.business.utils.ajax.AjaxPageableResponse;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
 import com.coretex.shop.admin.controller.customers.CustomerController;
@@ -113,7 +113,6 @@ public class ManufacturerController {
 			manufacturer.setManufacturer(dbManufacturer);
 
 			manufacturer.setCode(dbManufacturer.getCode());
-			manufacturer.setOrder(dbManufacturer.getOrder());
 
 		} else {    // Create mode
 
@@ -205,8 +204,7 @@ public class ManufacturerController {
 //			}
 //		}
 
-		newManufacturer.setOrder(manufacturer.getOrder());
-		newManufacturer.setMerchantStore(store);
+//		newManufacturer.setMerchantStore(store);
 		newManufacturer.setCode(manufacturer.getCode());
 
 
@@ -285,7 +283,7 @@ public class ManufacturerController {
 
 				entry.put("name", manufacturer.getName());
 				entry.put("code", manufacturer.getCode());
-				entry.put("order", manufacturer.getOrder());
+				entry.put("order", 0);
 				resp.addDataEntry(entry);
 
 			}

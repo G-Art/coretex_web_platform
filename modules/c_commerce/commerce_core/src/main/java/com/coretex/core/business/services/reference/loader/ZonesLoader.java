@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

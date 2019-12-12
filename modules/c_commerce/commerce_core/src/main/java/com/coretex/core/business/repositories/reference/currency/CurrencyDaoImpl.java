@@ -1,7 +1,7 @@
 package com.coretex.core.business.repositories.reference.currency;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
-import com.coretex.items.commerce_core_model.CurrencyItem;
+import com.coretex.items.cx_core.CurrencyItem;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

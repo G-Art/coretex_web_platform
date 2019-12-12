@@ -1,0 +1,89 @@
+
+/*=============================================
+=            service            =
+=============================================*/
+.service-text-area-wrapper{
+    margin-bottom: -100px;
+}
+.single-service-text{
+    margin-bottom: 95px;
+    .title{
+        @include font-prop(25px, #111, 600, 27px);
+        margin-top: -20px;
+
+        span{
+            @include font-prop(80px, $theme-color--primary, 700, 88px);
+            margin-right: 25px;
+
+            @media #{$extra-small-mobile}{
+                font-size: 70px;
+                line-height: 76px;
+            }
+        }
+    }
+
+    .short-desc{
+        @include font-prop(16px, #666, 400, 25px);
+    }
+}
+
+
+/*----------  video background area  ----------*/
+
+.video-background-area{
+    .video-area{
+        height: 680px;
+
+        @media #{$laptop-device}{
+            height: 600px;
+        }
+
+        @media #{$desktop-device}{
+            height: 500px;
+        }
+
+        @media #{$tablet-device}{
+            height: 300px;
+        }
+
+        @media #{$large-mobile}{
+            height: 300px;
+        }
+    }
+}
+
+
+/*----------  icon service text  ----------*/
+
+.icon-service-text-wrapper{
+    margin-bottom: -30px;
+
+
+
+}
+.single-icon-service{
+    text-align: center;
+    margin-bottom: 25px;
+
+    &__icon{
+        margin-bottom: 10px;
+        line-height: 1;
+        i{
+            font-size: 40px;
+            color: $theme-color--primary;
+        }
+    }
+
+    &__title{
+        margin-bottom: 25px;
+        @include font-prop(20px, #222, 700, 22px);
+    }
+
+    &__short-desc{
+        @include font-prop(15px, #878787, 400, 24px);
+    }
+}
+
+
+/*=====  End of service  ======*/
+

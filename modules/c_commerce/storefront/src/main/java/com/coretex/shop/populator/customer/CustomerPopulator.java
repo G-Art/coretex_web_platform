@@ -17,7 +17,7 @@ import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.customer.address.Address;
 import org.apache.commons.lang3.Validate;
@@ -79,13 +79,12 @@ public class CustomerPopulator extends
 			Address sourceBilling = source.getBilling();
 			if (sourceBilling != null) {
 				BillingItem billing = new BillingItem();
-				billing.setAddress(sourceBilling.getAddress());
+				billing.setAddressLine1(sourceBilling.getAddress());
 				billing.setCity(sourceBilling.getCity());
-				billing.setCompany(sourceBilling.getCompany());
 				//billing.setCountry(country);
 				billing.setFirstName(sourceBilling.getFirstName());
 				billing.setLastName(sourceBilling.getLastName());
-				billing.setTelephone(sourceBilling.getPhone());
+				billing.setPhone(sourceBilling.getPhone());
 				billing.setPostalCode(sourceBilling.getPostalCode());
 				billing.setState(sourceBilling.getStateProvince());
 				CountryItem billingCountry = null;
@@ -124,12 +123,11 @@ public class CustomerPopulator extends
 			Address sourceShipping = source.getDelivery();
 			if (sourceShipping != null) {
 				DeliveryItem delivery = new DeliveryItem();
-				delivery.setAddress(sourceShipping.getAddress());
+				delivery.setAddressLine1(sourceShipping.getAddress());
 				delivery.setCity(sourceShipping.getCity());
-				delivery.setCompany(sourceShipping.getCompany());
 				delivery.setFirstName(sourceShipping.getFirstName());
 				delivery.setLastName(sourceShipping.getLastName());
-				delivery.setTelephone(sourceShipping.getPhone());
+				delivery.setPhone(sourceShipping.getPhone());
 				delivery.setPostalCode(sourceShipping.getPostalCode());
 				delivery.setState(sourceShipping.getStateProvince());
 				CountryItem deliveryCountry = null;

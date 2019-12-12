@@ -3,8 +3,8 @@ package com.coretex.core.business.repositories.reference.zone;
 import java.util.List;
 import java.util.UUID;
 
-import com.coretex.items.commerce_core_model.ZoneItem;
 import com.coretex.core.activeorm.dao.Dao;
+import com.coretex.items.cx_core.ZoneItem;
 
 public interface ZoneDao extends Dao<ZoneItem> {
 

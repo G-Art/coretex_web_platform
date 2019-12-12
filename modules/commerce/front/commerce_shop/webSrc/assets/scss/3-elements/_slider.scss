@@ -1,0 +1,393 @@
+
+/*=============================================
+=            slider            =
+=============================================*/
+
+
+/* slick slider default settings */
+
+.theme-slick-slider{
+    position: relative;
+    .slick-arrow{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 3;
+        width: 30px;
+        height: 60px;
+        background-color: #111;
+        color: #ffffff;
+        border: none;
+        opacity: 0;
+        transition: 0.3s;
+        visibility: hidden;
+
+        @media #{$tablet-device}{
+            visibility: visible;
+            opacity: 0.6;
+        }
+        @media #{$large-mobile}{
+            visibility: visible;
+            opacity: 0.6;
+        }
+
+        i{
+            font-size: 20px;
+            line-height: 60px;
+        }
+
+        &.slick-next{
+            right: -50px;
+            @media #{$laptop-device}{
+                right: 0;
+            }
+        }
+
+        &.slick-prev{
+            left: -50px;
+            @media #{$laptop-device}{
+                left: 0;
+            }
+        }
+    }
+
+    .slick-dots{
+        margin-top: 45px;
+        text-align: center;
+        line-height: 0;
+
+        li{
+
+            display: inline-block;
+            margin: 0 5px 0 0;
+            line-height: 1.5;
+            
+            button{
+                height: 5px;
+                width: 20px;
+                display: block;
+                background: #000;
+                opacity: 0.4;
+                outline: none;
+                line-height: 0;
+                font-size: 0;
+                color: transparent;
+                border: none;
+                transition: 0.3s;
+
+                &:hover{
+                    opacity: 0.75;
+                }
+
+            }
+            &.slick-active{
+                button{
+                    opacity: 0.75;
+                }
+            }
+        }
+    }
+
+    &:hover{
+        .slick-arrow{
+            visibility: visible;
+            opacity: 0.6;
+
+            &:hover{
+                opacity: 0.8;
+            }
+
+            &.slick-next{
+                right: -40px;
+                @media #{$laptop-device}{
+                    right: 0;
+                }
+            }
+    
+            &.slick-prev{
+                left: -40px;
+                @media #{$laptop-device}{
+                    left: 0;
+                }
+            }
+        }
+    }
+}
+
+
+/* brand logo slider */
+
+.brand-logo-slider-wrapper{
+    padding: 50px 0;
+
+    .slick-track{
+        display: flex;
+        align-items: center;
+    }
+
+    .single-brand-logo{
+        text-align: center;
+        a{
+            display: block;
+            width: 100%;
+
+            img{
+                margin: 0 auto;
+            }
+        }
+    }
+
+    .slick-arrow{
+        &.slick-next{
+            right: 0;
+        }
+        &.slick-prev{
+            left: 0;
+        }
+    }
+
+    &:hover{
+        .slick-arrow{
+            &.slick-next{
+                right: 0;
+            }
+            &.slick-prev{
+                left: 0;
+            }
+        }
+    }
+}
+
+
+/* blog post slider */
+
+.blog-slider-area{
+    padding: 100px 0 95px;
+}
+
+.blog-slider-wrapper{
+    .slick-list{
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+}
+
+.single-slider-blog-post{
+    &__image{
+        margin-bottom: 15px;
+        a{
+            display: block;
+            width: 100%;
+
+            img{
+                width: 100%;
+            }
+        }
+    }
+
+    &__content{
+        .post-title{
+            @include font-prop(22px, #111, 600, 33px);
+            a{
+                color: #111;
+                &:hover{
+                    color: $theme-color--primary;
+                }
+            }
+        }
+
+        .post-meta{
+            @include font-prop(16px, #666, 400, 20px);
+
+            a{
+                &.post-author{
+                    color: $theme-color--primary;
+                    padding-left: 5px;
+                }
+
+                &:hover{
+                    color: $theme-color--primary;
+                }
+            }
+
+            .separator{
+                color: #111;
+                margin: 0 10px;
+            }
+        }
+
+        .post-excerpt{
+            @include font-prop(16px, #666, 400, 25px);
+            margin-bottom: 20px;
+        }
+    }
+}
+
+
+
+/* single row product slider */
+
+.product-slider-wrapper{
+    .slick-list{
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+
+    &:hover{
+        .slick-arrow{
+
+            @media #{$tablet-device, $large-mobile}{
+                visibility: visible;
+                opacity: 1;
+            }
+    
+            &.slick-prev{
+    
+                @media #{$tablet-device, $large-mobile}{
+                    left: -15px;
+                }
+
+                @media #{$small-mobile}{
+                    left: 0;
+                }
+    
+            }
+            &.slick-next{
+    
+                @media #{$tablet-device, $large-mobile}{
+                    right: -15px;
+                }
+                
+
+                @media #{$small-mobile}{
+                    right: 0;
+                }
+            }
+        }   
+    }
+
+    .slick-arrow{
+
+        @media #{$tablet-device, $large-mobile}{
+            visibility: visible;
+            opacity: 1;
+        }
+
+        &.slick-prev{
+
+            @media #{$tablet-device, $large-mobile}{
+                left: -15px;
+            }
+
+            @media #{$small-mobile}{
+                left: 0;
+            }
+
+        }
+        &.slick-next{
+
+            @media #{$tablet-device, $large-mobile}{
+                right: -15px;
+            }
+
+            @media #{$small-mobile}{
+                right: 0;
+            }
+        }
+    }
+}
+
+
+/* single row product slider with text */
+
+.product-slider-text-wrapper{
+    border: 10px solid #f8f8f8;
+    margin: 0 -115px;
+    padding: 65px 105px;
+
+    @media #{$laptop-device}{
+        margin: 0;
+        padding: 65px 70px;
+    }
+
+    @media #{$desktop-device}{
+        margin: 0;
+        padding: 65px 30px;
+    }
+
+    @media #{$tablet-device}{
+        margin: 0;
+        padding: 65px 30px;
+    }
+
+    @media #{$large-mobile}{
+        margin: 0;
+        padding: 65px 30px;
+    }
+
+    @media #{$extra-small-mobile}{
+        padding: 65px 15px;
+    }
+
+    .product-slider-wrapper{
+        .slick-arrow{
+            &.slick-next{
+                @media #{$small-mobile}{
+                    margin-right: -15px;
+                }
+            }
+            &.slick-prev{
+                @media #{$small-mobile}{
+                    margin-left: -15px;
+                }
+            }
+        }
+    }
+
+    &__text{
+
+        @media #{$tablet-device}{
+            margin-bottom: 30px;
+        }
+
+        @media #{$large-mobile}{
+            margin-bottom: 30px;
+        }
+
+        .title{
+            @include font-prop(36px, #202020, 700, 39px);
+            margin-bottom: 25px;
+            margin-top: -5px;
+
+            @media #{$large-mobile}{
+                font-size: 28px;
+                line-height: 31px;
+            }
+
+            &:after{
+                content: "";
+                display: block;
+                height: 2px;
+                width: 100px;
+                margin-top: 15px;
+                background-color: #ccc;
+            }
+        }
+
+        .description{
+            @include font-prop(16px, #666, 400, 25px);
+            margin-bottom: 35px;
+
+            @media #{$tablet-device}{
+                margin-bottom: 10px; 
+            }
+
+            @media #{$large-mobile}{
+                margin-bottom: 10px; 
+            }
+        }
+    }
+}
+
+/*=====  End of slider  ======*/
+

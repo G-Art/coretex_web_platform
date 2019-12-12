@@ -20,7 +20,7 @@ import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.core.constants.MeasureUnit;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.model.content.ReadableImage;
 import com.coretex.shop.model.references.ReadableAddress;
 import com.coretex.shop.model.shop.ReadableMerchantStore;

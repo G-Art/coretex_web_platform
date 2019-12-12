@@ -41,12 +41,11 @@ public class CustomerEntityPopulator
 			if (source.getBilling() != null) {
 				Address address = new Address();
 				address.setCity(source.getBilling().getCity());
-				address.setAddress(source.getBilling().getAddress());
-				address.setCompany(source.getBilling().getCompany());
+				address.setAddress(source.getBilling().getAddressLine1());
 				address.setFirstName(source.getBilling().getFirstName());
 				address.setLastName(source.getBilling().getLastName());
 				address.setPostalCode(source.getBilling().getPostalCode());
-				address.setPhone(source.getBilling().getTelephone());
+				address.setPhone(source.getBilling().getPhone());
 				if (source.getBilling().getCountry() != null) {
 					address.setCountry(source.getBilling().getCountry().getIsoCode());
 				}
@@ -70,12 +69,11 @@ public class CustomerEntityPopulator
 			if (source.getDelivery() != null) {
 				Address address = new Address();
 				address.setCity(source.getDelivery().getCity());
-				address.setAddress(source.getDelivery().getAddress());
-				address.setCompany(source.getDelivery().getCompany());
+				address.setAddress(source.getDelivery().getAddressLine1());
 				address.setFirstName(source.getDelivery().getFirstName());
 				address.setLastName(source.getDelivery().getLastName());
 				address.setPostalCode(source.getDelivery().getPostalCode());
-				address.setPhone(source.getDelivery().getTelephone());
+				address.setPhone(source.getDelivery().getPhone());
 				if (source.getDelivery().getCountry() != null) {
 					address.setCountry(source.getDelivery().getCountry().getIsoCode());
 				}

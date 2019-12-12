@@ -2,7 +2,7 @@ package com.coretex.core.business.repositories.reference.zone;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.relations.commerce_core_model.ZoneCountryRelation;

@@ -1,0 +1,54 @@
+
+/*=============================================
+=            contact us            =
+=============================================*/
+
+.contact-icon-text-wrapper{
+    margin-bottom: -30px;
+}
+
+.single-contact-icon-text{
+    margin-bottom: 25px;
+    text-align: center;
+
+    &__icon{
+        margin-bottom: 20px;
+        line-height: 1;
+        i{
+            font-size: 40px;
+            color: $theme-color--primary;
+        }
+    }
+
+    &__title{
+        margin-bottom: 25px;
+        @include font-prop(20px, #222, 700, 22px);
+    }
+
+    &__value{
+        @include font-prop(15px, #878787, 400, 24px);
+    }
+}
+
+.contact-form-content{
+    .social-links{
+        line-height: 1;
+        li{
+            display: inline-block;
+            margin-right: 20px;
+            a{
+                &:hover{
+                    color: $theme-color--primary;
+                }
+            }
+        }
+    }
+
+    @media #{$large-mobile}{
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+/*=====  End of contact us  ======*/
+

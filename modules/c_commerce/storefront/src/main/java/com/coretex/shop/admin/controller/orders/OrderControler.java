@@ -15,7 +15,7 @@ import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
 import com.coretex.core.data.orders.OrderConverterHelper;
 import com.coretex.core.data.orders.OrderForm;

@@ -1,7 +1,7 @@
 package com.coretex.shop.utils;
 
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 
 public interface ImageFilePath {

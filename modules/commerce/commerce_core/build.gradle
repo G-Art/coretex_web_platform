@@ -1,0 +1,6 @@
+
+dependencies {
+  compile project(":core")
+
+  compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+}

@@ -4,7 +4,7 @@ package com.coretex.shop.populator.manufacturer;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.manufacturer.ManufacturerDescription;
@@ -32,7 +32,7 @@ public class PersistableManufacturerPopulator extends AbstractDataPopulator<Pers
 
 		try {
 
-			target.setMerchantStore(store);
+//			target.setMerchantStore(store);
 			target.setCode(source.getCode());
 
 			if (!CollectionUtils.isEmpty(source.getDescriptions())) {

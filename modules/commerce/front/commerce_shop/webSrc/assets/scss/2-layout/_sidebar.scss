@@ -1,0 +1,159 @@
+
+/*=============================================
+=            Sidebar            =
+=============================================*/
+
+
+.single-sidebar-widget{
+    margin-bottom: 50px;
+
+    &:last-child{
+        margin-bottom: 0;
+    }
+    &__title{
+        @include font-prop(22px, #111, 600, 24px);
+        margin-bottom: 30px;
+         &:after{
+            content: "";
+            display: block;
+            height: 2px;
+            width: 100px;
+            background-color: #ddd;
+            margin-top: 25px;
+         }
+
+         &--extra-space{
+             margin-bottom: 35px;
+         }
+    }
+
+    &__dropdown{
+        & > li{
+            border-top: 1px solid #eee;
+            line-height: 1;
+            &.has-children{
+                position: relative;
+
+                &.active{
+                    & > i{
+                        transform: rotate(180deg);
+                    }
+                }
+                & > i{
+                    position: absolute;
+                    right: 0;
+                    top: 5px;
+                    cursor: pointer;
+                    height: 40px;
+                    width: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    transition: 0.3s;
+                }
+                & > .sub-menu{
+                    border-top: 1px solid #eee;
+                    padding-left: 35px;
+                    display: none;
+                    & > li{
+                        border-bottom: 1px solid #eee;
+
+                        &:last-child{
+                            border-bottom: 0;
+                        }
+                    }
+                }
+
+                &:first-child{
+                    i{
+                        top: -10px;
+                    }
+                }
+            }
+            
+            a{
+                @include font-prop(15px, #666, 400, 1);
+                padding: 15px 0;
+                &:hover{
+                    color: $theme-color--primary;
+                }
+
+            }
+
+            &:first-child{
+                border-top: 0;
+                & > a{
+                    padding-top: 0;
+                }
+            }
+
+            &:last-child{
+                & > a{
+                    padding-bottom: 0;
+                }
+            }
+        }
+
+        &--extra-height{
+            & > li{
+                a{
+                    line-height: 22px;
+                }
+            }
+        }
+
+        &--comments{
+            & > li{
+                word-wrap: break-word;
+                padding: 15px 0;
+
+                &:first-child{
+                    padding-top: 0;
+
+                }
+
+                &:last-child{
+                    padding-bottom: 0;
+                }
+                a{
+                    line-height: 22px;
+                    display: inline !important;
+                    padding: 0;
+                }
+            }
+        }
+    }
+
+    &--extra-space{
+        margin-bottom: 55px;
+    }
+}
+
+
+/*----------  sidebar search  ----------*/
+
+.sidebar-search{
+    position: relative;
+    input{
+        border: 1px solid #eee;
+        background: #f7f7f7;
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+        line-height: 19px;
+        padding-left: 15px;
+        padding-right: 45px;
+    }
+
+    button{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 5px;
+        background: none;
+        border: none;
+        color: #333;
+    }
+}
+
+/*=====  End of Sidebar  ======*/
+

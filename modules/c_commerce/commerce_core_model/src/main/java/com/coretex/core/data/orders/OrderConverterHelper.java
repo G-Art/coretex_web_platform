@@ -1,9 +1,9 @@
 package com.coretex.core.data.orders;
 
-import com.coretex.items.commerce_core_model.AbstractAddressItem;
 import com.coretex.items.commerce_core_model.BillingItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.AddressItem;
+import com.coretex.items.cx_core.ZoneItem;
 
 import java.util.Objects;
 
@@ -25,15 +25,15 @@ public class OrderConverterHelper {
 		return delivery;
 	}
 
-	private static <T extends AbstractAddressItem, R extends AbstractAddress> void convertAbstractAddress(T source, R target) {
+	private static <T extends AddressItem, R extends AbstractAddress> void convertAbstractAddress(T source, R target) {
 		target.setFirstName(source.getFirstName());
 		target.setLastName(source.getLastName());
 		target.setZone(convertZone(source.getZone()));
-		target.setAddress(source.getAddress());
+		target.setAddress(source.getAddressLine1());
 		target.setState(source.getState());
 		target.setCity(source.getCity());
 		target.setPostalCode(source.getPostalCode());
-		target.setTelephone(source.getTelephone());
+		target.setTelephone(source.getPhone());
 	}
 
 	public static Zone convertZone(ZoneItem zoneItem) {
@@ -56,13 +56,13 @@ public class OrderConverterHelper {
 		return billingItem;
 	}
 
-	private static <T extends AbstractAddress, R extends AbstractAddressItem> void convertAbstractAddressItem(T source, R target) {
+	private static <T extends AbstractAddress, R extends AddressItem> void convertAbstractAddressItem(T source, R target) {
 		target.setFirstName(source.getFirstName());
 		target.setLastName(source.getLastName());
-		target.setAddress(source.getAddress());
+		target.setAddressLine1(source.getAddress());
 		target.setState(source.getState());
 		target.setCity(source.getCity());
 		target.setPostalCode(source.getPostalCode());
-		target.setTelephone(source.getTelephone());
+		target.setPhone(source.getTelephone());
 	}
 }

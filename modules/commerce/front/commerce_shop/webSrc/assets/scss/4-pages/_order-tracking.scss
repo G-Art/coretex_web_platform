@@ -1,0 +1,50 @@
+
+/*=============================================
+=            Order tracking            =
+=============================================*/
+
+.order-tracking-area{
+    margin-bottom: 100px;
+}
+
+.order-tracking-wrapper{
+    width: 630px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 60px;
+    background-color: #f7f7f7;
+
+    @media #{$small-mobile}{
+        padding: 60px 30px;
+    }
+
+    @media #{$extra-small-mobile}{
+        padding: 40px 15px;
+    }
+}
+
+.order-track-form{
+    label{
+        @include font-prop(18px, #333, 600, 28px);
+        display: block;
+    }
+
+    input{
+        font-size: 14px;
+        display: block;
+        padding: 9px 25px;
+        color: #222;
+        width: 100%;
+        background: #fff;
+        border: 1px solid #eee;
+        transition: all .3s ease-in-out;
+        margin-bottom: 20px;
+
+        &:focus{
+            border-color: #c7c7c7;
+        }
+    }
+}
+
+/*=====  End of Order tracking  ======*/
+

@@ -24,19 +24,15 @@ public class PersistableCustomerShippingAddressPopulator extends AbstractDataPop
 			delivery.setLastName(source.getLastName());
 
 			if (StringUtils.isNotBlank(source.getAddress())) {
-				delivery.setAddress(source.getAddress());
+				delivery.setAddressLine1(source.getAddress());
 			}
 
 			if (StringUtils.isNotBlank(source.getCity())) {
 				delivery.setCity(source.getCity());
 			}
 
-			if (StringUtils.isNotBlank(source.getCompany())) {
-				delivery.setCompany(source.getCompany());
-			}
-
 			if (StringUtils.isNotBlank(source.getPhone())) {
-				delivery.setTelephone(source.getPhone());
+				delivery.setPhone(source.getPhone());
 			}
 
 			if (StringUtils.isNotBlank(source.getPostalCode())) {
@@ -55,19 +51,15 @@ public class PersistableCustomerShippingAddressPopulator extends AbstractDataPop
 			// lets fill optional data now
 
 			if (StringUtils.isNotBlank(source.getAddress())) {
-				target.getDelivery().setAddress(source.getAddress());
+				target.getDelivery().setAddressLine1(source.getAddress());
 			}
 
 			if (StringUtils.isNotBlank(source.getCity())) {
 				target.getDelivery().setCity(source.getCity());
 			}
 
-			if (StringUtils.isNotBlank(source.getCompany())) {
-				target.getDelivery().setCompany(source.getCompany());
-			}
-
 			if (StringUtils.isNotBlank(source.getPhone())) {
-				target.getDelivery().setTelephone(source.getPhone());
+				target.getDelivery().setPhone(source.getPhone());
 			}
 
 			if (StringUtils.isNotBlank(source.getPostalCode())) {

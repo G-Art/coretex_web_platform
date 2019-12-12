@@ -37,7 +37,7 @@ public class ReadableShippingSummaryPopulator extends
 			if (source.getDeliveryAddress() != null) {
 
 				ReadableDelivery deliveryAddress = new ReadableDelivery();
-				deliveryAddress.setAddress(source.getDeliveryAddress().getAddress());
+				deliveryAddress.setAddress(source.getDeliveryAddress().getAddressLine1());
 				deliveryAddress.setPostalCode(source.getDeliveryAddress().getPostalCode());
 				deliveryAddress.setCity(source.getDeliveryAddress().getCity());
 				if (source.getDeliveryAddress().getZone() != null) {

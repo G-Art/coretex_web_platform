@@ -20,15 +20,14 @@ public class CustomerBillingAddressPopulator extends AbstractDataPopulator<Custo
 			throws ConversionException {
 
 		target.setCity(source.getBilling().getCity());
-		target.setCompany(source.getBilling().getCompany());
 		target.setFirstName(source.getBilling().getFirstName());
 		target.setLastName(source.getBilling().getLastName());
 		target.setPostalCode(source.getBilling().getPostalCode());
-		target.setPhone(source.getBilling().getTelephone());
-		if (source.getBilling().getTelephone() == null) {
-			target.setPhone(source.getBilling().getTelephone());
+		target.setPhone(source.getBilling().getPhone());
+		if (source.getBilling().getPhone() == null) {
+			target.setPhone(source.getBilling().getPhone());
 		}
-		target.setAddress(source.getBilling().getAddress());
+		target.setAddress(source.getBilling().getAddressLine1());
 		if (source.getBilling().getCountry() != null) {
 			target.setCountry(source.getBilling().getCountry().getIsoCode());
 		}

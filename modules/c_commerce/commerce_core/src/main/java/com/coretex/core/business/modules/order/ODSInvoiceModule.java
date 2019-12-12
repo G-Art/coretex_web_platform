@@ -18,7 +18,7 @@ import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jopendocument.dom.OOUtils;
@@ -212,17 +212,12 @@ public class ODSInvoiceModule implements InvoiceModule {
 			billToCell++;
 		}
 
-		//9
-		if (!StringUtils.isBlank(order.getBilling().getCompany())) {
-			sheet.setValueAt(order.getBilling().getCompany(), 0, billToCell);
-			billToCell++;
-		}
 
 		//10
 		StringBuilder billToAddress = null;
-		if (!StringUtils.isBlank(order.getBilling().getAddress())) {
+		if (!StringUtils.isBlank(order.getBilling().getAddressLine1())) {
 			billToAddress = new StringBuilder();
-			billToAddress.append(order.getBilling().getAddress());
+			billToAddress.append(order.getBilling().getAddressLine1());
 		}
 		if (!StringUtils.isBlank(order.getBilling().getCity())) {
 			if (billToAddress == null) {
@@ -280,8 +275,8 @@ public class ODSInvoiceModule implements InvoiceModule {
 		}
 
 		//13
-		if (!StringUtils.isBlank(order.getBilling().getTelephone())) {
-			sheet.setValueAt(order.getBilling().getTelephone(), 0, billToCell);
+		if (!StringUtils.isBlank(order.getBilling().getPhone())) {
+			sheet.setValueAt(order.getBilling().getPhone(), 0, billToCell);
 		}
 
 		//delete address blank lines

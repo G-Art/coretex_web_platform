@@ -1,10 +1,10 @@
 package com.coretex.core.data.orders;
 
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
-import com.coretex.items.commerce_core_model.CurrencyItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
+import com.coretex.items.cx_core.CurrencyItem;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

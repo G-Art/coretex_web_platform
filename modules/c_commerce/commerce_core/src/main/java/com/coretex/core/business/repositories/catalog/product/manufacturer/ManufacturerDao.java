@@ -3,7 +3,7 @@ package com.coretex.core.business.repositories.catalog.product.manufacturer;
 import java.util.List;
 import java.util.UUID;
 
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.core.activeorm.dao.Dao;
 
 public interface ManufacturerDao extends Dao<ManufacturerItem> {

@@ -8,7 +8,7 @@ import com.coretex.core.business.services.shipping.ShippingService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;

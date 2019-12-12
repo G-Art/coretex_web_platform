@@ -4,7 +4,7 @@ package com.coretex.core.business.services.catalog.product.manufacturer;
 import com.coretex.core.business.repositories.catalog.product.manufacturer.ManufacturerDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

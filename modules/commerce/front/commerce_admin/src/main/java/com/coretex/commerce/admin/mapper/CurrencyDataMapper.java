@@ -2,7 +2,7 @@ package com.coretex.commerce.admin.mapper;
 
 import com.coretex.commerce.admin.data.CurrencyData;
 import com.coretex.commerce.admin.data.LocaleData;
-import com.coretex.items.commerce_core_model.CurrencyItem;
+import com.coretex.items.cx_core.CurrencyItem;
 import com.coretex.items.core.LocaleItem;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.InheritInverseConfiguration;

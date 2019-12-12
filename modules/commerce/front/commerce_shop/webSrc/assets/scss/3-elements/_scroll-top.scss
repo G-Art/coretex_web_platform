@@ -1,0 +1,57 @@
+/* scroll to top*/
+ 
+.scroll-top {
+    display: none;
+    color: #fff!important;
+    cursor: pointer;
+    z-index: 9;
+    position: fixed;
+    right: 30px;
+    bottom: 50px;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    font-size: 12px;
+    box-shadow: 0 1px 5px rgba(0,0,0,.3);
+    background-color: $theme-color--primary;
+    text-align: center;
+    overflow: hidden;
+    border: none;
+
+    &:hover{
+      i{
+        &:before{
+          transform: translate(-50%, -130%);
+
+        }
+        &:after{
+          top: 0;
+          transform: translate(-50%, 0);
+        }
+      }
+    }
+
+    i{
+      font-size: 35px;
+
+
+      &:before, &:after{
+        transition: 0.4s;
+      }
+
+      &:before{
+        transform: translate(-50%, -50%);
+        position: absolute;
+        left: 50%;
+        top: 45%;
+      }
+
+      &:after{
+        content: "\f106";
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        transform: translate(-50%, 100%);
+      }
+    }
+  }

@@ -1,0 +1,61 @@
+
+/*=============================================
+=            google map            =
+=============================================*/
+
+.google-map{
+    height: 500px;
+
+    @media #{$desktop-device}{
+        height: 400px;
+    }
+
+    @media #{$extra-small-mobile}{
+        height : 300px;
+    }
+
+    &--style-2{
+        height: 700px;
+
+        @media #{$desktop-device}{
+            height: 600px;
+        }
+    }
+
+    &--style-3{
+        height: 400px;
+        @media #{$laptop-device}{
+            height: 300px;
+        }
+    }
+}
+
+.group-map-container{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: -30px;
+
+    @media #{$tablet-device}{
+        flex-direction: column;
+    }
+
+    @media #{$large-mobile}{
+        flex-direction: column;
+    }
+}
+
+.single-map{
+    flex-basis: 32%;
+    margin-bottom: 30px;
+
+    @media #{$tablet-device}{
+        flex-basis: 100%;
+    }
+
+    @media #{$large-mobile}{
+        flex-basis: 100%;
+    }
+}
+
+/*=====  End of google map  ======*/
+

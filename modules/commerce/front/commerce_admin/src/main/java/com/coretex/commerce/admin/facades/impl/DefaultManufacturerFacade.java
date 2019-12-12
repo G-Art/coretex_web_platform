@@ -7,7 +7,7 @@ import com.coretex.commerce.admin.mapper.GenericDataMapper;
 import com.coretex.commerce.admin.mapper.minimal.MinimalManufacturerDataMapper;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
 import com.coretex.core.business.services.common.generic.PageableEntityService;
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -29,7 +29,7 @@ import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.newpost.NewPostDeliveryServiceItem;
 import com.coretex.newpost.api.NewPostApiService;
@@ -395,7 +395,7 @@ public class ShoppingOrderController extends AbstractController {
 
 			var deliveryItem = new DeliveryItem();
 			deliveryItem.setCity(order.getCityCode().toString());
-			deliveryItem.setTelephone(order.getPhone());
+			deliveryItem.setPhone(order.getPhone());
 			deliveryItem.setCountry(store.getCountry());
 			deliveryItem.setFirstName(order.getUserName());
 

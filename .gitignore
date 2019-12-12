@@ -15,3 +15,7 @@ velocity.log
 *lib/
 /tmp/*
 /modules/commerce/front/commerce_admin/adminty-master/
+**/package-lock.json
+/modules/commerce/front/commerce_shop/jsbuild/
+**/node_modules/
+**/webroot/resources/static/

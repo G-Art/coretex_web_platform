@@ -27,12 +27,8 @@ public class CustomerDeliveryAddressPopulator extends AbstractDataPopulator<Cust
 				target.setCity(source.getDelivery().getCity());
 			}
 
-			if (StringUtils.isNotBlank(source.getDelivery().getCompany())) {
-				target.setCompany(source.getDelivery().getCompany());
-			}
-
-			if (StringUtils.isNotBlank(source.getDelivery().getAddress())) {
-				target.setAddress(source.getDelivery().getAddress());
+			if (StringUtils.isNotBlank(source.getDelivery().getAddressLine1())) {
+				target.setAddress(source.getDelivery().getAddressLine1());
 			}
 
 			if (StringUtils.isNotBlank(source.getDelivery().getFirstName())) {
@@ -47,16 +43,16 @@ public class CustomerDeliveryAddressPopulator extends AbstractDataPopulator<Cust
 				target.setPostalCode(source.getDelivery().getPostalCode());
 			}
 
-			if (StringUtils.isNotBlank(source.getDelivery().getTelephone())) {
-				target.setPhone(source.getDelivery().getTelephone());
+			if (StringUtils.isNotBlank(source.getDelivery().getPhone())) {
+				target.setPhone(source.getDelivery().getPhone());
 			}
 
 			target.setStateProvince(source.getDelivery().getState());
 
-			if (source.getDelivery().getTelephone() == null) {
-				target.setPhone(source.getDelivery().getTelephone());
+			if (source.getDelivery().getPhone() == null) {
+				target.setPhone(source.getDelivery().getPhone());
 			}
-			target.setAddress(source.getDelivery().getAddress());
+			target.setAddress(source.getDelivery().getAddressLine1());
 			if (source.getDelivery().getCountry() != null) {
 				target.setCountry(source.getDelivery().getCountry().getIsoCode());
 			}

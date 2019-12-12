@@ -1,0 +1,72 @@
+
+/*=============================================
+=            section title            =
+=============================================*/
+
+.section-title-area{
+    margin-bottom: 50px;
+}
+
+.section-title{
+    @include font-prop(36px, $black, 700, 65px);
+    display: inline-block;
+    position: relative;
+    padding-bottom: 15px;
+    margin-top: -20px;
+    margin-bottom: 0;
+
+    @media #{$large-mobile}{
+        @include font-prop(28px, $black, 700, 55px);
+    }
+
+    @media #{$extra-small-mobile}{
+        @include font-prop(25px, $black, 700, 50px);
+        padding-bottom: 10px;
+    }
+
+    &:after{
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 2px;
+        background-color: #ccc;
+        content: "";
+
+        @media #{$extra-small-mobile}{
+            width: 80px;
+        }
+    }
+
+    &--left-align{
+        &:after{
+            left: 0;
+            transform: none;
+        }
+    }
+}
+
+.section-subtitle{
+    @include font-prop(16px, #666, 400, 25px);
+    width: 600px;
+    max-width: 100%;
+    margin: auto;
+    margin-top: 25px;
+    margin-bottom: -5px !important;
+
+    &--wide{
+        width: 1000px;
+        max-width: 100%;
+    }
+
+    &--left-align{
+        margin-left: 0;
+    }
+
+}
+
+
+
+/*=====  End of section title  ======*/
+

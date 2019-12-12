@@ -1,0 +1,40 @@
+
+/*=============================================
+=            pagination         =
+=============================================*/
+
+.pagination-wrapper{
+    ul{
+        text-align: center;
+        margin-bottom: -15px;
+        li{
+            display: inline-block;
+            text-align: center;
+            width: 40px;
+            line-height: 38px;
+            margin-right: 5px;
+            border: 1px solid #444;
+            transition: 0.3s;
+            margin-bottom: 15px;
+
+            &:last-child{
+                margin-right: 0;
+            }
+
+            &:hover, &.active{
+                background-color: #444;
+                a{
+                    color: $white;
+                }
+            }
+            a{
+                color: #444;
+                font-size: 14px;
+                display: block;
+            }
+        }
+    }
+}
+
+/*=====  End of pagination ======*/
+

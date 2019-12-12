@@ -20,7 +20,7 @@ public interface OrderDataMapper extends GenericDataMapper<OrderItem, OrderData>
 	@Override
 	@Mappings({
 			@Mapping(target = "name", source = "delivery.firstName"),
-			@Mapping(target = "phone", source = "delivery.telephone"),
+			@Mapping(target = "phone", source = "delivery.phone"),
 			@Mapping(target = "email", source = "customerEmailAddress"),
 			@Mapping(target = "date", source = "createDate", dateFormat = "dd-MM-yyyy HH:mm")
 	})

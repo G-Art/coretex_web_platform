@@ -1,0 +1,179 @@
+
+/*=============================================
+=            Theme default CSS            =
+=============================================*/
+
+/*-- Google Font --*/
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i');
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700,700i,900,900i');
+
+*, *::after, *::before {
+    box-sizing: border-box;
+  }
+  html, body {
+      height: 100%;
+  }
+
+  html{
+      font-size: $html-font-size;
+  }
+  body{
+
+      line-height: $body-line-height;
+      font-size: $body-font-size;
+      font-style: normal;
+      font-weight: $body-font-weight;
+      visibility: visible;
+      font-family: $font-family-name;
+      color: $body-text-color;
+      position: relative;
+      background-color: $body-bg-color;
+
+      &.active-body-search-overlay{
+        overflow: hidden;
+    }
+  
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+      color: $heading-text-color;
+      font-family: $heading-font-family-name;
+      font-weight: $heading-font-weight;
+      margin-top: 0;
+  }
+  h1 {
+      font-size: 36px;
+      line-height: 42px;
+  }
+  h2 {
+      font-size: 30px;
+      line-height: 36px;
+  }
+  h3 {
+      font-size: 24px;
+      line-height: 30px;
+  }
+  h4 {
+      font-size: 18px;
+      line-height: 24px;
+  }
+  h5 {
+      font-size: 14px;
+      line-height: 18px;
+  }
+  h6 {
+      font-size: 12px;
+      line-height: 14px;
+  }
+  p:last-child {
+      margin-bottom: 0;
+  }
+  a, button {
+      color: inherit;
+      display: inline-block;
+      line-height: inherit;
+      text-decoration: none;
+      cursor: pointer;
+  }
+  a, button, img, input, span {
+      transition: all 0.1s ease 0s;
+  }
+  *:focus {
+      outline: none !important;
+  }
+  a:focus {
+      color: inherit;
+      outline: none;
+      text-decoration: none;
+  }
+  a:hover {
+      transition: 0.3s;
+      text-decoration: none;
+  }
+  button, input[type="submit"] {
+      cursor: pointer;
+  }
+  ul {
+      list-style: outside none none;
+      margin: 0;
+      padding: 0;
+  }
+  
+  
+  /*-- Tab Content & Pane Fix --*/
+
+  .tab-content {
+      width: 100%;
+      & .tab-pane {
+          display: block;
+          height: 0;
+          max-width: 100%;
+          visibility: hidden;
+          overflow: hidden;
+          opacity: 0;
+          &.active {
+              height: auto;
+              visibility: visible;
+              opacity: 1;
+              overflow: visible;
+          }
+      }
+  }
+  
+
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 15px;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' height='10px' width='15px'%3E%3Ctext x='0' y='10' fill='black'%3E%E2%96%BE%3C/text%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 95% 50%;
+  }
+
+  /*----------  default settings slick slider  ----------*/
+
+.slick-slide>div>div {
+    vertical-align: middle;
+}
+
+
+/*----------  Sharp border tippyjs theme  ----------*/
+
+  /* If `animateFill: true` (default) */
+  .tippy-tooltip.sharpborder-theme .tippy-backdrop {
+    background-color: #383838;
+    font-weight: 400;
+    color: #fff;
+  }
+  
+  /* If `animateFill: false` */
+  .tippy-tooltip.sharpborder-theme {
+    font-weight: 400;
+    border-radius: 0;
+    font-size: 12px;
+    box-shadow: 4px 4px 8px rgba(0,0,0,.3);
+    background: #383838;
+    color: #fff;
+    line-height: 12px;
+    white-space: nowrap;
+    padding: 8px 10px;
+  }
+
+  /* If `animateFill: true` (default) */
+  .tippy-tooltip.roundborder-theme .tippy-backdrop {
+    background-color: #383838;
+    font-weight: 400;
+    color: #fff;
+  }
+  
+  /* If `animateFill: false` */
+  .tippy-tooltip.roundborder-theme {
+    font-weight: 400;
+    font-size: 12px;
+    box-shadow: 4px 4px 8px rgba(0,0,0,.3);
+    background: #383838;
+    color: #fff;
+    line-height: 12px;
+    white-space: nowrap;
+    padding: 8px 10px;
+  }

@@ -22,11 +22,11 @@ import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.items.commerce_core_model.BillingItem;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.CurrencyItem;
+import com.coretex.items.cx_core.CurrencyItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
@@ -37,7 +37,7 @@ import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductPriceItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
@@ -226,7 +226,7 @@ public class InitStoreData implements InitData {
 		// ProductTypeItem generalType = productTypeService.
 
 		ManufacturerItem oreilley = new ManufacturerItem();
-		oreilley.setMerchantStore(store);
+//		oreilley.setMerchantStore(store);
 		oreilley.setCode("oreilley");
 		oreilley.setName("O\'Reilley");
 
@@ -234,28 +234,28 @@ public class InitStoreData implements InitData {
 
 
 		ManufacturerItem sams = new ManufacturerItem();
-		sams.setMerchantStore(store);
+//		sams.setMerchantStore(store);
 		sams.setCode("sams");
 		sams.setName("Sams");
 
 		manufacturerService.create(sams);
 
 		ManufacturerItem packt = new ManufacturerItem();
-		packt.setMerchantStore(store);
+//		packt.setMerchantStore(store);
 		packt.setCode("packt");
 		packt.setName("Packt");
 
 		manufacturerService.create(packt);
 
 		ManufacturerItem manning = new ManufacturerItem();
-		manning.setMerchantStore(store);
+//		manning.setMerchantStore(store);
 		manning.setCode("manning");
 		manning.setName("Manning");
 
 		manufacturerService.create(manning);
 
 		ManufacturerItem novells = new ManufacturerItem();
-		novells.setMerchantStore(store);
+//		novells.setMerchantStore(store);
 		novells.setCode("novells");
 		novells.setName("Novells publishing");
 
@@ -582,7 +582,7 @@ public class InitStoreData implements InitData {
 		}
 
 		DeliveryItem delivery = new DeliveryItem();
-		delivery.setAddress("358 Du Languadoc");
+		delivery.setAddressLine1("358 Du Languadoc");
 		delivery.setCity("Boucherville");
 		delivery.setCountry(canada);
 //		    delivery.setCountryCode(canada.getIsoCode());
@@ -592,9 +592,8 @@ public class InitStoreData implements InitData {
 		delivery.setZone(zone);
 
 		BillingItem billing = new BillingItem();
-		billing.setAddress("358 Du Languadoc");
+		billing.setAddressLine1("358 Du Languadoc");
 		billing.setCity("Boucherville");
-		billing.setCompany("CSTI Consulting");
 		billing.setCountry(canada);
 //		    billing.setCountryCode(canada.getIsoCode());
 		billing.setFirstName("Leonardo");

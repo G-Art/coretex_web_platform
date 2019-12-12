@@ -1,0 +1,124 @@
+
+/*=============================================
+=            category            =
+=============================================*/
+
+.category-grid-wrapper{
+    margin-bottom: -30px;
+
+    .single-category{
+        margin-bottom: 30px;
+    }
+}
+
+.masonry-layout{
+    &--category{
+        margin-bottom: -30px;
+        .single-category--type-one{
+            margin-bottom: 30px;
+        }
+        .masonry-item--category{
+            margin-bottom: 30px;
+        }
+    }
+}
+
+.single-category{
+    &--type-one{
+        border-bottom: 2px solid #f5f5f5;
+        transition: 0.3s;
+        &__image{
+            overflow: hidden;
+            margin-bottom: 20px;
+            a{
+                display: block;
+                width: 100%;
+                
+                img{
+                    transform: scale(1);
+                    width: 100%;
+                    transition: 0.3s;
+                }
+            }
+        }
+
+        &__content{
+            .title{
+                @include font-prop(24px, #111, 600, 36px);
+            }
+            .category-button--shop-now{
+                transition: 0.3s;
+
+                i{
+                    transition: padding 0.3s;
+                    font-size: 10px;
+                }
+            }
+        }
+
+
+        &:hover{
+            border-bottom-color: #ccc;
+            .single-category--type-one__image{
+                a{
+                    img{
+                        transform: scale(1.05);
+                    }
+                }
+            }
+
+            .single-category--type-one__content{
+                .category-button--shop-now{
+                    color: $theme-color--primary;
+
+                    i{
+                        padding-left: 5px;
+                    }
+                }
+            }
+        }
+    }
+
+    &--type-two{
+        position: relative;
+        &__image{
+            overflow: hidden;
+            a{
+                display: block;
+                width: 100%;
+                img{
+                    width: 100%;
+                    transform: scale(1);
+                    transition: 0.3s;
+                }
+
+                &:hover{
+                    img{
+                        transform: scale(1.05);
+                    }
+                }
+            }
+        }
+
+        &__content{
+            position: absolute;
+            top: 30px;
+            left: 30px;
+
+            .title{
+                @include font-prop(24px, #111, 600, 24px); 
+                margin-bottom: 0;
+            }
+
+            .count{
+                @include font-prop(16px, #666, 400, 16px); 
+                margin-top: 5px;
+                display: inline-block;
+            }
+        }
+    }
+}
+
+
+/*=====  End of category  ======*/
+

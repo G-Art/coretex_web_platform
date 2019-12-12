@@ -3,7 +3,7 @@ package com.coretex.core.business.services.catalog.product.manufacturer;
 
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 
 import java.util.List;

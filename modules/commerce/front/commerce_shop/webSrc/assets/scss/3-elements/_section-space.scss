@@ -1,0 +1,52 @@
+
+/*=============================================
+=            section space            =
+=============================================*/
+
+.section-space{
+    margin-bottom: 100px !important;
+
+    &--small{
+        margin-bottom: 50px !important;
+    }
+
+    &--small-top{
+        margin-top: 50px !important;
+    }
+
+    &--contact-form{
+        margin-bottom: 80px !important;
+    }
+
+    &--inner{
+        padding: 100px 0 !important;
+
+        &--contact-form{
+            padding-top: 100px !important;
+            padding-bottom: 80px !important;
+        }
+    }
+
+    &--breadcrumb{
+        padding-top: 55px;
+        padding-bottom: 55px;
+
+        @media #{$tablet-device}{
+            padding-top: 100px;
+            padding-bottom: 100px;
+        }
+
+        @media #{$large-mobile}{
+            padding-top: 100px;
+            padding-bottom: 100px;
+        }
+    }
+
+    &--page-wrapper{
+        margin-bottom: 50px;
+    }
+}
+
+
+/*=====  End of section space  ======*/
+

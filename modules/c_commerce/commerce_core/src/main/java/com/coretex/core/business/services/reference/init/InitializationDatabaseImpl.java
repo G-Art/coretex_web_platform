@@ -13,12 +13,12 @@ import com.coretex.core.business.services.reference.loader.ShippingLoader;
 import com.coretex.core.business.services.reference.loader.ZonesLoader;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.constants.SchemaConstant;
-import com.coretex.items.commerce_core_model.CurrencyItem;
+import com.coretex.items.cx_core.CurrencyItem;
 import com.coretex.items.commerce_core_model.DeliveryServiceItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import org.apache.commons.lang3.LocaleUtils;
 import org.slf4j.Logger;
@@ -238,7 +238,7 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 		//create default manufacturer
 		ManufacturerItem defaultManufacturer = new ManufacturerItem();
 		defaultManufacturer.setCode("DEFAULT");
-		defaultManufacturer.setMerchantStore(store);
+//		defaultManufacturer.setMerchantStore(store);
 		defaultManufacturer.setName("DEFAULT");
 		defaultManufacturer.setDescription("DEFAULT");
 

@@ -1,6 +1,6 @@
 package com.coretex.shop.admin.model.catalog;
 
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import org.springframework.web.multipart.MultipartFile;
 

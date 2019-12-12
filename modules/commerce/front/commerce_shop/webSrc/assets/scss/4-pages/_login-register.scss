@@ -1,0 +1,190 @@
+
+/*=============================================
+=            Login Register            =
+=============================================*/
+
+.myaccount-wrapper{
+    margin-bottom: 100px;
+}
+
+/*-- Login Title --*/
+.login-title {
+    font-size: 20px;
+    line-height: 23px;
+    text-decoration: underline;
+    text-transform: capitalize;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/*-- Login Form --*/
+.login-form {
+
+    background-color: #ffffff;
+    padding: 30px;
+    box-shadow: 0px 5px 4px 0px rgba(0, 0, 0, 0.1); 
+    
+    @media #{$tablet-device}{
+        padding: 15px;
+    }
+    & label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 12px;
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+    
+    & .nice-select {
+        width: 100%;
+        background-color: transparent; 
+        border: 1px solid #999999;
+        border-radius: 0;
+        line-height: 23px;
+        padding: 10px 20px;
+        font-size: 14px;
+        height: 45px;
+        color: $body-text-color;
+        margin-bottom: 15px;
+        &::after {
+            width: 6px;
+            height: 6px;
+            border-width: 1px;
+            right: 20px;
+            border-color: $body-text-color;
+        }
+        & .current {
+            color: $body-text-color;
+            display: block;
+            line-height: 23px;
+        }
+        & .list {
+            width: 100%;
+        }
+    }
+    
+    & input {
+        width: 100%;
+        background-color: transparent;
+        border: 1px solid #eee;
+        border-radius: 0;
+        line-height: 23px;
+        padding: 10px 20px;
+        font-size: 14px;
+        color: $body-text-color;
+        margin-bottom: 15px;
+        transition: 0.3s;
+        &[type="checkbox"] {
+            width: auto;
+        }
+
+        &:focus{
+            border: 1px solid #c7c7c7;
+        }
+    }
+    
+    & .check-box {
+        float: left;
+        margin-right: 70px;
+        margin-bottom: 15px;
+        
+        &:last-child {
+            margin-right: 0;
+        }
+        
+        & input[type="checkbox"] {
+            display: none;
+            
+            & + label {
+                position: relative;
+                padding-left: 30px;
+                line-height: 20px;
+                font-size: 14px;
+                font-weight: 400;
+                color: $heading-text-color;
+                margin: 0;
+                &::before {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 20px;
+                    height: 20px;
+                    display: block;
+                    border: 2px solid #999999;
+                    content: "";
+                    transition: all 0.3s ease 0s;
+                }
+                &::after {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    display: block;
+                    content: "\f00c";
+                    font-family: Fontawesome;
+                    font-size: 12px;
+                    line-height: 20px;
+                    opacity: 0;
+                    color: $heading-text-color;
+                    width: 20px;
+                    text-align: center;
+                    transition: all 0.3s ease 0s;
+                }
+            }
+            
+            &:checked + label {
+                &::before {
+                    border: 2px solid $heading-text-color;
+                }
+                &::after {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    &--extra-space{
+
+        @media #{$tablet-device}{
+            margin-bottom: 50px;
+        }
+
+        @media #{$large-mobile}{
+            margin-bottom: 50px;
+        }
+    }
+    
+}
+
+/*-- Place Order --*/
+.register-button {
+    display: block;
+    margin-top: 40px;
+    width: 140px;
+    height: 36px;
+    border: none;
+    line-height: 24px;
+    padding: 6px 20px;
+    float: left;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: $white;
+    background-color: $heading-text-color;
+    border-radius: 3px;
+    &:hover{
+        background-color: $theme-color--primary;
+    }
+}
+
+
+.forget-pass-link{
+
+    @media #{$large-mobile}{
+        margin-bottom: 15px;
+    }
+    &:hover{
+        color: $theme-color--primary;
+    }
+}
+
+/*=====  End of Login Register  ======*/
+

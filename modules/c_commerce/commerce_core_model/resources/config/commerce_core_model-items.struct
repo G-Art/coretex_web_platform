@@ -305,16 +305,6 @@ elements {
             }
         }
 
-        Zone {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                name(String)
-            }
-        }
-
         GeoZone {
             attributes {
                 name(String)
@@ -324,21 +314,6 @@ elements {
                 }
             }
         }
-
-        Currency {
-            attributes {
-                supported(Boolean){
-                    defaultValue=true
-                }
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                symbol(String)
-                name(String)
-            }
-        }
-
 
         MerchantStore {
             attributes {
@@ -395,30 +370,6 @@ elements {
                 orderAccountStartDate(Date)
                 orderAccountEndDate(Date)
                 orderAccountBillDay(Integer)
-            }
-        }
-
-        Manufacturer {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                image(String)
-                name(String){
-                    localized = true
-                }
-                title(String){
-                    localized = true
-                }
-                description(String){
-                    localized = true
-                }
-                url(String){
-                    localized = true
-                }
-                merchantStore(MerchantStore)
-                order(Integer)
             }
         }
 
@@ -563,29 +514,12 @@ elements {
             }
         }
 
-        AbstractAddress(abstract: true) {
-            attributes {
-                company(String)
-                address(String)
-                city(String)
-                postalCode(String)
-                country(Country)
-                zone(Zone)
-                state(String)
-                telephone(String)
-                lastName(String)
-                firstName(String)
-                longitude(String)
-                latitude(String)
-            }
-        }
-
-        Billing(extend: AbstractAddress, table: false) {
+        Billing(extend: Address, table: false) {
             attributes {
             }
         }
 
-        Delivery(extend: AbstractAddress, table: false) {
+        Delivery(extend: Address, table: false) {
             attributes {
             }
         }

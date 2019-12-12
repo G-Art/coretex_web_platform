@@ -1,0 +1,41 @@
+
+/*=============================================
+=            Progressbar            =
+=============================================*/
+
+.progress-bar-element{
+
+    &__image{
+        @media #{$tablet-device}{
+            margin-bottom: 30px;
+        }
+
+        @media #{$large-mobile}{
+            margin-bottom: 30px;
+        }
+    }
+    &__content{
+        margin-bottom: -30px;
+        .progress{
+            background-color: #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,.1) inset;
+            border-radius: 0;
+            border: 1px solid #cfcfcf;
+            margin-bottom: 30px;
+
+            .progress-bar{
+                @include font-prop(18px, $white, 600, 18px);
+                .title{
+                    padding-left: 15px;
+                }
+
+                .value{
+                    padding-right: 15px;
+                }
+            }
+        }
+    }
+}
+
+/*=====  End of Progressbar  ======*/
+

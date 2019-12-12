@@ -1,0 +1,151 @@
+
+/*=============================================
+=            deal counter            =
+=============================================*/
+
+.deal-counter-wrapper{
+    border: 10px solid #f8f8f8;
+    margin: 0 -115px;
+    padding: 65px 0;
+    &__image{
+        text-align: center;
+
+        @media #{$laptop-device}{
+            text-align: left;
+        }
+
+        @media #{$tablet-device}{
+            margin-bottom: 40px;
+        }
+
+        @media #{$large-mobile}{
+            margin-bottom: 40px;
+        }
+
+        @media #{$extra-small-mobile}{
+            width: 90%;
+            margin: 0 auto;
+            margin-bottom: 30px;
+        }
+    }
+
+    @media #{$laptop-device}{
+        margin: 0;
+    }
+
+    @media #{$desktop-device}{
+        margin: 0;
+        padding: 65px 30px;
+    }
+
+    @media #{$tablet-device}{
+        margin: 0;
+    }
+
+    @media #{$large-mobile}{
+        margin: 0;
+    }
+
+    &__content{
+
+        @media #{$tablet-device}{
+            padding: 0 30px;
+        }
+
+        @media #{$large-mobile}{
+            padding: 0 30px;
+        }
+
+        @media #{$extra-small-mobile}{
+            padding: 0 10px;
+        }
+
+        .title{
+            @include font-prop(36px, #202020, 700, 39px);
+            margin-bottom: 25px;
+            margin-top: -5px;
+            &:after{
+                content: "";
+                display: block;
+                height: 2px;
+                width: 100px;
+                margin-top: 15px;
+                background-color: #ccc;
+            }
+
+            @media #{$extra-small-mobile}{
+                font-size: 22px;
+                line-height:27px;
+                margin-bottom: 15px;
+            }
+
+        }
+
+        .description{
+            @include font-prop(16px, #666, 400, 25px);
+            margin-bottom: 35px;
+
+            @media #{$extra-small-mobile}{
+                margin-bottom: 15px;
+            }
+        }
+
+        .deal-countdown{
+            margin-bottom: 40px;
+
+            @media #{$extra-small-mobile}{
+                margin-bottom: 15px;
+            }
+            .single-countdown{
+                border-right: 2px solid #EEEEEE;
+                text-align: center;
+                padding: 10px 25px;
+                width: 24.5%;
+
+                @media #{$small-mobile}{
+                    padding: 10px;
+                    width: 25%;
+                }
+
+                @media #{$extra-small-mobile}{
+                    width: 25%;
+                    border: none;
+                    padding: 10px 0;
+                    text-align: left;
+                }
+
+                &:first-child{
+                    border-left: 2px solid #eeeeee;
+
+                    @media #{$extra-small-mobile}{
+                        border: none;
+                    }
+                }
+                display: inline-block;
+
+                &__time{
+                    display: block;
+                    @include font-prop(36px, #202020, 700, 39px);
+                    margin-bottom: 10px;
+
+                    @media #{$extra-small-mobile}{
+                        font-size: 25px;
+                        line-height: 30px;
+                    }
+                }
+
+                &__text{
+                    @include font-prop(16px, #202020, 600, 16px);
+
+                    @media #{$extra-small-mobile}{
+                        font-size: 14px;
+                        line-height: 14px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/*=====  End of deal counter  ======*/
+

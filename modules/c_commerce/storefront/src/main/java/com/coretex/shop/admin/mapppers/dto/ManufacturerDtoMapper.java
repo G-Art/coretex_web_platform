@@ -1,6 +1,6 @@
 package com.coretex.shop.admin.mapppers.dto;
 
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.shop.admin.data.ManufacturerDto;
 import com.coretex.shop.admin.forms.ProductForm;

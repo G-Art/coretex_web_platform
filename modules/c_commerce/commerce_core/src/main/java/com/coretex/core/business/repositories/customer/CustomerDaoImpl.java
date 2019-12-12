@@ -3,7 +3,6 @@ package com.coretex.core.business.repositories.customer;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
 import com.coretex.items.commerce_core_model.BillingItem;
-import com.coretex.items.commerce_core_model.CurrencyItem;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.core.CountryItem;
 import com.google.common.collect.Maps;

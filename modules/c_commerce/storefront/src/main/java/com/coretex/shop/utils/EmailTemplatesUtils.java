@@ -14,7 +14,7 @@ import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.constants.ApplicationConstants;
 import com.coretex.shop.constants.EmailConstants;
 import com.coretex.shop.model.customer.PersistableCustomer;
@@ -97,13 +97,7 @@ public class EmailTemplatesUtils {
 
 			//format BillingItem address
 			StringBuilder billing = new StringBuilder();
-			if (StringUtils.isBlank(order.getBilling().getCompany())) {
-				billing.append(order.getBilling().getFirstName()).append(" ")
-						.append(order.getBilling().getLastName()).append(LINE_BREAK);
-			} else {
-				billing.append(order.getBilling().getCompany()).append(LINE_BREAK);
-			}
-			billing.append(order.getBilling().getAddress()).append(LINE_BREAK);
+			billing.append(order.getBilling().getAddressLine1()).append(LINE_BREAK);
 			billing.append(order.getBilling().getCity()).append(", ");
 
 			if (order.getBilling().getZone() != null) {
@@ -126,13 +120,7 @@ public class EmailTemplatesUtils {
 			StringBuilder shipping = null;
 			if (order.getDelivery() != null && !StringUtils.isBlank(order.getDelivery().getFirstName())) {
 				shipping = new StringBuilder();
-				if (StringUtils.isBlank(order.getDelivery().getCompany())) {
-					shipping.append(order.getDelivery().getFirstName()).append(" ")
-							.append(order.getDelivery().getLastName()).append(LINE_BREAK);
-				} else {
-					shipping.append(order.getDelivery().getCompany()).append(LINE_BREAK);
-				}
-				shipping.append(order.getDelivery().getAddress()).append(LINE_BREAK);
+				shipping.append(order.getDelivery().getAddressLine1()).append(LINE_BREAK);
 				shipping.append(order.getDelivery().getCity()).append(", ");
 
 				if (order.getDelivery().getZone() != null) {

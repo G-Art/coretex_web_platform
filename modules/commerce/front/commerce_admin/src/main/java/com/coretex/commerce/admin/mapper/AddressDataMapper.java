@@ -1,15 +1,14 @@
 package com.coretex.commerce.admin.mapper;
 
 import com.coretex.commerce.admin.data.AddressData;
-import com.coretex.commerce.admin.data.ZoneData;
-import com.coretex.items.commerce_core_model.AbstractAddressItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.AddressItem;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring",
 		uses = {ReferenceMapper.class,
+				StoreDataMapper.class,
 				CountryDataMapper.class,
 				ZoneDataMapper.class})
-public interface AddressDataMapper extends GenericDataMapper<AbstractAddressItem, AddressData>{
+public interface AddressDataMapper extends GenericDataMapper<AddressItem, AddressData>{
 
 }

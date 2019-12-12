@@ -1,0 +1,78 @@
+
+/*=============================================
+=            breadcrumb            =
+=============================================*/
+
+.breadcrumb-wrapper{
+    text-align: center;
+    margin-bottom: 45px;
+    @media #{$tablet-device}{
+        margin-bottom: 0;
+    }
+    @media #{$large-mobile}{
+        margin-bottom: 0;
+    }
+    .page-title{
+        @include font-prop(70px, #000, 700, 77px);
+        margin-bottom: 20px;
+        margin-top: -12px;
+
+        @media #{$laptop-device}{
+            font-size: 50px;
+            line-height: 60px;
+            margin-top: -10px;
+        }
+
+        @media #{$desktop-device}{
+            font-size: 50px;
+            line-height: 60px;
+            margin-top: -10px;
+        }
+
+        @media #{$tablet-device}{
+            font-size: 50px;
+            line-height: 60px;
+            margin-top: -10px;
+        }
+
+        @media #{$large-mobile}{
+            font-size: 40px;
+            line-height: 50px;
+            margin-top: -10px;
+        }
+
+        @media #{$extra-small-mobile}{
+            font-size: 33px;
+            line-height: 40px;
+            margin-top: -5px;
+        }
+    }
+
+    .breadcrumb-list{
+        li{
+            display: inline-block;
+            a{
+                @include font-prop(16px, #000, 400, 22px);
+            }
+
+            &.active{
+                @include font-prop(18px, #000, 600, 22px);
+            }
+
+            &:last-child{
+                &:after{
+                    display: none;
+                }
+            }
+
+            &:after{
+                content: "/";
+                margin: 0 6px;
+                color: #000;
+            }
+        }
+    }
+}
+
+/*=====  End of breadcrumb  ======*/
+

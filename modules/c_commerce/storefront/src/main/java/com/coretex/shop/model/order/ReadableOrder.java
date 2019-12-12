@@ -1,6 +1,6 @@
 package com.coretex.shop.model.order;
 
-import com.coretex.items.commerce_core_model.CurrencyItem;
+import com.coretex.items.cx_core.CurrencyItem;
 import com.coretex.shop.model.customer.ReadableCustomer;
 import com.coretex.shop.model.customer.ReadableDelivery;
 import com.coretex.shop.model.customer.address.Address;

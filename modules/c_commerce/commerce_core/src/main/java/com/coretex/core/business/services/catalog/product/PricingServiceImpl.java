@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import com.coretex.core.business.utils.ProductPriceUtils;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
 import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.commerce_core_model.CurrencyItem;
+import com.coretex.items.cx_core.CurrencyItem;
 
 /**
  * Contains all the logic required to calculate product price

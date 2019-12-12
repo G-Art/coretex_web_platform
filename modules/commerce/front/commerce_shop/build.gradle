@@ -1,0 +1,41 @@
+plugins {
+  id("com.github.node-gradle.node") version "2.2.0"
+}
+
+node {
+  version = '12.13.1'
+  npmVersion = '6.13.3'
+  download = true
+  workDir = project.file("${project.projectDir}/jsbuild/nodejs")
+  npmWorkDir = project.file("${project.projectDir}/jsbuild/npm")
+}
+
+
+//task runUiTests(type: NpmTask){
+//  args = ['test']
+//
+//  doLast {
+//    copy {
+//      from '.'
+//      into "${rootProject.buildDir}/reports/uiTest"
+//      include 'coverage/**'
+//    }
+//  }
+//}
+
+build.dependsOn 'npm_run_build'
+
+//task start(type: NpmTask, dependsOn: 'safeInstall') {
+//  args = ['run', 'start']
+//}
+
+
+clean.delete << file('node_modules')
+clean.delete << file('webroot/resources/static/app')
+
+dependencies {
+  compile project(":core")
+  compile project(":cx_core")
+
+  compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+}

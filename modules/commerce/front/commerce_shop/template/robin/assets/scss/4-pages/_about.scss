@@ -1,0 +1,130 @@
+
+/*=============================================
+=            about us            =
+=============================================*/
+
+
+.about-page-top-wrapper{
+    border-bottom: 1px solid #EEEEEE;
+    padding-bottom: 100px;
+    margin-top: -10px;
+
+    @media #{$desktop-device}{
+        margin-top: -5px;
+    }
+
+}
+
+
+/* about us brief */
+
+.about-us-brief-title{
+    @include font-prop(36px, #111, 700, 46px);
+    margin-bottom: 0;
+
+    @media #{$tablet-device}{
+        margin-bottom: 30px;
+    }
+
+    @media #{$large-mobile}{
+        margin-bottom: 30px;
+    }
+
+    @media #{$extra-small-mobile}{
+        font-size: 30px;
+        line-height: 40px;
+    }
+
+    &:after{
+        content: "";
+        display: block;
+        height: 2px;
+        width: 100px;
+        margin-top: 15px;
+        background-color: #ccc;
+    }
+}
+
+.about-us-brief-desc{
+    @include font-prop(16px, #666, 400, 25px);
+
+    p{
+        margin-bottom: 0;
+    }
+}
+
+
+
+/* about us process */
+
+.about-us-process-wrapper{
+    margin-bottom: -30px;
+    .single-process{
+        margin-bottom: 30px;
+        .title{
+            @include font-prop(20px, #666, 700, 32px);
+            margin-bottom: 15px;
+            margin-top: -10px;
+            span{
+                color: $theme-color--primary;
+            }
+        }
+
+        .description{
+            @include font-prop(16px, #666, 400, 25px);
+            margin-bottom: -3px;
+        }
+    }
+}
+
+
+.team-member-wrapper{
+    margin-bottom: -30px;
+}
+
+.single-team-member{
+    margin-bottom: 30px;
+
+    @media #{$small-mobile}{
+        text-align: center;
+    }
+    &__image{
+        margin-bottom: 15px;
+    }
+
+    &__content{
+        .name{
+            @include font-prop(18px, #111, 600, 25px);
+            margin-bottom: 10px;
+        }   
+
+        .designation{
+            @include font-prop(16px, $theme-color--primary, 400, 22px);
+            margin-bottom: 15px;
+        }
+
+        .short-desc{
+            @include font-prop(15px, #666, 400, 24px);
+            
+        }
+
+        .social-profiles{
+            line-height: 1;
+            li{
+                display: inline-block;
+                margin-right: 20px;
+                a{
+                    display: block;
+                    font-size: 16px;
+                    color: #666;
+
+                    &:hover{
+                        color: $theme-color--primary;
+                    }
+                }
+            }
+        }
+    }
+}
+/*=====  End of about us  ======*/
+

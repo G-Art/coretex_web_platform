@@ -1,0 +1,196 @@
+
+/*=============================================
+=            newsletter             =
+=============================================*/
+
+.footer-newsletter-small-area{
+    background-color: $theme-color--primary;
+    padding: 35px 0;
+}
+
+.footer-newsletter-text{
+    @include font-prop(30px, #fff, 700, 33px);
+    letter-spacing: 3px;
+    display: flex;
+    align-items: center;
+
+    @media #{$desktop-device}{
+        @include font-prop(25px, #fff, 700, 30px);
+    }
+
+    @media #{$tablet-device}{
+        @include font-prop(25px, #fff, 700, 30px);
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    @media #{$large-mobile}{
+        @include font-prop(25px, #fff, 700, 30px);
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    @media #{$extra-small-mobile}{
+        font-size: 20px;
+        letter-spacing: 1px;
+    }
+
+
+    i{
+        color: #ffffff;
+        font-size: 50px;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    span{
+        display: inline-block;
+    }
+}
+
+.footer-newsletter-form{
+    width: 425px;
+    max-width: 100%;
+    margin-left: auto;
+    position: relative;
+
+    @media #{$tablet-device}{
+        margin: 0 auto;
+    }
+
+    @media #{$large-mobile}{
+        margin: 0 auto;
+    }
+
+    .mailchimp-alerts{
+        text-align: left;
+    }
+
+    input{
+        color: #202020;
+        height: 50px;
+        width: 100%;
+        border: 2px solid transparent;
+        padding: 9px 15px;
+        padding-right: 60px;
+        transition: 0.3s;
+        font-style: italic;
+
+        &:focus{
+            border-color: #222;
+        }
+    }
+
+    button{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50px;
+        height: 50px;
+        background-color: #111;
+        border-color: #111;
+        color: $white;
+    }
+}
+
+
+
+/* mailchimp eleemnt */
+
+.mailchimp-form-content{
+    padding: 50px;
+    background-color: #EEEEEE;
+    position: relative;
+
+    @media #{$extra-small-mobile}{
+        padding: 30px 15px;
+
+    }
+
+    .icon{
+        position: absolute;
+        right: -30px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #868686;
+        background-color: #ffffff;
+        font-size: 18px;
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        border: 2px solid #eee;
+        text-align: center;
+        border-radius: 50%;
+        z-index: 9;
+
+        @media #{$tablet-device, $large-mobile}{
+            bottom: -30px;
+            top: auto;
+            transform: translate(-50%, 0);
+            left: 50%;
+        }
+    }
+
+    .mailchimp-form-wrapper{
+        border: 10px solid #fff;
+        padding: 90px 30px;
+
+        @media #{$large-mobile}{
+            border: 0;
+            padding: 60px 15px;
+
+        }
+
+        @media #{$extra-small-mobile}{
+            padding: 60px 0;
+        }
+
+        .mailchimp-form{
+            &--element{
+                text-align: center;
+                
+                input{
+                    font-size: 16px;
+                    font-style: italic;
+                    width: 100%;
+                    max-width: 670px;
+                    height: 44px;
+                    padding: 9px 15px;
+                    color: #202020;
+                    border-width: 0;
+                    border-color: #ccc;
+                    border-bottom-width: 1px;
+                    background: none;
+                    text-align: center;
+                    transition: 0.3s;
+                    margin-bottom: 35px;
+
+                    &:focus{
+                        border-color: #111;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+.mailchimp-form-bg{
+    background-image: url('../img/backgrounds/image-robin.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100%;
+    width: 100%;
+
+    @media #{$tablet-device, $large-mobile}{
+        height: 600px;
+    }
+
+    @media #{$extra-small-mobile}{
+        height: 400px;
+    }
+}
+
+/*=====  End of newsletter   ======*/
+

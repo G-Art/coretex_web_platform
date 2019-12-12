@@ -7,7 +7,7 @@ import java.util.Map;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 
 public interface ZoneService extends SalesManagerEntityService<ZoneItem> {
 

@@ -25,7 +25,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.enums.commerce_core_model.OrderChannelEnum;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
-import com.coretex.items.commerce_core_model.CurrencyItem;
+import com.coretex.items.cx_core.CurrencyItem;
 import com.coretex.shop.model.order.PersistableOrderApi;
 import com.coretex.shop.utils.LocaleUtils;
 

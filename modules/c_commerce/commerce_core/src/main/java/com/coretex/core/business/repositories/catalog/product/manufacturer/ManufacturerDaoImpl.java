@@ -1,7 +1,7 @@
 package com.coretex.core.business.repositories.catalog.product.manufacturer;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.relations.commerce_core_model.CategoryProductRelation;
 import org.springframework.stereotype.Component;

@@ -10,7 +10,7 @@ import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.model.customer.ReadableDelivery;
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,12 +48,8 @@ public class ReadableCustomerDeliveryAddressPopulator extends AbstractDataPopula
 			target.setCity(source.getCity());
 		}
 
-		if (StringUtils.isNotBlank(source.getCompany())) {
-			target.setCompany(source.getCompany());
-		}
-
-		if (StringUtils.isNotBlank(source.getAddress())) {
-			target.setAddress(source.getAddress());
+		if (StringUtils.isNotBlank(source.getAddressLine1())) {
+			target.setAddress(source.getAddressLine1());
 		}
 
 		if (StringUtils.isNotBlank(source.getFirstName())) {
@@ -68,16 +64,16 @@ public class ReadableCustomerDeliveryAddressPopulator extends AbstractDataPopula
 			target.setPostalCode(source.getPostalCode());
 		}
 
-		if (StringUtils.isNotBlank(source.getTelephone())) {
-			target.setPhone(source.getTelephone());
+		if (StringUtils.isNotBlank(source.getPhone())) {
+			target.setPhone(source.getPhone());
 		}
 
 		target.setStateProvince(source.getState());
 
-		if (source.getTelephone() == null) {
-			target.setPhone(source.getTelephone());
+		if (source.getPhone() == null) {
+			target.setPhone(source.getPhone());
 		}
-		target.setAddress(source.getAddress());
+		target.setAddress(source.getAddressLine1());
 		if (source.getCountry() != null) {
 			target.setCountry(source.getCountry().getIsoCode());
 

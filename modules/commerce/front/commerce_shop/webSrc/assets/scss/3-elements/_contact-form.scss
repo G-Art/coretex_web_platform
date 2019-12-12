@@ -1,0 +1,32 @@
+
+/*=============================================
+=            contact form            =
+=============================================*/
+
+
+.contact-form-wrapper{
+    input, textarea{
+        font-size: 15px;
+        padding: 10px 20px;
+        margin-bottom: 30px;
+        color: #222;
+        width: 100%;
+        background: #f7f7f7;
+        border: 1px solid #eee;
+        transition: all .3s ease-in-out;
+        display: block;
+
+        &:focus{
+            border-color: #c7c7c7;
+        }
+    }
+
+    .form-messege{
+        margin-top: 20px;
+    }
+}
+
+
+
+/*=====  End of contact form  ======*/
+

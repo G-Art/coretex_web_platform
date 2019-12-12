@@ -1,0 +1,110 @@
+
+/*=============================================
+=            accordion            =
+=============================================*/
+
+.accordion-toggle-wrapper{
+    margin-bottom: -50px;
+
+    .single-faq{
+        margin-bottom: 50px !important;
+    }
+}
+
+.faq-title{
+    @include font-prop(35px, #212121, 700, 38px);
+    margin-bottom: 35px;
+    margin-top: -5px;
+
+    &:after{
+        content: "";
+        display: block;
+        height: 2px;
+        width: 100px;
+        margin-top: 15px;
+        background-color: #ccc;
+    }
+
+    @media #{$small-mobile}{
+        font-size: 25px;
+        line-height: 32px;
+    }
+}
+
+.single-faq{
+    margin-bottom: 50px;
+
+    &:last-child{
+        margin-bottom: 0;
+    }
+
+    .card{
+        border: none;
+        border-radius: 0;
+
+        &:last-child{
+            .card-header{
+                h5{
+                    button{
+                        border-bottom: 1px solid #eee;
+                    }
+                }
+            }
+        }
+    }
+
+    .card-header{
+        border-bottom: 0;
+        padding: 0;
+        border-radius: 0;
+        margin-bottom: 0 !important;
+        h5{
+            button{
+                background-color: #eee;
+                @include font-prop(18px, #444, 600, 18px);
+                overflow-wrap: break-word;
+                white-space: normal;
+                text-align: left;    
+                width: 100%;
+                padding: 20px;   
+                border-bottom: 0;
+
+                &.btn{
+                    border-radius: 0;
+                }
+
+                &.collapsed{
+                    background-color: #fff;
+                    border-top: 1px solid #eee;
+                    border-bottom: 0;
+
+                    
+                    
+                }
+
+                &:hover, &:focus{
+                    text-decoration: none;
+                }
+
+                @media #{$small-mobile}{
+                    font-size: 18px;
+                    line-height: 26px;
+                }
+
+            }
+        }
+    }
+
+    .card-body{
+        padding-left: 0;
+        padding: 30px 0;
+        p{
+            @include font-prop(16px, #666, 400, 25px);
+        }
+    }
+
+    
+}
+
+/*=====  End of accordion  ======*/
+

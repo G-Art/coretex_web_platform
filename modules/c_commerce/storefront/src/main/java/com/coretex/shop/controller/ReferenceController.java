@@ -1,7 +1,7 @@
 package com.coretex.shop.controller;
 
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.coretex.core.business.services.reference.country.CountryService;

@@ -7,7 +7,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ZoneItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.model.references.ReadableCountry;
 import com.coretex.shop.model.references.ReadableZone;
 

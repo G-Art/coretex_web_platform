@@ -106,15 +106,14 @@ public class ReadableProductPopulator extends
 				owner.setFirstName(source.getOwner().getBilling().getFirstName());
 				owner.setLastName(source.getOwner().getBilling().getLastName());
 				com.coretex.shop.model.customer.address.Address address = new com.coretex.shop.model.customer.address.Address();
-				address.setAddress(source.getOwner().getBilling().getAddress());
+				address.setAddress(source.getOwner().getBilling().getAddressLine1());
 				address.setBillingAddress(true);
 				address.setCity(source.getOwner().getBilling().getCity());
-				address.setCompany(source.getOwner().getBilling().getCompany());
 				address.setCountry(source.getOwner().getBilling().getCountry().getIsoCode());
 				address.setZone(source.getOwner().getBilling().getZone().getCode());
 				address.setLatitude(source.getOwner().getBilling().getLatitude());
 				address.setLongitude(source.getOwner().getBilling().getLongitude());
-				address.setPhone(source.getOwner().getBilling().getTelephone());
+				address.setPhone(source.getOwner().getBilling().getPhone());
 				address.setPostalCode(source.getOwner().getBilling().getPostalCode());
 				owner.setAddress(address);
 				target.setOwner(owner);
@@ -154,7 +153,6 @@ public class ReadableProductPopulator extends
 				com.coretex.shop.model.catalog.manufacturer.ManufacturerDescription d = new com.coretex.shop.model.catalog.manufacturer.ManufacturerDescription();
 				d.setName(source.getManufacturer().getName());
 				manufacturerEntity.setUuid(source.getManufacturer().getUuid());
-				manufacturerEntity.setOrder(source.getManufacturer().getOrder() != null ? source.getManufacturer().getOrder(): 0);
 				manufacturerEntity.setCode(source.getManufacturer().getCode());
 				target.setManufacturer(manufacturerEntity);
 			}

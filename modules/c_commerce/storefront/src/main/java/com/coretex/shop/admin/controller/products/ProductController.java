@@ -11,7 +11,7 @@ import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.core.data.web.Menu;
 import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ManufacturerItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;

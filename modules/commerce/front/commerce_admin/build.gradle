@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     compile project(":core")
+    compile project(":cx_core")
     compile project(":newPost")
     compile project(":commerce_core")
     compile project(":commerce_core_model")

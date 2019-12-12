@@ -1,0 +1,95 @@
+elements {
+
+    relations {
+
+    }
+
+    items {
+
+        Zone {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                name(String)
+            }
+        }
+
+        Currency {
+            attributes {
+                supported(Boolean){
+                    defaultValue=true
+                }
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                symbol(String)
+                name(String)
+            }
+        }
+
+        Address {
+            attributes {
+                addressLine1(String)
+                addressLine2(String)
+                city(String)
+                postalCode(String)
+                country(Country)
+                zone(Zone)
+                state(String)
+                phone(String)
+                lastName(String)
+                firstName(String)
+                longitude(String)
+                latitude(String)
+            }
+        }
+
+        Store {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                name(String)
+                phone(String)
+                address(Address)
+                domainName(String)
+                storeEmail(String)
+                dateBusinessSince(String)
+                defaultLanguage('Locale')
+                zone(Zone)
+                country(Country)
+                currency('Currency')
+             }
+        }
+
+        Manufacturer {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                image(String)
+                url(String)
+                merchantStore(Store)
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+            }
+        }
+
+    }
+
+    enums {
+
+    }
+}

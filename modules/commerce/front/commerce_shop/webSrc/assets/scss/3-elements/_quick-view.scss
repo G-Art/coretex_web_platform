@@ -1,0 +1,667 @@
+
+/*=============================================
+=            Quick View            =
+=============================================*/
+
+
+// colors, fonts etc...
+// colors
+
+$color-1: #3e585f; // green dark
+$color-2: #f82f53; // crimson
+$color-3: #47374e; // purple
+$color-4: #ffffff; // white
+
+// custom mixins
+
+// rem fallback - credits: http://zerosixthree.se/
+
+@function calculateRem($size) {
+    $remSize: $size / 16px;
+    @return $remSize * 1rem;
+  }
+  
+  @mixin font-size($size) {
+    font-size: $size;
+    font-size: calculateRem($size);
+  }
+  
+  // center vertically and/or horizontally an absolute positioned element
+  
+  @mixin center($xy:xy) {
+    @if $xy == xy {
+      left: 50%;
+      top: 50%;
+      bottom: auto;
+      right: auto;
+    
+    }
+    @else if $xy == x {
+      left: 50%;
+      right: auto;
+      
+    }
+    @else if $xy == y {
+      top: 50%;
+      bottom: auto;
+     
+    }
+  }
+  
+  // border radius
+  
+  @mixin border-radius($radius:.25em) {
+    border-radius: $radius;
+  }
+  
+  // antialiasing mode font rendering
+  
+  @mixin font-smoothing {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+
+// responsive grid and media queries
+
+// breakpoints
+   
+$S:     480px;   
+$M:     768px;  
+$L:    992px;   
+$XL:   1170px;     
+
+// media queries
+
+@mixin MQ($canvas) {
+  @if $canvas == S {
+   @media only screen and (min-width: $S) { @content; } 
+  }
+  @else if $canvas == M {
+   @media only screen and (min-width: $M) { @content; } 
+  }
+  @else if $canvas == L {
+   @media only screen and (min-width: $L) { @content; } 
+  }
+  @else if $canvas == XL {
+   @media only screen and (min-width: $XL) { @content; } 
+  }
+}
+
+// super light grid - it works with the .cd-container class inside style.scss
+
+@mixin column($percentage, $float-direction:left) {
+  width: 100% * $percentage;
+  float: $float-direction;
+}
+
+
+
+/* -------------------------------- 
+
+Primary style
+
+-------------------------------- */
+
+// *, *::after, *::before {
+// 	@include box-sizing(border-box);
+// }
+
+body {
+
+
+	&::after {
+		/* dark overlay layer - visible when we fire .cd-quick-view */
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(35, 35, 44, 0.5);
+		visibility: hidden;
+		opacity: 0;
+		-webkit-transition: opacity .3s 0s, visibility 0s .3s;
+		-moz-transition: opacity .3s 0s, visibility 0s .3s;
+        transition: opacity .3s 0s, visibility 0s .3s;
+        content: "";
+        z-index: 9999;
+	}
+
+	@include MQ(L) {
+		&.overlay-layer::after {
+			visibility: visible;
+			opacity: 1;
+			-webkit-transition: opacity .3s 0s, visibility 0s 0s;
+			-moz-transition: opacity .3s 0s, visibility 0s 0s;
+            transition: opacity .3s 0s, visibility 0s 0s;
+            content: "";
+		}
+	}
+}
+
+
+/* -------------------------------- 
+
+Modules - reusable parts of our design
+
+-------------------------------- */
+
+.cd-container { /* this class is used to give a max-width to the element it is applied to, and center it horizontally when it reaches that max-width */
+	width: 90%;
+	max-width: $XL; // breakpoints inside partials > _layout.scss
+	margin: 0 auto;
+	
+}
+
+/* -------------------------------- 
+
+Main components 
+
+-------------------------------- */
+
+
+
+.cd-items {
+	padding: 1em 0;
+
+	@include MQ(M) {
+		padding: 2em 0 0;
+	}
+
+	@include MQ(L) {
+		padding: 4em 0 0;
+	}
+}
+
+.cd-item {
+	position: relative;
+	margin: 0 0 1em;
+
+	> img {
+		display: block;
+		width: 100%;
+	}
+
+	@include MQ(M) {
+		@include column(.48);
+		margin: 0 4% 2em 0;
+
+		&:nth-child(2n) {
+			margin-right: 0;
+		}
+	}
+
+	@include MQ(L) {
+		@include column(.22);
+		margin: 0 4% 2.8em 0;
+
+		&:nth-child(2n) {
+			margin-right: 4%;
+		}
+
+		&:nth-child(4n) {
+			margin-right: 0;
+		}
+
+		&.empty-box::after {
+			/* box visible as placeholder when the .cd-quick-view zooms in */
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: darken($color-3, 5%);
+		}
+	}
+}
+
+
+
+.cd-quick-view {
+
+    
+
+    &.animate-width{
+
+        z-index: 99999;
+    }
+
+
+  &.is-visible{
+      .cd-slider-pagination{
+          visibility: visible;
+          opacity: 1;
+      }
+  }
+
+  &.velocity-animating{
+    z-index: 99999;
+      &.is-visible{
+
+          .cd-slider-pagination{
+              visibility: hidden !important;
+              opacity: 0 !important;
+          }
+      }
+  }
+    
+// *::after, *::before {
+// 	content: '';
+// }
+ 
+	/* quick view non available on small devices */
+    display: none;
+
+	@include MQ(L) {
+		display: block;
+		position: fixed;
+		max-width: 900px;
+		visibility: hidden;
+
+		/* Force Hardware Acceleration in WebKit */
+		
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		will-change: left, top, width;
+
+		
+		z-index: 1;
+
+		&.is-visible {
+			/* class added when user clicks on .cd-trigger */
+			visibility: visible;
+		}
+
+		&.animate-width {
+			/* class added at the end of the first zoom-in animation */
+			background-color: $color-4;
+			box-shadow: 0 0 30px rgba(#000, .2);
+			
+		}
+	}
+}
+
+.cd-slider-wrapper {
+	position: relative;
+	display: inline-block;
+	float: left;
+    
+    &:hover{
+        .cd-slider-navigation{
+            li{
+				visibility: visible;
+				opacity: 0.5;
+            }
+        }
+    }
+}
+
+.cd-slider {
+
+	float: left;
+
+	li {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1;
+
+		img {
+			display: block;
+			width: 100%;
+			max-width: 400px;
+		}
+
+		&.selected {
+			position: relative;
+			z-index: 3;
+		}
+	}
+
+    
+}
+
+.cd-slider-navigation {
+	opacity: 0;
+	
+
+	.add-content & {
+		opacity: 1;
+	}
+}
+
+.cd-slider-navigation li {
+    
+	position: absolute;
+	@include center(y); // mixins inside partials > _mixins.scss
+    z-index: 3;
+	transition: 0.3s;
+	background-color: #000;
+	opacity: 0;
+	visibility: hidden;
+
+	&:first-child {
+		left: 0;
+	}
+
+	&:last-child {
+		/* equal to the .cd-slider-wrapper margin-right */
+		right: 0;
+	}
+
+	a {
+		display: block;
+		width: 40px;
+		height: 50px;
+		color: $white;
+		text-align: center;
+		line-height: 50px;
+		font-size: 25px;
+		/* Force Hardware Acceleration in WebKit */
+
+		
+	}
+
+	&:hover{
+		opacity: 0.8;
+	}
+
+}
+
+.cd-item-info {
+	position: absolute;
+	padding: 3em;
+	visibility: hidden;
+	opacity: 0;
+	-webkit-transition: opacity .3s, visibility 0s;
+	-moz-transition: opacity .3s, visibility 0s;
+    transition: opacity .3s, visibility 0s;
+    overflow: hidden;
+
+	h2 {
+		@include font-size(28px);
+	}
+
+	p {
+		line-height: 1.6;
+		margin: 1em 0;
+	}
+
+	.cd-item-action li {
+		display: inline-block;
+		margin-right: 1em;
+
+		&:first-child {
+			margin-left: -4px;
+		}
+	}
+
+	.add-to-cart {
+		
+		@include border-radius;
+		border: none;
+		padding: .6em 1.2em;
+		@include font-smoothing;
+		@include font-size(16px);
+		cursor: pointer;
+	}
+
+	.add-content & {
+		/* class added at the end of the width animation, used to show the content */
+		position: relative;
+		visibility: visible;
+		opacity: 1;
+	}
+}
+
+ 
+.cd-close {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	display: inline-block;
+	width: 30px;
+    height: 30px;
+    color: #333;
+
+	/* image replacement */
+	overflow: hidden;
+	text-indent: 100%;
+	white-space: nowrap;
+	visibility: hidden;
+	transition: transform .3s 0s, visibility 0s .3s;
+
+	&::before, &::after {
+		/* close icon in css */
+		position: absolute;
+		top: 12px;
+		left: 5px;
+		display: inline-block;
+		height: 1px;
+		width: 30px;
+		background: #777;
+		backface-visibility: hidden;
+		content: "";
+        
+	}
+
+	&::before {
+		transform: rotate(45deg);
+	}
+
+	&::after {
+		transform: rotate(135deg);
+	}
+
+	.no-touch &:hover {
+        //@include transform(scale(1.2));
+        color: #333;
+	}
+
+	.add-content & {
+		visibility: visible;
+		
+		-webkit-transition: -webkit-transform .3s 0s, visibility 0s 0s;
+		-moz-transition: -moz-transform .3s 0s, visibility 0s 0s;
+		transition: transform .3s 0s, visibility 0s 0s;
+	}
+}
+
+
+
+/*----------  pagination style  ----------*/
+
+.cd-slider-pagination{
+    position: absolute;
+    bottom: 20px;
+    z-index: 99;
+    left: 50%;
+    transform: translateX(-50%);
+    visibility: hidden;
+    opacity: 0;
+    li{
+        font-size: 0;
+        vertical-align: middle;
+        &.active{
+            a{
+                background-color: transparent;
+                border: 1px solid #333333;
+                border-radius: 100%;
+                opacity: 1;
+                width: 18px;
+                height: 18px;
+                margin: 0;
+                &:hover{
+                    background-color: transparent;
+                }
+                
+            }
+        }
+        display: inline-block;
+        a{
+            font-size: 0;
+            display: block;
+            cursor: pointer;
+            outline: 0;
+            line-height: 0;
+            border: 0;
+            width: 10px;
+            height: 10px;
+            color: transparent;
+            background-color: #1f1f1f; 
+            opacity: .2;
+            border-radius: 50%;
+            margin: 0 4px;
+            padding: 0;
+
+            &:hover{
+                background-color: #333;
+            }
+        }
+    }
+}
+
+
+
+/*----------  quickview description style  ----------*/
+
+.quickview-item-info{
+
+    max-height: 520px;
+    overflow-y: scroll;
+
+    .item-title{
+		@include font-prop(28px, #111, 600, 28px);
+		
+		@media #{$desktop-device}{
+			font-size: 25px;
+		}
+    }
+
+    .price{
+        .main-price{
+            @include font-prop(30px, #d92523, 600, 48px);
+
+            &.discounted{
+				@include font-prop(20px, #aaa, 600, 48px);
+                text-decoration: line-through;
+            }
+        }
+        
+
+        .discounted-price{
+			@include font-prop(30px, #d92523, 600, 48px);
+        }
+    }
+
+    .description{
+        @include font-prop(16px, #666, 400, 25px);
+        margin-bottom: 20px;
+    }
+}
+
+.quickview-title{
+    font-size: 16px; 
+    line-height: 22px;
+    color: #333;
+    font-weight: 500;
+}
+
+
+
+/*----------  quantity style  ----------*/
+
+.pro-qty{
+    padding: 10px;
+	margin: 0 10px 0 0;
+	background-color: #F7F7F7;
+    input{
+        width: 40px;
+        border: none;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 500;
+        color: #333333;
+		padding: 0 10px;
+		background-color: #F7F7F7;
+    }
+
+    .qty-btn{
+        font-size: 22px;
+        font-weight: 500;
+		color: #333;
+		line-height: 1;
+		position: relative;
+		top: 3px;
+    }
+}
+
+
+
+/*----------  quick view other info  ----------*/
+
+.quick-view-other-info{
+	border-top: 1px solid #e0e0e0;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-top: 30px;
+
+	.other-info-links{
+		margin-top: 15px;
+		a{
+			@include font-prop(16px, #666, 600, 22px);
+			letter-spacing: 1px;
+			margin-right: 15px;
+
+			@media #{$desktop-device}{
+				font-size: 14px;
+			}
+
+			@media #{$extra-small-mobile}{
+				font-size: 15px;
+			}
+
+			&:hover{
+				color: $theme-color--primary;
+			}
+
+			i{
+				margin-right: 5px;
+			}
+		}
+	}
+
+    table{
+        width: 100%;
+    
+        tr{
+            td{
+				padding-top: 15px;
+
+				&.quickview-title{
+					@include font-prop(12px, #333, 400, 24px);
+					letter-spacing: 1px;
+					text-transform: uppercase;
+				}
+				
+				&.quickview-value{
+					@include font-prop(14px, #666, 400, 28px);
+					a{
+						&:hover{
+							color: #333;
+						}
+					}
+				}
+    
+                .quickview-social-icons{
+                    li{
+						display: inline-block;
+						margin-right: 20px;
+                    }
+                }
+            }
+        }
+    }
+}
+/*=====  End of Quick View  ======*/
+

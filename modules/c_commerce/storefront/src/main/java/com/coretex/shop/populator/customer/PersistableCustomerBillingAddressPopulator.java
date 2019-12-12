@@ -22,19 +22,15 @@ public class PersistableCustomerBillingAddressPopulator extends AbstractDataPopu
 		// lets fill optional data now
 
 		if (StringUtils.isNotBlank(source.getAddress())) {
-			target.getBilling().setAddress(source.getAddress());
+			target.getBilling().setAddressLine1(source.getAddress());
 		}
 
 		if (StringUtils.isNotBlank(source.getCity())) {
 			target.getBilling().setCity(source.getCity());
 		}
 
-		if (StringUtils.isNotBlank(source.getCompany())) {
-			target.getBilling().setCompany(source.getCompany());
-		}
-
 		if (StringUtils.isNotBlank(source.getPhone())) {
-			target.getBilling().setTelephone(source.getPhone());
+			target.getBilling().setPhone(source.getPhone());
 		}
 
 		if (StringUtils.isNotBlank(source.getPostalCode())) {

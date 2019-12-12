@@ -1,0 +1,56 @@
+
+/*=============================================
+=            container            =
+=============================================*/
+
+@media (min-width: 1200px){
+    .container {
+        max-width: 1200px;
+        &.wide{
+            max-width: 95%;
+
+            @media #{$laptop-device}{
+                max-width: 100%;
+            }
+        }
+        &.full{
+            max-width: 100%;
+            padding: 0;
+        }
+    }
+}
+
+
+.col-custom-xl-6{
+    @media #{$laptop-device}{
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+.col-custom-sm-6{
+    @media only screen and (min-width: 480px) and (max-width: 575px){
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+
+.d-lg2-none{
+    @media #{$laptop-device}{
+        display: none !important;
+    }
+}
+
+.d-lg3-none{
+    @media #{$desktop-device}{
+        display: none !important;
+    }
+}
+
+
+.pb-80{
+    padding-bottom: 80px;
+}
+
+/*=====  End of container  ======*/
