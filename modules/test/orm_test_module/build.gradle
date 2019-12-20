@@ -10,5 +10,5 @@ configurations.all {
 }
 
 dependencies {
-    compile project(":core")
+    implementation project(":core")
 }

@@ -11,11 +11,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -30,7 +28,7 @@ import static java.lang.String.format;
  *
  *         This listener will be loaded automatically for each of web modules
  */
-public class CoretexContextLoaderListener extends ContextLoaderListener implements ServletContextListener {
+public class CoretexContextLoaderListener extends ContextLoaderListener {
 
     private Logger LOG = LoggerFactory.getLogger(CoretexContextLoaderListener.class);
 
@@ -77,11 +75,12 @@ public class CoretexContextLoaderListener extends ContextLoaderListener implemen
 
         setContextInitializers(new CortexEnvironmentInitializer());
         wac.setConfigLocations(configLocation.toArray(new String[configLocation.size()]));
-        var servletContext = wac.getServletContext();
 
-        var servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(wac));
-        servlet.setLoadOnStartup(1);
-        servlet.addMapping("/");
+//        var servletContext = wac.getServletContext();
+//
+//        var servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(wac));
+//        servlet.setLoadOnStartup(1);
+//        servlet.addMapping("/");
 
         super.customizeContext(sc, wac);
     }
