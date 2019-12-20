@@ -15,9 +15,9 @@ import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.store.controller.customer.facade.CustomerFacade;
 import com.coretex.shop.utils.EmailUtils;
@@ -26,6 +26,7 @@ import com.coretex.shop.utils.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -83,7 +83,7 @@ public class CustomerController {
 	private LanguageService languageService;
 
 	@Resource
-	@Named("passwordEncoder")
+	@Qualifier("passwordEncoder")
 	private PasswordEncoder passwordEncoder;
 
 	@Resource

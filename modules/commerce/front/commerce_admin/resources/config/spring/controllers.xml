@@ -52,7 +52,7 @@
     </mvc:interceptors>
 
     <mvc:redirect-view-controller path="/"  redirect-url="/home"/>
-    <mvc:view-controller path="/logon" view-name="logon"/>
+    <mvc:view-controller path="/login" view-name="logon"/>
     <mvc:view-controller path="/denied" view-name="logon"/>
 
 </beans>

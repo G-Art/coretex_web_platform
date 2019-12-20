@@ -36,19 +36,23 @@
   <session-config>
     <!-- Session timeout of 30 minutes -->
     <session-timeout>30</session-timeout>
+    <cookie-config>
+      <http-only>false</http-only>
+      <secure>false</secure>
+    </cookie-config>
   </session-config>
 
 
   <!-- JSP Configuration -->
 
-  <jsp-config>
-    <jsp-property-group>
-      <url-pattern>*.jsp</url-pattern>
-      <!-- Disable JSP scriptlets and expressions -->
-      <scripting-invalid>true</scripting-invalid>
-      <!-- Remove additional whitespace due to JSP directives -->
-      <trim-directive-whitespaces>true</trim-directive-whitespaces>
-    </jsp-property-group>
-  </jsp-config>
+<!--  <jsp-config>-->
+<!--    <jsp-property-group>-->
+<!--      <url-pattern>*.jsp</url-pattern>-->
+<!--      &lt;!&ndash; Disable JSP scriptlets and expressions &ndash;&gt;-->
+<!--      <scripting-invalid>true</scripting-invalid>-->
+<!--      &lt;!&ndash; Remove additional whitespace due to JSP directives &ndash;&gt;-->
+<!--      <trim-directive-whitespaces>true</trim-directive-whitespaces>-->
+<!--    </jsp-property-group>-->
+<!--  </jsp-config>-->
 
 </web-app>

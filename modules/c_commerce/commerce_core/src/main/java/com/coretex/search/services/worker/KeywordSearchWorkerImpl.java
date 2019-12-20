@@ -1,7 +1,7 @@
 package com.coretex.search.services.worker;
 
 import java.util.Collection;
-import javax.inject.Inject;
+import javax.annotation.Resource;
 
 import com.coretex.search.services.SearchResponse;
 import com.coretex.search.services.impl.SearchDelegate;
@@ -10,7 +10,7 @@ import com.coretex.search.utils.SearchClient;
 
 public class KeywordSearchWorkerImpl implements KeywordSearchWorker {
 
-	@Inject
+	@Resource
 	private SearchDelegate searchDelegate;
 
 	public SearchResponse execute(SearchClient client, String collection, String json, int size,

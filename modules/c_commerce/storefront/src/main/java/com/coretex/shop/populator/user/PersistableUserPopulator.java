@@ -3,13 +3,13 @@ package com.coretex.shop.populator.user;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
-import javax.inject.Named;
 
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.UserItem;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.coretex.core.business.exception.ConversionException;
@@ -32,7 +32,7 @@ public class PersistableUserPopulator extends AbstractDataPopulator<PersistableU
 	private GroupService groupService;
 
 	@Resource
-	@Named("passwordEncoder")
+	@Qualifier("passwordEncoder")
 	private PasswordEncoder passwordEncoder;
 
 	@Override

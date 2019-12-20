@@ -2,7 +2,6 @@ package com.coretex.search.services.worker;
 
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 
 import com.coretex.search.services.GetResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -14,12 +13,14 @@ import com.coretex.search.utils.SearchClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Resource;
+
 
 public class ObjectIndexerImpl implements IndexWorker {
 
 	private static boolean init = false;
 
-	@Inject
+	@Resource
 	private SearchDelegate searchDelegate;
 
 	private List<IndexConfiguration> indexConfigurations;

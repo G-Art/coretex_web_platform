@@ -12,6 +12,7 @@ import com.coretex.items.commerce_core_model.UserItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.inject.Named;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class UserServicesImpl implements WebUserServices {
 	private MerchantStoreService merchantService;
 
 	@Resource
-	@Named("passwordEncoder")
+	@Qualifier("passwordEncoder")
 	private PasswordEncoder passwordEncoder;
 
 	@Resource

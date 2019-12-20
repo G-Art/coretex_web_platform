@@ -1,6 +1,6 @@
 package com.coretex.search.services.worker;
 
-import javax.inject.Inject;
+import javax.annotation.Resource;
 
 import com.coretex.search.services.SearchRequest;
 import com.coretex.search.services.SearchResponse;
@@ -10,7 +10,7 @@ import com.coretex.search.utils.SearchClient;
 
 public class SearchWorkerImpl implements SearchWorker {
 
-	@Inject
+	@Resource
 	private SearchDelegate searchDelegate;
 
 	public SearchResponse execute(SearchClient client, SearchRequest request,

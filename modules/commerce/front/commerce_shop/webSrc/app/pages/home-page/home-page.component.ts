@@ -10,8 +10,6 @@ export class HomePageComponent implements OnInit, AfterViewInit{
   title = 'GoodMood - Home page';
 
   @ViewChild('rev_slider', {static: false}) slider: ElementRef;
-  @ViewChild('Html', {static: false}) html: ElementRef;
-  @ViewChild('Body', {static: false}) body: ElementRef;
 
   constructor() { }
 

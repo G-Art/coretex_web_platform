@@ -10,9 +10,9 @@ import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.core.data.web.Menu;
 import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
 import com.coretex.shop.admin.forms.UserForm;
 import com.coretex.shop.admin.mapppers.UserFormMapper;
@@ -28,6 +28,7 @@ import com.coretex.shop.utils.UserUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +43,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -87,7 +87,7 @@ public class UserController {
 	private EmailUtils emailUtils;
 
 	@Resource
-	@Named("passwordEncoder")
+	@Qualifier("passwordEncoder")
 	private PasswordEncoder passwordEncoder;
 
 	@Resource

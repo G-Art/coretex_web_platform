@@ -3,23 +3,17 @@ package com.coretex.commerce.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.resource.PathResourceResolver;
+import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.web.reactive.config.ResourceHandlerRegistry;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.web.reactive.resource.PathResourceResolver;
+import reactor.core.publisher.Mono;
 
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@EnableWebMvc
-public class ApplicationConfigurerAdapter implements WebMvcConfigurer {
-
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
+@EnableWebFlux
+public class ApplicationConfigurerAdapter implements WebFluxConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -30,12 +24,26 @@ public class ApplicationConfigurerAdapter implements WebMvcConfigurer {
             indexLocations[i] = staticLocations[i] + "index.html";
         }
 
-        registry.addResourceHandler(
+        registry.addResourceHandler("/**",
                 "/*.css",
                 "/*.js",
+                "/*.gif",
+                "/*.css",
+                "/*.ico",
+                "/*.js",
+                "/*.map",
+                "/*.png",
+                "/*.jpg",
+                "/*.svg",
+                "/*.woff",
+                "/*.woff2",
+                "/*.eot",
+                "/*.otf",
+                "/*.ttf",
                 "/**/*.css",
                 "/**/*.ico",
                 "/**/*.js",
+                "/**/*.gif",
                 "/**/*.map",
                 "/**/*.png",
                 "/**/*.jpg",
@@ -52,21 +60,19 @@ public class ApplicationConfigurerAdapter implements WebMvcConfigurer {
                 "/*.html",
                 "/*.json")
                 .addResourceLocations(staticLocations)
-                .setCacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS));
+                .setCacheControl(CacheControl.maxAge(600, TimeUnit.SECONDS));
 
-        registry.addResourceHandler("/**")
-                .addResourceLocations(indexLocations)
-                .resourceChain(true)
-                .addResolver(new PathResourceResolver() {
-                    @Override
-                    protected Resource getResource(String resourcePath, Resource location) {
-                        return location.exists() && location.isReadable() ? location : null;
-                    }
-                });
+//        registry.addResourceHandler("/**")
+//                .addResourceLocations(indexLocations)
+//                .resourceChain(true)
+//                .addResolver(new PathResourceResolver() {
+//                    @Override
+//                    protected Mono<Resource> getResource(String resourcePath, Resource location) {
+//                        return Mono.just(location)
+//                                .filter(Resource::exists)
+//                                .filter(Resource::isReadable);
+//                    }
+//                });
     }
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/index.html");
-    }
 }

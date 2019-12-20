@@ -164,7 +164,6 @@
         <intercept-url pattern="/api/v1/private/refresh" access="permitAll"/>
         <intercept-url pattern="/api/v1/private/**" method="OPTIONS" access="permitAll"/>
         <intercept-url pattern="/api/v1/private/**" access="hasRole('AUTH')"/>
-        <custom-filter ref="authenticationTokenFilter" before="FORM_LOGIN_FILTER"/>
         <csrf disabled="true"/>
     </http>
 
@@ -202,8 +201,6 @@
         <intercept-url pattern="/api/v1/auth/refresh" access="permitAll"/>
         <intercept-url pattern="/api/v1/auth/**" method="OPTIONS" access="permitAll"/>
         <intercept-url pattern="/api/v1/auth/**" access="hasRole('AUTH_CUSTOMER')"/>
-
-        <custom-filter ref="authenticationTokenFilter" before="FORM_LOGIN_FILTER"/>
         <logout/>
         <csrf disabled="true"/>
     </http>
@@ -237,9 +234,6 @@
 <!--		<csrf disabled="true"/>&lt;!&ndash; Spring security 4 &ndash;&gt;-->
 <!--	</http>-->
 
-    <beans:bean id="authenticationTokenFilter"
-                class="com.coretex.shop.store.security.AuthenticationTokenFilter">
-    </beans:bean>
 
     <authentication-manager id="adminAuthenticationManager">
         <authentication-provider user-service-ref="userDetailsService">
@@ -266,20 +260,6 @@
             <password-encoder ref="passwordEncoder" hash="bcrypt"/>
         </authentication-provider>
     </authentication-manager>
-
-    <!-- Facebook authentication -->
-    <authentication-manager id="facebookAuthenticationManager">
-        <authentication-provider
-                ref="socialAuthenticationProvider"/>
-    </authentication-manager>
-
-    <!-- Configures the social authentication provider which processes authentication
-        requests made by using social authentication service (FB). -->
-    <beans:bean id="socialAuthenticationProvider"
-                class="org.springframework.social.security.SocialAuthenticationProvider">
-        <beans:constructor-arg index="0" ref="socialUsersConnectionRepository"/>
-        <beans:constructor-arg index="1" ref="facebookSocialUserDetailsService"/>
-    </beans:bean>
 
 
     <beans:bean id="adminAuthenticationEntryPoint"

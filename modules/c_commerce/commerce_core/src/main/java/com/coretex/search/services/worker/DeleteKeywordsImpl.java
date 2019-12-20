@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
+import javax.annotation.Resource;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +21,7 @@ public class DeleteKeywordsImpl implements DeleteObjectWorker {
 
 
 	private List<CustomIndexConfiguration> indexConfigurations = null;
-	@Inject
+	@Resource
 	private SearchDelegate searchDelegate;
 
 	public void deleteObject(SearchClient client, String collection, String object, String id,

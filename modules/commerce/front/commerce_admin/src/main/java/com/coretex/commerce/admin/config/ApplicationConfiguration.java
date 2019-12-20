@@ -12,17 +12,15 @@ import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.social.UserIdSource;
-import org.springframework.social.security.AuthenticationNameUserIdSource;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
 @ComponentScan({"com.coretex.commerce"})
 @EnableWebSecurity
 @EnableWebMvc
-public class ApplicationConfiguration implements WebMvcConfigurer {
+public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
 
 	private Logger LOG = LoggerFactory.getLogger(ApplicationConfiguration.class);
 
@@ -46,9 +44,5 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 		return mapper;
 	}
 
-	@Bean
-	public UserIdSource getUserIdSource() {
-		return new AuthenticationNameUserIdSource();
-	}
 
 }

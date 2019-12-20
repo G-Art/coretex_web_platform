@@ -2,18 +2,17 @@ package com.coretex.shop.admin.security;
 
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.user.GroupService;
-import com.coretex.core.business.services.user.PermissionService;
 import com.coretex.core.business.services.user.UserService;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.enums.commerce_core_model.GroupTypeEnum;
+import com.coretex.items.commerce_core_model.GroupItem;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.PermissionItem;
 import com.coretex.items.commerce_core_model.UserItem;
-import com.coretex.shop.admin.model.permission.Permissions;
 import com.coretex.shop.constants.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,15 +24,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.inject.Named;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 
 /**
@@ -57,7 +53,7 @@ public class UserServicesImpl implements WebUserServices {
 	private MerchantStoreService merchantService;
 
 	@Resource
-	@Named("passwordEncoder")
+	@Qualifier("passwordEncoder")
 	private PasswordEncoder passwordEncoder;
 
 	@Resource

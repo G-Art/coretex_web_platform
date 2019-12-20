@@ -1,6 +1,6 @@
 package com.coretex.search.services.worker;
 
-import javax.inject.Inject;
+import javax.annotation.Resource;
 
 import com.coretex.search.services.GetResponse;
 import com.coretex.search.services.impl.SearchDelegate;
@@ -9,7 +9,7 @@ import com.coretex.search.utils.SearchClient;
 
 public class DeleteObjectImpl implements DeleteObjectWorker {
 
-	@Inject
+	@Resource
 	private SearchDelegate searchDelegate;
 
 	public void deleteObject(SearchClient client, String collection, String object, String id,
