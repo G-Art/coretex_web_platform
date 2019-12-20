@@ -33,6 +33,10 @@
     <session-config>
         <!-- Session timeout of 30 minutes -->
         <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>false</http-only>
+            <secure>false</secure>
+        </cookie-config>
     </session-config>
 
 

@@ -1,6 +1,12 @@
 subprojects {
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+
     [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
     apply plugin: 'idea'
@@ -48,7 +54,7 @@ subprojects {
 
             scopes = [
                     COMPILE: [
-                            plus: [configurations.compile]
+                            plus: [configurations.implementation]
                     ],
                     TEST: [
                             plus: [configurations.testRuntime]
