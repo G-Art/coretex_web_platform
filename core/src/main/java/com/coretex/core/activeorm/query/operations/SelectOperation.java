@@ -1,34 +1,30 @@
 package com.coretex.core.activeorm.query.operations;
 
-import com.coretex.core.activeorm.extractors.CoretexResultSetExtractor;
+import com.coretex.core.activeorm.extractors.CoretexReactiveResultSetExtractor;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.sources.SelectSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
-import com.coretex.items.core.GenericItem;
-import com.coretex.meta.AbstractGenericItem;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.sf.jsqlparser.statement.select.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec<T>> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectOperation.class);
 
 	private QueryTransformationProcessor<Select> transformationProcessor;
-	private Function<SelectOperation, CoretexResultSetExtractor<T>> extractorFunction;
+	private Function<SelectOperation, CoretexReactiveResultSetExtractor<T>> extractorFunction;
 
 	private static Cache<Integer, Select> selectCache = CacheBuilder.newBuilder()
 			.softValues()
@@ -36,7 +32,7 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 			.expireAfterAccess(20, TimeUnit.SECONDS)
 			.build();
 
-	private List<T> result;
+	private Stream<T> result;
 	private boolean transformed;
 
 	public SelectOperation(SelectOperationSpec<T> operationSpec, QueryTransformationProcessor<Select> transformationProcessor) {
@@ -45,11 +41,11 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 		this.transformationProcessor = transformationProcessor;
 	}
 
-	public void setExtractorCreationFunction(Function<SelectOperation, CoretexResultSetExtractor<T>> extractorFunction) {
+	public void setExtractorCreationFunction(Function<SelectOperation, CoretexReactiveResultSetExtractor<T>> extractorFunction) {
 		this.extractorFunction = extractorFunction;
 	}
 
-	protected Function<SelectOperation, CoretexResultSetExtractor<T>> getExtractorFunction() {
+	protected Function<SelectOperation, CoretexReactiveResultSetExtractor<T>> getExtractorFunction() {
 		return extractorFunction;
 	}
 
@@ -88,9 +84,13 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 		}
 	}
 
-	public List<T> searchResult(){
+	public Stream<T> searchResultAsStream(){
 		this.execute();
 		return result;
+	}
+
+	public List<T> searchResult(){
+		return this.searchResultAsStream().collect(Collectors.toList());
 	}
 
 	public QueryTransformationProcessor<Select> getTransformationProcessor() {

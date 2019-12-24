@@ -3,7 +3,7 @@ package com.coretex.core.services.items.context.provider.impl;
 
 import com.coretex.core.activeorm.exceptions.QueryException;
 import com.coretex.core.activeorm.exceptions.SearchException;
-import com.coretex.core.activeorm.extractors.CoretexResultSetExtractor;
+import com.coretex.core.activeorm.extractors.CoretexReactiveResultSetExtractor;
 import com.coretex.core.activeorm.factories.RowMapperFactory;
 import com.coretex.core.activeorm.query.operations.SelectOperation;
 import com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor;
@@ -22,7 +22,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import static com.coretex.core.general.utils.AttributeTypeUtils.isCollection;
 import static com.coretex.core.utils.TypeUtil.toType;
@@ -83,7 +86,7 @@ public class DefaultAttributeProvider implements AttributeProvider {
 		SelectOperation<Object> selectOperation = selectItemAttributeOperationSpec.createOperation(transformationProcessor);
 		selectOperation.setJdbcTemplateSupplier(this::getJdbcTemplate);
 		selectOperation.setExtractorCreationFunction(select -> {
-			CoretexResultSetExtractor<Object> extractor = new CoretexResultSetExtractor<>(select, metaTypeProvider);
+			CoretexReactiveResultSetExtractor<Object> extractor = new CoretexReactiveResultSetExtractor<>(select, metaTypeProvider);
 			extractor.setMapperFactorySupplier(() -> rowMapperFactory);
 			return extractor;
 		});
