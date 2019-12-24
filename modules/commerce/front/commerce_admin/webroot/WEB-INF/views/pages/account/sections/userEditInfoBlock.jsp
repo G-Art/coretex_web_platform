@@ -1,8 +1,8 @@
-<%--@elvariable id="user" type="com.coretex.commerce.admin.data.UserData"--%>
-<%--@elvariable id="currentUser" type="com.coretex.commerce.admin.data.UserData"--%>
-<%--@elvariable id="languages" type="java.util.List<com.coretex.commerce.admin.data.LocaleData>"--%>
-<%--@elvariable id="stores" type="java.util.List<com.coretex.commerce.admin.data.MerchantStoreData>"--%>
-<%--@elvariable id="groups" type="java.util.List<com.coretex.commerce.admin.data.GroupData>"--%>
+<%--@elvariable id="user" type="com.coretex.commerce.data.UserData"--%>
+<%--@elvariable id="currentUser" type="com.coretex.commerce.data.UserData"--%>
+<%--@elvariable id="languages" type="java.util.List<com.coretex.commerce.data.LocaleData>"--%>
+<%--@elvariable id="stores" type="java.util.List<com.coretex.commerce.data.MerchantStoreData>"--%>
+<%--@elvariable id="groups" type="java.util.List<com.coretex.commerce.data.GroupData>"--%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="tags-account" tagdir="/WEB-INF/tags/account" %>
 <%@ taglib prefix="tags-common" tagdir="/WEB-INF/tags/common" %>

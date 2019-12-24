@@ -1,12 +1,11 @@
 package com.coretex.core.business.repositories.catalog.product.manufacturer;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
-import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.relations.commerce_core_model.CategoryProductRelation;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,7 +23,7 @@ public class ManufacturerDaoImpl extends DefaultGenericDao<ManufacturerItem> imp
 
 	@Override
 	public List<ManufacturerItem> findByStoreAndLanguage(UUID storeId, UUID languageId) {
-		return find(Map.of(ManufacturerItem.MERCHANT_STORE, storeId));
+		return find(Map.of(ManufacturerItem.STORE, storeId));
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class ManufacturerDaoImpl extends DefaultGenericDao<ManufacturerItem> imp
 
 	@Override
 	public List<ManufacturerItem> findByStore(UUID storeId) {
-		return find(Map.of(ManufacturerItem.MERCHANT_STORE, storeId));
+		return find(Map.of(ManufacturerItem.STORE, storeId));
 	}
 
 	//	@Query("select distinct manufacturer from ProductItem as p join p.manufacturer manufacturer join manufacturer.descriptions md join p.categories categs where categs.id in (?1) and md.language.id=?2")
@@ -52,6 +51,6 @@ public class ManufacturerDaoImpl extends DefaultGenericDao<ManufacturerItem> imp
 
 	@Override
 	public ManufacturerItem findByCodeAndMerchandStore(String code, UUID storeId) {
-		return findSingle(Map.of(ManufacturerItem.CODE, code, ManufacturerItem.MERCHANT_STORE, storeId), true);
+		return findSingle(Map.of(ManufacturerItem.CODE, code, ManufacturerItem.STORE, storeId), true);
 	}
 }

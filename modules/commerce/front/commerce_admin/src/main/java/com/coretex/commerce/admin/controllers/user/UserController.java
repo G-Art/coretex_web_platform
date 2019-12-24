@@ -1,13 +1,13 @@
 package com.coretex.commerce.admin.controllers.user;
 
 import com.coretex.commerce.admin.controllers.PageableDataTableAbstractController;
-import com.coretex.commerce.admin.data.GroupData;
-import com.coretex.commerce.admin.data.MerchantStoreData;
-import com.coretex.commerce.admin.data.UserData;
-import com.coretex.commerce.admin.data.minimal.MinimalUserData;
-import com.coretex.commerce.admin.facades.GroupFacade;
-import com.coretex.commerce.admin.facades.PageableDataTableFacade;
-import com.coretex.commerce.admin.facades.StoreFacade;
+import com.coretex.commerce.data.GroupData;
+import com.coretex.commerce.data.MerchantStoreData;
+import com.coretex.commerce.data.UserData;
+import com.coretex.commerce.data.minimal.MinimalUserData;
+import com.coretex.commerce.facades.GroupFacade;
+import com.coretex.commerce.facades.PageableDataTableFacade;
+import com.coretex.commerce.facades.MerchantStoreFacade;
 import com.coretex.commerce.admin.facades.UserFacade;
 import com.coretex.items.commerce_core_model.UserItem;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ public class UserController extends PageableDataTableAbstractController<MinimalU
 	@Resource
 	private UserFacade userFacade;
 	@Resource
-	private StoreFacade storeFacade;
+	private MerchantStoreFacade merchantStoreFacade;
 	@Resource
 	private GroupFacade groupFacade;
 
@@ -65,7 +65,7 @@ public class UserController extends PageableDataTableAbstractController<MinimalU
 
 	@ModelAttribute("stores")
 	public Collection<MerchantStoreData> getStores() {
-		return storeFacade.getAll();
+		return merchantStoreFacade.getAll();
 	}
 
 	@ModelAttribute("groups")

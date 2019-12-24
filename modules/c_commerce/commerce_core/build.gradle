@@ -1,5 +1,6 @@
 dependencies {
     implementation project(":core")
+    implementation project(":cx_core")
     implementation project(":commerce_core_model")
 
     // https://mvnrepository.com/artifact/net.sf.ehcache/ehcache

@@ -1,0 +1,10 @@
+<ng-container>
+    <div class="header-top-dropdown">
+        <a href="#">{{selectedLanguage?.name}} <i class="pe-7s-angle-down"></i></a>
+        <ul class="header-top-dropdown__list">
+            <li *ngFor="let lang of languages">
+                <a (click)="useLanguage(lang?.isocode)" href="#">{{lang?.name}}</a>
+            </li>
+        </ul>
+    </div>
+</ng-container>

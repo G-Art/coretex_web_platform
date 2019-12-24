@@ -3,14 +3,13 @@ package com.coretex.core.business.services.common.generic;
 import com.coretex.core.activeorm.dao.Dao;
 import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.items.core.GenericItem;
-import com.coretex.meta.AbstractGenericItem;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public abstract class SalesManagerEntityServiceImpl<E extends AbstractGenericItem>
+public abstract class SalesManagerEntityServiceImpl<E extends GenericItem>
 		implements SalesManagerEntityService<E> {
 
 	private Class<E> objectClass;

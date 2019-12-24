@@ -32,17 +32,17 @@ public class LanguageServiceImpl extends SalesManagerEntityServiceImpl<LocaleIte
 	@Resource
 	private CacheUtils cache;
 
-	private LocaleDao languageDao;
+	private LocaleDao localeDao;
 
-	public LanguageServiceImpl(LocaleDao languageDao) {
-		super(languageDao);
-		this.languageDao = languageDao;
+	public LanguageServiceImpl(LocaleDao localeDao) {
+		super(localeDao);
+		this.localeDao = localeDao;
 	}
 
 
 	@Override
 	public LocaleItem getByCode(String code) {
-		return languageDao.findSingle(Map.of(LocaleItem.ISO, code), true);
+		return localeDao.findSingle(Map.of(LocaleItem.ISO, code), true);
 	}
 
 	@Override

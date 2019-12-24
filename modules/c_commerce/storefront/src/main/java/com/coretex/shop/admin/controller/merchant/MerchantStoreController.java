@@ -151,7 +151,6 @@ public class MerchantStoreController {
 		store.setCountry(sessionStore.getCountry());
 		store.setZone(sessionStore.getZone());
 		store.setStoreStateProvince(sessionStore.getStoreStateProvince());
-		store.setLanguages(sessionStore.getLanguages());
 		store.setDomainName(sessionStore.getDomainName());
 
 

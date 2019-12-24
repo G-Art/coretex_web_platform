@@ -1,6 +1,6 @@
 package com.coretex.commerce.admin.controllers.content;
 
-import com.coretex.commerce.admin.facades.PageableDataTableFacade;
+import com.coretex.commerce.facades.PageableDataTableFacade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;

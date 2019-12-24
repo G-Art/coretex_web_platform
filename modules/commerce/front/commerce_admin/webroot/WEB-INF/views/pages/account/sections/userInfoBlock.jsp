@@ -1,5 +1,5 @@
-<%--@elvariable id="user" type="com.coretex.commerce.admin.data.UserData"--%>
-<%--@elvariable id="currentUser" type="com.coretex.commerce.admin.data.UserData"--%>
+<%--@elvariable id="user" type="com.coretex.commerce.data.UserData"--%>
+<%--@elvariable id="currentUser" type="com.coretex.commerce.data.UserData"--%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="tags-account" tagdir="/WEB-INF/tags/account" %>
 <%@ taglib prefix="tags-common" tagdir="/WEB-INF/tags/common" %>

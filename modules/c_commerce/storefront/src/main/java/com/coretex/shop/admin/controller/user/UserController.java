@@ -292,7 +292,6 @@ public class UserController {
 		stores = merchantStoreService.list();
 
 		model.addAttribute("stores", stores);
-		model.addAttribute("languages", store.getLanguages());
 		model.addAttribute("groups", groups.stream()
 				.map(groupDtoMapper::fromItem)
 				.collect(Collectors.toList()));

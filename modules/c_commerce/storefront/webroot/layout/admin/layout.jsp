@@ -84,7 +84,7 @@
 
                                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                         <i class="icon-globe"></i>
-                                        <s:message code="label.generic.language" text="Language"/>
+                                        <s:message code="label.generic.language" text="LanguageData"/>
                                         <b class="caret"></b>
                                     </a>
 

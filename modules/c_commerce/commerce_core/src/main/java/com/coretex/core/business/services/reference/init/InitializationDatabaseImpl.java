@@ -13,11 +13,13 @@ import com.coretex.core.business.services.reference.loader.ShippingLoader;
 import com.coretex.core.business.services.reference.loader.ZonesLoader;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.constants.SchemaConstant;
+import com.coretex.items.cx_core.AddressItem;
 import com.coretex.items.cx_core.CurrencyItem;
 import com.coretex.items.commerce_core_model.DeliveryServiceItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import org.apache.commons.lang3.LocaleUtils;
@@ -202,13 +204,40 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 
 		Date date = new Date(System.currentTimeMillis());
 
-		LocaleItem en = languageService.getByCode("ru");
+		LocaleItem en = languageService.getByCode("en");
+		LocaleItem ru = languageService.getByCode("ru");
+		LocaleItem ua = languageService.getByCode("ua");
 		CountryItem ca = countryService.getByCode("UA");
 		CurrencyItem currency = currencyService.getByCode("UAH");
 		ZoneItem qc = zoneService.getByCode("Kyiv");
 
-		List<LocaleItem> supportedLanguages = new ArrayList<LocaleItem>();
+		List<LocaleItem> supportedLanguages = new ArrayList<>();
 		supportedLanguages.add(en);
+		supportedLanguages.add(ru);
+		supportedLanguages.add(ua);
+
+
+		StoreItem s = new StoreItem();
+		s.setCountry(ca);
+		s.setCurrency(currency);
+		s.setDefaultLanguage(en);
+		s.setZone(qc);
+		s.setName("G.O.O.D M.O.O.D");
+		s.setPhone("+38(066) 666-66-66");
+		s.setCode(Constants.DEFAULT_STORE);
+		s.setStoreEmail("support@goodmood.market");
+		s.setDomainName("goodmood.market");
+		s.setLanguages(supportedLanguages);
+
+		AddressItem address = new AddressItem();
+		address.setPhone("+38(066) 666-66-66");
+		address.setAddressLine1("1234 Street address");
+		address.setCity("Kiev");
+		address.setPostalCode("08122");
+
+		s.setAddress(address);
+
+		itemService.save(s);
 
 		//create a merchant
 		MerchantStoreItem store = new MerchantStoreItem();
@@ -228,21 +257,19 @@ public class InitializationDatabaseImpl implements InitializationDatabase {
 		store.setStoreEmailAddress("support@goodmood.market");
 		store.setDomainName("https//goodmood.market:8888/");
 		store.setStoreTemplate("exoticamobilia");
-		store.setLanguages(supportedLanguages);
 		store.setCurrencyFormatNational(true);
 
-
-		merchantService.create(store);
-
+		merchantService.save(store);
 
 		//create default manufacturer
 		ManufacturerItem defaultManufacturer = new ManufacturerItem();
 		defaultManufacturer.setCode("DEFAULT");
+		defaultManufacturer.setStore(s);
 //		defaultManufacturer.setMerchantStore(store);
 		defaultManufacturer.setName("DEFAULT");
 		defaultManufacturer.setDescription("DEFAULT");
 
-		manufacturerService.create(defaultManufacturer);
+		manufacturerService.save(defaultManufacturer);
 
 
 	}

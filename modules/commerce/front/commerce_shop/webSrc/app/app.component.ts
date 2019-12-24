@@ -3,6 +3,7 @@ import {Title} from '@angular/platform-browser';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 
 import {filter, map, mergeMap} from 'rxjs/operators';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
     selector: 'app-root',
@@ -15,10 +16,14 @@ export class AppComponent implements OnInit {
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
-                private titleService: Title) {
+                private titleService: Title,
+                private translate: TranslateService) {
+        this.translate.setDefaultLang('en');
+        this.translate.use('en')
     }
 
     ngOnInit() {
+
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
             map(() => this.activatedRoute),

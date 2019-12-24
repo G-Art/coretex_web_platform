@@ -6,5 +6,5 @@
 
 
 {title:"<s:message code="label.entity.id" text="Id"/>", name:"code", canFilter:false},
-{title:"<s:message code="label.generic.language" text="Language"/>", name:"language"},
+{title:"<s:message code="label.generic.language" text="LanguageData"/>", name:"language"},
 {title:"<s:message code="label.generic.keyword" text="Keyword"/>", name:"keyword"}

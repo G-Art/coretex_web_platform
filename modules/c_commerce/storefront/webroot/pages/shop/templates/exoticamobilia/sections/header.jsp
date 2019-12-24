@@ -291,7 +291,7 @@
                                 <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><i
                                         class="fa fa-gear no-desktop"></i><span
                                         class="no-responsive uppercase"><s:message code="label.generic.language"
-                                                                                   text="Language"/></span></button>
+                                                                                   text="LanguageData"/></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right dropdown-animation">
                                     <c:forEach items="${requestScope.MERCHANT_STORE.languages}" var="language">
                                         <li><a href="<c:url value="/shop?locale=${language.iso}"/>"><s:message

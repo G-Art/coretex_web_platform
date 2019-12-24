@@ -90,7 +90,6 @@ public class ManufacturerController {
 
 		//List<LocaleItem> languages = languageService.getLanguages();
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-		List<LocaleItem> languages = store.getLanguages();
 
 
 		Manufacturer manufacturer = new Manufacturer();
@@ -105,7 +104,7 @@ public class ManufacturerController {
 				return ControllerConstants.Tiles.Product.manufacturerList;
 			}
 
-			if (!dbManufacturer.getMerchantStore().getUuid().equals(store.getUuid())) {
+			if (!dbManufacturer.getStore().getUuid().equals(store.getUuid())) {
 				return ControllerConstants.Tiles.Product.manufacturerList;
 			}
 
@@ -121,7 +120,6 @@ public class ManufacturerController {
 
 		}
 
-		model.addAttribute("languages", languages);
 		model.addAttribute("manufacturer", manufacturer);
 
 		return ControllerConstants.Tiles.Product.manufacturerDetails;
@@ -192,7 +190,7 @@ public class ManufacturerController {
 
 			newManufacturer = manufacturerService.getByUUID(manufacturer.getManufacturer().getUuid());
 
-			if (!newManufacturer.getMerchantStore().getUuid().equals(store.getUuid())) {
+			if (!newManufacturer.getStore().getUuid().equals(store.getUuid())) {
 				return ControllerConstants.Tiles.Product.manufacturerList;
 			}
 
@@ -316,7 +314,7 @@ public class ManufacturerController {
 
 		try {
 			ManufacturerItem delManufacturer = manufacturerService.getByUUID(sid);
-			if (delManufacturer == null || !delManufacturer.getMerchantStore().getUuid().equals(store.getUuid())) {
+			if (delManufacturer == null || !delManufacturer.getStore().getUuid().equals(store.getUuid())) {
 				resp.setStatusMessage(messages.getMessage("message.unauthorized", locale));
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
 				String returnString = resp.toJSONString();

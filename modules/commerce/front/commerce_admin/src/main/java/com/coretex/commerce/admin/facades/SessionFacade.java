@@ -1,7 +1,7 @@
 package com.coretex.commerce.admin.facades;
 
-import com.coretex.commerce.admin.data.CurrencyData;
-import com.coretex.commerce.admin.data.LocaleData;
+import com.coretex.commerce.data.CurrencyData;
+import com.coretex.commerce.data.LocaleData;
 
 import java.util.Collection;
 

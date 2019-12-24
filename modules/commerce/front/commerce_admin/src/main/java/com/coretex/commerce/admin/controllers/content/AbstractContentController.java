@@ -1,9 +1,9 @@
 package com.coretex.commerce.admin.controllers.content;
 
 import com.coretex.commerce.admin.controllers.PageableDataTableAbstractController;
-import com.coretex.commerce.admin.facades.CategoryFacade;
-import com.coretex.commerce.admin.facades.ManufacturerFacade;
-import com.coretex.commerce.admin.facades.ProductFacade;
+import com.coretex.commerce.facades.CategoryFacade;
+import com.coretex.commerce.facades.ManufacturerFacade;
+import com.coretex.commerce.facades.ProductFacade;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.annotation.Resource;

@@ -1,7 +1,16 @@
 elements {
 
     relations {
-
+        StoreLocaleRelation(source: Store, target: 'Locale') {
+            source(languages) {
+                description = "Supported languages"
+                containerType = List
+            }
+            target(stores) {
+                containerType = List
+                description = "Stores"
+            }
+        }
     }
 
     items {
@@ -74,7 +83,7 @@ elements {
                 }
                 image(String)
                 url(String)
-                merchantStore(Store)
+                store(Store)
                 name(String){
                     localized = true
                 }

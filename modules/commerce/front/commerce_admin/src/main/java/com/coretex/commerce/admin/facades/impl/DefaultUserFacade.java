@@ -1,13 +1,13 @@
 package com.coretex.commerce.admin.facades.impl;
 
-import com.coretex.commerce.admin.data.minimal.MinimalUserData;
-import com.coretex.commerce.admin.data.UserData;
 import com.coretex.commerce.admin.facades.UserFacade;
-import com.coretex.commerce.admin.mapper.GenericDataMapper;
-import com.coretex.commerce.admin.mapper.minimal.MinimalUserDataMapper;
-import com.coretex.commerce.admin.mapper.UserDataMapper;
 import com.coretex.commerce.admin.security.PrincipalUser;
-import com.coretex.core.business.services.common.generic.PageableEntityService;
+import com.coretex.commerce.core.services.PageableService;
+import com.coretex.commerce.data.UserData;
+import com.coretex.commerce.data.minimal.MinimalUserData;
+import com.coretex.commerce.mapper.GenericDataMapper;
+import com.coretex.commerce.mapper.UserDataMapper;
+import com.coretex.commerce.mapper.minimal.MinimalUserDataMapper;
 import com.coretex.core.business.services.user.UserService;
 import com.coretex.items.commerce_core_model.UserItem;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -81,7 +81,7 @@ public class DefaultUserFacade implements UserFacade {
 	}
 
 	@Override
-	public PageableEntityService<UserItem> getPageableService() {
+	public PageableService<UserItem> getPageableService() {
 		return userService;
 	}
 

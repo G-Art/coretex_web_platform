@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation project(":core")
-    implementation project(":cx_core")
+    implementation project(":cxcommercefacade")
     implementation project(":newPost")
     implementation project(":commerce_core")
     implementation project(":commerce_core_model")
@@ -16,21 +16,5 @@ dependencies {
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.9'
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
-    implementation "org.mapstruct:mapstruct:1.3.1.Final"
-    annotationProcessor "org.mapstruct:mapstruct-processor:1.3.1.Final"
-
-
     implementation 'commons-fileupload:commons-fileupload:1.4'
-}
-
-compileJava {
-
-    options.compilerArgs = [
-            '-Amapstruct.suppressGeneratorTimestamp=true',
-            '-Amapstruct.suppressGeneratorVersionInfoComment=true',
-            '-Amapstruct.unmappedTargetPolicy=IGNORE',
-            '-Amapstruct.defaultComponentModel=spring'
-    ]
-
-    options.setAnnotationProcessorGeneratedSourcesDirectory( file("$projectDir/genSrc"))
 }

@@ -1,4 +1,4 @@
-<%--@elvariable id="order" type="com.coretex.commerce.admin.data.OrderData"--%>
+<%--@elvariable id="order" type="com.coretex.commerce.data.OrderData"--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>

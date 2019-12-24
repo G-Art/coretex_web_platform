@@ -1,9 +1,9 @@
 package com.coretex.commerce.admin.controllers.order;
 
 import com.coretex.commerce.admin.controllers.PageableDataTableAbstractController;
-import com.coretex.commerce.admin.data.minimal.MinimalOrderData;
-import com.coretex.commerce.admin.facades.OrderFacade;
-import com.coretex.commerce.admin.facades.PageableDataTableFacade;
+import com.coretex.commerce.data.minimal.MinimalOrderData;
+import com.coretex.commerce.facades.OrderFacade;
+import com.coretex.commerce.facades.PageableDataTableFacade;
 import com.coretex.items.commerce_core_model.OrderItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

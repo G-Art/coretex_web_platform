@@ -1,60 +1,6 @@
 (function ($) {
     "use strict";
 
-
-    
-    /*=============================================
-    =            variables            =
-    =============================================*/
-    
-    var $window = $(window),
-        $html = $('html'),
-        $body = $('body'),
-        $headerSticky = $('.header-sticky');
-    
-    /*=====  End of variables  ======*/
-    
-
-    
-    /*=============================================
-    =            sticky header            =
-    =============================================*/
-    
-    $window.on('scroll', function() {
-        if ($window.scrollTop() >= 200 && $window.width() > 767) {
-            $headerSticky.addClass('is-sticky');
-        }
-        else {
-            $headerSticky.removeClass('is-sticky');
-        }
-
-        //code for scroll top
-        var scroll = $window.scrollTop();
-
-		if (scroll >= 400) {
-			$('.scroll-top').fadeIn();
-		} else {
-			$('.scroll-top').fadeOut();
-		}
-
-    });
-    
-    /*=====  End of sticky header  ======*/
-
-    
-    /*=============================================
-    =            scroll top            =
-    =============================================*/
-    
-    $('.scroll-top').on('click', function () {
-		$('html,body').animate({
-			scrollTop: 0
-		}, 2000);
-	});
-    
-    /*=====  End of scroll top  ======*/
-
-
     
     /*=============================================
     =     active and deactive search overlay            =

@@ -1,8 +1,8 @@
 package com.coretex.commerce.admin.controllers;
 
-import com.coretex.commerce.admin.data.CurrencyData;
-import com.coretex.commerce.admin.data.LocaleData;
-import com.coretex.commerce.admin.data.UserData;
+import com.coretex.commerce.data.CurrencyData;
+import com.coretex.commerce.data.LocaleData;
+import com.coretex.commerce.data.UserData;
 import com.coretex.commerce.admin.facades.SessionFacade;
 import com.coretex.commerce.admin.facades.UserFacade;
 import com.coretex.core.business.services.SessionService;

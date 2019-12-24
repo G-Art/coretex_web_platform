@@ -18,8 +18,6 @@ public class WebModuleServletContextListener implements ServletContextListener {
 		servlet.setLoadOnStartup(1);
 		servlet.addMapping("/");
 
-		container.getSessionCookieConfig().setHttpOnly(true);
-		container.getSessionCookieConfig().setSecure(true);
 	}
 
 }

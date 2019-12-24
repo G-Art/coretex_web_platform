@@ -1,16 +1,6 @@
 elements {
 
     relations {
-        MerchantStoreLanguageRelation(source: MerchantStore, target: 'Locale') {
-            source(languages) {
-                description = "Supported languages"
-                containerType = List
-            }
-            target(stores) {
-                containerType = List
-                description = "Stores"
-            }
-        }
 
         GeoZoneCountryRelation(source: GeoZone, target: Country) {
             source(countries) {

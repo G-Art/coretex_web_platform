@@ -1,32 +1,22 @@
 package com.coretex.commerce.admin.controllers.store;
 
-import com.coretex.commerce.admin.controllers.AbstractController;
 import com.coretex.commerce.admin.controllers.PageableDataTableAbstractController;
-import com.coretex.commerce.admin.data.GroupData;
-import com.coretex.commerce.admin.data.MerchantStoreData;
-import com.coretex.commerce.admin.data.UserData;
-import com.coretex.commerce.admin.facades.GroupFacade;
-import com.coretex.commerce.admin.facades.PageableDataTableFacade;
-import com.coretex.commerce.admin.facades.StoreFacade;
-import com.coretex.commerce.admin.facades.UserFacade;
+import com.coretex.commerce.data.minimal.MinimalStoreData;
+import com.coretex.commerce.facades.PageableDataTableFacade;
+import com.coretex.commerce.facades.StoreFacade;
+import com.coretex.items.cx_core.StoreItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.Objects;
 import java.util.UUID;
 
 @Controller
 @RequestMapping("/store")
-public class StoreController extends PageableDataTableAbstractController {
+public class StoreController extends PageableDataTableAbstractController<MinimalStoreData> {
 
 	@Resource
 	private StoreFacade storeFacade;
@@ -42,7 +32,7 @@ public class StoreController extends PageableDataTableAbstractController {
 	}
 
 	@Override
-	protected PageableDataTableFacade getPageableFacade() {
+	protected PageableDataTableFacade<StoreItem, MinimalStoreData> getPageableFacade() {
 		return storeFacade;
 	}
 }

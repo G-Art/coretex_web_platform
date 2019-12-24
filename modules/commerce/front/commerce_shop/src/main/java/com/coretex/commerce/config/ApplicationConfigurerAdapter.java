@@ -1,13 +1,10 @@
 package com.coretex.commerce.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.ResourceHandlerRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
-import org.springframework.web.reactive.resource.PathResourceResolver;
-import reactor.core.publisher.Mono;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +22,7 @@ public class ApplicationConfigurerAdapter implements WebFluxConfigurer {
         }
 
         registry.addResourceHandler("/**",
+                "/*.json",
                 "/*.css",
                 "/*.js",
                 "/*.gif",
@@ -40,6 +38,7 @@ public class ApplicationConfigurerAdapter implements WebFluxConfigurer {
                 "/*.eot",
                 "/*.otf",
                 "/*.ttf",
+                "/**/*.json",
                 "/**/*.css",
                 "/**/*.ico",
                 "/**/*.js",

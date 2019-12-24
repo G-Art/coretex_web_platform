@@ -1,12 +1,12 @@
 package com.coretex.commerce.admin.facades.impl;
 
-import com.coretex.commerce.admin.data.CurrencyData;
-import com.coretex.commerce.admin.data.LocaleData;
 import com.coretex.commerce.admin.facades.SessionFacade;
-import com.coretex.commerce.admin.mapper.CurrencyDataMapper;
-import com.coretex.commerce.admin.mapper.LocaleDataMapper;
+import com.coretex.commerce.core.dao.CurrencyDao;
+import com.coretex.commerce.data.CurrencyData;
+import com.coretex.commerce.data.LocaleData;
+import com.coretex.commerce.mapper.CurrencyDataMapper;
+import com.coretex.commerce.mapper.LocaleDataMapper;
 import com.coretex.core.activeorm.dao.LocaleDao;
-import com.coretex.core.business.repositories.reference.currency.CurrencyDao;
 import com.google.common.base.Suppliers;
 import org.springframework.stereotype.Component;
 

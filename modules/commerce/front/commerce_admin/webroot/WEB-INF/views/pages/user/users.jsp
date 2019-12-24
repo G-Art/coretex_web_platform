@@ -1,4 +1,4 @@
-<%--@elvariable id="currentUser" type="com.coretex.commerce.admin.data.UserData"--%>
+<%--@elvariable id="currentUser" type="com.coretex.commerce.data.UserData"--%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>

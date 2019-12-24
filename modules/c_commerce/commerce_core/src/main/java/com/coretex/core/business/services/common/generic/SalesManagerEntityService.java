@@ -1,9 +1,12 @@
 package com.coretex.core.business.services.common.generic;
 
+import com.coretex.commerce.core.services.PageableService;
+import com.coretex.items.core.GenericItem;
+
 import java.util.List;
 import java.util.UUID;
 
-public interface SalesManagerEntityService<E> extends PageableEntityService<E> {
+public interface SalesManagerEntityService<E extends GenericItem> extends PageableService<E> {
 
 	void save(E entity);
 	void refresh(E entity);

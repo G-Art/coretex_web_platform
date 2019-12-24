@@ -1,16 +1,12 @@
 package com.coretex.shop.admin.controller.merchant;
 
 
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.coretex.core.business.services.merchant.MerchantStoreService;
+import com.coretex.core.business.utils.ajax.AjaxResponse;
+import com.coretex.core.data.web.Menu;
+import com.coretex.core.model.content.InputContentFile;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.shop.constants.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,16 +21,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import com.coretex.core.business.services.merchant.MerchantStoreService;
-import com.coretex.core.business.services.reference.country.CountryService;
-import com.coretex.core.business.services.reference.currency.CurrencyService;
-import com.coretex.core.business.services.reference.language.LanguageService;
-import com.coretex.core.business.services.reference.zone.ZoneService;
-import com.coretex.core.business.utils.ajax.AjaxResponse;
-import com.coretex.core.model.content.FileContentType;
-import com.coretex.core.model.content.InputContentFile;
-import com.coretex.core.data.web.Menu;
-import com.coretex.shop.constants.Constants;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 @Controller
 public class StoreBrandingController {
@@ -45,8 +39,6 @@ public class StoreBrandingController {
 	@Resource
 	MerchantStoreService merchantStoreService;
 
-	@Resource(name = "templates")
-	List<String> templates;
 
 	@PreAuthorize("hasRole('STORE')")
 	@RequestMapping(value = "/admin/store/storeBranding.html", method = RequestMethod.GET)
@@ -56,8 +48,6 @@ public class StoreBrandingController {
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
 
-		//display templates
-		model.addAttribute("templates", templates);
 
 		model.addAttribute("store", store);
 
@@ -81,9 +71,6 @@ public class StoreBrandingController {
 		setMenu(model, request);
 
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.ADMIN_STORE);
-
-		model.addAttribute("templates", templates);
-
 
 		model.addAttribute("store", store);
 
@@ -125,9 +112,6 @@ public class StoreBrandingController {
 		merchantStoreService.saveOrUpdate(sessionstore);
 
 		request.setAttribute(Constants.ADMIN_STORE, sessionstore);
-
-		//display templates
-		model.addAttribute("templates", templates);
 
 		model.addAttribute("success", "success");
 		model.addAttribute("store", sessionstore);

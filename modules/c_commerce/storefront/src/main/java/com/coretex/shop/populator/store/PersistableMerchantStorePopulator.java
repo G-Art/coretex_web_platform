@@ -1,17 +1,5 @@
 package com.coretex.shop.populator.store;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import com.coretex.items.cx_core.CurrencyItem;
-import com.coretex.items.core.LocaleItem;
-import com.coretex.items.cx_core.ZoneItem;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
-import org.springframework.stereotype.Component;
-
 import com.coretex.core.business.constants.Constants;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.services.reference.country.CountryService;
@@ -21,8 +9,16 @@ import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CurrencyItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.model.references.PersistableAddress;
 import com.coretex.shop.model.shop.PersistableMerchantStore;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Component
 public class PersistableMerchantStorePopulator extends AbstractDataPopulator<PersistableMerchantStore, MerchantStoreItem> {
@@ -76,13 +72,7 @@ public class PersistableMerchantStorePopulator extends AbstractDataPopulator<Per
 				target.setCurrency(currencyService.getByCode(Constants.DEFAULT_CURRENCY.getCurrencyCode()));
 			}
 
-			List<String> languages = source.getSupportedLanguages();
-			if (!CollectionUtils.isEmpty(languages)) {
-				for (String lang : languages) {
-					LocaleItem ll = languageService.getByCode(lang);
-					target.getLanguages().add(ll);
-				}
-			}
+
 
 		} catch (Exception e) {
 			throw new ConversionException(e);

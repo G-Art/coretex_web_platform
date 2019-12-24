@@ -38,7 +38,7 @@
                     <br/><br/>
 
                     <div class="control-group">
-                        <label><s:message code="label.generic.language" text="Language"/></label>
+                        <label><s:message code="label.generic.language" text="LanguageData"/></label>
                         <div class="controls">
                             <form:select path="languageCode">
                                 <form:options items="${store.languages}" itemValue="code" itemLabel="code"/>

@@ -10,6 +10,7 @@
 
     <context:component-scan base-package="com.coretex"/>
 
+    <import resource="classpath:/config/spring/properties.xml"/>
     <!-- cache -->
     <import resource="classpath:/config/spring/core-ehcache.xml"/>
     <!-- DB, TX and properties -->

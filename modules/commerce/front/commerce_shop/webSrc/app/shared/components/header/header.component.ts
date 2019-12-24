@@ -1,4 +1,5 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {StoreData} from "../../../core/data/store.data";
 
 declare var $: any;
 
@@ -8,6 +9,7 @@ declare var $: any;
     styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, AfterViewInit {
+    @Input() store: StoreData;
 
     @ViewChild('headerSticky', {static: false}) headerSticky: ElementRef;
 
@@ -17,51 +19,22 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     ngOnInit() {
     }
 
-    ngAfterViewInit(): void {
 
+    @HostListener('window:scroll', ['$event'])
+    scrollHandler(event) {
         let $window = $(window),
             $headerSticky = $(this.headerSticky.nativeElement);
 
-        /*=====  End of variables  ======*/
+        let scroll = $window.scrollTop();
 
+        if (scroll >= 200 && $window.width() > 767) {
+            $headerSticky.addClass('is-sticky');
+        } else {
+            $headerSticky.removeClass('is-sticky');
+        }
+    }
 
-        /*=============================================
-        =            sticky header            =
-        =============================================*/
-
-        $window.on('scroll', function () {
-            if ($window.scrollTop() >= 200 && $window.width() > 767) {
-                $headerSticky.addClass('is-sticky');
-            } else {
-                $headerSticky.removeClass('is-sticky');
-            }
-
-            //code for scroll top
-            var scroll = $window.scrollTop();
-
-            if (scroll >= 400) {
-                $('.scroll-top').fadeIn();
-            } else {
-                $('.scroll-top').fadeOut();
-            }
-
-        });
-
-        /*=====  End of sticky header  ======*/
-
-
-        /*=============================================
-        =            scroll top            =
-        =============================================*/
-
-        $('.scroll-top').on('click', function () {
-            $('html,body').animate({
-                scrollTop: 0
-            }, 2000);
-        });
-
-        /*=====  End of scroll top  ======*/
-
+    ngAfterViewInit(): void {
 
         /*=============================================
         =            mobile menu activation            =

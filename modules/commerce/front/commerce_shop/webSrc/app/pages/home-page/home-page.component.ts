@@ -1,4 +1,5 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {StoreData} from "../../core/data/store.data";
 declare var $: any;
 
 @Component({
@@ -7,6 +8,9 @@ declare var $: any;
   styleUrls: ['./home-page.component.scss']
 })
 export class HomePageComponent implements OnInit, AfterViewInit{
+
+
+
   title = 'GoodMood - Home page';
 
   @ViewChild('rev_slider', {static: false}) slider: ElementRef;
@@ -161,9 +165,6 @@ export class HomePageComponent implements OnInit, AfterViewInit{
       });
 
     });
-
-
-
 
     /*=====  End of slick slider active  ======*/
 

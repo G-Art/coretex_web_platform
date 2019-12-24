@@ -1,0 +1,25 @@
+{
+  "employee": [
+    {
+      "name": "l_pogrebnyak",
+      "email": "Mila.pogrebnyak@gmail.com",
+      "firstName": "Люда",
+      "active": true,
+      "groups": ["ADMIN"]
+    },
+    {
+      "name": "masha",
+      "email": "madmashs666@gmail.com",
+      "firstName": "Маша",
+      "active": true,
+      "groups": ["ADMIN"]
+    },
+    {
+      "name": "max",
+      "email": "maksduka89@gmail.com ",
+      "firstName": "Макс",
+      "active": true,
+      "groups": ["ADMIN"]
+    }
+  ]
+}

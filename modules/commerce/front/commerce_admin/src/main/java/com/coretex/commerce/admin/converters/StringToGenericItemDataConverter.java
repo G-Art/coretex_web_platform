@@ -1,6 +1,6 @@
 package com.coretex.commerce.admin.converters;
 
-import com.coretex.commerce.admin.data.GenericItemData;
+import com.coretex.commerce.data.GenericItemData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

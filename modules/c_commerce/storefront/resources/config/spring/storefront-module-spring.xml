@@ -36,8 +36,6 @@
     <mvc:resources mapping="/resources/**" location="/resources/"/>
 
     <import resource="classpath:/config/spring/controllers.xml"/>
-
-    <import resource="classpath:/config/spring/properties.xml"/>
     <!-- security -->
     <import resource="classpath:/config/spring/security.xml"/>
     <!-- servlet-context -->

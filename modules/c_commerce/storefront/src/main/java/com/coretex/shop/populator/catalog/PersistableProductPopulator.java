@@ -95,7 +95,7 @@ public class PersistableProductPopulator extends
 					throw new ConversionException("Invalid manufacturer id");
 				}
 				if (manuf != null) {
-					if (!manuf.getMerchantStore().getUuid().equals(store.getUuid())) {
+					if (!manuf.getStore().getUuid().equals(store.getUuid())) {
 						throw new ConversionException("Invalid manufacturer id");
 					}
 					target.setManufacturer(manuf);

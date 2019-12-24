@@ -1,7 +1,7 @@
 package com.coretex.commerce.admin.controllers.content;
 
-import com.coretex.commerce.admin.data.CategoryHierarchyData;
-import com.coretex.commerce.admin.facades.PageableDataTableFacade;
+import com.coretex.commerce.data.CategoryHierarchyData;
+import com.coretex.commerce.facades.PageableDataTableFacade;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
