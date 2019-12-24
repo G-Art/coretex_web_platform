@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class PageableSelectOperation<T> extends SelectOperation<T> {
@@ -31,7 +32,7 @@ public class PageableSelectOperation<T> extends SelectOperation<T> {
 		doTransformation(countStatement);
 		var results = getJdbcTemplate().query(countStatement.toString(),
 				new SelectSqlParameterSource(getOperationSpec()),
-				getExtractorFunction().apply(this));
+				getExtractorFunction().apply(this)).collect(Collectors.toList());
 		if(CollectionUtils.isNotEmpty(results)){
 			Map rowResultMap = (Map) results.iterator().next();
 			totalCount = (Long) rowResultMap.get("count");

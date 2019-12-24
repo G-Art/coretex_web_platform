@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 
@@ -57,8 +59,13 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find() {
+		return findReactive().collect(Collectors.toList());
+	}
+
+	@Override
+	public Stream<I> findReactive() {
 		SelectOperationSpec<I> query = this.createSearchQuery();
-		return this.getSearchService().search(query).getResult();
+		return this.getSearchService().search(query).getResultStream();
 	}
 
 	@Override
@@ -77,35 +84,60 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find(String query) {
+		return findReactive(query).collect(Collectors.toList());
+	}
+
+	@Override
+	public Stream<I> findReactive(String query) {
 		SearchService ss = this.getSearchService();
 		SearchResult<I> searchResult = ss.search(query);
-		return searchResult.getResult();
+		return searchResult.getResultStream();
 	}
 
 	@Override
 	public List<I> find(String query, Map<String, Object> params) {
+		return findReactive(params).collect(Collectors.toList());
+	}
+
+	@Override
+	public Stream<I> findReactive(String query, Map<String, Object> params) {
 		SearchService ss = this.getSearchService();
 		SearchResult<I> searchResult = ss.search(query, params);
-		return searchResult.getResult();
+		return searchResult.getResultStream();
 	}
 
 	@Override
 	public List<I> find(Map<String, ?> params) {
+		return findReactive(params).collect(Collectors.toList());
+	}
+
+	@Override
+	public Stream<I> findReactive(Map<String, ?> params) {
 		SelectOperationSpec<I> query = this.createSearchQuery(params);
 		SearchResult<I> searchResult = this.getSearchService().search(query);
-		return searchResult.getResult();
+		return searchResult.getResultStream();
 	}
 
 	@Override
 	public List<I> find(SortParameters sortParameters) {
+		return findReactive(sortParameters).collect(Collectors.toList());
+	}
+
+	@Override
+	public Stream<I> findReactive(SortParameters sortParameters) {
 		SelectOperationSpec<I> query = this.createSearchQuery(sortParameters);
-		return this.getSearchService().search(query).getResult();
+		return this.getSearchService().search(query).getResultStream();
 	}
 
 	@Override
 	public List<I> find(Map<String, ?> params, SortParameters sortParameters) {
+		return findReactive(params, sortParameters).collect(Collectors.toList());
+	}
+
+	@Override
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters) {
 		var query = this.createSearchQuery(params, sortParameters);
-		return this.getSearchService().search(query).getResult();
+		return this.getSearchService().search(query).getResultStream();
 	}
 
 	@Override
@@ -114,8 +146,18 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 	}
 
 	@Override
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count) {
+		return findPageable(params, sortParameters, count).getResultStream();
+	}
+
+	@Override
 	public List<I> find(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
 		return findPageable(params, sortParameters, count, page).getResult();
+	}
+
+	@Override
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
+		return findPageable(params, sortParameters, count, page).getResultStream();
 	}
 
 	@Override

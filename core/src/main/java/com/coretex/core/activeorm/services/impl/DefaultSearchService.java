@@ -1,6 +1,6 @@
 package com.coretex.core.activeorm.services.impl;
 
-import com.coretex.core.activeorm.extractors.CoretexResultSetExtractor;
+import com.coretex.core.activeorm.extractors.CoretexReactiveResultSetExtractor;
 import com.coretex.core.activeorm.factories.RowMapperFactory;
 import com.coretex.core.activeorm.query.operations.PageableSelectOperation;
 import com.coretex.core.activeorm.query.operations.SelectOperation;
@@ -44,13 +44,13 @@ public class DefaultSearchService extends AbstractJdbcService implements SearchS
 	public <T> SearchResult<T> search(SelectOperationSpec<T> spec) {
 		SelectOperation<T> selectOperation = spec.createOperation(transformationProcessor);
 		selectOperation.setExtractorCreationFunction(select -> {
-			CoretexResultSetExtractor<T> extractor = new CoretexResultSetExtractor<>(select, cortexContext);
+			CoretexReactiveResultSetExtractor<T> extractor = new CoretexReactiveResultSetExtractor<>(select, cortexContext);
 			extractor.setMapperFactorySupplier(() -> rowMapperFactory);
 			return extractor;
 		});
 
 		selectOperation.setJdbcTemplateSupplier(this::getJdbcTemplate);
-		return new SearchResult<>(selectOperation::searchResult);
+		return new SearchResult<>(selectOperation::searchResultAsStream);
 	}
 
 	@Override
@@ -69,13 +69,13 @@ public class DefaultSearchService extends AbstractJdbcService implements SearchS
 	public <T> PageableSearchResult<T> searchPageable(PageableSelectOperationSpec<T> spec) {
 		PageableSelectOperation<T> selectOperation = spec.createOperation(transformationProcessor);
 		selectOperation.setExtractorCreationFunction(select -> {
-			CoretexResultSetExtractor<T> extractor = new CoretexResultSetExtractor<>(select, cortexContext);
+			CoretexReactiveResultSetExtractor<T> extractor = new CoretexReactiveResultSetExtractor<>(select, cortexContext);
 			extractor.setMapperFactorySupplier(() -> rowMapperFactory);
 			return extractor;
 		});
 
 		selectOperation.setJdbcTemplateSupplier(this::getJdbcTemplate);
-		return new PageableSearchResult<>(selectOperation, selectOperation::searchResult);
+		return new PageableSearchResult<>(selectOperation, selectOperation::searchResultAsStream);
 	}
 
 }
