@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {map, share} from "rxjs/operators";
 import {LanguageData} from "../data/language.data";
 
 @Injectable()
 export class LanguageService {
 
-    data;
+    dataMap = new Map();
     observable;
 
     apiUrl = environment.baseApiUrl;
@@ -18,13 +18,12 @@ export class LanguageService {
     }
 
     getStorageLanguages(uuid: string): Observable<LanguageData[]> {
-
-        if (this.data) {
-            return new Observable(this.data);
+        if (this.dataMap.has(uuid)) {
+            return of(this.dataMap.get(uuid));
         } else if (this.observable) {
             return this.observable;
         } else {
-            this.observable = this.http.get(`${this.apiUrl}/languages/store/${uuid}`, {
+            this.observable = this.http.get<LanguageData[]>(`${this.apiUrl}/languages/store/${uuid}`, {
                 observe: 'response'
             }).pipe(
                 map(response => {
@@ -32,8 +31,9 @@ export class LanguageService {
                     if (response.status === 400) {
                         return 'Request failed.';
                     } else if (response.status === 200) {
-                        this.data = response.body;
-                        return this.data;
+                        let data = response.body;
+                        this.dataMap.set(uuid, data);
+                        return data;
                     }
                 }),
                 share()

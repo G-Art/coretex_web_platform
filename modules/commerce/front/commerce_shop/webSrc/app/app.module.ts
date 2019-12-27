@@ -12,14 +12,15 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import { FooterComponent } from './shared/components/footer/footer.component';
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
+import { LoginComponent } from './shared/components/login/login.component';
+import {ComponentsModule} from "./shared/components/components.module";
 
 @NgModule({
     declarations: [
         DefaultLayoutComponent,
+        LoginLayoutComponent,
         AppComponent,
-        HeaderComponent,
-        HomePageComponent,
-        FooterComponent
     ],
     imports: [
         BrowserModule,
@@ -33,14 +34,17 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
                 useFactory: HttpLoaderFactory,
                 deps: [HttpClient]
             }
-        })
+        }),
+        ComponentsModule
     ],
     providers: [],
+    exports: [
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
 }
 
 export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, './assets/i18n/');
+    return new TranslateHttpLoader(http, './app/assets/i18n/');
 }

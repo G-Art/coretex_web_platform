@@ -1,6 +1,11 @@
 {
   "button": {
-    "login_register": "Вхід/Реєстрація",
-    "my_account": "Мій профіль"
+    "login": "Вхід",
+    "register": "Реєстрація",
+    "my_account": "Мій профіль",
+    "shopping_cart": "Корзина",
+    "checkout": "Замовлення",
+    "order_tracking": "Відстеження замовлення"
+
   }
 }

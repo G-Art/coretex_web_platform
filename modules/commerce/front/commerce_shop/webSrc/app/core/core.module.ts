@@ -4,6 +4,10 @@ import {StoreService} from "./service/store.service";
 import {HttpClientModule} from "@angular/common/http";
 import {RouterModule} from "@angular/router";
 import {CommonModule} from "@angular/common";
+import {AuthService} from "./service/auth.service";
+import {AuthGuardService} from "./service/authguard.service";
+import {UserService} from "./service/user.service";
+import {CookieService} from "ngx-cookie-service";
 
 
 @NgModule({
@@ -11,11 +15,16 @@ import {CommonModule} from "@angular/common";
     imports: [
         CommonModule,
         HttpClientModule,
-        RouterModule],
+        RouterModule,
+    ],
     exports: [
         HttpClientModule
     ],
     providers: [
+        CookieService,
+        AuthService,
+        AuthGuardService,
+        UserService,
         LanguageService,
         StoreService]
 })

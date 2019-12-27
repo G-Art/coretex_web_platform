@@ -4,7 +4,10 @@
 
 export const environment = {
   production: false,
-  baseApiUrl: '/v1'
+  baseApiUrl: '/v1',
+  routes: {
+    loginUrl: '/login'
+  }
 };
 
 /*

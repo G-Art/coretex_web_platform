@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 import {StoreData} from "../../../core/data/store.data";
+import {AuthService} from "../../../core/service/auth.service";
 
 declare var $: any;
 
@@ -13,12 +14,17 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
     @ViewChild('headerSticky', {static: false}) headerSticky: ElementRef;
 
-    constructor() {
+    authorized = false;
+
+    constructor(private authService: AuthService) {
     }
 
     ngOnInit() {
     }
 
+    isLoggedIn(){
+        return this.authService.isAuthenticated();
+    }
 
     @HostListener('window:scroll', ['$event'])
     scrollHandler(event) {

@@ -1,6 +1,10 @@
 {
   "button": {
-    "login_register": "Вход/Регистрацыя",
-    "my_account": "Мой профиль"
+    "login": "Вход",
+    "register": "Регистрацыя",
+    "my_account": "Мой профиль",
+    "shopping_cart": "Корзина",
+    "checkout": "Заказ",
+    "order_tracking": "Заказы"
   }
 }

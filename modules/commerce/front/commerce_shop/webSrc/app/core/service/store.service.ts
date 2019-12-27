@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {map, share} from "rxjs/operators";
 import {StoreData} from "../data/store.data";
 
 @Injectable()
 export class StoreService {
-  data;
+  data:StoreData;
   observable;
 
   apiUrl = environment.baseApiUrl;
@@ -17,7 +17,7 @@ export class StoreService {
 
   getCurrentStore(): Observable<StoreData> {
     if (this.data) {
-      return new Observable(this.data);
+      return of(this.data);
     } else if (this.observable) {
       return this.observable;
     } else {

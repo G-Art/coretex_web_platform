@@ -37,6 +37,8 @@ dependencies {
   implementation project(":core")
   implementation project(":cxcommercefacade")
 
-//  implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
   implementation group: 'org.springframework', name: 'spring-webflux', version: '5.1.8.RELEASE'
+  implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.1.5.RELEASE'
+
+  implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 }

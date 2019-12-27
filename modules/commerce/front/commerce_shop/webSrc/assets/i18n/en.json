@@ -1,6 +1,30 @@
 {
   "button": {
-    "login_register": "Login / Register",
-    "my_account": "My account"
+    "login": "Login",
+    "register": "Register",
+    "my_account": "My account",
+    "shopping_cart": "Shopping cart",
+    "checkout": "Checkout",
+    "order_tracking": "Order Tracking"
+  },
+  "form": {
+    "login": {
+      "title": "Login",
+      "errors": {
+        "500": "Something went wrong, try again later",
+        "401": "Wrong email or password",
+        "email.required": "Email is required",
+        "password.required": "Password is required"
+      },
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "button": "Sign In"
+    },
+    "register": {
+      "title": "Registration",
+      "button": "Sign Up"
+    }
   }
 }

@@ -25,11 +25,13 @@ export class LanguageSelectorComponent implements OnInit {
 
     ngOnInit() {
         let currentLang = this.translate.currentLang;
+
         this.storeService.getCurrentStore()
             .subscribe((store: StoreData) => {
                 let storeUuid = store.uuid;
 
-                this.langService.getStorageLanguages(storeUuid).subscribe( (langs:LanguageData[]) => {
+                this.langService.getStorageLanguages(storeUuid)
+                    .subscribe( (langs:LanguageData[]) => {
                     this.allLanguage = langs;
                     this.selectedLanguage = langs.find(({ isocode }) => isocode === currentLang);
                     this.languages = langs.filter(({ isocode }) => isocode !== currentLang);

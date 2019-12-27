@@ -11,7 +11,7 @@
 
                         <app-language-selector></app-language-selector>
 
-                        <app-currency-selector></app-currency-selector>
+<!--                        <app-currency-selector></app-currency-selector>-->
 
                         <div class="header-contact-info-wrapper d-none d-lg-block">
                             <ul class="header-contact-info__list">
@@ -25,22 +25,22 @@
                 <div class="col-lg-4 d-none d-lg-block">
                     <div class="header-top-content-wrapper justify-content-end">
 
-                        <div class="header-top-dropdown border-left-0">
-                            <a href="#">{{'button.login_register' | translate}} <i class="pe-7s-angle-down"></i></a>
-
-                            <ul class="header-top-dropdown__list">
-                                <li><a href="my-account.html">{{'button.my_account' | translate}}</a></li>
-                                <li><a href="cart.html">Shopping cart</a></li>
-                                <li><a href="checkout.html">Checkout</a></li>
-                                <li><a href="order-tracking.html">Order Tracking</a></li>
+                        <div class="header-top-dropdown border-right-0 ">
+                            <em *ngIf="!isLoggedIn()" style="font-style: normal"> <a routerLink="/login" routerLinkActive="active">{{'button.login' | translate}}</a>/<a routerLink="/register" routerLinkActive="active">{{'button.register' | translate}}</a> </em>
+                            <a *ngIf="isLoggedIn()" href="#" onclick="return false;">Hello customer <i class="pe-7s-angle-down"></i></a>
+                            <ul *ngIf="isLoggedIn()" class="header-top-dropdown__list">
+                                <li><a routerLink="/account" routerLinkActive="active">{{'button.my_account' | translate}}</a></li>
+<!--                                <li><a href="cart.html">{{'button.shopping_cart' | translate}}</a></li>-->
+<!--                                <li><a href="checkout.html">{{'button.checkout' | translate}}</a></li>-->
+                                <li><a href="order-tracking.html">{{'button.order_tracking' | translate}}</a></li>
                             </ul>
                         </div>
 
-                        <div class="header-contact-info-wrapper">
-                            <ul class="header-contact-info__list">
-                                <li><i class="fa fa-envelope-o"></i> <a href="#">Newsletter Signup</a></li>
-                            </ul>
-                        </div>
+<!--                        <div class="header-contact-info-wrapper">-->
+<!--                            <ul class="header-contact-info__list">-->
+<!--                                <li><i class="fa fa-envelope-o"></i> <a href="#">Newsletter Signup</a></li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                 <div class="col-lg-12">
                     <div class="header-info-wrapper header-info-wrapper--alt-style">
                         <div class="header-logo">
-                            <a href="index.html">
+                            <a routerLink="">
                                 <h2>{{store?.name}}</h2>
                             </a>
                         </div>
@@ -66,7 +66,7 @@
                             <nav>
                                 <ul>
                                     <li class="has-children">
-                                        <a href="index.html">HOME</a>
+                                        <a routerLink="\">HOME</a>
                                         <ul class="submenu submenu--home-variation">
                                             <li class="submenu--home-variation__item">
                                                 <p class="submenu--home-variation__item__title"><a href="index.html">HOMEPAGE 01</a></p>
@@ -344,7 +344,7 @@
             <div class="row align-items-center">
                 <div class="col-6 col-md-6">
                     <div class="header-logo">
-                        <a href="index.html">
+                        <a routerLink="\">
                             <h3>{{store?.name}}</h3>
                         </a>
                     </div>

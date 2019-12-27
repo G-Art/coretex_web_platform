@@ -18,8 +18,10 @@ export class AppComponent implements OnInit {
                 private activatedRoute: ActivatedRoute,
                 private titleService: Title,
                 private translate: TranslateService) {
-        this.translate.setDefaultLang('en');
-        this.translate.use('en')
+        if(!this.translate.currentLang){
+            this.translate.setDefaultLang('en');
+            this.translate.use('en')
+        }
     }
 
     ngOnInit() {

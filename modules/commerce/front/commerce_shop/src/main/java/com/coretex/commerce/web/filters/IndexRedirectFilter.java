@@ -12,12 +12,13 @@ public class IndexRedirectFilter implements WebFilter {
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 		var request = exchange.getRequest();
-		if (request.getPath().pathWithinApplication().value().equals("/")) {
+		if (!request.getPath().pathWithinApplication().value().startsWith("/v1") &&
+			!request.getPath().pathWithinApplication().value().startsWith("/app")) {
 			return chain.filter(
 					exchange.mutate()
 							.request(
 									request.mutate()
-											.path("/index.html")
+											.path("/app/index.html")
 											.build()
 							).build()
 			);

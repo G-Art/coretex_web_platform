@@ -4,15 +4,26 @@ import {RoutingModule} from "../routing/routing.module";
 import {FragmentsModule} from "../shared/fragments/fragments.module";
 import {CoreModule} from "../core/core.module";
 import {HttpClientModule} from "@angular/common/http";
+import { LoginPageComponent } from './login-page/login-page.component';
+import { AccountPageComponent } from './account-page/account-page.component';
+import { RegisterPageComponent } from './register-page/register-page.component';
+import {HomePageComponent} from "./home-page/home-page.component";
+import {ComponentsModule} from "../shared/components/components.module";
 
 @NgModule({
-    declarations: [],
+    declarations: [
+        LoginPageComponent,
+        AccountPageComponent,
+        RegisterPageComponent,
+        HomePageComponent
+    ],
     imports: [
         FragmentsModule,
         BrowserModule,
         RoutingModule,
         HttpClientModule,
-        CoreModule
+        CoreModule,
+        ComponentsModule
     ],
     exports: [
         FragmentsModule
