@@ -3,7 +3,7 @@ package com.coretex.shop.store.security.admin;
 import com.coretex.core.business.services.user.UserService;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.PermissionItem;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.store.security.user.JWTUser;
 import org.slf4j.Logger;

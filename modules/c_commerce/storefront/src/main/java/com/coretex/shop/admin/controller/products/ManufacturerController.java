@@ -9,7 +9,6 @@ import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
-import com.coretex.shop.admin.controller.customers.CustomerController;
 import com.coretex.shop.admin.model.catalog.Manufacturer;
 import com.coretex.core.data.web.Menu;
 import com.coretex.shop.constants.Constants;
@@ -57,7 +56,7 @@ public class ManufacturerController {
 	@Resource
 	private CoreConfiguration configuration;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ManufacturerController.class);
 
 	@PreAuthorize("hasRole('PRODUCTS')")
 	@RequestMapping(value = "/admin/catalogue/manufacturer/list.html", method = RequestMethod.GET)

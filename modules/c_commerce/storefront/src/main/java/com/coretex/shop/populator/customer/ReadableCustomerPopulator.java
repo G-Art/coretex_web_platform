@@ -2,7 +2,7 @@ package com.coretex.shop.populator.customer;
 
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.customer.ReadableCustomer;
@@ -44,14 +44,6 @@ public class ReadableCustomerPopulator extends
 				target.setLastName(address.getLastName());
 
 				target.setBilling(address);
-			}
-
-			if (source.getCustomerReviewAvg() != null) {
-				target.setRating(source.getCustomerReviewAvg().doubleValue());
-			}
-
-			if (source.getCustomerReviewCount() != null) {
-				target.setRatingCount(source.getCustomerReviewCount().intValue());
 			}
 
 			if (source.getDelivery() != null) {

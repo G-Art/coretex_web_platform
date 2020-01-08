@@ -7,6 +7,7 @@ import {LoginPageComponent} from "../pages/login-page/login-page.component";
 import {AccountPageComponent} from "../pages/account-page/account-page.component";
 import {AuthGuardService} from "../core/service/authguard.service";
 import {RegisterPageComponent} from "../pages/register-page/register-page.component";
+import {ProductListPageComponent} from "../pages/product-list-page/product-list-page.component";
 
 
 const routes: Routes = [
@@ -16,7 +17,18 @@ const routes: Routes = [
         children: [
             {
                 path: '',
+                pathMatch: 'full',
                 component: HomePageComponent
+            },
+            {
+                path: 'category/:code',
+                component: ProductListPageComponent,
+                data: {type: 'category'}
+            },
+            {
+                path: 'search',
+                component: ProductListPageComponent,
+                data: {type: 'search'}
             },
             {
                 path: 'account',

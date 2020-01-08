@@ -2,8 +2,6 @@ package com.coretex.shop.filter;
 
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.ProductService;
-import com.coretex.core.business.services.content.ContentService;
-import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.system.MerchantConfigurationService;
@@ -11,11 +9,10 @@ import com.coretex.core.business.utils.CacheUtils;
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.model.system.MerchantConfig;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.commerce_core_model.MerchantConfigurationItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.category.ReadableCategory;
 import com.coretex.shop.model.customer.AnonymousCustomer;
@@ -24,19 +21,15 @@ import com.coretex.shop.model.shop.Breadcrumb;
 import com.coretex.shop.model.shop.BreadcrumbItem;
 import com.coretex.shop.model.shop.BreadcrumbItemType;
 import com.coretex.shop.model.shop.PageInformation;
-import com.coretex.shop.populator.catalog.ReadableCategoryPopulator;
 import com.coretex.shop.store.controller.category.facade.CategoryFacade;
 import com.coretex.shop.utils.LabelUtils;
 import com.coretex.shop.utils.LanguageUtils;
 import com.coretex.shop.utils.WebApplicationCacheUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.annotation.Resource;
@@ -62,10 +55,6 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 	private final static String STORE_REQUEST_PARAMETER = "store";
 
-
-	@Resource
-	private ContentService contentService;
-
 	@Resource
 	private CategoryService categoryService;
 
@@ -74,9 +63,6 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 	@Resource
 	private MerchantStoreService merchantService;
-
-	@Resource
-	private CustomerService customerService;
 
 	@Resource
 	private MerchantConfigurationService merchantConfigurationService;
@@ -163,7 +149,7 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 			/** customer **/
 			CustomerItem customer = (CustomerItem) request.getSession().getAttribute(Constants.CUSTOMER);
 			if (customer != null) {
-				if (!customer.getMerchantStore().getUuid().equals(store.getUuid())) {
+				if (!customer.getStore().getUuid().equals(store.getUuid())) {
 					request.getSession().removeAttribute(Constants.CUSTOMER);
 				}
 				if (customer.getAnonymous() == null || !customer.getAnonymous()) {
@@ -173,19 +159,6 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 				}
 				request.setAttribute(Constants.CUSTOMER, customer);
 			}
-
-			if (customer == null) {
-
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				if (auth != null && request.isUserInRole("AUTH_CUSTOMER")) {
-					customer = customerService.getByNick(auth.getName());
-					if (customer != null) {
-						request.setAttribute(Constants.CUSTOMER, customer);
-					}
-				}
-
-			}
-
 
 			AnonymousCustomer anonymousCustomer =
 					(AnonymousCustomer) request.getSession().getAttribute(Constants.ANONYMOUS_CUSTOMER);

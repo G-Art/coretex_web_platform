@@ -1,25 +1,20 @@
 package com.coretex.core.business.services.order;
 
 import com.coretex.core.business.constants.Constants;
-
 import com.coretex.core.business.modules.order.InvoiceModule;
 import com.coretex.core.business.repositories.order.OrderDao;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
-import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
 import com.coretex.core.model.order.OrderCriteria;
 import com.coretex.core.model.order.OrderList;
 import com.coretex.core.model.order.OrderSummary;
 import com.coretex.core.model.order.OrderSummaryType;
 import com.coretex.core.model.order.OrderTotalSummary;
-import com.coretex.core.model.order.OrderValueType;
 import com.coretex.core.model.shipping.ShippingConfiguration;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.enums.commerce_core_model.OrderTotalTypeEnum;
-import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
@@ -29,8 +24,9 @@ import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.google.common.collect.Lists;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +45,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 @Service("orderService")
@@ -65,9 +60,6 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 	@Resource
 	private ProductService productService;
-
-	@Resource
-	private CustomerService customerService;
 
 	private final OrderDao orderDao;
 
@@ -140,9 +132,9 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 		}
 
-		if (customer.getUuid() == null) {
-			customerService.create(customer);
-		}
+//		if (customer.getUuid() == null) {
+//			customerService.create(customer);
+//		}
 
 		order.setCustomerId(customer.getUuid());
 

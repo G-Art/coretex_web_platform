@@ -1,32 +1,28 @@
 package com.coretex.shop.admin.controller.orders;
 
 import com.coretex.core.business.modules.email.Email;
-import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.system.EmailService;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.core.data.orders.OrderConverterHelper;
+import com.coretex.core.data.orders.OrderForm;
+import com.coretex.core.data.web.Menu;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
-import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
+import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
-import com.coretex.core.data.orders.OrderConverterHelper;
-import com.coretex.core.data.orders.OrderForm;
-import com.coretex.core.data.web.Menu;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.constants.EmailConstants;
 import com.coretex.shop.utils.DateUtil;
 import com.coretex.shop.utils.EmailUtils;
 import com.coretex.shop.utils.LabelUtils;
 import com.coretex.shop.utils.LocaleUtils;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +40,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -68,9 +71,6 @@ public class OrderControler {
 
 	@Resource
 	ZoneService zoneService;
-
-	@Resource
-	CustomerService customerService;
 
 	@Resource
 	EmailService emailService;
@@ -129,21 +129,6 @@ public class OrderControler {
 
 			UUID customerId = dbOrder.getCustomerId();
 
-			if (customerId != null) {
-
-				try {
-
-					CustomerItem customer = customerService.getByUUID(customerId);
-					if (customer != null) {
-						model.addAttribute("customer", customer);
-					}
-
-
-				} catch (Exception e) {
-					LOGGER.error("Error while getting customer for customerId " + customerId, e);
-				}
-
-			}
 
 			order.setCustomerId(dbOrder.getCustomerId().toString());
 			order.setCustomerEmailAddress(dbOrder.getCustomerEmailAddress());
@@ -310,33 +295,11 @@ public class OrderControler {
 
 		UUID customerId = newOrder.getCustomerId();
 
-		if (customerId != null) {
-
-			try {
-
-				CustomerItem customer = customerService.getByUUID(customerId);
-				if (customer != null) {
-					model.addAttribute("customer", customer);
-				}
-
-
-			} catch (Exception e) {
-				LOGGER.error("Error while getting customer for customerId " + customerId, e);
-			}
-
-		}
-
-
 		if (StringUtils.isBlank(entityOrder.getOrderHistoryComment())) {
 
 			try {
 
-				CustomerItem customer = customerService.getByUUID(newOrder.getCustomerId());
 				LocaleItem lang = store.getDefaultLanguage();
-				if (customer != null) {
-					lang = customer.getDefaultLanguage();
-				}
-
 				Locale customerLocale = LocaleUtils.getLocale(lang);
 
 				StringBuilder customerName = new StringBuilder();

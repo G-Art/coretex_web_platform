@@ -1,7 +1,7 @@
 package com.coretex.commerce.admin.security;
 
 import com.coretex.core.business.services.user.UserService;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;

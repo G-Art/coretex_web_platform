@@ -1,7 +1,6 @@
 package com.coretex.shop.store.controller.customer;
 
 import com.coretex.core.business.exception.ConversionException;
-
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
@@ -9,12 +8,12 @@ import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartCalculationService;
 import com.coretex.core.business.services.system.EmailService;
 import com.coretex.core.business.utils.CoreConfiguration;
-import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.cx_core.ZoneItem;
-import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.shop.constants.ApplicationConstants;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.customer.AnonymousCustomer;
@@ -50,7 +49,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -254,7 +252,7 @@ public class CustomerRegistrationController extends AbstractController {
 			super.setSessionAttribute(Constants.CUSTOMER, c, request);
 
 			StringBuilder cookieValue = new StringBuilder();
-			cookieValue.append(merchantStore.getCode()).append("_").append(c.getLogin());
+			cookieValue.append(merchantStore.getCode()).append("_").append(c.getEmail());
 
 			//set username in the cookie
 			Cookie cookie = new Cookie(Constants.COOKIE_NAME_USER, cookieValue.toString());

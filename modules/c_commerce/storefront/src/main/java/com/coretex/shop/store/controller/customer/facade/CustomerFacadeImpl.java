@@ -2,9 +2,7 @@
 package com.coretex.shop.store.controller.customer.facade;
 
 import com.coretex.core.business.exception.ConversionException;
-
 import com.coretex.core.business.modules.email.Email;
-import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
@@ -12,16 +10,13 @@ import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
 import com.coretex.core.business.services.system.EmailService;
 import com.coretex.core.business.services.user.GroupService;
 import com.coretex.core.business.utils.CoreConfiguration;
-import com.coretex.core.model.customer.CustomerList;
 import com.coretex.enums.commerce_core_model.GroupTypeEnum;
-import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.PermissionItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
-import com.coretex.items.cx_core.ZoneItem;
-import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.shop.admin.model.userpassword.UserReset;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.constants.EmailConstants;
@@ -30,16 +25,9 @@ import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.customer.ReadableCustomer;
 import com.coretex.shop.model.customer.UserAlreadyExistException;
 import com.coretex.shop.model.customer.address.Address;
-import com.coretex.shop.populator.customer.CustomerBillingAddressPopulator;
-import com.coretex.shop.populator.customer.CustomerDeliveryAddressPopulator;
-import com.coretex.shop.populator.customer.CustomerEntityPopulator;
 import com.coretex.shop.populator.customer.CustomerPopulator;
-import com.coretex.shop.populator.customer.PersistableCustomerBillingAddressPopulator;
-import com.coretex.shop.populator.customer.PersistableCustomerShippingAddressPopulator;
-import com.coretex.shop.populator.customer.ReadableCustomerList;
 import com.coretex.shop.populator.customer.ReadableCustomerPopulator;
 import com.coretex.shop.store.api.exception.ConversionRuntimeException;
-import com.coretex.shop.store.api.exception.ResourceNotFoundException;
 import com.coretex.shop.store.api.exception.ServiceRuntimeException;
 import com.coretex.shop.utils.EmailTemplatesUtils;
 import com.coretex.shop.utils.EmailUtils;
@@ -67,9 +55,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 /**
@@ -91,9 +77,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	public final static String ROLE_PREFIX = "ROLE_";// Spring Security 4
 
-
-	@Resource
-	private CustomerService customerService;
 
 	@Resource
 	private ShoppingCartService shoppingCartService;
@@ -151,19 +134,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	public CustomerEntity getCustomerDataByUserName(final String userName, final MerchantStoreItem store,
 													final LocaleItem language) throws Exception {
 		LOG.info("Fetching customer with userName" + userName);
-		CustomerItem customer = customerService.getByNick(userName);
 
-		if (customer != null) {
-			LOG.info("Found customer, converting to CustomerEntity");
-			try {
-				CustomerEntityPopulator customerEntityPopulator = new CustomerEntityPopulator();
-				return customerEntityPopulator.populate(customer, store, language); // store, language
-
-			} catch (ConversionException ex) {
-				LOG.error("Error while converting CustomerItem to CustomerEntity", ex);
-				throw new Exception(ex);
-			}
-		}
 
 		return null;
 
@@ -250,7 +221,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	@Override
 	public CustomerItem getCustomerByUserName(String userName, MerchantStoreItem store) throws Exception {
-		return customerService.getByNick(userName, store.getUuid());
+		return null;
 	}
 
 	@Override
@@ -258,14 +229,9 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		Validate.notNull(userName, "Username cannot be null");
 		Validate.notNull(merchantStore, "MerchantStoreItem cannot be null");
 
-		CustomerItem customerModel = getCustomerByNickAndStoreId(userName, merchantStore);
-		return convertCustomerToReadableCustomer(customerModel, merchantStore, language);
+		return null;
 	}
 
-	private CustomerItem getCustomerByNickAndStoreId(String userName, MerchantStoreItem merchantStore) {
-		return Optional.ofNullable(customerService.getByNick(userName, merchantStore.getUuid()))
-				.orElseThrow(() -> new ResourceNotFoundException("No CustomerItem found for ID : " + userName));
-	}
 
 
 	/**
@@ -285,13 +251,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	public boolean checkIfUserExists(final String userName, final MerchantStoreItem store)
 			throws Exception {
 		if (StringUtils.isNotBlank(userName) && store != null) {
-			CustomerItem customer = customerService.getByNick(userName, store.getUuid());
-			if (customer != null) {
-				LOG.info("CustomerItem with userName {} already exists for store {} ", userName,
-						store.getStoreName());
-				return true;
-			}
-
 			LOG.info("No customer found with userName {} for store {} ", userName, store.getStoreName());
 			return false;
 
@@ -318,7 +277,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		}
 
 		LOG.info("About to persist customer to database.");
-		customerService.saveOrUpdate(customerModel);
 
 		LOG.info("Returning customer data to controller..");
 		// return customerEntityPoulator(customerModel,merchantStore);
@@ -349,7 +307,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		}
 		// set groups
 		if (!StringUtils.isBlank(customerModel.getPassword())
-				&& !StringUtils.isBlank(customerModel.getLogin())) {
+				&& !StringUtils.isBlank(customerModel.getEmail())) {
 			customerModel.setPassword(passwordEncoder.encode(customer.getClearPassword()));
 			setCustomerModelDefaultProperties(customerModel, merchantStore);
 		}
@@ -423,31 +381,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	@Override
 	public Address getAddress(UUID userId, final MerchantStoreItem merchantStore,
 							  boolean isBillingAddress) throws Exception {
-		LOG.info("Fetching customer for id {} ", userId);
-		Address address = null;
-		final CustomerItem customerModel = customerService.getByUUID(userId);
-
-		if (customerModel == null) {
-			LOG.error("CustomerItem with ID {} does not exists..", userId);
-			// throw new CustomerNotFoundException( "customer with given id does not exists" );
-			throw new Exception("customer with given id does not exists");
-		}
-
-		if (isBillingAddress) {
-			LOG.info("getting billing address..");
-			CustomerBillingAddressPopulator billingAddressPopulator =
-					new CustomerBillingAddressPopulator();
-			address = billingAddressPopulator.populate(customerModel, merchantStore,
-					merchantStore.getDefaultLanguage());
-			address.setBillingAddress(true);
-			return address;
-		}
-
-		LOG.info("getting DeliveryItem address..");
-		CustomerDeliveryAddressPopulator deliveryAddressPopulator =
-				new CustomerDeliveryAddressPopulator();
-		return deliveryAddressPopulator.populate(customerModel, merchantStore,
-				merchantStore.getDefaultLanguage());
+		return null;
 
 	}
 
@@ -456,71 +390,13 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	public void updateAddress(UUID userId, MerchantStoreItem merchantStore, Address address,
 							  final LocaleItem language) throws Exception {
 
-		CustomerItem customerModel = customerService.getByUUID(userId);
-		Map<String, CountryItem> countriesMap = countryService.getCountriesMap(language);
-		CountryItem country = countriesMap.get(address.getCountry());
-
-		if (customerModel == null) {
-			LOG.error("CustomerItem with ID {} does not exists..", userId);
-			// throw new CustomerNotFoundException( "customer with given id does not exists" );
-			throw new Exception("customer with given id does not exists");
-
-		}
-		if (address.isBillingAddress()) {
-			LOG.info("updating customer billing address..");
-			PersistableCustomerBillingAddressPopulator billingAddressPopulator =
-					new PersistableCustomerBillingAddressPopulator();
-			customerModel = billingAddressPopulator.populate(address, customerModel, merchantStore,
-					merchantStore.getDefaultLanguage());
-			customerModel.getBilling().setCountry(country);
-			if (StringUtils.isNotBlank(address.getZone())) {
-				ZoneItem zone = zoneService.getByCode(address.getZone());
-				if (zone == null) {
-					throw new ConversionException("Unsuported zone code " + address.getZone());
-				}
-				customerModel.getBilling().setZone(zone);
-				customerModel.getBilling().setState(null);
-
-			} else {
-				customerModel.getBilling().setZone(null);
-			}
-
-		} else {
-			LOG.info("updating customer shipping address..");
-			PersistableCustomerShippingAddressPopulator shippingAddressPopulator =
-					new PersistableCustomerShippingAddressPopulator();
-			customerModel = shippingAddressPopulator.populate(address, customerModel, merchantStore,
-					merchantStore.getDefaultLanguage());
-			customerModel.getDelivery().setCountry(country);
-			if (StringUtils.isNotBlank(address.getZone())) {
-				ZoneItem zone = zoneService.getByCode(address.getZone());
-				if (zone == null) {
-					throw new ConversionException("Unsuported zone code " + address.getZone());
-				}
-
-				customerModel.getDelivery().setZone(zone);
-				customerModel.getDelivery().setState(null);
-
-			} else {
-				customerModel.getDelivery().setZone(null);
-			}
-
-		}
-
-
-		// same update address with customer model
-		this.customerService.saveOrUpdate(customerModel);
-
 	}
 
 	@Override
 	public ReadableCustomer getCustomerById(final UUID id, final MerchantStoreItem merchantStore,
 											final LocaleItem language) {
 
-		CustomerItem customerModel = Optional.ofNullable(customerService.getByUUID(id))
-				.orElseThrow(() -> new ResourceNotFoundException("No CustomerItem found for ID : " + id));
-
-		return convertCustomerToReadableCustomer(customerModel, merchantStore, language);
+		return null;
 	}
 
 
@@ -548,12 +424,10 @@ public class CustomerFacadeImpl implements CustomerFacade {
 	}
 
 	private void saveCustomer(CustomerItem customerToPopulate) {
-		customerService.save(customerToPopulate);
 	}
 
 	private boolean userExist(String userName) {
-		return Optional.ofNullable(customerService.getByNick(userName))
-				.isPresent();
+		return true;
 	}
 
 	private List<GroupItem> getListOfGroups(GroupTypeEnum groupType) {
@@ -613,19 +487,12 @@ public class CustomerFacadeImpl implements CustomerFacade {
 			throw new ServiceRuntimeException("Can't update a customer with null id");
 		}
 
-		CustomerItem cust = customerService.getByUUID(customer.getUuid());
-
-
 		CustomerPopulator populator = new CustomerPopulator();
 		populator.setCountryService(countryService);
 		populator.setLanguageService(languageService);
 		populator.setZoneService(zoneService);
 		populator.setGroupService(groupService);
-		try {
-			populator.populate(customer, cust, store, store.getDefaultLanguage());
-		} catch (ConversionException e) {
-			throw new ConversionRuntimeException(e);
-		}
+
 
 		String password = customer.getClearPassword();
 		if (StringUtils.isBlank(password)) {
@@ -641,8 +508,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		}
 
 		customer.setEncodedPassword(encodedPassword);
-		saveCustomer(cust);
-		customer.setUuid(cust.getUuid());
 
 		return customer;
 	}
@@ -657,7 +522,6 @@ public class CustomerFacadeImpl implements CustomerFacade {
 		String encodedPassword = passwordEncoder.encode(password);
 
 		customer.setPassword(encodedPassword);
-		customerService.saveOrUpdate(customer);
 
 		Locale locale = languageService.toLocale(language, store);
 
@@ -703,27 +567,10 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
 	}
 
-	private CustomerItem getByNick(String userName) {
-		return Optional.ofNullable(customerService.getByNick(userName))
-				.orElseThrow(() -> new ResourceNotFoundException("No CustomerItem found for ID : " + userName));
-	}
 
 	@Override
 	public void delete(CustomerItem entity) {
-		customerService.delete(entity);
-	}
 
-	private ReadableCustomerList convertCustomerListToReadableCustomerList(
-			CustomerList customerList, MerchantStoreItem store, LocaleItem language) {
-		List<ReadableCustomer> readableCustomers = customerList.getCustomers()
-				.stream()
-				.map(customer -> convertCustomerToReadableCustomer(customer, store, language))
-				.collect(Collectors.toList());
-
-		ReadableCustomerList readableCustomerList = new ReadableCustomerList();
-		readableCustomerList.setCustomers(readableCustomers);
-		readableCustomerList.setTotalCount(customerList.getTotalCount());
-		return readableCustomerList;
 	}
 
 	private ReadableCustomer convertCustomerToReadableCustomer(CustomerItem customer, MerchantStoreItem merchantStore, LocaleItem language) {

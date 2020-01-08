@@ -1,28 +1,22 @@
 package com.coretex.shop.store.security;
 
-import java.util.Collection;
-import java.util.Date;
-
-import javax.annotation.Resource;
-
+import com.coretex.core.business.services.user.GroupService;
+import com.coretex.core.business.services.user.PermissionService;
+import com.coretex.items.cx_core.CustomerItem;
+import com.coretex.shop.store.security.user.JWTUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.coretex.core.business.services.customer.CustomerService;
-import com.coretex.core.business.services.user.GroupService;
-import com.coretex.core.business.services.user.PermissionService;
-import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.shop.store.security.user.JWTUser;
+import java.util.Collection;
 
 
 @Service("jwtCustomerDetailsService")
 public class JWTCustomerServicesImpl extends AbstractCustomerServices {
 
 
-	public JWTCustomerServicesImpl(CustomerService customerService, PermissionService permissionService, GroupService groupService) {
-		super(customerService, permissionService, groupService);
-		this.customerService = customerService;
+	public JWTCustomerServicesImpl(PermissionService permissionService, GroupService groupService) {
+		super(permissionService, groupService);
 		this.permissionService = permissionService;
 		this.groupService = groupService;
 	}

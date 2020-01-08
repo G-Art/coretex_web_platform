@@ -1,25 +1,24 @@
 package com.coretex.shop.populator.user;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Resource;
-
-import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.UserItem;
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import com.coretex.core.business.exception.ConversionException;
-
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.user.GroupService;
 import com.coretex.core.populators.AbstractDataPopulator;
+import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.UserItem;
 import com.coretex.shop.model.security.PersistableGroup;
 import com.coretex.shop.model.user.PersistableUser;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Component
@@ -48,7 +47,7 @@ public class PersistableUserPopulator extends AbstractDataPopulator<PersistableU
 		target.setFirstName(source.getFirstName());
 		target.setLastName(source.getLastName());
 		target.setEmail(source.getEmailAddress());
-		target.setAdminName(source.getUserName());
+		target.setLogin(source.getUserName());
 		if (!StringUtils.isBlank(source.getPassword())) {
 			target.setPassword(passwordEncoder.encode(source.getPassword()));
 		}
@@ -63,8 +62,6 @@ public class PersistableUserPopulator extends AbstractDataPopulator<PersistableU
 
 		// set default language
 		target.setLanguage(lang);
-
-		target.setMerchantStore(store);
 
 		List<GroupItem> userGroups = new ArrayList<GroupItem>();
 		for (PersistableGroup group : source.getGroups()) {

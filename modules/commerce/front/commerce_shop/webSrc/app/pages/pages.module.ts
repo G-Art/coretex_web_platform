@@ -9,13 +9,15 @@ import { AccountPageComponent } from './account-page/account-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import {HomePageComponent} from "./home-page/home-page.component";
 import {ComponentsModule} from "../shared/components/components.module";
+import { ProductListPageComponent } from './product-list-page/product-list-page.component';
 
 @NgModule({
     declarations: [
         LoginPageComponent,
         AccountPageComponent,
         RegisterPageComponent,
-        HomePageComponent
+        HomePageComponent,
+        ProductListPageComponent
     ],
     imports: [
         FragmentsModule,

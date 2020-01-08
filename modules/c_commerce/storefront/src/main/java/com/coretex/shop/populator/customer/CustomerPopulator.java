@@ -1,29 +1,27 @@
 package com.coretex.shop.populator.customer;
 
 
-import java.math.BigDecimal;
-import java.util.Map;
-
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.user.GroupService;
 import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.enums.commerce_core_model.CustomerGenderEnum;
 import com.coretex.items.commerce_core_model.BillingItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
-import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.customer.address.Address;
-import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public class CustomerPopulator extends
 		AbstractDataPopulator<PersistableCustomer, CustomerItem> {
@@ -60,21 +58,11 @@ public class CustomerPopulator extends
 				target.setAnonymous(false);
 			}
 
-			target.setProvider(source.getProvider());
-
 			target.setEmail(source.getEmailAddress());
 			target.setFirstName(source.getUserName());
-			if (source.getGender() != null) {
-				target.setGender(CustomerGenderEnum.fromString(source.getGender()));
-			}
-			if (target.getGender() == null) {
-				target.setGender(CustomerGenderEnum.MALE);
-			}
 
 			Map<String, CountryItem> countries = countryService.getCountriesMap(language);
 			Map<String, ZoneItem> zones = zoneService.getZones(language);
-
-			target.setMerchantStore(store);
 
 			Address sourceBilling = source.getBilling();
 			if (sourceBilling != null) {
@@ -152,12 +140,6 @@ public class CustomerPopulator extends
 				target.setDelivery(delivery);
 			}
 
-			if (source.getRating() != null) {
-				target.setCustomerReviewAvg(new BigDecimal(source.getRating().doubleValue()));
-			}
-
-			target.setCustomerReviewCount(source.getRatingCount());
-
 
 			if (target.getDelivery() == null && source.getDelivery() != null) {
 				LOG.info("Setting default value for delivery");
@@ -174,7 +156,7 @@ public class CustomerPopulator extends
 			}
 
 			if (target.getDefaultLanguage() == null) {
-				target.setDefaultLanguage(target.getMerchantStore().getDefaultLanguage());
+				target.setDefaultLanguage(target.getStore().getDefaultLanguage());
 			}
 
 

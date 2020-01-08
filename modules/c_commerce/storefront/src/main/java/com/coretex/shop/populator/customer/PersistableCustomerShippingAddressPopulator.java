@@ -1,6 +1,6 @@
 package com.coretex.shop.populator.customer;
 
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import org.apache.commons.lang3.StringUtils;
 
 import com.coretex.items.commerce_core_model.DeliveryItem;

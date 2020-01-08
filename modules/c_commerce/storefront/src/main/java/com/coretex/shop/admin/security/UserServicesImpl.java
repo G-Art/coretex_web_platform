@@ -3,11 +3,9 @@ package com.coretex.shop.admin.security;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.user.GroupService;
 import com.coretex.core.business.services.user.UserService;
-import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.PermissionItem;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 import com.coretex.shop.constants.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -24,12 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -108,70 +103,5 @@ public class UserServicesImpl implements WebUserServices {
 				true, true, authorities);
 		return secUser;
 	}
-
-
-	public void createDefaultAdmin() {
-
-		//TODO create all groups and permissions
-
-		MerchantStoreItem store = merchantService.getByCode(com.coretex.core.business.constants.Constants.DEFAULT_STORE);
-
-		String password = passwordEncoder.encode(DEFAULT_INITIAL_PASSWORD);
-
-		List<GroupItem> groups = groupService.listGroup(GroupTypeEnum.ADMIN);
-
-		UserItem user = new UserItem();
-		user.setAdminName("admin");
-		user.setPassword(password);
-		user.setEmail("admin@coretex.com");
-		user.setFirstName("Artem");
-		user.setLastName("Herasymenko");
-		user.setActive(true);
-
-		for (GroupItem group : groups) {
-			if (group.getGroupName().equals(Constants.GROUP_SUPERADMIN) || group.getGroupName().equals(Constants.GROUP_ADMIN)) {
-				user.getGroups().add(group);
-			}
-		}
-
-		user.setMerchantStore(store);
-		userService.create(user);
-
-		creteAdmins(store);
-
-	}
-
-	private void creteAdmins(MerchantStoreItem store) {
-		org.springframework.core.io.Resource permissionXML = resourceLoader.getResource("classpath:/permission/admins.json");
-
-		try {
-			InputStream xmlSource = permissionXML.getInputStream();
-			List<GroupItem> groups = groupService.listGroup(GroupTypeEnum.ADMIN);
-			Map admins = jacksonObjectMapper.readValue(xmlSource, Map.class);
-			List<Map> employee = (List<Map>) admins.get("employee");
-			String password = passwordEncoder.encode(DEFAULT_ADMIN_INITIAL_PASSWORD);
-			employee.forEach(map -> {
-				UserItem user = new UserItem();
-				user.setAdminName((String) map.get("name"));
-				user.setPassword(password);
-				user.setEmail((String) map.get("email"));
-				user.setFirstName((String) map.get("firstName"));
-				user.setActive((Boolean) map.get("active"));
-				List<String> groupList = (List<String>) map.get("groups");
-				for (GroupItem group : groups) {
-					if (groupList.contains(group.getGroupName())) {
-						user.getGroups().add(group);
-					}
-				}
-				user.setMerchantStore(store);
-				userService.save(user);
-			});
-
-		} catch (IOException e) {
-			LOGGER.error("admins.json read exception", e);
-		}
-
-	}
-
 
 }

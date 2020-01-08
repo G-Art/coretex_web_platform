@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../../core/service/auth.service";
 import {first} from "rxjs/operators";
+import {CookieService} from "ngx-cookie-service";
 
 @Component({
     selector: 'app-login',
@@ -18,6 +19,7 @@ export class LoginComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder,
                 private authService: AuthService,
+                private cookieService: CookieService,
                 private route: ActivatedRoute,
                 private router: Router,) {
     }
@@ -43,16 +45,21 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
-        this.authService.login({login: this.f.email.value, password: this.f.password.value})
-            .pipe(first())
+        this.authService
+            .login({login: this.f.email.value, password: this.f.password.value})
             .subscribe(
                 data => {
                     this.authService.getRedirectUrl()
-                        .subscribe(data => this.router.navigate(data));
+                        .subscribe(data => {
+                            console.log(data);
+                            this.router.navigate(data);
+                        });
+
                 },
                 error => {
                     this.error = `form.login.errors.${error.status}`;
                     this.loading = false;
                 });
+        this.loading = false
     }
 }

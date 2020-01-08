@@ -1,9 +1,9 @@
 package com.coretex.core.model.customer;
 
-import java.util.List;
-
 import com.coretex.core.model.common.EntityList;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
+
+import java.util.List;
 
 public class CustomerList extends EntityList {
 

@@ -9,7 +9,7 @@ import com.coretex.core.business.services.common.generic.SalesManagerEntityServi
 import com.coretex.core.model.common.Criteria;
 import com.coretex.core.model.common.GenericEntityList;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 
 
 public class UserServiceImpl extends SalesManagerEntityServiceImpl<UserItem>

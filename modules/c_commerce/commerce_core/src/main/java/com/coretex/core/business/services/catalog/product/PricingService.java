@@ -8,7 +8,7 @@ import java.util.Locale;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.cx_core.CurrencyItem;
 

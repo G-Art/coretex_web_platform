@@ -3,7 +3,7 @@ import {CookieService} from 'ngx-cookie-service';
 
 import {Router} from "@angular/router";
 import {Observable, of} from "rxjs";
-import {UserForm} from "../data/user-form.data";
+import {LoginForm} from "../data/login-form.data";
 import {UserService} from "./user.service";
 
 @Injectable()
@@ -19,22 +19,16 @@ export class AuthService {
 
 
     isAuthenticated(): boolean {
-        return !!this.cookieService.get('auth');
+        return !!this.cookieService.get('accessToken');
     }
 
-    login(user: UserForm) {
-        let auth = this.userService
-            .authenticate(user.login, user.password);
-
-        auth.subscribe(() => {
-            this.cookieService.set('auth', 'true');
-        });
-
-        return auth
+    login(user: LoginForm) {
+        return this.userService
+            .authenticate(user.login, user.password)
     }
 
     logout(): void {
-        this.cookieService.delete('auth');
+        this.cookieService.delete('accessToken');
         this.router.navigate([`/`]);
     }
 

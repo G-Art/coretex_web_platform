@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
 import org.apache.commons.collections4.CollectionUtils;

@@ -15,7 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import com.coretex.core.business.services.user.UserService;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 
 public abstract class AbstractAuthenticatinSuccessHandler extends
 		SavedRequestAwareAuthenticationSuccessHandler {

@@ -1,6 +1,6 @@
 package com.coretex.shop.admin.model.secutity;
 
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 
 import java.io.Serializable;
 

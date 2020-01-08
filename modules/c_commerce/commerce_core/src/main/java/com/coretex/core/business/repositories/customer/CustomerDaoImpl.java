@@ -3,7 +3,7 @@ package com.coretex.core.business.repositories.customer;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
 import com.coretex.items.commerce_core_model.BillingItem;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.core.CountryItem;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -128,18 +128,9 @@ public class CustomerDaoImpl extends DefaultGenericDao<CustomerItem> implements 
 		return find(query, Map.of("fn", "%" + name + "%"));
 	}
 
-	@Override
-	public CustomerItem findByNick(String nick) {
-		return findSingle(Map.of(CustomerItem.LOGIN, nick), true);
-	}
-
-	@Override
-	public CustomerItem findByNick(String nick, UUID storeId) {
-		return findSingle(Map.of(CustomerItem.LOGIN, nick, CustomerItem.MERCHANT_STORE, storeId), true);
-	}
 
 	@Override
 	public List<CustomerItem> findByStore(UUID storeId) {
-		return find(Map.of(CustomerItem.MERCHANT_STORE, storeId));
+		return find(Map.of(CustomerItem.STORE, storeId));
 	}
 }

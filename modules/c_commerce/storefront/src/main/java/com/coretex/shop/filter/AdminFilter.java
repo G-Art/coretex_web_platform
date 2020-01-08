@@ -9,7 +9,7 @@ import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.user.UserService;
 import com.coretex.core.business.utils.CacheUtils;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 import com.coretex.core.data.web.Menu;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.utils.LanguageUtils;
@@ -76,7 +76,7 @@ public class AdminFilter extends HandlerInterceptorAdapter {
 				user = userService.getByUserName(userName);
 				request.getSession().setAttribute(Constants.ADMIN_USER, user);
 				if (user != null) {
-					storeCode = user.getMerchantStore().getCode();
+					storeCode = user.getStore().getCode();
 				} else {
 					LOGGER.warn("UserItem name not found " + userName);
 				}
@@ -88,10 +88,10 @@ public class AdminFilter extends HandlerInterceptorAdapter {
 				return true;
 			}
 
-			if (!user.getAdminName().equals(userName)) {
+			if (!user.getLogin().equals(userName)) {
 				user = userService.getByUserName(userName);
 				if (user != null) {
-					storeCode = user.getMerchantStore().getCode();
+					storeCode = user.getStore().getCode();
 				} else {
 					LOGGER.warn("UserItem name not found " + userName);
 				}

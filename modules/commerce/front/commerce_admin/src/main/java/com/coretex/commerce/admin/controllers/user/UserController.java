@@ -9,7 +9,7 @@ import com.coretex.commerce.facades.GroupFacade;
 import com.coretex.commerce.facades.PageableDataTableFacade;
 import com.coretex.commerce.facades.MerchantStoreFacade;
 import com.coretex.commerce.admin.facades.UserFacade;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;

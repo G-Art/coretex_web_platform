@@ -1,7 +1,7 @@
 package com.coretex.shop.utils;
 
 import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 
 import java.util.List;
 

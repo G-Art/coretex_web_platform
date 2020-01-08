@@ -1,10 +1,8 @@
 package com.coretex.shop.admin.controller.orders;
 
-import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.core.data.orders.Refund;
-import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
@@ -12,7 +10,6 @@ import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.utils.EmailTemplatesUtils;
 import com.coretex.shop.utils.LabelUtils;
-import com.coretex.shop.utils.LocaleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -50,9 +47,6 @@ public class OrderActionsControler {
 	private OrderService orderService;
 
 	@Resource
-	CustomerService customerService;
-
-	@Resource
 	EmailTemplatesUtils emailTemplatesUtils;
 
 
@@ -85,15 +79,6 @@ public class OrderActionsControler {
 
 				LOGGER.error("Merchant store does not have order {0}", id);
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
-				String returnString = resp.toJSONString();
-				return new ResponseEntity<String>(returnString, HttpStatus.OK);
-			}
-
-			CustomerItem customer = customerService.getByUUID(order.getCustomerId());
-
-			if (customer == null) {
-				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
-				resp.setStatusMessage(messages.getMessage("message.notexist.customer", locale));
 				String returnString = resp.toJSONString();
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
@@ -172,15 +157,6 @@ public class OrderActionsControler {
 			if (submitedAmount.doubleValue() <= 0) {
 				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
 				resp.setStatusMessage(messages.getMessage("message.invalid.amount", locale));
-				String returnString = resp.toJSONString();
-				return new ResponseEntity<String>(returnString, HttpStatus.OK);
-			}
-
-			CustomerItem customer = customerService.getByUUID(order.getCustomerId());
-
-			if (customer == null) {
-				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
-				resp.setStatusMessage(messages.getMessage("message.notexist.customer", locale));
 				String returnString = resp.toJSONString();
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
@@ -280,21 +256,6 @@ public class OrderActionsControler {
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
 
-			//get customer
-			CustomerItem customer = customerService.getByUUID(dbOrder.getCustomerId());
-
-			if (customer == null) {
-				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
-				resp.setErrorString("CustomerItem does not exist");
-				String returnString = resp.toJSONString();
-				return new ResponseEntity<String>(returnString, HttpStatus.OK);
-			}
-
-			Locale customerLocale = LocaleUtils.getLocale(customer.getDefaultLanguage());
-
-			emailTemplatesUtils.sendOrderEmail(customer.getEmail(), customer, dbOrder, customerLocale, customer.getDefaultLanguage(), store, request.getContextPath());
-
-
 			resp.setStatus(AjaxResponse.RESPONSE_OPERATION_COMPLETED);
 
 		} catch (Exception e) {
@@ -348,19 +309,6 @@ public class OrderActionsControler {
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
 
-			//get customer
-			CustomerItem customer = customerService.getByUUID(dbOrder.getCustomerId());
-
-			if (customer == null) {
-				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
-				resp.setErrorString("CustomerItem does not exist");
-				String returnString = resp.toJSONString();
-				return new ResponseEntity<String>(returnString, HttpStatus.OK);
-			}
-
-			Locale customerLocale = LocaleUtils.getLocale(customer.getDefaultLanguage());
-
-
 			Set<OrderStatusHistoryItem> orderStatus = dbOrder.getOrderHistory();
 			OrderStatusHistoryItem lastHistory = null;
 			if (orderStatus != null) {
@@ -380,8 +328,6 @@ public class OrderActionsControler {
 				String returnString = resp.toJSONString();
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
-			emailTemplatesUtils.sendUpdateOrderStatusEmail(customer, dbOrder, lastHistory, store, customerLocale, request.getContextPath());
-
 
 			resp.setStatus(AjaxResponse.RESPONSE_OPERATION_COMPLETED);
 
@@ -435,22 +381,6 @@ public class OrderActionsControler {
 				String returnString = resp.toJSONString();
 				return new ResponseEntity<String>(returnString, HttpStatus.OK);
 			}
-
-			//get customer
-			CustomerItem customer = customerService.getByUUID(dbOrder.getCustomerId());
-
-			if (customer == null) {
-				resp.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
-				resp.setErrorString("CustomerItem does not exist");
-				String returnString = resp.toJSONString();
-				return new ResponseEntity<String>(returnString, HttpStatus.OK);
-			}
-
-			Locale customerLocale = LocaleUtils.getLocale(customer.getDefaultLanguage());
-
-
-			emailTemplatesUtils.sendOrderDownloadEmail(customer, dbOrder, store, customerLocale, request.getContextPath());
-
 
 			resp.setStatus(AjaxResponse.RESPONSE_OPERATION_COMPLETED);
 

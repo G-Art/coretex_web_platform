@@ -7,6 +7,8 @@ import {FragmentsModule} from "../fragments/fragments.module";
 import {RoutingModule} from "../../routing/routing.module";
 import {ReactiveFormsModule} from "@angular/forms";
 import { RegisterComponent } from './register/register.component';
+import { AppEqualValidatorDirective } from './register/app-equal-validator.directive';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 
 @NgModule({
@@ -14,7 +16,9 @@ import { RegisterComponent } from './register/register.component';
         HeaderComponent,
         FooterComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        AppEqualValidatorDirective,
+        SidebarComponent
     ],
     imports: [
         RoutingModule,
@@ -26,7 +30,8 @@ import { RegisterComponent } from './register/register.component';
         HeaderComponent,
         FooterComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        SidebarComponent
     ]
 
 })

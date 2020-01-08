@@ -4,19 +4,17 @@ import com.coretex.core.business.constants.Constants;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
-import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.populators.AbstractDataPopulator;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.items.core.LocaleItem;
-import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductPriceItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.shop.model.catalog.product.PersistableImage;
 import com.coretex.shop.model.catalog.product.PersistableProduct;
 import com.coretex.shop.model.catalog.product.ProductPriceEntity;
@@ -42,8 +40,6 @@ public class PersistableProductPopulator extends
 	private ManufacturerService manufacturerService;
 	@Resource
 	private LanguageService languageService;
-	@Resource
-	private CustomerService customerService;
 
 
 	@Override
@@ -71,11 +67,6 @@ public class PersistableProductPopulator extends
 			target.setRentalPeriod(source.getRentalPeriod());
 
 			/** end RENTAL **/
-
-			if (source.getOwner() != null && source.getOwner().getUuid() != null) {
-				CustomerItem owner = customerService.getByUUID(source.getOwner().getUuid());
-				target.setOwner(owner);
-			}
 
 			if (!StringUtils.isBlank(source.getDateAvailable())) {
 				target.setDateAvailable(DateUtil.getDate(source.getDateAvailable()));
@@ -257,16 +248,6 @@ public class PersistableProductPopulator extends
 	protected ProductItem createTarget() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-
-	public CustomerService getCustomerService() {
-		return customerService;
-	}
-
-
-	public void setCustomerService(CustomerService customerService) {
-		this.customerService = customerService;
 	}
 
 }

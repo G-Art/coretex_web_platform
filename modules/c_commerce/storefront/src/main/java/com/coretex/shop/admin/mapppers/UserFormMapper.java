@@ -1,7 +1,7 @@
 package com.coretex.shop.admin.mapppers;
 
 import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 import com.coretex.shop.admin.data.GroupDto;
 import com.coretex.shop.admin.forms.UserForm;
 import com.coretex.shop.admin.mapppers.dto.GroupDtoMapper;

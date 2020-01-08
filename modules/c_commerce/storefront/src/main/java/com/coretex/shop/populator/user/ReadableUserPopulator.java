@@ -2,7 +2,7 @@ package com.coretex.shop.populator.user;
 
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 import org.apache.commons.lang3.Validate;
 import com.coretex.core.business.constants.Constants;
 import com.coretex.core.business.exception.ConversionException;
@@ -31,7 +31,7 @@ public class ReadableUserPopulator extends AbstractDataPopulator<UserItem, Reada
 		target.setFirstName(source.getFirstName());
 		target.setLastName(source.getLastName());
 		target.setEmailAddress(source.getEmail());
-		target.setUserName(source.getAdminName());
+		target.setUserName(source.getLogin());
 		target.setActive(source.getActive());
 
 		if (source.getLastAccess() != null) {

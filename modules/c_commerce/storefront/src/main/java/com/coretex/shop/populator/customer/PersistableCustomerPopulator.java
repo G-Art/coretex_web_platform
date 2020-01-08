@@ -2,7 +2,7 @@ package com.coretex.shop.populator.customer;
 
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.customer.PersistableCustomer;
@@ -41,16 +41,6 @@ public class PersistableCustomerPopulator extends
 				target.setBilling(address);
 			}
 
-			target.setProvider(source.getProvider());
-
-			if (source.getCustomerReviewAvg() != null) {
-				target.setRating(source.getCustomerReviewAvg().doubleValue());
-			}
-
-			if (source.getCustomerReviewCount() != null) {
-				target.setRatingCount(source.getCustomerReviewCount().intValue());
-			}
-
 			if (source.getDelivery() != null) {
 				Address address = new Address();
 				address.setAddress(source.getDelivery().getAddressLine1());
@@ -71,9 +61,6 @@ public class PersistableCustomerPopulator extends
 
 			target.setUuid(source.getUuid());
 			target.setEmailAddress(source.getEmail());
-			if (source.getGender() != null) {
-				target.setGender(source.getGender().name());
-			}
 			if (source.getDefaultLanguage() != null) {
 				target.setLanguage(source.getDefaultLanguage().getIso());
 			}

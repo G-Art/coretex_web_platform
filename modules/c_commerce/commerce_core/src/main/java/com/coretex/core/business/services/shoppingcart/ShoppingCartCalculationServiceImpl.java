@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.order.OrderServiceImpl;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.core.model.order.OrderTotalSummary;
 
 /**

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
 import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.core.model.shipping.ShippingProduct;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;

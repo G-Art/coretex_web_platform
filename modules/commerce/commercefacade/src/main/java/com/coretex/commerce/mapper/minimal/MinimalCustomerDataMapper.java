@@ -4,9 +4,9 @@ import com.coretex.commerce.data.minimal.MinimalCustomerData;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.LocaleDataMapper;
 import com.coretex.commerce.mapper.ReferenceMapper;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.cx_core.StoreItem;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring",
@@ -14,8 +14,8 @@ import org.mapstruct.Mapper;
 				LocaleDataMapper.class})
 public interface MinimalCustomerDataMapper extends GenericDataMapper<CustomerItem, MinimalCustomerData> {
 
-	default String mapStore(MerchantStoreItem value) {
-		return value.getStoreName();
+	default String mapStore(StoreItem value) {
+		return value.getName();
 	}
 
 	default String mapStore(GroupItem value) {

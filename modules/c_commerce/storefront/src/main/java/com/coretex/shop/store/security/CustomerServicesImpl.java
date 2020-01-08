@@ -1,20 +1,16 @@
 package com.coretex.shop.store.security;
 
-import java.util.Collection;
-
-import javax.annotation.Resource;
-
+import com.coretex.core.business.services.user.GroupService;
+import com.coretex.core.business.services.user.PermissionService;
+import com.coretex.items.cx_core.CustomerItem;
+import com.coretex.shop.store.security.user.CustomerDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.coretex.core.business.services.customer.CustomerService;
-import com.coretex.core.business.services.user.GroupService;
-import com.coretex.core.business.services.user.PermissionService;
-import com.coretex.items.commerce_core_model.CustomerItem;
-import com.coretex.shop.store.security.user.CustomerDetails;
+import java.util.Collection;
 
 
 /**
@@ -27,14 +23,11 @@ public class CustomerServicesImpl extends AbstractCustomerServices {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerServicesImpl.class);
 
-
-	private CustomerService customerService;
 	private PermissionService permissionService;
 	private GroupService groupService;
 
-	public CustomerServicesImpl(CustomerService customerService, PermissionService permissionService, GroupService groupService) {
-		super(customerService, permissionService, groupService);
-		this.customerService = customerService;
+	public CustomerServicesImpl(PermissionService permissionService, GroupService groupService) {
+		super(permissionService, groupService);
 		this.permissionService = permissionService;
 		this.groupService = groupService;
 	}

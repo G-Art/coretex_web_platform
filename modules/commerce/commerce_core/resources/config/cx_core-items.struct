@@ -96,6 +96,40 @@ elements {
             }
         }
 
+
+        Principle(abstract: true) {
+            attributes {
+                password(String)
+                email(String)
+                firstName(String)
+                lastName(String)
+                language('Locale')
+                active(Boolean) {
+                    defaultValue = true
+                }
+                store(Store)
+            }
+        }
+
+        User (extend: Principle) {
+            attributes {
+                login(String)
+                lastAccess(Date)
+                loginTime(Date)
+            }
+        }
+
+        Customer (extend: Principle) {
+            attributes {
+                dateOfBirth(Date)
+                anonymous(Boolean){
+                    defaultValue = false
+                }
+                defaultLanguage('Locale')
+                billing(Address)
+                delivery(Address)
+            }
+        }
     }
 
     enums {

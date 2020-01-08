@@ -1,11 +1,10 @@
 
 package com.coretex.shop.store.controller.customer.facade;
 
-import com.coretex.core.business.services.customer.CustomerService;
-import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.shop.model.customer.CustomerEntity;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.customer.ReadableCustomer;
@@ -13,16 +12,6 @@ import com.coretex.shop.model.customer.address.Address;
 
 import java.util.UUID;
 
-/**
- * <p>CustomerItem facade working as a bridge between {@link CustomerService} and Controller
- * It will take care about interacting with Service API and doing any pre and post processing
- * </p>
- *
- * @author Umesh Awasthi
- * @version 2.2.1
- *
- *
- */
 public interface CustomerFacade {
 
 	/**

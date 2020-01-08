@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import org.springframework.validation.BindingResult;

@@ -5,6 +5,8 @@ import com.coretex.commerce.config.security.AuthResponse;
 import com.coretex.commerce.config.security.JWTUtil;
 import com.coretex.commerce.config.security.PBKDF2Encoder;
 import com.coretex.commerce.config.security.service.JWTUserService;
+import com.coretex.commerce.data.requests.RegisterRequest;
+import com.coretex.commerce.facades.CustomerFacade;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,9 @@ public class AuthenticationController {
 	@Resource
 	private JWTUserService userRepository;
 
+	@Resource
+	private CustomerFacade customerFacade;
+
 	@Value("${jwt.jjwt.expiration}")
 	private String expirationTime;
 
@@ -47,6 +52,19 @@ public class AuthenticationController {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			}
 		}).defaultIfEmpty(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+	}
+
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public Mono<ResponseEntity<?>> register(@RequestBody RegisterRequest rr, ServerHttpRequest request) {
+		rr.setEncoder(passwordEncoder::encode);
+		var register = customerFacade.register(rr);
+		if (!register.isHasErrors()) {
+			var authRequest = new AuthRequest();
+			authRequest.setName(rr.getEmail());
+			authRequest.setPassword(rr.getPassword());
+			return login(new AuthRequest(), request);
+		}
+		return Mono.fromSupplier(() -> ResponseEntity.ok().body(register));
 	}
 
 	public HttpHeaders generateCookieHeader(String jwt, ServerHttpRequest request) {

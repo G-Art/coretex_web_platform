@@ -24,7 +24,24 @@
     },
     "register": {
       "title": "Registration",
-      "button": "Sign Up"
+      "button": "Sign Up",
+      "fields": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm password"
+      },
+      "errors": {
+        "500": "Something went wrong, try again later",
+        "firstName.required": "First name is required",
+        "lastName.required": "Last name is required",
+        "email.required": "Email is required",
+        "password.required": "Password is required",
+        "password.minlength": "Password must be at least {{count}} characters",
+        "confirmPassword.required": "Confirm password is required",
+        "confirmPassword.notEqual": "Password mismatch"
+      }
     }
   }
 }

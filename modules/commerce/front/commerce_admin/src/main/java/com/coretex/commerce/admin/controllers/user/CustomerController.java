@@ -4,7 +4,7 @@ import com.coretex.commerce.admin.controllers.PageableDataTableAbstractControlle
 import com.coretex.commerce.data.minimal.MinimalCustomerData;
 import com.coretex.commerce.facades.CustomerFacade;
 import com.coretex.commerce.facades.PageableDataTableFacade;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

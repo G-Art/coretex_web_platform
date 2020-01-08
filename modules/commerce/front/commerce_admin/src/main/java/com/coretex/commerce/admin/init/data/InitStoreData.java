@@ -2,12 +2,13 @@ package com.coretex.commerce.admin.init.data;
 
 
 import com.coretex.commerce.admin.Constants;
+import com.coretex.commerce.core.services.CustomerService;
+import com.coretex.commerce.core.services.StoreService;
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.catalog.product.image.ProductImageService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
-import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
@@ -17,12 +18,10 @@ import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.user.GroupService;
 import com.coretex.core.model.content.FileContentType;
 import com.coretex.core.model.content.ImageContentFile;
-import com.coretex.enums.commerce_core_model.CustomerGenderEnum;
 import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.items.commerce_core_model.BillingItem;
 import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
@@ -38,6 +37,7 @@ import com.coretex.items.commerce_core_model.ProductPriceItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.CurrencyItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.cx_core.ZoneItem;
 import org.apache.commons.io.IOUtils;
@@ -104,6 +104,9 @@ public class InitStoreData implements InitData {
 	@Resource
 	protected GroupService groupService;
 
+	@Resource
+	private StoreService storeService;
+
 	public void initInitialData()  {
 
 
@@ -119,6 +122,7 @@ public class InitStoreData implements InitData {
 
 		//create a merchant
 		MerchantStoreItem store = merchantService.getByCode(DEFAULT_STORE);
+		var s = storeService.getByCode(DEFAULT_STORE);
 
 		CategoryItem book = new CategoryItem();
 		book.setMerchantStore(store);
@@ -554,17 +558,14 @@ public class InitStoreData implements InitData {
 		//Create a customer (user name[nick] : shopizer password : password)
 
 		CustomerItem customer = new CustomerItem();
-		customer.setMerchantStore(store);
+		customer.setStore(s);
 		customer.setEmail("test@shopizer.com");
 		customer.setFirstName("Leonardo");
 		customer.setLastName("DiCaprio");
-		customer.setGender(CustomerGenderEnum.MALE);
 		customer.setAnonymous(false);
-		customer.setCompany("CSTI Consulting");
 		customer.setDateOfBirth(new Date());
 
 		customer.setDefaultLanguage(en);
-		customer.setLogin("shopizer");
 
 		String password = passwordEncoder.encode("password");
 		customer.setPassword(password);

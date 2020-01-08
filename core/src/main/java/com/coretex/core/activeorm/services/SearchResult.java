@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class SearchResult<T> extends ReactiveSearchResult<T> {
 	}
 
 	protected void sureDataLoaded(){
-		if(CollectionUtils.isEmpty(this.result)){
+		if(Objects.isNull(this.result)){
 			List<T> result = Collections.emptyList();
 			try{
 				var timer = Stopwatch.createStarted();

@@ -1,10 +1,7 @@
 package com.coretex.core.business.repositories.user;
 
 import com.coretex.core.activeorm.dao.DefaultGenericDao;
-
-import com.coretex.core.model.common.Criteria;
-import com.coretex.core.model.common.GenericEntityList;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,13 +17,13 @@ public class UserDaoImpl extends DefaultGenericDao<UserItem> implements UserDao 
 
 	@Override
 	public UserItem findByUserName(String userName) {
-		return findSingle(Map.of(UserItem.ADMIN_NAME, userName), true);
+		return findSingle(Map.of(UserItem.LOGIN, userName), true);
 	}
 
 	@Override
 	public UserItem findByCredentials(String loginOrEmail) {
 		String query = "SELECT u.* FROM " + UserItem.ITEM_TYPE +" AS u " +
-				"WHERE u."+UserItem.ADMIN_NAME+" = :login OR u."+UserItem.EMAIL+" = :email";
+				"WHERE u."+UserItem.LOGIN+" = :login OR u."+UserItem.EMAIL+" = :email";
 		var result = getSearchService().<UserItem>search(query, Map.of("login", loginOrEmail, "email", loginOrEmail)).getResult();
 		if(result.isEmpty()){
 			return null;
@@ -46,7 +43,7 @@ public class UserDaoImpl extends DefaultGenericDao<UserItem> implements UserDao 
 
 	@Override
 	public List<UserItem> findByStore(UUID storeId) {
-		return find(Map.of(UserItem.MERCHANT_STORE, storeId));
+		return find(Map.of(UserItem.STORE, storeId));
 	}
 
 	@Override

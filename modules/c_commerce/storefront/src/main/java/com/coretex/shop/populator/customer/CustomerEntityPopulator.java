@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.shop.model.customer.CustomerEntity;
 import com.coretex.shop.model.customer.address.Address;
 
@@ -56,14 +56,6 @@ public class CustomerEntityPopulator
 				address.setStateProvince(source.getBilling().getState());
 
 				target.setBilling(address);
-			}
-
-			if (source.getCustomerReviewAvg() != null) {
-				target.setRating(source.getCustomerReviewAvg().doubleValue());
-			}
-
-			if (source.getCustomerReviewCount() != null) {
-				target.setRatingCount(source.getCustomerReviewCount().intValue());
 			}
 
 			if (source.getDelivery() != null) {

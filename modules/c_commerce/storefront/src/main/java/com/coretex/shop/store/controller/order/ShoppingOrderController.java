@@ -1,36 +1,31 @@
 package com.coretex.shop.store.controller.order;
 
 import com.coretex.core.activeorm.services.ItemService;
-
 import com.coretex.core.business.repositories.area.CityDao;
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
-import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.shipping.DeliveryService;
 import com.coretex.core.business.services.shipping.ShippingService;
-import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
 import com.coretex.core.model.order.OrderTotalSummary;
 import com.coretex.core.model.shipping.ShippingMetaData;
 import com.coretex.core.model.shipping.ShippingOption;
 import com.coretex.core.model.shipping.ShippingSummary;
-import com.coretex.items.commerce_core_model.BillingItem;
 import com.coretex.items.commerce_core_model.CityItem;
-import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.DeliveryServiceItem;
-import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
-import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.items.core.CountryItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.newpost.NewPostDeliveryServiceItem;
 import com.coretex.newpost.api.NewPostApiService;
 import com.coretex.newpost.dao.NewPostDeliveryTypeDao;
@@ -38,7 +33,6 @@ import com.coretex.newpost.data.NewPostDeliveryServiceData;
 import com.coretex.newpost.facades.NewPostFacade;
 import com.coretex.newpost.populators.NewPostDeliveryServiceDataPopulator;
 import com.coretex.shop.constants.Constants;
-import com.coretex.shop.model.customer.AnonymousCustomer;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.order.ReadableShopOrder;
 import com.coretex.shop.model.order.ShopOrder;
@@ -110,9 +104,6 @@ public class ShoppingOrderController extends AbstractController {
 
 	@Resource
 	private ShoppingCartFacade shoppingCartFacade;
-
-	@Resource
-	private CustomerService customerService;
 
 	@Resource
 	private ShippingService shippingService;
@@ -243,25 +234,6 @@ public class ShoppingOrderController extends AbstractController {
 			}
 		} else {
 			customer = orderFacade.initEmptyCustomer(store);
-			AnonymousCustomer anonymousCustomer = (AnonymousCustomer) request.getAttribute(Constants.ANONYMOUS_CUSTOMER);
-			if (anonymousCustomer != null && anonymousCustomer.getBilling() != null) {
-				BillingItem billing = customer.getBilling();
-				billing.setCity(anonymousCustomer.getBilling().getCity());
-				Map<String, CountryItem> countriesMap = countryService.getCountriesMap(language);
-				CountryItem anonymousCountry = countriesMap.get(anonymousCustomer.getBilling().getCountry());
-				if (anonymousCountry != null) {
-					billing.setCountry(anonymousCountry);
-				}
-				Map<String, ZoneItem> zonesMap = zoneService.getZones(language);
-				ZoneItem anonymousZone = zonesMap.get(anonymousCustomer.getBilling().getZone());
-				if (anonymousZone != null) {
-					billing.setZone(anonymousZone);
-				}
-				if (anonymousCustomer.getBilling().getPostalCode() != null) {
-					billing.setPostalCode(anonymousCustomer.getBilling().getPostalCode());
-				}
-				customer.setBilling(billing);
-			}
 		}
 
 
@@ -380,18 +352,8 @@ public class ShoppingOrderController extends AbstractController {
 
 		}
 
-		CustomerItem modelCustomer = customerService.getByEmail(order.getEmail());
 		if (authCustomer == null) {//not authenticated, create a new volatile user
 
-			if (Objects.isNull(modelCustomer)) {
-				modelCustomer = orderFacade.initEmptyCustomer(store);
-				customerFacade.setCustomerModelDefaultProperties(modelCustomer, store);
-			}
-			userName = modelCustomer.getFirstName();
-			LOGGER.debug("About to persist volatile customer to database.");
-			modelCustomer.setEmail(order.getEmail());
-			modelCustomer.setAnonymous(true);
-			modelCustomer.setLogin(order.getEmail());
 
 			var deliveryItem = new DeliveryItem();
 			deliveryItem.setCity(order.getCityCode().toString());
@@ -399,9 +361,6 @@ public class ShoppingOrderController extends AbstractController {
 			deliveryItem.setCountry(store.getCountry());
 			deliveryItem.setFirstName(order.getUserName());
 
-			modelCustomer.setDelivery(deliveryItem);
-
-			customerService.saveOrUpdate(modelCustomer);
 //			} else {//use existing customer
 //				modelCustomer = customerFacade.populateCustomerModel(authCustomer, customer, store, language);
 //			}
@@ -410,7 +369,6 @@ public class ShoppingOrderController extends AbstractController {
 
 		OrderItem modelOrder = null;
 
-		modelOrder = orderFacade.processOrder(order, modelCustomer, store, language);
 
 		//save order id in session
 		super.setSessionAttribute(Constants.ORDER_ID, modelOrder.getUuid(), request);
@@ -435,25 +393,7 @@ public class ShoppingOrderController extends AbstractController {
 		super.removeAttribute(Constants.SHIPPING_SUMMARY, request);
 		super.removeAttribute(Constants.SHOPPING_CART, request);
 
-
-		try {
-
-
-			//send order confirmation email to customer
-			emailTemplatesUtils.sendOrderEmail(modelCustomer.getEmail(), modelCustomer, modelOrder, locale, language, store, request.getContextPath());
-
-
-			//send order confirmation email to merchant
-			emailTemplatesUtils.sendOrderEmail(store.getStoreEmailAddress(), modelCustomer, modelOrder, locale, language, store, request.getContextPath());
-
-
-		} catch (Exception e) {
-			LOGGER.error("Error while post processing order", e);
-		}
-
-
 		return modelOrder;
-
 
 	}
 
@@ -636,28 +576,6 @@ public class ShoppingOrderController extends AbstractController {
 		CustomerItem customer = getSessionService().getSessionAttribute(Constants.CUSTOMER, CustomerItem.class);
 		String shoppingCartCode = getSessionAttribute(Constants.SHOPPING_CART, request);
 
-		if (isNull(customer)) {
-			customer = orderFacade.initEmptyCustomer(store);
-			AnonymousCustomer anonymousCustomer = (AnonymousCustomer) request.getAttribute(Constants.ANONYMOUS_CUSTOMER);
-			if (anonymousCustomer != null && anonymousCustomer.getBilling() != null) {
-				BillingItem billing = customer.getBilling();
-				billing.setCity(anonymousCustomer.getBilling().getCity());
-				Map<String, CountryItem> countriesMap = countryService.getCountriesMap(language);
-				CountryItem anonymousCountry = countriesMap.get(anonymousCustomer.getBilling().getCountry());
-				if (anonymousCountry != null) {
-					billing.setCountry(anonymousCountry);
-				}
-				Map<String, ZoneItem> zonesMap = zoneService.getZones(language);
-				ZoneItem anonymousZone = zonesMap.get(anonymousCustomer.getBilling().getZone());
-				if (anonymousZone != null) {
-					billing.setZone(anonymousZone);
-				}
-				if (anonymousCustomer.getBilling().getPostalCode() != null) {
-					billing.setPostalCode(anonymousCustomer.getBilling().getPostalCode());
-				}
-				customer.setBilling(billing);
-			}
-		}
 
 		Validate.notNull(shoppingCartCode, "shoppingCartCode does not exist in the session");
 

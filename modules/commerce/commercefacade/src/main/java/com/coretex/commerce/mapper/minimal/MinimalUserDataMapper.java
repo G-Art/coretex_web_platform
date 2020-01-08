@@ -5,21 +5,17 @@ import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.LocaleDataMapper;
 import com.coretex.commerce.mapper.ReferenceMapper;
 import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.UserItem;
-import org.mapstruct.InheritConfiguration;
+import com.coretex.items.cx_core.StoreItem;
+import com.coretex.items.cx_core.UserItem;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring",
 		uses = {ReferenceMapper.class,
 				LocaleDataMapper.class})
 public interface MinimalUserDataMapper extends GenericDataMapper<UserItem, MinimalUserData> {
 
-	default String mapStore(MerchantStoreItem value) {
-		return value.getStoreName();
+	default String mapStore(StoreItem value) {
+		return value.getName();
 	}
 
 	default String mapStore(GroupItem value) {

@@ -15,7 +15,6 @@ public class JWTUser implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 	private final UUID id;
-	private final String username;
 	private final String firstname;
 	private final String lastname;
 	private final String password;
@@ -26,7 +25,6 @@ public class JWTUser implements UserDetails {
 
 	public JWTUser(
 			UUID id,
-			String username,
 			String firstname,
 			String lastname,
 			String email,
@@ -36,7 +34,6 @@ public class JWTUser implements UserDetails {
 			LocalDateTime lastPasswordResetDate
 	) {
 		this.id = id;
-		this.username = username;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.email = email;
@@ -49,11 +46,6 @@ public class JWTUser implements UserDetails {
 	@JsonIgnore
 	public UUID getId() {
 		return id;
-	}
-
-	@Override
-	public String getUsername() {
-		return username;
 	}
 
 	@JsonIgnore
@@ -90,6 +82,11 @@ public class JWTUser implements UserDetails {
 	@Override
 	public String getPassword() {
 		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return email;
 	}
 
 	@Override

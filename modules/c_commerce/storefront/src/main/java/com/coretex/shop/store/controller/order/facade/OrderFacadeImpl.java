@@ -2,11 +2,9 @@ package com.coretex.shop.store.controller.order.facade;
 
 import com.coretex.core.business.constants.Constants;
 import com.coretex.core.business.exception.ConversionException;
-
 import com.coretex.core.business.services.catalog.product.PricingService;
 import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
-import com.coretex.core.business.services.customer.CustomerService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.currency.CurrencyService;
@@ -24,9 +22,7 @@ import com.coretex.core.model.shipping.ShippingQuote;
 import com.coretex.core.model.shipping.ShippingSummary;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.items.commerce_core_model.BillingItem;
-import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
-import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
@@ -37,6 +33,8 @@ import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.core.CountryItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.customer.ReadableCustomer;
 import com.coretex.shop.model.order.OrderEntity;
@@ -98,8 +96,6 @@ public class OrderFacadeImpl implements OrderFacade {
 	private ProductAttributeService productAttributeService;
 	@Resource
 	private ShoppingCartService shoppingCartService;
-	@Resource
-	private CustomerService customerService;
 	@Resource
 	private ShippingService shippingService;
 	@Resource
@@ -276,8 +272,6 @@ public class OrderFacadeImpl implements OrderFacade {
 
 		OrderItem modelOrder = new OrderItem();
 		modelOrder.setDatePurchased(new Date());
-		modelOrder.setBilling(customer.getBilling());
-		modelOrder.setDelivery(customer.getDelivery());
 		modelOrder.setCustomerAgreement(order.isCustomerAgreed());
 		modelOrder.setLocale(LocaleUtils.getLocale(store).toString());//set the store locale based on the country for order $ formatting
 
@@ -367,14 +361,9 @@ public class OrderFacadeImpl implements OrderFacade {
 	}
 
 	private void orderCustomer(CustomerItem customer, OrderItem order, LocaleItem language) {
-
 		//populate customer
-		order.setBilling(customer.getBilling());
-		order.setDelivery(customer.getDelivery());
 		order.setCustomerEmailAddress(customer.getEmail());
 		order.setCustomerId(customer.getUuid());
-
-
 	}
 
 
@@ -674,7 +663,6 @@ public class OrderFacadeImpl implements OrderFacade {
 
 		PersistableOrderApiPopulator populator = new PersistableOrderApiPopulator();
 		populator.setCurrencyService(currencyService);
-		populator.setCustomerService(customerService);
 		populator.setProductAttributeService(productAttributeService);
 		populator.setProductService(productService);
 		populator.setShoppingCartService(shoppingCartService);

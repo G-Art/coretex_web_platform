@@ -15,7 +15,7 @@ import com.coretex.items.core.CountryItem;
 import com.coretex.items.cx_core.CurrencyItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.ZoneItem;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 import com.coretex.shop.admin.controller.ControllerConstants;
 import com.coretex.shop.admin.model.reference.Size;
 import com.coretex.shop.admin.model.reference.Weight;

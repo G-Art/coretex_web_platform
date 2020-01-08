@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.user.UserService;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.UserItem;
 import com.coretex.shop.constants.Constants;
 
 

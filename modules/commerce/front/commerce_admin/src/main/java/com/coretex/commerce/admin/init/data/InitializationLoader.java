@@ -2,6 +2,7 @@ package com.coretex.commerce.admin.init.data;
 
 import com.coretex.commerce.admin.init.permission.Permissions;
 import com.coretex.commerce.admin.init.permission.ShopPermission;
+import com.coretex.commerce.core.services.StoreService;
 import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.core.business.constants.Constants;
 import com.coretex.core.business.constants.SystemConstants;
@@ -18,7 +19,8 @@ import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.PermissionItem;
 import com.coretex.items.commerce_core_model.SystemConfigurationItem;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.StoreItem;
+import com.coretex.items.cx_core.UserItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
@@ -86,6 +88,9 @@ public class InitializationLoader {
 
 	@Resource
 	protected MerchantStoreService merchantService;
+
+	@Resource
+	private StoreService storeService;
 
 	@Resource
 	private ObjectMapper jacksonObjectMapper;
@@ -193,12 +198,14 @@ public class InitializationLoader {
 
 		MerchantStoreItem store = merchantService.getByCode(com.coretex.core.business.constants.Constants.DEFAULT_STORE);
 
+		var s = storeService.getByCode(com.coretex.core.business.constants.Constants.DEFAULT_STORE);
+
 		String password = passwordEncoder.encode(DEFAULT_INITIAL_PASSWORD);
 
 		List<GroupItem> groups = groupService.listGroup(GroupTypeEnum.ADMIN);
 
 		UserItem user = new UserItem();
-		user.setAdminName("admin");
+		user.setLogin("admin");
 		user.setPassword(password);
 		user.setEmail("admin@coretex.com");
 		user.setFirstName("Artem");
@@ -206,20 +213,20 @@ public class InitializationLoader {
 		user.setActive(true);
 
 		for (GroupItem group : groups) {
-			if (group.getGroupName().equals(com.coretex.commerce.admin.Constants.GROUP_SUPERADMIN) ||
-					group.getGroupName().equals(com.coretex.commerce.admin.Constants.GROUP_ADMIN)) {
+			if (group.getGroupName().equals(com.coretex.commerce.admin.Constants.GROUP_SUPERADMIN)
+					|| group.getGroupName().equals(com.coretex.commerce.admin.Constants.GROUP_ADMIN)) {
 				user.getGroups().add(group);
 			}
 		}
 
-		user.setMerchantStore(store);
+		user.setStore(s);
 		itemService.save(user);
 
-		creteAdmins(store);
+		creteAdmins(s);
 
 	}
 
-	private void creteAdmins(MerchantStoreItem store) {
+	private void creteAdmins(StoreItem store) {
 		org.springframework.core.io.Resource permissionXML = resourceLoader.getResource("classpath:/permission/admins.json");
 
 		try {
@@ -230,7 +237,7 @@ public class InitializationLoader {
 			String password = passwordEncoder.encode(DEFAULT_ADMIN_INITIAL_PASSWORD);
 			employee.forEach(map -> {
 				UserItem user = new UserItem();
-				user.setAdminName((String) map.get("name"));
+				user.setLogin((String) map.get("name"));
 				user.setPassword(password);
 				user.setEmail((String) map.get("email"));
 				user.setFirstName((String) map.get("firstName"));
@@ -241,7 +248,7 @@ public class InitializationLoader {
 						user.getGroups().add(group);
 					}
 				}
-				user.setMerchantStore(store);
+				user.setStore(store);
 				itemService.save(user);
 			});
 

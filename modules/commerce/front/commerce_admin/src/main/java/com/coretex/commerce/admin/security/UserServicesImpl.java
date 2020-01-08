@@ -1,6 +1,7 @@
 package com.coretex.commerce.admin.security;
 
 import com.coretex.commerce.admin.Constants;
+import com.coretex.commerce.core.services.StoreService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.user.GroupService;
 import com.coretex.core.business.services.user.UserService;
@@ -8,7 +9,8 @@ import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.PermissionItem;
-import com.coretex.items.commerce_core_model.UserItem;
+import com.coretex.items.cx_core.StoreItem;
+import com.coretex.items.cx_core.UserItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +46,9 @@ public class UserServicesImpl implements WebUserServices {
 
 	@Resource
 	private MerchantStoreService merchantService;
+
+	@Resource
+	private StoreService storeService;
 
 	@Resource
 	@Qualifier("passwordEncoder")
@@ -114,12 +119,14 @@ public class UserServicesImpl implements WebUserServices {
 
 		MerchantStoreItem store = merchantService.getByCode(com.coretex.core.business.constants.Constants.DEFAULT_STORE);
 
+		var s = storeService.getByCode(com.coretex.core.business.constants.Constants.DEFAULT_STORE);
+
 		String password = passwordEncoder.encode(DEFAULT_INITIAL_PASSWORD);
 
 		List<GroupItem> groups = groupService.listGroup(GroupTypeEnum.ADMIN);
 
 		UserItem user = new UserItem();
-		user.setAdminName("admin");
+		user.setLogin("admin");
 		user.setPassword(password);
 		user.setEmail("admin@coretex.com");
 		user.setFirstName("Administrator");
@@ -127,19 +134,20 @@ public class UserServicesImpl implements WebUserServices {
 		user.setActive(true);
 
 		for (GroupItem group : groups) {
-			if (group.getGroupName().equals(Constants.GROUP_SUPERADMIN) || group.getGroupName().equals(Constants.GROUP_ADMIN)) {
+			if (group.getGroupName().equals(Constants.GROUP_SUPERADMIN)
+					|| group.getGroupName().equals(Constants.GROUP_ADMIN)) {
 				user.getGroups().add(group);
 			}
 		}
 
-		user.setMerchantStore(store);
+		user.setStore(s);
 		userService.create(user);
 
-		creteAdmins(store);
+		creteAdmins(s);
 
 	}
 
-	private void creteAdmins(MerchantStoreItem store) {
+	private void creteAdmins(StoreItem store) {
 		org.springframework.core.io.Resource permissionXML = resourceLoader.getResource("classpath:/permission/admins.json");
 
 		try {
@@ -150,7 +158,7 @@ public class UserServicesImpl implements WebUserServices {
 			String password = passwordEncoder.encode(DEFAULT_ADMIN_INITIAL_PASSWORD);
 			employee.forEach(map -> {
 				UserItem user = new UserItem();
-				user.setAdminName((String) map.get("name"));
+				user.setLogin((String) map.get("name"));
 				user.setPassword(password);
 				user.setEmail((String) map.get("email"));
 				user.setFirstName((String) map.get("firstName"));
@@ -161,7 +169,7 @@ public class UserServicesImpl implements WebUserServices {
 						user.getGroups().add(group);
 					}
 				}
-				user.setMerchantStore(store);
+				user.setStore(store);
 				userService.save(user);
 			});
 

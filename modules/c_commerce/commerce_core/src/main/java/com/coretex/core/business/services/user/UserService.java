@@ -1,14 +1,11 @@
 package com.coretex.core.business.services.user;
 
+import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.cx_core.UserItem;
+
 import java.util.List;
 import java.util.UUID;
-
-
-import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
-import com.coretex.core.model.common.Criteria;
-import com.coretex.core.model.common.GenericEntityList;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.UserItem;
 
 
 public interface UserService extends SalesManagerEntityService<UserItem> {

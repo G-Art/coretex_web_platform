@@ -2,8 +2,8 @@ package com.coretex.commerce.config.security.service;
 
 import com.coretex.commerce.config.security.user.JWTRole;
 import com.coretex.commerce.config.security.user.JWTUser;
-import com.coretex.core.business.services.customer.CustomerService;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.commerce.core.services.CustomerService;
+import com.coretex.items.cx_core.CustomerItem;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -23,7 +23,6 @@ public class JWTUserService {
 
 	private JWTUser toJwtUser(CustomerItem userItem) {
 		return new JWTUser(userItem.getUuid(),
-				userItem.getLogin(),
 				userItem.getFirstName(),
 				userItem.getLastName(),
 				userItem.getEmail(),

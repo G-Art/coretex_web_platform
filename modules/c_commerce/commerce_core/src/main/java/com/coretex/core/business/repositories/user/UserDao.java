@@ -1,10 +1,10 @@
 package com.coretex.core.business.repositories.user;
 
+import com.coretex.core.activeorm.dao.Dao;
+import com.coretex.items.cx_core.UserItem;
+
 import java.util.List;
 import java.util.UUID;
-
-import com.coretex.items.commerce_core_model.UserItem;
-import com.coretex.core.activeorm.dao.Dao;
 
 public interface UserDao extends Dao<UserItem>{
 

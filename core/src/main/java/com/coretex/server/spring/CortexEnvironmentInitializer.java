@@ -1,14 +1,5 @@
 package com.coretex.server.spring;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Objects;
-import java.util.Properties;
-
 import com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor;
 import com.coretex.server.ApplicationContextProvider;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +10,14 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Properties;
 
 public class CortexEnvironmentInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext>{
 

@@ -3,7 +3,7 @@ package com.coretex.shop.store.controller.order;
 import com.coretex.core.business.services.content.ContentService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.model.content.FileContentType;
-import com.coretex.items.commerce_core_model.CustomerItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.shop.constants.Constants;

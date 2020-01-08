@@ -6,25 +6,26 @@ import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartCalculationService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
 import com.coretex.core.business.utils.ajax.AjaxResponse;
-import com.coretex.items.commerce_core_model.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.customer.SecuredCustomer;
 import com.coretex.shop.model.shoppingcart.ShoppingCartData;
 import com.coretex.shop.populator.shoppingCart.ShoppingCartDataPopulator;
 import com.coretex.shop.store.controller.AbstractController;
 import com.coretex.shop.store.controller.customer.facade.CustomerFacade;
-import com.coretex.shop.utils.ImageFilePath;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -90,7 +91,7 @@ public class CustomerLoginController extends AbstractController {
 				return jsonObject;
 			}
 
-			if (!customerModel.getMerchantStore().getCode().equals(storeCode)) {
+			if (!customerModel.getStore().getCode().equals(storeCode)) {
 				jsonObject.setStatus(AjaxResponse.RESPONSE_STATUS_FAIURE);
 				return jsonObject;
 			}
@@ -99,7 +100,7 @@ public class CustomerLoginController extends AbstractController {
 			//set customer in the http session
 			super.setSessionAttribute(Constants.CUSTOMER, customerModel, request);
 			jsonObject.setStatus(AjaxResponse.RESPONSE_STATUS_SUCCESS);
-			jsonObject.addEntry(Constants.RESPONSE_KEY_USERNAME, customerModel.getLogin());
+			jsonObject.addEntry(Constants.RESPONSE_KEY_USERNAME, customerModel.getEmail());
 
 
 			LOG.info("Fetching and merging Shopping Cart data");
@@ -146,7 +147,7 @@ public class CustomerLoginController extends AbstractController {
 			}
 
 			StringBuilder cookieValue = new StringBuilder();
-			cookieValue.append(store.getCode()).append("_").append(customerModel.getLogin());
+			cookieValue.append(store.getCode()).append("_").append(customerModel.getEmail());
 
 			//set username in the cookie
 			Cookie c = new Cookie(Constants.COOKIE_NAME_USER, cookieValue.toString());
