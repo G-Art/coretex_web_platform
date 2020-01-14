@@ -1,13 +1,15 @@
 package com.coretex.commerce.facades.impl;
 
+import com.coretex.commerce.core.services.CategoryService;
 import com.coretex.commerce.data.CategoryHierarchyData;
 import com.coretex.commerce.data.minimal.MinimalCategoryData;
+import com.coretex.commerce.data.minimal.MinimalCategoryHierarchyData;
 import com.coretex.commerce.facades.CategoryFacade;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.minimal.MinimalCategoryDataMapper;
 import com.coretex.commerce.core.services.PageableService;
-import com.coretex.core.business.services.catalog.category.CategoryService;
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.commerce.mapper.minimal.MinimalCategoryHierarchyDataMapper;
+import com.coretex.items.cx_core.CategoryItem;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class DefaultCategoryFacade implements CategoryFacade {
@@ -25,10 +28,12 @@ public class DefaultCategoryFacade implements CategoryFacade {
 	@Resource
 	private MinimalCategoryDataMapper minimalCategoryDataMapper;
 
+	@Resource
+	private MinimalCategoryHierarchyDataMapper minimalCategoryHierarchyDataMapper;
+
 	@Override
 	public List<CategoryHierarchyData> categoryHierarchyLeverByNodeUUID(UUID uuid) {
 		return categoryService.listByParent(uuid)
-				.stream()
 				.map(CategoryHierarchyData::new)
 				.collect(Collectors.toList());
 	}
@@ -48,6 +53,13 @@ public class DefaultCategoryFacade implements CategoryFacade {
 			cat.setParent(p);
 		}
 		categoryService.save(cat);
+	}
+
+	@Override
+	public Stream<MinimalCategoryHierarchyData> rootCategories() {
+		return categoryService
+				.listByRoot()
+				.map(minimalCategoryHierarchyDataMapper::fromItem);
 	}
 
 	@Override

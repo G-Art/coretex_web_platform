@@ -1,19 +1,18 @@
 package com.coretex.shop.store.controller.shoppingCart;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.cx_core.CustomerItem;
+import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
+import com.coretex.core.business.utils.ajax.AjaxResponse;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
+import com.coretex.shop.constants.Constants;
+import com.coretex.shop.model.shop.PageInformation;
+import com.coretex.shop.model.shoppingcart.ShoppingCartData;
+import com.coretex.shop.model.shoppingcart.ShoppingCartItem;
+import com.coretex.shop.store.controller.AbstractController;
+import com.coretex.shop.store.controller.ControllerConstants;
+import com.coretex.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
+import com.coretex.shop.utils.LabelUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,22 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
-import com.coretex.core.business.services.order.OrderService;
-import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
-import com.coretex.core.business.utils.ProductPriceUtils;
-import com.coretex.core.business.utils.ajax.AjaxResponse;
-import com.coretex.shop.constants.Constants;
-import com.coretex.shop.model.shop.PageInformation;
-import com.coretex.shop.model.shoppingcart.ShoppingCartData;
-import com.coretex.shop.model.shoppingcart.ShoppingCartItem;
-import com.coretex.shop.store.controller.AbstractController;
-import com.coretex.shop.store.controller.ControllerConstants;
-import com.coretex.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
-import com.coretex.shop.utils.LabelUtils;
-import com.coretex.shop.utils.LanguageUtils;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 
 /**
@@ -66,8 +57,6 @@ import com.coretex.shop.utils.LanguageUtils;
  *
  * @author Carl Samson
  * @author Umesh
- * @see javascript re-creates the shopping cart div item (div id shoppingcart) (see webapp\pages\shop\templates\bootstrap\sections\header.jsp)
- * The javascript set the shopping cart code in the cookie
  * <p>
  * Display a page
  * ----------------
@@ -90,33 +79,15 @@ import com.coretex.shop.utils.LanguageUtils;
 public class ShoppingCartController extends AbstractController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ShoppingCartController.class);
-	@Resource
-	private ProductService productService;
-
-	@Resource
-	private ProductAttributeService productAttributeService;
-
-	@Resource
-	private PricingService pricingService;
-
-	@Resource
-	private OrderService orderService;
 
 	@Resource
 	private ShoppingCartService shoppingCartService;
-
-	@Resource
-	private ProductPriceUtils productPriceUtils;
 
 	@Resource
 	private ShoppingCartFacade shoppingCartFacade;
 
 	@Resource
 	private LabelUtils messages;
-
-	@Resource
-	private LanguageUtils languageUtils;
-
 
 	/**
 	 * Add an item to the ShoppingCartItem (AJAX exposed method)
@@ -259,12 +230,12 @@ public class ShoppingCartController extends AbstractController {
 		List<ShoppingCartItem> items = shoppingCart.getShoppingCartItems();
 		for (ShoppingCartItem item : items) {
 			String code = item.getProductCode();
-			ProductItem p = productService.getByCode(code);
-			if (p.getAvailable() == null || !p.getAvailable()) {
-				unavailables.add(item);
-			} else {
+//			ProductItem p = productService.getByCode(code);
+//			if (p.getAvailable() == null || !p.getAvailable()) {
+//				unavailables.add(item);
+//			} else {
 				availables.add(item);
-			}
+//			}
 
 		}
 		shoppingCart.setShoppingCartItems(availables);
@@ -306,12 +277,12 @@ public class ShoppingCartController extends AbstractController {
 		List<ShoppingCartItem> items = cart.getShoppingCartItems();
 		for (ShoppingCartItem item : items) {
 			String code = item.getProductCode();
-			ProductItem p = productService.getByCode(code);
-			if (!p.getAvailable()) {
-				unavailables.add(item);
-			} else {
+//			ProductItem p = productService.getByCode(code);
+//			if (!p.getAvailable()) {
+//				unavailables.add(item);
+//			} else {
 				availables.add(item);
-			}
+//			}
 
 		}
 		cart.setShoppingCartItems(availables);

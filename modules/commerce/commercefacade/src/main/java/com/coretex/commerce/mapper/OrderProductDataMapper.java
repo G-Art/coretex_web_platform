@@ -1,10 +1,10 @@
 package com.coretex.commerce.mapper;
 
+import com.coretex.commerce.core.services.ProductService;
 import com.coretex.commerce.data.OrderProductData;
 import com.coretex.commerce.data.ProductData;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.items.commerce_core_model.OrderProductItem;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

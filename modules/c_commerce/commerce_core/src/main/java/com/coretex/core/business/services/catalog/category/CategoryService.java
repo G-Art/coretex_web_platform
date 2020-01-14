@@ -2,13 +2,14 @@ package com.coretex.core.business.services.catalog.category;
 
 
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public interface CategoryService extends SalesManagerEntityService<CategoryItem> {
 
@@ -62,8 +63,11 @@ public interface CategoryService extends SalesManagerEntityService<CategoryItem>
 
 	CategoryItem getBySeUrl(MerchantStoreItem store, String seUrl);
 
-	List<CategoryItem> listByParent(CategoryItem category);
-	List<CategoryItem> listByParent(UUID categoryUuid);
+	Stream<CategoryItem> listByParent(CategoryItem category);
+
+	Stream<CategoryItem> listByRoot();
+
+	Stream<CategoryItem> listByParent(UUID categoryUuid);
 
 	CategoryItem getOneByLanguage(UUID categoryId, LocaleItem language);
 

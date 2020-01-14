@@ -53,27 +53,6 @@ elements {
             }
         }
 
-        CategoryCategoryRelation(source: 'Category', target: 'Category') {
-            source(categories) {
-                description = "Categories"
-                containerType = List
-            }
-            target(parent) {
-                description = "Parent category"
-            }
-        }
-
-        CategoryProductRelation(source: 'Category', target: Product) {
-            source(products) {
-                description = "Products"
-                containerType = List
-            }
-            target(categories) {
-                description = "Parent category"
-                containerType = Set
-            }
-        }
-
         ProductProductAttributeRelation(source: Product, target: ProductAttribute) {
             source('attributes') {
                 description = "Attributes"
@@ -430,49 +409,6 @@ elements {
             }
         }
 
-        Category {
-            attributes {
-                code(String){
-                    unique = true
-                    optional = false
-                }
-                categoryHighlight(String){
-                    localized = true
-                }
-                seUrl(String)
-                metatagTitle(String){
-                    localized = true
-                }
-                metatagKeywords(String){
-                    localized = true
-                }
-                metatagDescription(String){
-                    localized = true
-                }
-                name(String){
-                    localized = true
-                }
-                title(String){
-                    localized = true
-                }
-                description(String){
-                    localized = true
-                }
-                featured(Boolean){
-                    defaultValue = false
-                }
-                sortOrder(Integer)
-                categoryImage(String)
-                categoryStatus(Boolean)
-                visible(Boolean){
-                    defaultValue = true
-                }
-                depth(Integer)
-                lineage(String)
-                merchantStore(MerchantStore)
-            }
-        }
-
         ProductAttribute {
             attributes {
                 attributePrice(String)
@@ -511,71 +447,6 @@ elements {
 
         Delivery(extend: Address, table: false) {
             attributes {
-            }
-        }
-
-        Product {
-            attributes {
-                sku(String){
-                    unique = true
-                    optional = false
-                }
-                name(String){
-                    localized = true
-                }
-                title(String){
-                    localized = true
-                }
-                description(String){
-                    localized = true
-                }
-                productHighlight(String){
-                    localized = true
-                }
-                productExternalDl(String){
-                    localized = true
-                }
-                seUrl(String)
-                metatagTitle(String){
-                    localized = true
-                }
-                metatagKeywords(String){
-                    localized = true
-                }
-                metatagDescription(String){
-                    localized = true
-                }
-                rentalPeriod(Integer)
-                rentalDuration(Integer)
-                productVirtual(Boolean){
-                    defaultValue = false
-                }
-                productLength(BigDecimal)
-                productWidth(BigDecimal)
-                productHeight(BigDecimal)
-                productWeight(BigDecimal)
-                productReviewAvg(BigDecimal)
-                productReviewCount(Integer)
-                productOrdered(Integer)
-                productIsFree(Boolean){
-                    defaultValue = false
-                }
-                dateAvailable(Date)
-                sortOrder(Integer)
-                available(Boolean){
-                    defaultValue = true
-                }
-                productShippable(Boolean){
-                    defaultValue = true
-                }
-                preOrder(Boolean){
-                    defaultValue = false
-                }
-                manufacturer(Manufacturer)
-                merchantStore(MerchantStore)
-                condition(ProductCondition)
-                rentalStatus(RentalStatus)
-                owner(Customer)
             }
         }
 

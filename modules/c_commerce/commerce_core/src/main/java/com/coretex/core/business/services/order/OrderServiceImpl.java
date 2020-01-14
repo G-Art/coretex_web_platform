@@ -4,7 +4,6 @@ import com.coretex.core.business.constants.Constants;
 import com.coretex.core.business.modules.order.InvoiceModule;
 import com.coretex.core.business.repositories.order.OrderDao;
 import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
 import com.coretex.core.model.order.OrderCriteria;
@@ -20,8 +19,6 @@ import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
-import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.core.LocaleItem;
@@ -57,9 +54,6 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 
 	@Resource
 	private PricingService pricingService;
-
-	@Resource
-	private ProductService productService;
 
 	private final OrderDao orderDao;
 
@@ -105,14 +99,6 @@ public class OrderServiceImpl extends SalesManagerEntityServiceImpl<OrderItem> i
 		Set<OrderProductItem> products = order.getOrderProducts();
 		for (OrderProductItem orderProduct : products) {
 			orderProduct.getProductQuantity();
-			ProductItem p = productService.getByCode(orderProduct.getSku());
-			for (ProductAvailabilityItem availability : p.getAvailabilities()) {
-				int qty = availability.getProductQuantity();
-
-				qty = qty - orderProduct.getProductQuantity();
-				availability.setProductQuantity(qty);
-			}
-			productService.save(p);
 		}
 
 

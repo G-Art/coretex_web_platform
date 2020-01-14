@@ -47,6 +47,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 
 		if(addWrapper(plainSelectScanner.get(), tableTransformationData, dataInjectionPoint.isUseSubtypes())){
 			PlainSelect wrapper = getTransformationHelper().clone(originalPlainSelect);
+			plainSelectScanner.get().setWrapped(true);
 			var orderByElements = originalPlainSelect.getOrderByElements();
 			Limit limit = originalPlainSelect.getLimit();
 			Offset offset = originalPlainSelect.getOffset();
@@ -71,7 +72,6 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 			wrapper.setOffset(offset);
 			wrapper.setOrderByElements(orderByElements);
 			wrapper.setWhere(null);
-			plainSelectScanner.get().setWrapped(true);
 			return wrapper;
 		} else {
 			return adjustInheritance(tableTransformationData, plainSelectScanner.get(), dataInjectionPoint.isUseSubtypes());

@@ -1,6 +1,6 @@
 package com.coretex.shop.admin.mapppers.dto;
 
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.shop.admin.data.CategoryDto;
 import com.coretex.shop.admin.mapppers.LocalizedFieldMapper;
 import org.mapstruct.InheritConfiguration;
@@ -17,10 +17,9 @@ public interface CategoryDtoMapper extends GenericDtoMapper<CategoryItem, Catego
 			@Mapping(target = "name", ignore = true),
 			@Mapping(target = "title", ignore = true),
 			@Mapping(target = "description", ignore = true),
-			@Mapping(target = "categoryHighlight", ignore = true),
-			@Mapping(target = "metatagTitle", ignore = true),
-			@Mapping(target = "metatagKeywords", ignore = true),
-			@Mapping(target = "metatagDescription", ignore = true)
+			@Mapping(target = "metaTitle", ignore = true),
+			@Mapping(target = "metaKeywords", ignore = true),
+			@Mapping(target = "metaDescription", ignore = true)
 	})
 	CategoryDto fromItem(CategoryItem categoryItem);
 
@@ -33,10 +32,9 @@ public interface CategoryDtoMapper extends GenericDtoMapper<CategoryItem, Catego
 			@Mapping(target = "name", ignore = true),
 			@Mapping(target = "title", ignore = true),
 			@Mapping(target = "description", ignore = true),
-			@Mapping(target = "categoryHighlight", ignore = true),
-			@Mapping(target = "metatagTitle", ignore = true),
-			@Mapping(target = "metatagKeywords", ignore = true),
-			@Mapping(target = "metatagDescription", ignore = true)
+			@Mapping(target = "metaTitle", ignore = true),
+			@Mapping(target = "metaKeywords", ignore = true),
+			@Mapping(target = "metaDescription", ignore = true)
 	})
 	CategoryItem toItem(CategoryDto source);
 

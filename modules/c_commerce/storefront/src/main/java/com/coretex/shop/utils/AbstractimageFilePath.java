@@ -3,7 +3,7 @@ package com.coretex.shop.utils;
 import com.coretex.core.model.content.FileContentType;
 import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.shop.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
@@ -93,7 +93,7 @@ public abstract class AbstractimageFilePath implements ImageFilePath {
 	 */
 	public String buildProductImageUtils(MerchantStoreItem store, ProductItem product, String imageName) {
 		return new StringBuilder().append(getBasePath()).append(Constants.PRODUCTS_URI).append(Constants.SLASH).append(store.getCode()).append(Constants.SLASH)
-				.append(product.getSku()).append(Constants.SLASH).append(Constants.SMALL_IMAGE).append(Constants.SLASH).append(imageName).toString();
+				.append(product.getCode()).append(Constants.SLASH).append(Constants.SMALL_IMAGE).append(Constants.SLASH).append(imageName).toString();
 	}
 
 	/**

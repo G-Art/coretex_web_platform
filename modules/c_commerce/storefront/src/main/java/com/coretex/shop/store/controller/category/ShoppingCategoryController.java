@@ -2,17 +2,15 @@ package com.coretex.shop.store.controller.category;
 
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.utils.CacheUtils;
-import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.core.model.catalog.product.ProductCriteria;
-import com.coretex.items.cx_core.ManufacturerItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.ProductList;
 import com.coretex.shop.model.catalog.category.ReadableCategory;
@@ -45,7 +43,15 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 /**
@@ -66,9 +72,6 @@ public class ShoppingCategoryController {
 
 	@Resource
 	private MerchantStoreService merchantStoreService;
-
-	@Resource
-	private ProductService productService;
 
 	@Resource
 	private ManufacturerService manufacturerService;
@@ -165,7 +168,7 @@ public class ShoppingCategoryController {
 		pageInformation.setPageUrl(categoryProxy.getDescription().getFriendlyUrl());
 
 		//** retrieves category id drill down**//
-		String lineage = new StringBuilder().append(category.getLineage()).append(category.getUuid()).append(Constants.CATEGORY_LINEAGE_DELIMITER).toString();
+		String lineage = new StringBuilder().append(category.getUuid()).append(Constants.CATEGORY_LINEAGE_DELIMITER).toString();
 
 
 		request.setAttribute(Constants.REQUEST_PAGE_INFORMATION, pageInformation);
@@ -331,18 +334,18 @@ public class ShoppingCategoryController {
 					countByCategories.put(c.getUuid(), (Long) objects[1]);
 				} else {
 					//get lineage
-					String lin = c.getLineage();
-					String[] categoryPath = lin.split(Constants.CATEGORY_LINEAGE_DELIMITER);
-					for (int i = 0; i < categoryPath.length; i++) {
-						String sId = categoryPath[i];
-						if (!StringUtils.isBlank(sId)) {
-							Long count = countByCategories.get(UUID.fromString(sId));
-							if (count != null) {
-								count = count +  (Long) objects[1];
-								countByCategories.put(UUID.fromString(sId), count);
-							}
-						}
-					}
+//					String lin = c.getLineage();
+//					String[] categoryPath = lin.split(Constants.CATEGORY_LINEAGE_DELIMITER);
+//					for (int i = 0; i < categoryPath.length; i++) {
+//						String sId = categoryPath[i];
+//						if (!StringUtils.isBlank(sId)) {
+//							Long count = countByCategories.get(UUID.fromString(sId));
+//							if (count != null) {
+//								count = count +  (Long) objects[1];
+//								countByCategories.put(UUID.fromString(sId), count);
+//							}
+//						}
+//					}
 				}
 			}
 		}
@@ -355,7 +358,7 @@ public class ShoppingCategoryController {
 
 
 		//sub categories
-		List<CategoryItem> subCategories = categoryService.listByParent(category);
+		List<CategoryItem> subCategories = categoryService.listByParent(category).collect(Collectors.toList());
 		ReadableCategoryPopulator populator = new ReadableCategoryPopulator();
 		List<ReadableCategory> subCategoryProxies = new ArrayList<ReadableCategory>();
 
@@ -477,7 +480,7 @@ public class ShoppingCategoryController {
 				response.sendError(503, "CategoryItem is null");//TODO localized message
 			}
 
-			String lineage = new StringBuilder().append(cat.getLineage()).append(cat.getUuid()).append("/").toString();
+			String lineage = new StringBuilder().append(cat.getUuid()).append("/").toString();
 
 			List<CategoryItem> categories = categoryService.getListByLineage(store, lineage);
 
@@ -494,7 +497,7 @@ public class ShoppingCategoryController {
 				lang = langs.get(Constants.DEFAULT_LANGUAGE);
 			}
 
-			List<ProductItem> products = productService.getProducts(ids, lang);
+//			List<ProductItem> products = productService.getProducts(ids, lang);
 
 			ProductList productList = new ProductList();
 
@@ -502,12 +505,12 @@ public class ShoppingCategoryController {
 			populator.setPricingService(pricingService);
 			populator.setimageUtils(imageUtils);
 
-			for (ProductItem product : products) {
-				//create new proxy product
-				ReadableProduct p = populator.populate(product, new ReadableProduct(), merchantStore, lang);
-				productList.getProducts().add(p);
-
-			}
+//			for (ProductItem product : products) {
+//				//create new proxy product
+//				ReadableProduct p = populator.populate(product, new ReadableProduct(), merchantStore, lang);
+//				productList.getProducts().add(p);
+//
+//			}
 
 			productList.setProductCount(productList.getProducts().size());
 			return productList;
@@ -619,7 +622,7 @@ public class ShoppingCategoryController {
 				return null;
 			}
 
-			String lineage = new StringBuilder().append(cat.getLineage()).append(cat.getUuid()).append("/").toString();
+			String lineage = new StringBuilder().append(cat.getUuid()).append("/").toString();
 
 			List<CategoryItem> categories = categoryService.getListByLineage(store, lineage);
 
@@ -653,21 +656,21 @@ public class ShoppingCategoryController {
 				}
 			}
 
-			com.coretex.core.model.catalog.product.ProductList products = productService.listByStore(merchantStore, lang, productCriteria);
+//			com.coretex.core.model.catalog.product.ProductList products = productService.listByStore(merchantStore, lang, productCriteria);
 
 			ReadableProductPopulator populator = new ReadableProductPopulator();
 			populator.setPricingService(pricingService);
 			populator.setimageUtils(imageUtils);
 
 			ProductList productList = new ProductList();
-			for (ProductItem product : products.getProducts()) {
-
-				//create new proxy product
-				ReadableProduct p = populator.populate(product, new ReadableProduct(), merchantStore, lang);
-				productList.getProducts().add(p);
-				prices.add(p.getPrice());
-
-			}
+//			for (ProductItem product : products.getProducts()) {
+//
+//				//create new proxy product
+//				ReadableProduct p = populator.populate(product, new ReadableProduct(), merchantStore, lang);
+//				productList.getProducts().add(p);
+//				prices.add(p.getPrice());
+//
+//			}
 
 
 			/** order products based on the specified order **/
@@ -682,7 +685,7 @@ public class ShoppingCategoryController {
 			});
 
 
-			productList.setProductCount(products.getTotalCount());
+//			productList.setProductCount(products.getTotalCount());
 
 			if (CollectionUtils.isNotEmpty(prices)) {
 				BigDecimal minPrice = Collections.min(prices);

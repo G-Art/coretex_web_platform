@@ -4,7 +4,7 @@ import java.util.List;
 
 
 import com.coretex.core.business.services.common.generic.SalesManagerEntityService;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.core.model.catalog.product.file.ProductImageSize;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.core.model.content.ImageContentFile;

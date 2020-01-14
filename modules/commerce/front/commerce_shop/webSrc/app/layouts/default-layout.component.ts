@@ -12,6 +12,8 @@ declare var $: any;
 })
 export class DefaultLayoutComponent implements OnInit {
 
+    mobileMenuOpen: boolean = false;
+
     public currentStore:StoreData;
 
     constructor(private storeService: StoreService, private translate: TranslateService) {
@@ -45,5 +47,9 @@ export class DefaultLayoutComponent implements OnInit {
         } else {
             $('.scroll-top').fadeOut();
         }
+    }
+
+    toggleMobileMenuEvent($event: any) {
+        this.mobileMenuOpen = !this.mobileMenuOpen;
     }
 }

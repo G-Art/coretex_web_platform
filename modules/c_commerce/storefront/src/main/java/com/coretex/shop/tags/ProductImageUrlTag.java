@@ -4,7 +4,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

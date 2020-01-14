@@ -3,7 +3,7 @@ package com.coretex.commerce.mapper.minimal;
 import com.coretex.commerce.data.minimal.MinimalCategoryData;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.ReferenceMapper;
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;

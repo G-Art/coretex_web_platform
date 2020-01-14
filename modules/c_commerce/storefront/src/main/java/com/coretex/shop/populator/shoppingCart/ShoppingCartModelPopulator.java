@@ -2,22 +2,16 @@
 package com.coretex.shop.populator.shoppingCart;
 
 
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
 import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductAttributeItem;
-import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.core.LocaleItem;
-import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
-import com.coretex.shop.model.shoppingcart.ShoppingCartAttribute;
+import com.coretex.items.commerce_core_model.ShoppingCartItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.shop.model.shoppingcart.ShoppingCartData;
-import com.google.common.collect.Sets;
 import org.apache.commons.beanutils.ConversionException;
-import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -48,20 +42,6 @@ public class ShoppingCartModelPopulator
 	public void setShoppingCartService(ShoppingCartService shoppingCartService) {
 		this.shoppingCartService = shoppingCartService;
 	}
-
-
-	private ProductService productService;
-
-
-	public ProductService getProductService() {
-		return productService;
-	}
-
-
-	public void setProductService(ProductService productService) {
-		this.productService = productService;
-	}
-
 
 	private ProductAttributeService productAttributeService;
 
@@ -147,20 +127,12 @@ public class ShoppingCartModelPopulator
 												 MerchantStoreItem store)
 			throws Exception {
 
-		ProductItem product = productService.getByUUID(shoppingCartItem.getProductId());
+//		ProductItem product = productService.getByUUID(shoppingCartItem.getProductId());
 
-		if (product == null) {
-			throw new Exception("Item with id " + shoppingCartItem.getProductId() + " does not exist");
-		}
-
-		if (!product.getMerchantStore().getUuid().equals(store.getUuid())) {
-			throw new Exception("Item with id " + shoppingCartItem.getProductId() + " does not belong to merchant "
-					+ store.getUuid());
-		}
 
 		ShoppingCartEntryItem item = new ShoppingCartEntryItem();
 		item.setShoppingCart(cart);
-		item.setProduct(product);
+//		item.setProduct(product);
 		item.setQuantity(shoppingCartItem.getQuantity());
 		item.setItemPrice(shoppingCartItem.getProductPrice());
 		item.setShoppingCart(cart);

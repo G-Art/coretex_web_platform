@@ -9,6 +9,10 @@ import {ReactiveFormsModule} from "@angular/forms";
 import { RegisterComponent } from './register/register.component';
 import { AppEqualValidatorDirective } from './register/app-equal-validator.directive';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { ProductGridComponent } from './product-grid/product-grid.component';
+import { ProductCollectionItemComponent } from './product-collection-item/product-collection-item.component';
+import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
+import { SubmenuComponent } from './navigation-menu/submenu/submenu.component';
 
 
 @NgModule({
@@ -18,7 +22,11 @@ import { SidebarComponent } from './sidebar/sidebar.component';
         LoginComponent,
         RegisterComponent,
         AppEqualValidatorDirective,
-        SidebarComponent
+        SidebarComponent,
+        ProductGridComponent,
+        ProductCollectionItemComponent,
+        NavigationMenuComponent,
+        SubmenuComponent
     ],
     imports: [
         RoutingModule,
@@ -31,7 +39,10 @@ import { SidebarComponent } from './sidebar/sidebar.component';
         FooterComponent,
         LoginComponent,
         RegisterComponent,
-        SidebarComponent
+        SidebarComponent,
+        ProductGridComponent,
+        ProductCollectionItemComponent,
+        NavigationMenuComponent
     ]
 
 })

@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import javax.annotation.Resource;
 
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.slf4j.Logger;

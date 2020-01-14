@@ -1,16 +1,14 @@
 package com.coretex.shop.filter;
 
 import com.coretex.core.business.services.catalog.category.CategoryService;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.business.services.system.MerchantConfigurationService;
 import com.coretex.core.business.utils.CacheUtils;
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.model.system.MerchantConfig;
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.shop.constants.Constants;
@@ -57,9 +55,6 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 
 	@Resource
 	private CategoryService categoryService;
-
-	@Resource
-	private ProductService productService;
 
 	@Resource
 	private MerchantStoreService merchantService;
@@ -467,15 +462,14 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 							homeItem.setUrl(Constants.HOME_URL);
 							items.add(homeItem);
 						} else if (item.getItemType().name().equals(BreadcrumbItemType.PRODUCT)) {
-							ProductItem product = productService.getProductForLocale(item.getId(), language, locale);
-							if (product != null) {
-								BreadcrumbItem productItem = new BreadcrumbItem();
-								productItem.setId(product.getUuid());
-								productItem.setItemType(BreadcrumbItemType.PRODUCT);
-								productItem.setLabel(product.getName());
-								productItem.setUrl(product.getSeUrl());
-								items.add(productItem);
-							}
+//							ProductItem product = productService.getProductForLocale(item.getId(), language, locale);
+//							if (product != null) {
+//								BreadcrumbItem productItem = new BreadcrumbItem();
+//								productItem.setId(product.getUuid());
+//								productItem.setItemType(BreadcrumbItemType.PRODUCT);
+//								productItem.setLabel(product.getName());
+//								items.add(productItem);
+//							}
 						} else if (item.getItemType().name().equals(BreadcrumbItemType.CATEGORY)) {
 							CategoryItem category = categoryService.getOneByLanguage(item.getId(), language);
 							if (category != null) {
@@ -483,7 +477,7 @@ public class StoreFilter extends HandlerInterceptorAdapter {
 								categoryItem.setId(category.getUuid());
 								categoryItem.setItemType(BreadcrumbItemType.CATEGORY);
 								categoryItem.setLabel(category.getName());
-								categoryItem.setUrl(category.getSeUrl());
+//								categoryItem.setUrl(category.getSeUrl());
 								items.add(categoryItem);
 							}
 						}

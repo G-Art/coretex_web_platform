@@ -6,7 +6,7 @@
         <common-components:cardBlock title="Store Info"
                                      description="Information about current store">
             <jsp:attribute name="cardBlock">
-                <c:set var="store" value="${currentUser.merchantStore}"/>
+                <c:set var="store" value="${currentUser.store}"/>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="general-info">
@@ -17,19 +17,19 @@
                                             <tbody>
                                             <tr>
                                                 <th scope="row">Store name</th>
-                                                <td>${store.storeName}</td>
+                                                <td>${store.name}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Store address</th>
-                                                <td>${store.storeAddress}</td>
+                                                <td>${store.address.addressLine1}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">City</th>
-                                                <td>${store.storeCity}</td>
+                                                <td>${store.address.city}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Postal code</th>
-                                                <td>${store.storePostalCode}</td>
+                                                <td>${store.address.postalCode}</td>
                                             </tr>
 
                                             </tbody>
@@ -49,11 +49,11 @@
                                             </tr>
                                             <tr>
                                                 <th scope="row">Email</th>
-                                                <td>${store.storeEmailAddress}</td>
+                                                <td>${store.storeEmail}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Phone</th>
-                                                <td>${store.storePhone}</td>
+                                                <td>${store.phone}</td>
                                             </tr>
                                             </tbody>
                                         </table>

@@ -1,39 +1,35 @@
 package com.coretex.shop.populator.catalog;
 
+import com.coretex.core.business.constants.Constants;
+import com.coretex.core.business.exception.ConversionException;
+import com.coretex.core.business.services.catalog.product.PricingService;
+import com.coretex.core.model.catalog.product.price.FinalPrice;
+import com.coretex.core.populators.AbstractDataPopulator;
+import com.coretex.items.cx_core.CategoryItem;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.commerce_core_model.ProductAttributeItem;
+import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
+import com.coretex.items.commerce_core_model.ProductImageItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.ProductItem;
+import com.coretex.shop.model.catalog.category.ReadableCategory;
+import com.coretex.shop.model.catalog.manufacturer.ReadableManufacturer;
+import com.coretex.shop.model.catalog.product.ReadableImage;
+import com.coretex.shop.model.catalog.product.ReadableProduct;
+import com.coretex.shop.model.catalog.product.attribute.ReadableProductAttribute;
+import com.coretex.shop.model.catalog.product.attribute.ReadableProductAttributeValue;
+import com.coretex.shop.model.catalog.product.attribute.ReadableProductOption;
+import com.coretex.shop.model.catalog.product.attribute.ReadableProductOptionValue;
+import com.coretex.shop.utils.ImageFilePath;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.Validate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
-
-import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductAttributeItem;
-import com.coretex.items.commerce_core_model.ProductImageItem;
-import com.coretex.items.core.LocaleItem;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.StringUtils;
-
-import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
-import com.coretex.core.model.catalog.product.price.FinalPrice;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.shop.model.catalog.category.ReadableCategory;
-import com.coretex.shop.model.catalog.manufacturer.ReadableManufacturer;
-import com.coretex.shop.model.catalog.product.ReadableImage;
-import com.coretex.shop.model.catalog.product.ReadableProduct;
-import com.coretex.shop.model.catalog.product.RentalOwner;
-import com.coretex.shop.model.catalog.product.attribute.ReadableProductAttribute;
-import com.coretex.shop.model.catalog.product.attribute.ReadableProductAttributeValue;
-import com.coretex.shop.model.catalog.product.attribute.ReadableProductOption;
-import com.coretex.shop.model.catalog.product.attribute.ReadableProductOptionValue;
-import com.coretex.shop.utils.DateUtil;
-import com.coretex.shop.utils.ImageFilePath;
 
 
 public class ReadableProductPopulator extends
@@ -75,78 +71,14 @@ public class ReadableProductPopulator extends
 
 			target.setUuid(source.getUuid());
 			target.setAvailable(source.getAvailable());
-			target.setProductHeight(source.getProductHeight());
-			target.setProductLength(source.getProductLength());
-			target.setProductWeight(source.getProductWeight());
-			target.setProductWidth(source.getProductWidth());
-			target.setPreOrder(source.getPreOrder() != null?source.getPreOrder():false);
-			target.setSortOrder(source.getSortOrder()!=null? source.getSortOrder():0);
 
-
-			target.setCondition(source.getCondition());
-
-
-			//RENTAL
-			if (source.getRentalDuration() != null) {
-				target.setRentalDuration(source.getRentalDuration());
-			}
-			if (source.getRentalPeriod() != null) {
-				target.setRentalPeriod(source.getRentalPeriod());
-			}
-			target.setRentalStatus(source.getRentalStatus());
-
-			/**
-			 * END RENTAL
-			 */
-
-			if (source.getOwner() != null) {
-				RentalOwner owner = new RentalOwner();
-				owner.setUuid(source.getOwner().getUuid());
-				owner.setEmailAddress(source.getOwner().getEmail());
-				owner.setFirstName(source.getOwner().getBilling().getFirstName());
-				owner.setLastName(source.getOwner().getBilling().getLastName());
-				com.coretex.shop.model.customer.address.Address address = new com.coretex.shop.model.customer.address.Address();
-				address.setAddress(source.getOwner().getBilling().getAddressLine1());
-				address.setBillingAddress(true);
-				address.setCity(source.getOwner().getBilling().getCity());
-				address.setCountry(source.getOwner().getBilling().getCountry().getIsoCode());
-				address.setZone(source.getOwner().getBilling().getZone().getCode());
-				address.setLatitude(source.getOwner().getBilling().getLatitude());
-				address.setLongitude(source.getOwner().getBilling().getLongitude());
-				address.setPhone(source.getOwner().getBilling().getPhone());
-				address.setPostalCode(source.getOwner().getBilling().getPostalCode());
-				owner.setAddress(address);
-				target.setOwner(owner);
-			}
-
-
-			if (source.getDateAvailable() != null) {
-				target.setDateAvailable(DateUtil.formatDate(source.getDateAvailable()));
-			}
-
-			if (source.getProductReviewAvg() != null) {
-				double avg = source.getProductReviewAvg().doubleValue();
-				double rating = Math.round(avg * 2) / 2.0f;
-				target.setRating(rating);
-			}
-			target.setProductVirtual(source.getProductVirtual() != null? source.getProductVirtual() : false);
-			if (source.getProductReviewCount() != null) {
-				target.setRatingCount(source.getProductReviewCount());
-			}
 			com.coretex.shop.model.catalog.product.ProductDescription tragetDescription = new com.coretex.shop.model.catalog.product.ProductDescription();
-			tragetDescription.setFriendlyUrl(source.getSeUrl());
+
 			tragetDescription.setName(source.getName());
 			tragetDescription.setUuid(source.getUuid());
-			if (!StringUtils.isBlank(source.getMetatagTitle())) {
-				tragetDescription.setTitle(source.getMetatagTitle());
-			} else {
-				tragetDescription.setTitle(source.getName());
-			}
-			tragetDescription.setMetaDescription(source.getMetatagDescription());
+			tragetDescription.setTitle(source.getName());
 			tragetDescription.setDescription(source.getDescription());
-			tragetDescription.setHighlights(source.getProductHighlight());
 			target.setDescription(tragetDescription);
-
 
 			if (source.getManufacturer() != null) {
 				ReadableManufacturer manufacturerEntity = new ReadableManufacturer();
@@ -166,14 +98,14 @@ public class ReadableProductPopulator extends
 				for (ProductImageItem img : images) {
 					ReadableImage prdImage = new ReadableImage();
 					prdImage.setImageName(img.getProductImage());
-					prdImage.setDefaultImage(img.getDefaultImage()!=null? img.getDefaultImage(): false);
+					prdImage.setDefaultImage(img.getDefaultImage() != null ? img.getDefaultImage() : false);
 
 					StringBuilder imgPath = new StringBuilder();
-					imgPath.append(contextPath).append(imageUtils.buildProductImageUtils(store, source.getSku(), img.getProductImage()));
+					imgPath.append(contextPath).append(imageUtils.buildProductImageUtils(store, source.getCode(), img.getProductImage()));
 
 					prdImage.setImageUrl(imgPath.toString());
 					prdImage.setUuid(img.getUuid());
-					prdImage.setImageType(img.getImageType()!=null?img.getImageType():0);
+					prdImage.setImageType(img.getImageType() != null ? img.getImageType() : 0);
 					if (img.getProductImageUrl() != null) {
 						prdImage.setExternalUrl(img.getProductImageUrl());
 					}
@@ -299,7 +231,7 @@ public class ReadableProductPopulator extends
 			//target.setVisible(isVisible);
 
 
-			target.setSku(source.getSku());
+			target.setSku(source.getCode());
 
 			FinalPrice price = pricingService.calculateProductPrice(source);
 
@@ -314,9 +246,9 @@ public class ReadableProductPopulator extends
 			//availability
 			for (ProductAvailabilityItem availability : source.getAvailabilities()) {
 				if (availability.getRegion().equals(Constants.ALL_REGIONS)) {//TODO REL 2.1 accept a region
-					target.setQuantity(availability.getProductQuantity()!= null? availability.getProductQuantity():0);
-					target.setQuantityOrderMaximum(availability.getProductQuantityOrderMax()!=null? availability.getProductQuantityOrderMax():0);
-					target.setQuantityOrderMinimum(availability.getProductQuantityOrderMin()!=null? availability.getProductQuantityOrderMin():0);
+					target.setQuantity(availability.getProductQuantity() != null ? availability.getProductQuantity() : 0);
+					target.setQuantityOrderMaximum(availability.getProductQuantityOrderMax() != null ? availability.getProductQuantityOrderMax() : 0);
+					target.setQuantityOrderMinimum(availability.getProductQuantityOrderMin() != null ? availability.getProductQuantityOrderMin() : 0);
 					if (availability.getProductQuantity().intValue() > 0 && target.isAvailable()) {
 						target.setCanBePurchased(true);
 					}
@@ -330,6 +262,7 @@ public class ReadableProductPopulator extends
 			throw new ConversionException(e);
 		}
 	}
+
 	@Override
 	protected ReadableProduct createTarget() {
 		// TODO Auto-generated method stub

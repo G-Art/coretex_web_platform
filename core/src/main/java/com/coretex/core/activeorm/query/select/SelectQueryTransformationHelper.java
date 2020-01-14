@@ -14,6 +14,7 @@ import com.coretex.core.activeorm.query.visitors.TableAmendVisitor;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaTypeItem;
+import com.google.common.collect.Lists;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;
@@ -27,6 +28,7 @@ import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.SingletonMap;
 
@@ -105,6 +107,20 @@ public class SelectQueryTransformationHelper {
 
 	public void adjustColumn(ExpressionScanner scanner, SelectBodyScanner ownerSelectBodyScanner) {
 		if (!scanner.isColumn()) {
+			if(ownerSelectBodyScanner.isWrapped()
+					&& scanner.isFunction()
+					&& ownerSelectBodyScanner.isPlaneSelect()){
+				var columns = getColumnFromFunction(scanner);
+				if(!columns.isEmpty()){
+					PlainSelect ps = (PlainSelect) ownerSelectBodyScanner.scannedObject();
+					ps.getSelectItems().remove(scanner.getParentStatement());
+					columns.forEach(column -> {
+						var exp = new SelectExpressionItem(column);
+						ps.getSelectItems().add(exp);
+						scanner.scan(column);
+					});
+				}
+			}
 			processInternalExpression(scanner, ownerSelectBodyScanner);
 		} else {
 			Column column = (Column) scanner.getExpression();
@@ -130,6 +146,17 @@ public class SelectQueryTransformationHelper {
 				}
 			}
 		}
+	}
+
+	private List<Expression> getColumnFromFunction(ExpressionScanner scanner) {
+		var columns = Lists.<Expression>newArrayList();
+			if(scanner.isColumn()){
+				columns.add(scanner.getExpression());
+			}
+			scanner.getInternalExpressions()
+					.forEach(exp-> columns.addAll(getColumnFromFunction((ExpressionScanner)exp)));
+
+		return columns;
 	}
 
 	public TableTransformationData getTableTransformationDataForTable(Table table, SelectBodyScanner ownerSelectBodyScanner){

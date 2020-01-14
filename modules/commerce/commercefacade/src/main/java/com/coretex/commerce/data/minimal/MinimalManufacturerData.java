@@ -6,7 +6,7 @@ public class MinimalManufacturerData extends GenericItemData {
 
 	private String code;
 	private String name;
-	private String merchantStore;
+	private String store;
 
 	public String getCode() {
 		return code;
@@ -24,11 +24,11 @@ public class MinimalManufacturerData extends GenericItemData {
 		this.name = name;
 	}
 
-	public String getMerchantStore() {
-		return merchantStore;
+	public String getStore() {
+		return store;
 	}
 
-	public void setMerchantStore(String merchantStore) {
-		this.merchantStore = merchantStore;
+	public void setStore(String store) {
+		this.store = store;
 	}
 }

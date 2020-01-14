@@ -7,7 +7,6 @@ import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.SelectItemDataInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.dip.WrapperInjectionPoint;
 import com.coretex.items.core.GenericItem;
-import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;

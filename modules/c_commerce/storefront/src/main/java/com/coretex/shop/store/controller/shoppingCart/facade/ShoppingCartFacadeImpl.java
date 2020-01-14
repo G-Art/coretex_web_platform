@@ -1,25 +1,27 @@
 
 package com.coretex.shop.store.controller.shoppingCart.facade;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
+import com.coretex.core.business.services.catalog.product.PricingService;
+import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.reference.language.LanguageService;
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductAttributeItem;
-import com.coretex.items.cx_core.CustomerItem;
+import com.coretex.core.business.services.shoppingcart.ShoppingCartCalculationService;
+import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
+import com.coretex.core.business.utils.ProductPriceUtils;
+import com.coretex.core.model.catalog.product.price.FinalPrice;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.core.LocaleItem;
+import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
-import com.google.common.collect.Sets;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
+import com.coretex.shop.constants.Constants;
+import com.coretex.shop.model.shoppingcart.CartModificationException;
+import com.coretex.shop.model.shoppingcart.PersistableShoppingCartItem;
+import com.coretex.shop.model.shoppingcart.ReadableShoppingCart;
+import com.coretex.shop.model.shoppingcart.ShoppingCartData;
+import com.coretex.shop.populator.shoppingCart.ReadableShoppingCartPopulator;
+import com.coretex.shop.populator.shoppingCart.ShoppingCartDataPopulator;
+import com.coretex.shop.utils.ImageFilePath;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -30,25 +32,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-
-import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
-import com.coretex.core.business.services.shoppingcart.ShoppingCartCalculationService;
-import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
-import com.coretex.core.business.utils.ProductPriceUtils;
-import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
-import com.coretex.core.model.catalog.product.price.FinalPrice;
-import com.coretex.shop.constants.Constants;
-import com.coretex.shop.model.shoppingcart.CartModificationException;
-import com.coretex.shop.model.shoppingcart.PersistableShoppingCartItem;
-import com.coretex.shop.model.shoppingcart.ReadableShoppingCart;
-import com.coretex.shop.model.shoppingcart.ShoppingCartAttribute;
-import com.coretex.shop.model.shoppingcart.ShoppingCartData;
-import com.coretex.shop.populator.shoppingCart.ReadableShoppingCartPopulator;
-import com.coretex.shop.populator.shoppingCart.ShoppingCartDataPopulator;
-import com.coretex.shop.utils.DateUtil;
-import com.coretex.shop.utils.ImageFilePath;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Umesh Awasthi
@@ -70,9 +60,6 @@ public class ShoppingCartFacadeImpl
 
 	@Resource
 	private ProductPriceUtils productPriceUtils;
-
-	@Resource
-	private ProductService productService;
 
 	@Resource
 	private PricingService pricingService;
@@ -185,16 +172,16 @@ public class ShoppingCartFacadeImpl
 												 final MerchantStoreItem store)
 			throws Exception {
 
-		ProductItem product = productService.getByUUID(shoppingCartItem.getProductId());
+//		ProductItem product = productService.getByUUID(shoppingCartItem.getProductId());
 
-		if (product == null) {
-			throw new Exception("Item with id " + shoppingCartItem.getProductId() + " does not exist");
-		}
-
-		if (!product.getMerchantStore().getUuid().equals(store.getUuid())) {
-			throw new Exception("Item with id " + shoppingCartItem.getProductId() + " does not belong to merchant "
-					+ store.getUuid());
-		}
+//		if (product == null) {
+//			throw new Exception("Item with id " + shoppingCartItem.getProductId() + " does not exist");
+//		}
+//
+//		if (!product.getMerchantStore().getUuid().equals(store.getUuid())) {
+//			throw new Exception("Item with id " + shoppingCartItem.getProductId() + " does not belong to merchant "
+//					+ store.getUuid());
+//		}
 
 		/**
 		 * Check if product quantity is 0
@@ -202,35 +189,30 @@ public class ShoppingCartFacadeImpl
 		 * Check if date available <= now
 		 */
 
-		Set<ProductAvailabilityItem> availabilities = product.getAvailabilities();
-		if (availabilities == null) {
+//		Set<ProductAvailabilityItem> availabilities = product.getAvailabilities();
+//		if (availabilities == null) {
+//
+//			throw new Exception("Item with id " + product.getUuid() + " is not properly configured");
+//
+//		}
 
-			throw new Exception("Item with id " + product.getUuid() + " is not properly configured");
+//		for (ProductAvailabilityItem availability : availabilities) {
+//			if (availability.getProductQuantity() == null || availability.getProductQuantity().intValue() == 0) {
+//				throw new Exception("Item with id " + product.getUuid() + " is not available");
+//			}
+//		}
 
-		}
+//		if (!product.getAvailable()) {
+//			throw new Exception("Item with id " + product.getUuid() + " is not available");
+//		}
 
-		for (ProductAvailabilityItem availability : availabilities) {
-			if (availability.getProductQuantity() == null || availability.getProductQuantity().intValue() == 0) {
-				throw new Exception("Item with id " + product.getUuid() + " is not available");
-			}
-		}
+//		ShoppingCartEntryItem item =
+//				shoppingCartService.populateShoppingCartItem(product);
 
-		if (!product.getAvailable()) {
-			throw new Exception("Item with id " + product.getUuid() + " is not available");
-		}
+//		item.setQuantity(shoppingCartItem.getQuantity());
+//		item.setShoppingCart(cartModel);
 
-		if (!DateUtil.dateBeforeEqualsDate(product.getDateAvailable(), new Date())) {
-			throw new Exception("Item with id " + product.getUuid() + " is not available");
-		}
-
-
-		ShoppingCartEntryItem item =
-				shoppingCartService.populateShoppingCartItem(product);
-
-		item.setQuantity(shoppingCartItem.getQuantity());
-		item.setShoppingCart(cartModel);
-
-		return item;
+		return null;
 
 	}
 
@@ -239,16 +221,16 @@ public class ShoppingCartFacadeImpl
 	private ShoppingCartEntryItem createCartItem(ShoppingCartItem cartModel,
 												 PersistableShoppingCartItem shoppingCartItem, MerchantStoreItem store) throws Exception {
 
-		ProductItem product = productService.getByUUID(shoppingCartItem.getProduct());
+//		ProductItem product = productService.getByUUID(shoppingCartItem.getProduct());
 
-		if (product == null) {
-			throw new Exception("Item with id " + shoppingCartItem.getProduct() + " does not exist");
-		}
-
-		if (!product.getMerchantStore().getUuid().equals(store.getUuid())) {
-			throw new Exception("Item with id " + shoppingCartItem.getProduct() + " does not belong to merchant "
-					+ store.getUuid());
-		}
+//		if (product == null) {
+//			throw new Exception("Item with id " + shoppingCartItem.getProduct() + " does not exist");
+//		}
+//
+//		if (!product.getMerchantStore().getUuid().equals(store.getUuid())) {
+//			throw new Exception("Item with id " + shoppingCartItem.getProduct() + " does not belong to merchant "
+//					+ store.getUuid());
+//		}
 
 		/**
 		 * Check if product quantity is 0
@@ -256,35 +238,30 @@ public class ShoppingCartFacadeImpl
 		 * Check if date available <= now
 		 */
 
-		Set<ProductAvailabilityItem> availabilities = product.getAvailabilities();
-		if (availabilities == null) {
+//		Set<ProductAvailabilityItem> availabilities = product.getAvailabilities();
+//		if (availabilities == null) {
+//
+//			throw new Exception("Item with id " + product.getUuid() + " is not properly configured");
+//
+//		}
 
-			throw new Exception("Item with id " + product.getUuid() + " is not properly configured");
+//		for (ProductAvailabilityItem availability : availabilities) {
+//			if (availability.getProductQuantity() == null || availability.getProductQuantity().intValue() == 0) {
+//				throw new Exception("Item with id " + product.getUuid() + " is not available");
+//			}
+//		}
 
-		}
+//		if (!product.getAvailable()) {
+//			throw new Exception("Item with id " + product.getUuid() + " is not available");
+//		}
 
-		for (ProductAvailabilityItem availability : availabilities) {
-			if (availability.getProductQuantity() == null || availability.getProductQuantity().intValue() == 0) {
-				throw new Exception("Item with id " + product.getUuid() + " is not available");
-			}
-		}
+//		ShoppingCartEntryItem item = shoppingCartService
+//				.populateShoppingCartItem(product);
 
-		if (!product.getAvailable()) {
-			throw new Exception("Item with id " + product.getUuid() + " is not available");
-		}
+//		item.setQuantity(shoppingCartItem.getQuantity());
+//		item.setShoppingCart(cartModel);
 
-		if (!DateUtil.dateBeforeEqualsDate(product.getDateAvailable(), new Date())) {
-			throw new Exception("Item with id " + product.getUuid() + " is not available");
-		}
-
-
-		ShoppingCartEntryItem item = shoppingCartService
-				.populateShoppingCartItem(product);
-
-		item.setQuantity(shoppingCartItem.getQuantity());
-		item.setShoppingCart(cartModel);
-
-		return item;
+		return null;
 
 	}
 

@@ -50,7 +50,7 @@
                                     <div class="col-8">
                                         <div class="row">
                                             <div class="col-3">SKU:</div>
-                                            <div class="col-9">${originalProduct.sku}</div>
+                                            <div class="col-9">${originalProduct.code}</div>
                                         </div>
                                         <div class="row">
                                             <div class="col-3">Name:</div>

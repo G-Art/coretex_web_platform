@@ -10,7 +10,7 @@ public class OrderProductData extends GenericItemData {
 	private BigDecimal oneTimeCharge;
 	private ProductData originalProduct;
 
-	public String getSku() {
+	public String getCode() {
 		return sku;
 	}
 

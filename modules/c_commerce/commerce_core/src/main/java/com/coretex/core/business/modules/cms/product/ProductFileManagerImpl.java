@@ -11,7 +11,7 @@ import java.net.URLConnection;
 import java.util.List;
 import javax.imageio.ImageIO;
 
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

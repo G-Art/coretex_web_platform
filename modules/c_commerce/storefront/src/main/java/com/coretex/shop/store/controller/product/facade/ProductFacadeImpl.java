@@ -1,12 +1,10 @@
 package com.coretex.shop.store.controller.product.facade;
 
 import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
-import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.shop.model.catalog.manufacturer.ReadableManufacturer;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
 import com.coretex.shop.populator.catalog.ReadableProductPopulator;
@@ -24,8 +22,8 @@ public class ProductFacadeImpl implements ProductFacade {
 	@Resource
 	private ManufacturerService manufacturerService;
 
-	@Resource
-	private ProductService productService;
+//	@Resource
+//	private ProductService productService;
 
 	@Resource
 	private PricingService pricingService;
@@ -37,11 +35,11 @@ public class ProductFacadeImpl implements ProductFacade {
 	@Override
 	public ReadableProduct getProduct(MerchantStoreItem store, UUID id, LocaleItem language){
 
-		ProductItem product = productService.getByUUID(id);
+//		ProductItem product = productService.getByUUID(id);
 
-		if (product == null) {
-			return null;
-		}
+//		if (product == null) {
+//			return null;
+//		}
 
 		ReadableProduct readableProduct = new ReadableProduct();
 
@@ -49,7 +47,7 @@ public class ProductFacadeImpl implements ProductFacade {
 
 		populator.setPricingService(pricingService);
 		populator.setimageUtils(imageUtils);
-		populator.populate(product, readableProduct, store, language);
+//		populator.populate(product, readableProduct, store, language);
 
 		return readableProduct;
 	}
@@ -58,11 +56,11 @@ public class ProductFacadeImpl implements ProductFacade {
 	public ReadableProduct getProduct(MerchantStoreItem store, String sku, LocaleItem language)
 			throws Exception {
 
-		ProductItem product = productService.getByCode(sku);
+//		ProductItem product = productService.getByCode(sku);
 
-		if (product == null) {
-			return null;
-		}
+//		if (product == null) {
+//			return null;
+//		}
 
 		ReadableProduct readableProduct = new ReadableProduct();
 
@@ -70,7 +68,7 @@ public class ProductFacadeImpl implements ProductFacade {
 
 		populator.setPricingService(pricingService);
 		populator.setimageUtils(imageUtils);
-		populator.populate(product, readableProduct, store, language);
+//		populator.populate(product, readableProduct, store, language);
 
 		return readableProduct;
 	}

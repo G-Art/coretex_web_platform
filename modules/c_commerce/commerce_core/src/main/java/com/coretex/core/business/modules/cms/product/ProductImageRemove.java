@@ -2,7 +2,7 @@ package com.coretex.core.business.modules.cms.product;
 
 
 import com.coretex.core.business.modules.cms.common.ImageRemove;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 
 

@@ -1,5 +1,28 @@
 package com.coretex.core.business.services.search;
 
+import com.coretex.core.business.constants.Constants;
+import com.coretex.core.business.services.catalog.product.PricingService;
+import com.coretex.core.business.utils.CoreConfiguration;
+import com.coretex.core.model.catalog.product.price.FinalPrice;
+import com.coretex.core.model.search.IndexProduct;
+import com.coretex.core.model.search.SearchEntry;
+import com.coretex.core.model.search.SearchFacet;
+import com.coretex.core.model.search.SearchKeywords;
+import com.coretex.items.cx_core.CategoryItem;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.cx_core.ProductItem;
+import com.coretex.search.services.Facet;
+import com.coretex.search.services.SearchHit;
+import com.coretex.search.services.SearchRequest;
+import com.coretex.search.services.SearchResponse;
+import com.coretex.search.services.SearchingService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,31 +31,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Resource;
-
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.search.services.SearchingService;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import com.coretex.core.business.constants.Constants;
-
-import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.utils.CoreConfiguration;
-import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.core.model.catalog.product.price.FinalPrice;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.core.model.search.IndexProduct;
-import com.coretex.core.model.search.SearchEntry;
-import com.coretex.core.model.search.SearchFacet;
-import com.coretex.core.model.search.SearchKeywords;
-import com.coretex.search.services.Facet;
-import com.coretex.search.services.SearchHit;
-import com.coretex.search.services.SearchRequest;
-import com.coretex.search.services.SearchResponse;
 
 
 @Service("productSearchService")
@@ -121,13 +119,6 @@ public class SearchServiceImpl implements com.coretex.core.business.services.sea
 			}
 			if (price != null) {
 				index.setPrice(price.getFinalPrice().doubleValue());
-			}
-			index.setHighlight(product.getProductHighlight(locale));
-			if (!StringUtils.isBlank(product.getMetatagKeywords(locale))) {
-				String[] tags = product.getMetatagKeywords(locale).split(",");
-				@SuppressWarnings("unchecked")
-				List<String> tagsList = new ArrayList(Arrays.asList(tags));
-				index.setTags(tagsList);
 			}
 
 

@@ -1,4 +1,4 @@
-<%--@elvariable id="currentUser" type="com.coretex.commerce.data.UserData"--%>
+<%--@elvariable id="currentUser" type="com.coretex.commerce.data.minimal.MinimalCustomerData"--%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -71,8 +71,8 @@
                 <div class="col-lg-8">
                     <div class="page-header-title">
                         <div class="d-inline">
-                            <h4>Products</h4>
-                            <span>Products information</span>
+                            <h4>Customers</h4>
+                            <span>Customers information</span>
                         </div>
                     </div>
                 </div>
@@ -86,14 +86,13 @@
                                        tableId="customersTable"
                                        dataSourceLink="/customer/paginated"
                                        rowId="uuid"
-                                       actionTarget="6" >
+                                       actionTarget="5" >
                 <jsp:attribute name="theader">
                     <tr>
                         <th>Email</th>
                         <th>First name</th>
                         <th>Last name</th>
                         <th>Store</th>
-                        <th>Gender</th>
                         <th>Active</th>
                         <th>Action</th>
                     </tr>
@@ -103,8 +102,7 @@
                         {"data": "email"},
                         {"data": "firstName"},
                         {"data": "lastName"},
-                        {"data": "merchantStore"},
-                        {"data": "gender"},
+                        {"data": "store"},
                         {"data": "active"}
                     ]
                 </jsp:attribute>

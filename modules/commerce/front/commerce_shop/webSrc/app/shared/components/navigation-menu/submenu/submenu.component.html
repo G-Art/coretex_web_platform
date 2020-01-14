@@ -1,0 +1,8 @@
+<ul class="{{subMenuClasses}}" >
+    <li *ngFor="let category of categoryData"
+        [ngClass]="{'has-children' : category.children !== 'undefined' && category.children.length > 0}">
+        <a routerLink="/category/{{category.code}}">{{category.name}}</a>
+        <app-submenu *ngIf="category.children !== 'undefined' && category.children.length > 0"
+                     [categoryData]="category.children" ></app-submenu>
+    </li>
+</ul>

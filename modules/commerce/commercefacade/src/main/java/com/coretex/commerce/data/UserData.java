@@ -11,17 +11,17 @@ public class UserData extends GenericItemData {
 	private String adminName;
 
 	private LocaleData language;
-	private MerchantStoreData merchantStore;
+	private StoreData store;
 	private List<GroupData> groups;
 
 	private Boolean active;
 
-	public MerchantStoreData getMerchantStore() {
-		return merchantStore;
+	public StoreData getStore() {
+		return store;
 	}
 
-	public void setMerchantStore(MerchantStoreData merchantStore) {
-		this.merchantStore = merchantStore;
+	public void setStore(StoreData store) {
+		this.store = store;
 	}
 
 	public List<GroupData> getGroups() {

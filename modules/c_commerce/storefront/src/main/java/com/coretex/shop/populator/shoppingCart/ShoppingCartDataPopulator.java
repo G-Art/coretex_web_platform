@@ -103,7 +103,7 @@ public class ShoppingCartDataPopulator extends AbstractDataPopulator<ShoppingCar
 
 				com.coretex.shop.model.shoppingcart.ShoppingCartItem shoppingCartItem = new com.coretex.shop.model.shoppingcart.ShoppingCartItem();
 				shoppingCartItem.setCode(cart.getCode());
-				shoppingCartItem.setProductCode(item.getProduct().getSku());
+				shoppingCartItem.setProductCode(item.getProduct().getCode());
 				shoppingCartItem.setProductVirtual(item.getProductVirtual() != null ? item.getProductVirtual() : false);
 
 				shoppingCartItem.setProductId(item.getProduct().getUuid());
@@ -122,7 +122,7 @@ public class ShoppingCartDataPopulator extends AbstractDataPopulator<ShoppingCar
 				shoppingCartItem.setSubTotal(pricingService.getDisplayAmount(item.getSubTotal(), store));
 				Optional<ProductImageItem> image = item.getProduct().getImages().stream().filter(ProductImageItem::getDefaultImage).findAny();
 				if (image.isPresent() && imageUtils != null) {
-					String imagePath = imageUtils.buildProductImageUtils(store, item.getProduct().getSku(), image.get().getProductImage());
+					String imagePath = imageUtils.buildProductImageUtils(store, item.getProduct().getCode(), image.get().getProductImage());
 					shoppingCartItem.setImage(imagePath);
 				}
 				shoppingCartItemsList.add(shoppingCartItem);

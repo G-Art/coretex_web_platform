@@ -1,12 +1,12 @@
 package com.coretex.commerce.data;
 
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.collections4.CollectionUtils;
 
 public class CategoryHierarchyData{
 
-	private transient com.coretex.items.commerce_core_model.CategoryItem categoryItem;
+	private transient CategoryItem categoryItem;
 
 	public CategoryHierarchyData(CategoryItem categoryItem) {
 		this.categoryItem = categoryItem;

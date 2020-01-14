@@ -1,6 +1,6 @@
 package com.coretex.shop.store.controller.category.converter;
 
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.shop.model.catalog.category.Category;
@@ -23,15 +23,15 @@ public class ReadableCategoryConverter implements Converter<CategoryItem, Readab
 				createParentCategory(source);
 		parentCategory.ifPresent(target::setParent);
 
-		Optional.ofNullable(source.getDepth()).ifPresent(target::setDepth);
+//		Optional.ofNullable(source.getDepth()).ifPresent(target::setDepth);
 
 		target.setDescription(getCategoryDescription(source).get());
-		target.setLineage(source.getLineage());
+//		target.setLineage(source.getLineage());
 		target.setCode(source.getCode());
 		target.setUuid(source.getUuid());
-		target.setSortOrder(source.getSortOrder());
+//		target.setSortOrder(source.getSortOrder());
 		target.setVisible(source.getVisible());
-		target.setFeatured(source.getFeatured());
+//		target.setFeatured(source.getFeatured());
 		return target;
 	}
 
@@ -47,13 +47,13 @@ public class ReadableCategoryConverter implements Converter<CategoryItem, Readab
 	private CategoryDescription convertDescription(CategoryItem source) {
 		final CategoryDescription desc = new CategoryDescription();
 
-		desc.setFriendlyUrl(source.getSeUrl());
+//		desc.setFriendlyUrl(source.getSeUrl());
 		desc.setName(source.getName());
 		desc.setDescription(source.getName());
-		desc.setKeyWords(source.getMetatagKeywords());
-		desc.setHighlights(source.getCategoryHighlight());
-		desc.setTitle(source.getMetatagTitle());
-		desc.setMetaDescription(source.getMetatagDescription());
+//		desc.setKeyWords(source.getMetatagKeywords());
+//		desc.setHighlights(source.getCategoryHighlight());
+//		desc.setTitle(source.getMetatagTitle());
+//		desc.setMetaDescription(source.getMetatagDescription());
 		return desc;
 	}
 

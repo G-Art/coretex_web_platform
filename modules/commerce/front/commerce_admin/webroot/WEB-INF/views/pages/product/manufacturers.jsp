@@ -102,7 +102,7 @@
                     [
                         {"data": "code"},
                         {"data": "name"},
-                        {"data": "merchantStore"}
+                        {"data": "store"}
                     ]
                 </jsp:attribute>
             </components:tableComponent>

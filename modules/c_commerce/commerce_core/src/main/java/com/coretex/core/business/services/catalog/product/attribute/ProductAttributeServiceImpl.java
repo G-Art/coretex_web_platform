@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.coretex.core.business.repositories.catalog.product.attribute.ProductAttributeDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.core.LocaleItem;
 
 @Service("productAttributeService")

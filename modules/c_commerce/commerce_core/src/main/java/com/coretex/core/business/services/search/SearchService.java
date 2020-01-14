@@ -1,7 +1,7 @@
 package com.coretex.core.business.services.search;
 
 
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.core.model.search.SearchKeywords;

@@ -7,7 +7,7 @@ import org.apache.commons.lang3.Validate;
 
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.shop.model.catalog.product.PersistableImage;
 
 public class PersistableProductImagePopulator extends AbstractDataPopulator<PersistableImage, ProductImageItem> {

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

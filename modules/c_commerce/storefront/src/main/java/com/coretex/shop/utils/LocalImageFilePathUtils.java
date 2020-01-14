@@ -4,7 +4,7 @@ import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.core.model.content.FileContentType;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.manufacturer.Manufacturer;
@@ -94,7 +94,7 @@ public class LocalImageFilePathUtils extends AbstractimageFilePath {
 	 */
 	public String buildProductimageUtils(MerchantStoreItem store, ProductItem product, String imageName) {
 		return new StringBuilder().append(getBasePath()).append("/products/").append(store.getCode()).append("/")
-				.append(product.getSku()).append("/").append("LARGE").append("/").append(imageName).toString();
+				.append(product.getCode()).append("/").append("LARGE").append("/").append(imageName).toString();
 	}
 
 	/**

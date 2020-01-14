@@ -1,30 +1,21 @@
 package com.coretex.shop.store.controller.product;
 
 import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.utils.CacheUtils;
-import com.coretex.core.model.catalog.product.price.FinalPrice;
-import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ProductAttributeItem;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
 import com.coretex.shop.model.catalog.product.ReadableProductPrice;
-import com.coretex.shop.model.shop.Breadcrumb;
 import com.coretex.shop.model.shop.PageInformation;
 import com.coretex.shop.populator.catalog.ReadableFinalPricePopulator;
 import com.coretex.shop.populator.catalog.ReadableProductPopulator;
 import com.coretex.shop.store.controller.ControllerConstants;
 import com.coretex.shop.store.model.catalog.Attribute;
-import com.coretex.shop.store.model.catalog.AttributeValue;
 import com.coretex.shop.utils.BreadcrumbsUtils;
 import com.coretex.shop.utils.ImageFilePath;
-import com.coretex.shop.utils.PageBuilderUtils;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,8 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -59,9 +48,6 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/shop/product")
 public class ShopProductController {
-
-	@Resource
-	private ProductService productService;
 
 	@Resource
 	private ProductAttributeService productAttributeService;
@@ -124,30 +110,30 @@ public class ShopProductController {
 		MerchantStoreItem store = (MerchantStoreItem) request.getAttribute(Constants.MERCHANT_STORE);
 		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
-		ProductItem product = productService.getBySeUrl(store, friendlyUrl, locale);
+//		ProductItem product = productService.getBySeUrl(store, friendlyUrl, locale);
 
-		if (product == null) {
-			return PageBuilderUtils.build404(store);
-		}
+//		if (product == null) {
+//			return PageBuilderUtils.build404(store);
+//		}
 
 		ReadableProductPopulator populator = new ReadableProductPopulator();
 		populator.setPricingService(pricingService);
 		populator.setimageUtils(imageUtils);
 
-		ReadableProduct productProxy = populator.populate(product, new ReadableProduct(), store, language);
+//		ReadableProduct productProxy = populator.populate(product, new ReadableProduct(), store, language);
 
 		//meta information
 		PageInformation pageInformation = new PageInformation();
-		pageInformation.setPageDescription(productProxy.getDescription().getMetaDescription());
-		pageInformation.setPageKeywords(productProxy.getDescription().getKeyWords());
-		pageInformation.setPageTitle(productProxy.getDescription().getTitle());
-		pageInformation.setPageUrl(productProxy.getDescription().getFriendlyUrl());
+//		pageInformation.setPageDescription(productProxy.getDescription().getMetaDescription());
+//		pageInformation.setPageKeywords(productProxy.getDescription().getKeyWords());
+//		pageInformation.setPageTitle(productProxy.getDescription().getTitle());
+//		pageInformation.setPageUrl(productProxy.getDescription().getFriendlyUrl());
 
 		request.setAttribute(Constants.REQUEST_PAGE_INFORMATION, pageInformation);
 
-		Breadcrumb breadCrumb = breadcrumbsUtils.buildProductBreadcrumb(reference, productProxy, store, language, request.getContextPath());
-		request.getSession().setAttribute(Constants.BREADCRUMB, breadCrumb);
-		request.setAttribute(Constants.BREADCRUMB, breadCrumb);
+//		Breadcrumb breadCrumb = breadcrumbsUtils.buildProductBreadcrumb(reference, productProxy, store, language, request.getContextPath());
+//		request.getSession().setAttribute(Constants.BREADCRUMB, breadCrumb);
+//		request.setAttribute(Constants.BREADCRUMB, breadCrumb);
 
 
 		StringBuilder relatedItemsCacheKey = new StringBuilder();
@@ -175,74 +161,74 @@ public class ShopProductController {
 				//Boolean missedContent = (Boolean)cache.getFromCache(relatedItemsMissed.toString());
 
 				//if(missedContent==null) {
-				relatedItems = relatedItems(store, product, language);
+//				relatedItems = relatedItems(store, product, language);
 				if (relatedItems != null) {
 					relatedItemsMap = new HashMap<>();
-					relatedItemsMap.put(product.getUuid(), relatedItems);
+//					relatedItemsMap.put(product.getUuid(), relatedItems);
 					cache.putInCache(relatedItemsMap, relatedItemsCacheKey.toString());
 				} else {
 					//cache.putInCache(new Boolean(true), relatedItemsMissed.toString());
 				}
 				//}
 			} else {
-				relatedItems = relatedItemsMap.get(product.getUuid());
+//				relatedItems = relatedItemsMap.get(product.getUuid());
 			}
 		} else {
-			relatedItems = relatedItems(store, product, language);
+//			relatedItems = relatedItems(store, product, language);
 		}
 
 		model.addAttribute("relatedProducts", relatedItems);
-		Set<ProductAttributeItem> attributes = product.getAttributes();
+//		Set<ProductAttributeItem> attributes = product.getAttributes();
 
 
 		//split read only and options
 		Map<UUID, Attribute> readOnlyAttributes = null;
 		Map<UUID, Attribute> selectableOptions = null;
 
-		if (!CollectionUtils.isEmpty(attributes)) {
-
-			for (ProductAttributeItem attribute : attributes) {
-				Attribute attr = null;
-				AttributeValue attrValue = new AttributeValue();
-
-				if (attribute.getAttributeDisplayOnly() == true) {//read only attribute
-					if (readOnlyAttributes == null) {
-						readOnlyAttributes = new TreeMap<>();
-					}
-
-					if (attr != null) {
-						attr.setReadOnlyValue(attrValue);
-					}
-				} else {//selectable option
-					if (selectableOptions == null) {
-						selectableOptions = new TreeMap<>();
-					}
-
-				}
-
-
-				attrValue.setDefaultAttribute(attribute.getAttributeDefault());
-				attrValue.setUuid(attribute.getUuid());//id of the attribute
-				attrValue.setLanguage(language.getIso());
-				if (attribute.getProductAttributePrice() != null && attribute.getProductAttributePrice().doubleValue() > 0) {
-					String formatedPrice = pricingService.getDisplayAmount(attribute.getProductAttributePrice(), store);
-					attrValue.setPrice(formatedPrice);
-				}
-
-				attrValue.setSortOrder(0);
-				if (attribute.getProductOptionSortOrder() != null) {
-					attrValue.setSortOrder(attribute.getProductOptionSortOrder().intValue());
-				}
-
-				List<AttributeValue> attrs = attr.getValues();
-				if (attrs == null) {
-					attrs = new ArrayList<>();
-					attr.setValues(attrs);
-				}
-				attrs.add(attrValue);
-			}
-
-		}
+//		if (!CollectionUtils.isEmpty(attributes)) {
+//
+//			for (ProductAttributeItem attribute : attributes) {
+//				Attribute attr = null;
+//				AttributeValue attrValue = new AttributeValue();
+//
+//				if (attribute.getAttributeDisplayOnly() == true) {//read only attribute
+//					if (readOnlyAttributes == null) {
+//						readOnlyAttributes = new TreeMap<>();
+//					}
+//
+//					if (attr != null) {
+//						attr.setReadOnlyValue(attrValue);
+//					}
+//				} else {//selectable option
+//					if (selectableOptions == null) {
+//						selectableOptions = new TreeMap<>();
+//					}
+//
+//				}
+//
+//
+//				attrValue.setDefaultAttribute(attribute.getAttributeDefault());
+//				attrValue.setUuid(attribute.getUuid());//id of the attribute
+//				attrValue.setLanguage(language.getIso());
+//				if (attribute.getProductAttributePrice() != null && attribute.getProductAttributePrice().doubleValue() > 0) {
+//					String formatedPrice = pricingService.getDisplayAmount(attribute.getProductAttributePrice(), store);
+//					attrValue.setPrice(formatedPrice);
+//				}
+//
+//				attrValue.setSortOrder(0);
+//				if (attribute.getProductOptionSortOrder() != null) {
+//					attrValue.setSortOrder(attribute.getProductOptionSortOrder().intValue());
+//				}
+//
+//				List<AttributeValue> attrs = attr.getValues();
+//				if (attrs == null) {
+//					attrs = new ArrayList<>();
+//					attr.setValues(attrs);
+//				}
+//				attrs.add(attrValue);
+//			}
+//
+//		}
 
 		List<Attribute> attributesList = null;
 		if (readOnlyAttributes != null) {
@@ -266,7 +252,7 @@ public class ShopProductController {
 		model.addAttribute("attributes", attributesList);
 		model.addAttribute("options", optionsList);
 
-		model.addAttribute("product", productProxy);
+//		model.addAttribute("product", productProxy);
 
 
 		/** template **/
@@ -284,23 +270,23 @@ public class ShopProductController {
 		LocaleItem language = (LocaleItem) request.getAttribute("LANGUAGE");
 
 
-		ProductItem product = productService.getByUUID(UUID.fromString(productId));
+//		ProductItem product = productService.getByUUID(UUID.fromString(productId));
 
 		@SuppressWarnings("unchecked")
 		List<UUID> ids = Arrays.stream(attributeIds).map(UUID::fromString).collect(Collectors.toList());
-		List<ProductAttributeItem> attributes = productAttributeService.getByAttributeIds(store, product, ids);
+//		List<ProductAttributeItem> attributes = productAttributeService.getByAttributeIds(store, product, ids);
 
-		for (ProductAttributeItem attribute : attributes) {
-			if (!attribute.getProduct().getUuid().equals(UUID.fromString(productId))) {
-				return null;
-			}
-		}
+//		for (ProductAttributeItem attribute : attributes) {
+//			if (!attribute.getProduct().getUuid().equals(UUID.fromString(productId))) {
+//				return null;
+//			}
+//		}
 
-		FinalPrice price = pricingService.calculateProductPrice(product, attributes);
+//		FinalPrice price = pricingService.calculateProductPrice(product, attributes);
 		ReadableProductPrice readablePrice = new ReadableProductPrice();
 		ReadableFinalPricePopulator populator = new ReadableFinalPricePopulator();
 		populator.setPricingService(pricingService);
-		populator.populate(price, readablePrice, store, language);
+//		populator.populate(price, readablePrice, store, language);
 		return readablePrice;
 
 	}

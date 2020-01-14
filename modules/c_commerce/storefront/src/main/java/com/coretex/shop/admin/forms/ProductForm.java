@@ -20,17 +20,16 @@ public class ProductForm implements Serializable {
 	private UUID uuid;
 
 	@NotBlank
-	private String sku;
-	private String seUrl;
+	private String code;
 
 	private Map<String, String> name;
 	private Map<String, String> title;
 	private Map<String, String> description;
 	private Map<String, String> productHighlight;
 	private Map<String, String> productExternalDl;
-	private Map<String, String> metatagTitle;
-	private Map<String, String> metatagKeywords;
-	private Map<String, String> metatagDescription;
+	private Map<String, String> metaTitle;
+	private Map<String, String> metaKeywords;
+	private Map<String, String> metaDescription;
 
 	private boolean available = false;
 	private boolean preOrder = false;
@@ -41,6 +40,38 @@ public class ProductForm implements Serializable {
 	private BigDecimal productWidth;
 	private BigDecimal productLength;
 	private Integer sortOrder;
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Map<String, String> getMetaTitle() {
+		return metaTitle;
+	}
+
+	public void setMetaTitle(Map<String, String> metaTitle) {
+		this.metaTitle = metaTitle;
+	}
+
+	public Map<String, String> getMetaKeywords() {
+		return metaKeywords;
+	}
+
+	public void setMetaKeywords(Map<String, String> metaKeywords) {
+		this.metaKeywords = metaKeywords;
+	}
+
+	public Map<String, String> getMetaDescription() {
+		return metaDescription;
+	}
+
+	public void setMetaDescription(Map<String, String> metaDescription) {
+		this.metaDescription = metaDescription;
+	}
 
 	@NotEmpty
 	private String productPrice = "0";
@@ -61,14 +92,6 @@ public class ProductForm implements Serializable {
 
 
 	private ProductImageItem productImage = null;
-
-	public String getSeUrl() {
-		return seUrl;
-	}
-
-	public void setSeUrl(String seUrl) {
-		this.seUrl = seUrl;
-	}
 
 	public Integer getSortOrder() {
 		return sortOrder;
@@ -134,29 +157,7 @@ public class ProductForm implements Serializable {
 		this.productExternalDl = productExternalDl;
 	}
 
-	public Map<String, String> getMetatagTitle() {
-		return metatagTitle;
-	}
 
-	public void setMetatagTitle(Map<String, String> metatagTitle) {
-		this.metatagTitle = metatagTitle;
-	}
-
-	public Map<String, String> getMetatagKeywords() {
-		return metatagKeywords;
-	}
-
-	public void setMetatagKeywords(Map<String, String> metatagKeywords) {
-		this.metatagKeywords = metatagKeywords;
-	}
-
-	public Map<String, String> getMetatagDescription() {
-		return metatagDescription;
-	}
-
-	public void setMetatagDescription(Map<String, String> metatagDescription) {
-		this.metatagDescription = metatagDescription;
-	}
 
 	public Map<String, String> getName() {
 		return name;
@@ -228,14 +229,6 @@ public class ProductForm implements Serializable {
 
 	public void setPreOrder(boolean preOrder) {
 		this.preOrder = preOrder;
-	}
-
-	public String getSku() {
-		return sku;
-	}
-
-	public void setSku(String sku) {
-		this.sku = sku;
 	}
 
 	public String getDateAvailable() {

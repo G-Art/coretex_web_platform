@@ -1,11 +1,11 @@
 package com.coretex.core.business.repositories.catalog.category;
 
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.cx_core.CategoryItem;
+
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
 
 public interface CategoryRepositoryCustom {
 

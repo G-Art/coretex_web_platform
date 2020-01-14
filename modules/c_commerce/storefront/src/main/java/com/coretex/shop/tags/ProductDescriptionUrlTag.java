@@ -1,24 +1,21 @@
 package com.coretex.shop.tags;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
-
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ProductItem;
-import org.apache.commons.lang3.StringUtils;
+import com.coretex.items.cx_core.ProductItem;
+import com.coretex.shop.constants.Constants;
+import com.coretex.shop.utils.FilePathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.tags.RequestContextAwareTag;
 
-import com.coretex.shop.constants.Constants;
-import com.coretex.shop.utils.FilePathUtils;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
 
 
 public class ProductDescriptionUrlTag extends RequestContextAwareTag {
-
 
 
 	private static final long serialVersionUID = 6319855234657139862L;
@@ -58,16 +55,9 @@ public class ProductDescriptionUrlTag extends RequestContextAwareTag {
 			String baseUrl = filePathUtils.buildStoreUri(merchantStore, request);
 			productPath.append(baseUrl);
 
-			if (!StringUtils.isBlank(this.getProduct().getSeUrl())) {
-				productPath.append(Constants.PRODUCT_URI).append("/");
-				productPath.append(this.getProduct().getSeUrl());
-			} else {
-				productPath.append(Constants.PRODUCT_ID_URI).append("/");
-				productPath.append(this.getProduct().getSku());
-			}
 
-			productPath.append(Constants.URL_EXTENSION);
-
+			productPath.append(Constants.PRODUCT_ID_URI).append("/");
+			productPath.append(this.getProduct().getCode());
 
 			pageContext.getOut().print(productPath.toString());
 

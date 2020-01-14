@@ -7,15 +7,15 @@ import com.coretex.core.model.catalog.product.ProductCriteria;
 import com.coretex.core.model.catalog.product.ProductList;
 import com.coretex.core.model.catalog.product.attribute.AttributeCriteria;
 import com.coretex.enums.commerce_core_model.RentalStatusEnum;
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.relations.commerce_core_model.CategoryProductRelation;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.relations.commerce_core_model.ProductProductAttributeRelation;
 import com.coretex.relations.commerce_core_model.ProductProductAvailabilityRelation;
+import com.coretex.relations.cx_core.CategoryProductRelation;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -38,12 +38,12 @@ public class ProductDaoImpl extends DefaultGenericDao<ProductItem> implements Pr
 
 	@Override
 	public ProductItem getByCode(String productCode, LocaleItem language) {
-		return findSingle(Map.of(ProductItem.SKU, productCode), true);
+		return findSingle(Map.of(ProductItem.CODE, productCode), true);
 	}
 
 	@Override
 	public ProductItem getByCode(String productCode) {
-		return findSingle(Map.of(ProductItem.SKU, productCode), true);
+		return findSingle(Map.of(ProductItem.CODE, productCode), true);
 	}
 
 	public ProductItem getByFriendlyUrl(MerchantStoreItem store, String seUrl, Locale locale) {

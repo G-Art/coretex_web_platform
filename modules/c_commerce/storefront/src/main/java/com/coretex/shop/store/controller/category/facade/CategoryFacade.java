@@ -1,6 +1,6 @@
 package com.coretex.shop.store.controller.category.facade;
 
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.model.catalog.category.PersistableCategory;

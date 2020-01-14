@@ -1,12 +1,11 @@
 package com.coretex.shop.store.controller.category.facade;
 
 import com.coretex.core.business.exception.ConversionException;
-
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
-import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.shop.model.catalog.category.PersistableCategory;
 import com.coretex.shop.model.catalog.category.ReadableCategory;
 import com.coretex.shop.populator.catalog.PersistableCategoryPopulator;
@@ -14,7 +13,13 @@ import com.coretex.shop.populator.catalog.ReadableCategoryPopulator;
 import com.coretex.shop.store.api.exception.ResourceNotFoundException;
 import com.coretex.shop.store.api.exception.ServiceRuntimeException;
 import com.coretex.shop.store.controller.converter.Converter;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +28,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 @Service(value = "categoryFacade")
 public class CategoryFacadeImpl implements CategoryFacade {
@@ -137,15 +135,15 @@ public class CategoryFacadeImpl implements CategoryFacade {
 		if (parent != null) {
 			category.setParent(category);
 
-			String lineage = parent.getLineage();
-			int depth = parent.getDepth();
+//			String lineage = parent.getLineage();
+//			int depth = parent.getDepth();
 
-			category.setDepth(depth + 1);
-			category.setLineage(
-					new StringBuilder().append(lineage).append(parent.getUuid()).append("/").toString());
+//			category.setDepth(depth + 1);
+//			category.setLineage(
+//					new StringBuilder().append(lineage).append(parent.getUuid()).append("/").toString());
 		}
 
-		category.setMerchantStore(store);
+//		category.setMerchantStore(store);
 
 		// remove children
 		List<CategoryItem> children = category.getCategories();
@@ -171,22 +169,22 @@ public class CategoryFacadeImpl implements CategoryFacade {
 	public ReadableCategory getById(MerchantStoreItem store, UUID id, LocaleItem language) {
 		CategoryItem categoryModel = getCategoryById(id, language);
 
-		StringBuilder lineage =
-				new StringBuilder().append(categoryModel.getLineage()).append(categoryModel.getUuid());
+//		StringBuilder lineage =
+//				new StringBuilder().append(categoryModel.getLineage()).append(categoryModel.getUuid());
 
 		// get children
-		ReadableCategory readableCategory =
-				categoryReadableCategoryConverter.convert(categoryModel, store, language);
+//		ReadableCategory readableCategory =
+//				categoryReadableCategoryConverter.convert(categoryModel, store, language);
 
-		List<CategoryItem> children = getListByLineage(store, lineage.toString());
+//		List<CategoryItem> children = getListByLineage(store, lineage.toString());
 
-		List<ReadableCategory> childrenCats =
-				children.stream()
-						.map(cat -> categoryReadableCategoryConverter.convert(cat, store, language))
-						.collect(Collectors.toList());
-
-		addChildToParent(readableCategory, childrenCats);
-		return readableCategory;
+//		List<ReadableCategory> childrenCats =
+//				children.stream()
+//						.map(cat -> categoryReadableCategoryConverter.convert(cat, store, language))
+//						.collect(Collectors.toList());
+//
+//		addChildToParent(readableCategory, childrenCats);
+		return null;
 	}
 
 	private void addChildToParent(ReadableCategory readableCategory,

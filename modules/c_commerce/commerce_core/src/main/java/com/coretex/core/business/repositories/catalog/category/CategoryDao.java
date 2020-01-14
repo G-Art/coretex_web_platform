@@ -1,10 +1,11 @@
 package com.coretex.core.business.repositories.catalog.category;
 
+import com.coretex.core.activeorm.dao.Dao;
+import com.coretex.items.cx_core.CategoryItem;
+
 import java.util.List;
 import java.util.UUID;
-
-import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.core.activeorm.dao.Dao;
+import java.util.stream.Stream;
 
 
 public interface CategoryDao extends Dao<CategoryItem>, CategoryRepositoryCustom {
@@ -12,9 +13,6 @@ public interface CategoryDao extends Dao<CategoryItem>, CategoryRepositoryCustom
 
 	//	@Query("select c from CategoryItem c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cd.seUrl like ?2 and cm.id = ?1 order by c.sortOrder asc")
 	List<CategoryItem> listByFriendlyUrl(UUID storeId, String friendlyUrl);
-
-	//	@Query("select c from CategoryItem c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cd.seUrl=?2 and cm.id = ?1")
-	CategoryItem findByFriendlyUrl(UUID storeId, String friendlyUrl);
 
 	//	@Query("select c from CategoryItem c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cd.name like %?2% and cdl.id=?3 and cm.id = ?1 order by c.sortOrder asc")
 	List<CategoryItem> findByName(UUID storeId, String name, UUID languageId);
@@ -53,7 +51,7 @@ public interface CategoryDao extends Dao<CategoryItem>, CategoryRepositoryCustom
 	List<CategoryItem> findByDepthFilterByFeatured(UUID merchantId, int depth, UUID languageId);
 
 	//	@Query("select distinct c from CategoryItem c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm left join fetch c.parent cp where cp.id=?1 and cdl.id=?2 order by c.lineage, c.sortOrder asc")
-	List<CategoryItem> findByParent(UUID parentId);
+	Stream<CategoryItem> findByParent(UUID parentId);
 
 	//	@Query("select distinct c from CategoryItem c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and cdl.id=?2 order by c.lineage, c.sortOrder asc")
 	List<CategoryItem> findByStore(UUID merchantId, UUID languageId);

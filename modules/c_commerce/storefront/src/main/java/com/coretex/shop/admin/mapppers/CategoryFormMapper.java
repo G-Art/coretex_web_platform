@@ -1,6 +1,6 @@
 package com.coretex.shop.admin.mapppers;
 
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.shop.admin.forms.CategoryForm;
 import com.coretex.shop.admin.mapppers.dto.CategoryDtoMapper;
 import com.coretex.shop.admin.mapppers.dto.ReferenceMapper;
@@ -22,10 +22,9 @@ public abstract class CategoryFormMapper implements LocalizedFieldMapper<Categor
 			@Mapping(target = "name", ignore = true),
 			@Mapping(target = "title", ignore = true),
 			@Mapping(target = "description", ignore = true),
-			@Mapping(target = "categoryHighlight", ignore = true),
-			@Mapping(target = "metatagTitle", ignore = true),
-			@Mapping(target = "metatagKeywords", ignore = true),
-			@Mapping(target = "metatagDescription", ignore = true)
+			@Mapping(target = "metaTitle", ignore = true),
+			@Mapping(target = "metaKeywords", ignore = true),
+			@Mapping(target = "metaDescription", ignore = true)
 	})
 	public abstract CategoryForm fromCategoryItem(CategoryItem source);
 
@@ -38,10 +37,9 @@ public abstract class CategoryFormMapper implements LocalizedFieldMapper<Categor
 			@Mapping(target = "name", ignore = true),
 			@Mapping(target = "title", ignore = true),
 			@Mapping(target = "description", ignore = true),
-			@Mapping(target = "categoryHighlight", ignore = true),
-			@Mapping(target = "metatagTitle", ignore = true),
-			@Mapping(target = "metatagKeywords", ignore = true),
-			@Mapping(target = "metatagDescription", ignore = true)
+			@Mapping(target = "metaTitle", ignore = true),
+			@Mapping(target = "metaKeywords", ignore = true),
+			@Mapping(target = "metaDescription", ignore = true)
 	})
 	public abstract CategoryItem toCategoryItem(CategoryForm source);
 

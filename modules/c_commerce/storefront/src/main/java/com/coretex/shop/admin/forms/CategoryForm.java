@@ -15,9 +15,9 @@ public class CategoryForm implements Serializable {
 	private Map<String, String> title;
 	private Map<String, String> description;
 	private Map<String, String> categoryHighlight;
-	private Map<String, String> metatagTitle;
-	private Map<String, String> metatagKeywords;
-	private Map<String, String> metatagDescription;
+	private Map<String, String> metaTitle;
+	private Map<String, String> metaKeywords;
+	private Map<String, String> metaDescription;
 
 	private Boolean featured = false;
 	private Boolean visible = true;
@@ -87,28 +87,28 @@ public class CategoryForm implements Serializable {
 		this.categoryHighlight = categoryHighlight;
 	}
 
-	public Map<String, String> getMetatagTitle() {
-		return metatagTitle;
+	public Map<String, String> getMetaTitle() {
+		return metaTitle;
 	}
 
-	public void setMetatagTitle(Map<String, String> metatagTitle) {
-		this.metatagTitle = metatagTitle;
+	public void setMetaTitle(Map<String, String> metaTitle) {
+		this.metaTitle = metaTitle;
 	}
 
-	public Map<String, String> getMetatagKeywords() {
-		return metatagKeywords;
+	public Map<String, String> getMetaKeywords() {
+		return metaKeywords;
 	}
 
-	public void setMetatagKeywords(Map<String, String> metatagKeywords) {
-		this.metatagKeywords = metatagKeywords;
+	public void setMetaKeywords(Map<String, String> metaKeywords) {
+		this.metaKeywords = metaKeywords;
 	}
 
-	public Map<String, String> getMetatagDescription() {
-		return metatagDescription;
+	public Map<String, String> getMetaDescription() {
+		return metaDescription;
 	}
 
-	public void setMetatagDescription(Map<String, String> metatagDescription) {
-		this.metatagDescription = metatagDescription;
+	public void setMetaDescription(Map<String, String> metaDescription) {
+		this.metaDescription = metaDescription;
 	}
 
 	public Boolean getFeatured() {

@@ -1,7 +1,6 @@
 package com.coretex.shop.populator.order;
 
 import com.coretex.core.business.exception.ConversionException;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.reference.currency.CurrencyService;
 import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
@@ -27,7 +26,6 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 
 	private CurrencyService currencyService;
 	private ShoppingCartService shoppingCartService;
-	private ProductService productService;
 	private ProductAttributeService productAttributeService;
 
 
@@ -38,7 +36,6 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 
 		Validate.notNull(currencyService, "currencyService must be set");
 		Validate.notNull(shoppingCartService, "shoppingCartService must be set");
-		Validate.notNull(productService, "productService must be set");
 		Validate.notNull(productAttributeService, "productAttributeService must be set");
 		Validate.notNull(source.getPayment(), "Payment cannot be null");
 
@@ -118,14 +115,6 @@ public class PersistableOrderApiPopulator extends AbstractDataPopulator<Persista
 
 	public void setShoppingCartService(ShoppingCartService shoppingCartService) {
 		this.shoppingCartService = shoppingCartService;
-	}
-
-	public ProductService getProductService() {
-		return productService;
-	}
-
-	public void setProductService(ProductService productService) {
-		this.productService = productService;
 	}
 
 	public ProductAttributeService getProductAttributeService() {

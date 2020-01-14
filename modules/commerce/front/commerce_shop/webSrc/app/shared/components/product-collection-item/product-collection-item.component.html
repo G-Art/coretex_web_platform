@@ -1,0 +1,191 @@
+<!--=======  grid view product  =======-->
+
+<div *ngIf="itemView === 'grid' " class="single-grid-product">
+    <div class="single-grid-product__image">
+        <div class="product-badge-wrapper">
+            <span class="onsale">-17%</span>
+            <span class="hot">Hot</span>
+        </div>
+        <a href="product-details-basic.html" class="image-wrap">
+            <img src="/app/assets/img/products/product-9-1-600x800.jpg"
+                 class="img-fluid"
+                 alt="">
+            <img src="/app/assets/img/products/product-9-2-600x800.jpg"
+                 class="img-fluid"
+                 alt="">
+        </a>
+        <div class="product-hover-icon-wrapper">
+            <span class="single-icon single-icon--quick-view">
+                <a class="cd-trigger"
+                   href="#qv-1"
+                   data-tippy="Quick View"
+                   data-tippy-inertia="true"
+                   data-tippy-animation="shift-away"
+                   data-tippy-delay="50"
+                   data-tippy-arrow="true"
+                   data-tippy-theme="sharpborder">
+                    <i class="fa fa-search"></i>
+                </a>
+            </span>
+            <span class="single-icon single-icon--add-to-cart">
+                <a href="#"
+                   data-tippy="Add to cart"
+                   data-tippy-inertia="true"
+                   data-tippy-animation="shift-away"
+                   data-tippy-delay="50"
+                   data-tippy-arrow="true"
+                   data-tippy-theme="sharpborder">
+                    <i class="fa fa-shopping-basket"></i><span>ADD TO CART</span>
+                </a>
+            </span>
+            <span class="single-icon single-icon--compare">
+                <a href="#"
+                   data-tippy="Compare"
+                   data-tippy-inertia="true"
+                   data-tippy-animation="shift-away"
+                   data-tippy-delay="50"
+                   data-tippy-arrow="true"
+                   data-tippy-theme="sharpborder">
+                    <i class="fa fa-exchange"> </i>
+                </a>
+            </span>
+        </div>
+    </div>
+    <div class="single-grid-product__content">
+        <h3 class="title"><a href="product-details-basic.html">Lighting Lamp</a></h3>
+        <div class="price"><span class="main-price discounted">$145</span> <span
+                class="discounted-price">$110</span></div>
+        <div class="rating">
+            <i class="fa fa-star active"></i>
+            <i class="fa fa-star active"></i>
+            <i class="fa fa-star active"></i>
+            <i class="fa fa-star active"></i>
+            <i class="fa fa-star"></i>
+        </div>
+        <div class="color">
+            <ul>
+                <li><a class="active" href="#" data-tippy="Black"
+                       data-tippy-inertia="true" data-tippy-animation="shift-away"
+                       data-tippy-delay="50" data-tippy-arrow="true"
+                       data-tippy-theme="roundborder"><span
+                        class="color-picker black"></span></a></li>
+                <li><a href="#" data-tippy="Blue" data-tippy-inertia="true"
+                       data-tippy-animation="shift-away" data-tippy-delay="50"
+                       data-tippy-arrow="true" data-tippy-theme="roundborder"><span
+                        class="color-picker blue"></span></a></li>
+                <li><a href="#" data-tippy="Brown" data-tippy-inertia="true"
+                       data-tippy-animation="shift-away" data-tippy-delay="50"
+                       data-tippy-arrow="true" data-tippy-theme="roundborder"><span
+                        class="color-picker brown"></span></a></li>
+            </ul>
+        </div>
+        <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"
+           data-tippy-inertia="true" data-tippy-animation="shift-away"
+           data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder"
+           data-tippy-placement="left">
+            <i class="fa fa-heart-o"></i>
+            <i class="fa fa-heart"></i>
+        </a>
+    </div>
+</div>
+
+<!--=======  End of grid view product  =======-->
+
+<!--=======  list view product  =======-->
+
+<div *ngIf="itemView === 'list'" class="single-list-product">
+
+    <div class="single-list-product__image">
+        <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"
+           data-tippy-inertia="true" data-tippy-animation="shift-away"
+           data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder"
+           data-tippy-placement="left">
+            <i class="fa fa-heart-o"></i>
+            <i class="fa fa-heart"></i>
+        </a>
+
+        <div class="product-badge-wrapper">
+            <span class="onsale">-17%</span>
+            <span class="hot">Hot</span>
+        </div>
+        <a href="product-details-basic.html" class="image-wrap">
+            <img src="/app/assets/img/products/product-9-1-600x800.jpg"
+                 class="img-fluid"
+                 alt="">
+            <img src="/app/assets/img/products/product-9-2-600x800.jpg"
+                 class="img-fluid"
+                 alt="">
+        </a>
+
+
+    </div>
+
+    <div class="single-list-product__content">
+        <h3 class="title"><a href="product-details-basic.html">Lighting Lamp</a></h3>
+        <div class="price"><span class="main-price discounted">$145</span> <span
+                class="discounted-price">$110</span></div>
+        <p class="product-short-desc">Lorem ipsum dolor sit amet, consectetur
+            adipisicing elit. Dolorem quod optio quaerat in molestiae amet repudiandae
+            repellendus eveniet libero mollitia. Lorem ipsum dolor sit amet, consectetur
+            adipisicing elit.</p>
+
+        <div class="color">
+            <ul>
+                <li><a class="active" href="#" data-tippy="Black"
+                       data-tippy-inertia="true" data-tippy-animation="shift-away"
+                       data-tippy-delay="50" data-tippy-arrow="true"
+                       data-tippy-theme="roundborder"><span
+                        class="color-picker black"></span></a></li>
+                <li><a href="#" data-tippy="Blue" data-tippy-inertia="true"
+                       data-tippy-animation="shift-away" data-tippy-delay="50"
+                       data-tippy-arrow="true" data-tippy-theme="roundborder"><span
+                        class="color-picker blue"></span></a></li>
+                <li><a href="#" data-tippy="Brown" data-tippy-inertia="true"
+                       data-tippy-animation="shift-away" data-tippy-delay="50"
+                       data-tippy-arrow="true" data-tippy-theme="roundborder"><span
+                        class="color-picker brown"></span></a></li>
+            </ul>
+        </div>
+
+        <div class="product-hover-icon-wrapper">
+            <span class="single-icon single-icon--quick-view">
+                <a class="cd-trigger"
+                   href="#qv-1"
+                   data-tippy="Quick View"
+                   data-tippy-inertia="true"
+                   data-tippy-animation="shift-away"
+                   data-tippy-delay="50"
+                   data-tippy-arrow="true"
+                   data-tippy-theme="sharpborder">
+                    <i class="fa fa-search"></i>
+                </a>
+            </span>
+            <span class="single-icon single-icon--add-to-cart">
+                <a href="#"
+                   data-tippy="Add to cart"
+                   data-tippy-inertia="true"
+                   data-tippy-animation="shift-away"
+                   data-tippy-delay="50"
+                   data-tippy-arrow="true"
+                   data-tippy-theme="sharpborder">
+                    <i class="fa fa-shopping-basket"></i>
+                    <span>ADD TO CART</span>
+                </a>
+            </span>
+            <span class="single-icon single-icon--compare">
+                <a href="#"
+                   data-tippy="Compare"
+                   data-tippy-inertia="true"
+                   data-tippy-animation="shift-away"
+                   data-tippy-delay="50"
+                   data-tippy-arrow="true"
+                   data-tippy-theme="sharpborder">
+                    <i class="fa fa-exchange"></i>
+                </a>
+            </span>
+        </div>
+
+    </div>
+</div>
+
+<!--=======  End of list view product  =======-->

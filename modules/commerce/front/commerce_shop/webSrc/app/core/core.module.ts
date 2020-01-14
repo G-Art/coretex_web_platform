@@ -8,6 +8,7 @@ import {AuthService} from "./service/auth.service";
 import {AuthGuardService} from "./service/authguard.service";
 import {UserService} from "./service/user.service";
 import {CookieService} from "ngx-cookie-service";
+import {CategoryService} from "./service/category.service";
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import {CookieService} from "ngx-cookie-service";
         AuthGuardService,
         UserService,
         LanguageService,
+        CategoryService,
         StoreService]
 })
 export class CoreModule {

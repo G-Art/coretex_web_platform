@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
 import com.coretex.items.cx_core.CustomerItem;

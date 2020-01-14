@@ -100,10 +100,10 @@
                 </jsp:attribute>
                 <jsp:attribute name="columns">
                     [
-                        {"data": "sku"},
+                        {"data": "code"},
                         {"data": "name"},
                         {"data": "available"},
-                        {"data": "merchantStore"}
+                        {"data": "store"}
                     ]
                 </jsp:attribute>
             </components:tableComponent>

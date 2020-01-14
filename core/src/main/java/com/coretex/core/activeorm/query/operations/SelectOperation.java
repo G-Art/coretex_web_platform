@@ -29,6 +29,7 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 	private static Cache<Integer, Select> selectCache = CacheBuilder.newBuilder()
 			.softValues()
 			.maximumSize(255)
+			.concurrencyLevel(1)
 			.expireAfterAccess(20, TimeUnit.SECONDS)
 			.build();
 

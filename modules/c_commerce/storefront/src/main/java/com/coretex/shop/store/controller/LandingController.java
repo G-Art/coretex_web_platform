@@ -6,7 +6,7 @@ import com.coretex.core.business.services.merchant.MerchantStoreService;
 import com.coretex.core.model.catalog.product.relationship.ProductRelationshipType;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
 import com.coretex.shop.model.shop.Breadcrumb;

@@ -1,14 +1,5 @@
 package com.coretex.core.business.modules.cms.product.aws;
 
-import java.io.ByteArrayOutputStream;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
@@ -21,17 +12,25 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.coretex.core.business.constants.Constants;
-
 import com.coretex.core.business.modules.cms.impl.CMSManager;
 import com.coretex.core.business.modules.cms.product.ProductImageGet;
 import com.coretex.core.business.modules.cms.product.ProductImagePut;
 import com.coretex.core.business.modules.cms.product.ProductImageRemove;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.core.model.catalog.product.file.ProductImageSize;
-import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.core.model.content.FileContentType;
 import com.coretex.core.model.content.ImageContentFile;
 import com.coretex.core.model.content.OutputContentFile;
+import com.coretex.items.commerce_core_model.ProductImageItem;
+import com.coretex.items.cx_core.ProductItem;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayOutputStream;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ProductItem content file manager with AWS S3
@@ -135,8 +134,8 @@ public class S3ProductContentFileManager
 			String bucketName = bucketName();
 
 			final AmazonS3 s3 = s3Client();
-			s3.deleteObject(bucketName, nodePath(productImage.getProduct().getMerchantStore().getCode(),
-					productImage.getProduct().getSku()) + productImage.getProductImage());
+			s3.deleteObject(bucketName, nodePath(productImage.getProduct().getStore().getCode(),
+					productImage.getProduct().getCode()) + productImage.getProductImage());
 
 			LOGGER.info("Remove file");
 		} catch (final Exception e) {
@@ -152,7 +151,7 @@ public class S3ProductContentFileManager
 			String bucketName = bucketName();
 
 			final AmazonS3 s3 = s3Client();
-			s3.deleteObject(bucketName, nodePath(product.getMerchantStore().getCode(), product.getSku()));
+			s3.deleteObject(bucketName, nodePath(product.getStore().getCode(), product.getCode()));
 
 			LOGGER.info("Remove file");
 		} catch (final Exception e) {
@@ -196,8 +195,8 @@ public class S3ProductContentFileManager
 			String bucketName = bucketName();
 			final AmazonS3 s3 = s3Client();
 
-			String nodePath = this.nodePath(productImage.getProduct().getMerchantStore().getCode(),
-					productImage.getProduct().getSku(), contentImage);
+			String nodePath = this.nodePath(productImage.getProduct().getStore().getCode(),
+					productImage.getProduct().getCode(), contentImage);
 
 
 			ObjectMetadata metadata = new ObjectMetadata();

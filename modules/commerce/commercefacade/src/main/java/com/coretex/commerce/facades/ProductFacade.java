@@ -2,7 +2,7 @@ package com.coretex.commerce.facades;
 
 import com.coretex.commerce.data.minimal.MinimalProductData;
 import com.coretex.commerce.data.ProductData;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 
 import java.util.List;
 

@@ -1,21 +1,21 @@
 package com.coretex.core.business.repositories.catalog.category;
 
+import com.coretex.core.activeorm.dao.DefaultGenericDao;
+import com.coretex.core.activeorm.exceptions.AmbiguousResultException;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.cx_core.CategoryItem;
+import com.coretex.items.cx_core.ProductItem;
+import com.coretex.relations.cx_core.CategoryCategoryRelation;
+import com.coretex.relations.cx_core.CategoryProductRelation;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.stereotype.Component;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-
-
-import com.coretex.core.activeorm.dao.DefaultGenericDao;
-import com.coretex.core.activeorm.exceptions.AmbiguousResultException;
-import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.relations.commerce_core_model.CategoryCategoryRelation;
-import com.coretex.relations.commerce_core_model.CategoryProductRelation;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.stereotype.Component;
+import java.util.stream.Stream;
 
 @Component
 public class CategoryDaoImpl extends DefaultGenericDao<CategoryItem> implements CategoryDao {
@@ -96,10 +96,6 @@ public class CategoryDaoImpl extends DefaultGenericDao<CategoryItem> implements 
 		return null;
 	}
 
-	@Override
-	public CategoryItem findByFriendlyUrl(UUID storeId, String friendlyUrl) {
-		return findSingle(Map.of(CategoryItem.MERCHANT_STORE, storeId, CategoryItem.SE_URL, friendlyUrl), true);
-	}
 
 	@Override
 	public List<CategoryItem> findByName(UUID storeId, String name, UUID languageId) {
@@ -108,23 +104,23 @@ public class CategoryDaoImpl extends DefaultGenericDao<CategoryItem> implements 
 
 	@Override
 	public CategoryItem findByCode(UUID storeId, String code) {
-		return findSingle(Map.of(CategoryItem.MERCHANT_STORE, storeId, CategoryItem.CODE, code), true);
+		return findSingle(Map.of(CategoryItem.STORE, storeId, CategoryItem.CODE, code), true);
 	}
 
 	@Override
 	public List<CategoryItem> findByCodes(UUID storeId, List<String> codes, UUID languageId) {
 		String stringBuilder = "Select * from \"" + CategoryItem.ITEM_TYPE + "\" as c" +
-				" WHERE c." + CategoryItem.MERCHANT_STORE + " = :" + CategoryItem.MERCHANT_STORE +
-				" AND c.code IN (:" + CategoryItem.CODE + "S) order by c." + CategoryItem.SORT_ORDER + " asc";
-		return getSearchService().<CategoryItem>search(stringBuilder, Map.of(CategoryItem.MERCHANT_STORE, storeId, CategoryItem.CODE+"S", codes)).getResult();
+				" WHERE c." + CategoryItem.STORE + " = :" + CategoryItem.STORE +
+				" AND c.code IN (:" + CategoryItem.CODE + "S) ";
+		return getSearchService().<CategoryItem>search(stringBuilder, Map.of(CategoryItem.STORE, storeId, CategoryItem.CODE+"S", codes)).getResult();
 	}
 
 	@Override
 	public List<CategoryItem> findByIds(UUID storeId, List<UUID> ids, UUID languageId) {
 		String stringBuilder = "Select * from \"" + CategoryItem.ITEM_TYPE + "\" as c" +
-				" WHERE c." + CategoryItem.MERCHANT_STORE + " = :" + CategoryItem.MERCHANT_STORE +
-				" AND c.uuid IN (:" + CategoryItem.UUID + "S) order by c." + CategoryItem.SORT_ORDER + " asc";
-		return getSearchService().<CategoryItem>search(stringBuilder, Map.of(CategoryItem.MERCHANT_STORE, storeId, CategoryItem.UUID+"S", ids)).getResult();
+				" WHERE c." + CategoryItem.STORE + " = :" + CategoryItem.STORE +
+				" AND c.uuid IN (:" + CategoryItem.UUID + "S) ";
+		return getSearchService().<CategoryItem>search(stringBuilder, Map.of(CategoryItem.STORE, storeId, CategoryItem.UUID+"S", ids)).getResult();
 	}
 
 	@Override
@@ -173,22 +169,20 @@ public class CategoryDaoImpl extends DefaultGenericDao<CategoryItem> implements 
 	@Override
 	public List<CategoryItem> findByDepth(UUID merchantId, int depth, UUID languageId) {
 		String stringBuilder = "select * FROM \"" + CategoryItem.ITEM_TYPE + "\" AS c" +
-				" WHERE c." + CategoryItem.MERCHANT_STORE + " = :" + CategoryItem.MERCHANT_STORE +
-				" AND c." + CategoryItem.DEPTH + " >= :" + CategoryItem.DEPTH + " ORDER BY c." + CategoryItem.SORT_ORDER + " ASC";
-		return getSearchService().<CategoryItem>search(stringBuilder, Map.of(CategoryItem.MERCHANT_STORE, merchantId, CategoryItem.DEPTH, depth)).getResult();
+				" WHERE c." + CategoryItem.STORE + " = :" + CategoryItem.STORE ;
+		return getSearchService().<CategoryItem>search(stringBuilder, Map.of(CategoryItem.STORE, merchantId)).getResult();
 	}
 
 	//	@Query("select distinct c from CategoryItem c left join fetch c.descriptions cd join fetch cd.language cdl join fetch c.merchantStore cm where cm.id=?1 and cdl.id=?3 and c.depth >= ?2 and c.featured=true order by c.lineage, c.sortOrder asc")
 	@Override
 	public List<CategoryItem> findByDepthFilterByFeatured(UUID merchantId, int depth, UUID languageId) {
 		String stringBuilder = "Select * from \"" + CategoryItem.ITEM_TYPE + "\" as c" +
-				" WHERE c." + CategoryItem.MERCHANT_STORE + " = :" + CategoryItem.MERCHANT_STORE +
-				" AND c." + CategoryItem.DEPTH + " >= :" + CategoryItem.DEPTH + " and c." + CategoryItem.FEATURED + "=true" + " order by c." + CategoryItem.SORT_ORDER + " asc";
-		return getSearchService().<CategoryItem>search(stringBuilder, Map.of(CategoryItem.MERCHANT_STORE, merchantId, CategoryItem.DEPTH, depth)).getResult();
+				" WHERE c." + CategoryItem.STORE + " = :" + CategoryItem.STORE;
+		return getSearchService().<CategoryItem>search(stringBuilder, Map.of(CategoryItem.STORE, merchantId)).getResult();
 	}
 
 	@Override
-	public List<CategoryItem> findByParent(UUID parentId) {
+	public Stream<CategoryItem> findByParent(UUID parentId) {
 
 		String qs = "SELECT * FROM " + CategoryItem.ITEM_TYPE + " AS category ";
 
@@ -200,18 +194,18 @@ public class CategoryDaoImpl extends DefaultGenericDao<CategoryItem> implements 
 					"WHERE categories.source = :cid";
 		}
 		if(Objects.isNull(parentId)){
-			return getSearchService().<CategoryItem>search(qs).getResult();
+			return getSearchService().<CategoryItem>search(qs).getResultStream();
 		}
-		return getSearchService().<CategoryItem>search(qs, Map.of("cid", parentId)).getResult();
+		return getSearchService().<CategoryItem>search(qs, Map.of("cid", parentId)).getResultStream();
 	}
 
 	@Override
 	public List<CategoryItem> findByStore(UUID merchantId, UUID languageId) {
-		return find(Map.of(CategoryItem.MERCHANT_STORE, merchantId));
+		return find(Map.of(CategoryItem.STORE, merchantId));
 	}
 
 	@Override
 	public List<CategoryItem> findByStore(UUID merchantId) {
-		return find(Map.of(CategoryItem.MERCHANT_STORE, merchantId));
+		return find(Map.of(CategoryItem.STORE, merchantId));
 	}
 }

@@ -3,7 +3,6 @@ package com.coretex.shop.store.controller.order.facade;
 import com.coretex.core.business.constants.Constants;
 import com.coretex.core.business.exception.ConversionException;
 import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
@@ -29,7 +28,7 @@ import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.core.CountryItem;
@@ -90,8 +89,6 @@ public class OrderFacadeImpl implements OrderFacade {
 
 	@Resource
 	private OrderService orderService;
-	@Resource
-	private ProductService productService;
 	@Resource
 	private ProductAttributeService productAttributeService;
 	@Resource
@@ -175,7 +172,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 		ShoppingCartItemPopulator populator = new ShoppingCartItemPopulator();
 		populator.setProductAttributeService(productAttributeService);
-		populator.setProductService(productService);
+//		populator.setProductService(productService);
 		populator.setShoppingCartService(shoppingCartService);
 
 		List<ShoppingCartEntryItem> items = new ArrayList<ShoppingCartEntryItem>();
@@ -289,7 +286,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 		OrderProductPopulator orderProductPopulator = new OrderProductPopulator();
 		orderProductPopulator.setProductAttributeService(productAttributeService);
-		orderProductPopulator.setProductService(productService);
+//		orderProductPopulator.setProductService(productService);
 		orderProductPopulator.setPricingService(pricingService);
 
 		for (ShoppingCartEntryItem item : shoppingCartItems) {
@@ -552,7 +549,7 @@ public class OrderFacadeImpl implements OrderFacade {
 		for (OrderProductItem p : order.getOrderProducts()) {
 			ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
 			orderProductPopulator.setLocale(locale);
-			orderProductPopulator.setProductService(productService);
+//			orderProductPopulator.setProductService(productService);
 			orderProductPopulator.setPricingService(pricingService);
 			orderProductPopulator.setimageUtils(imageUtils);
 			ReadableOrderProduct orderProduct = new ReadableOrderProduct();
@@ -643,7 +640,7 @@ public class OrderFacadeImpl implements OrderFacade {
 		List<ReadableOrderProduct> orderProducts = new ArrayList<ReadableOrderProduct>();
 		for (OrderProductItem p : modelOrder.getOrderProducts()) {
 			ReadableOrderProductPopulator orderProductPopulator = new ReadableOrderProductPopulator();
-			orderProductPopulator.setProductService(productService);
+//			orderProductPopulator.setProductService(productService);
 			orderProductPopulator.setPricingService(pricingService);
 			orderProductPopulator.setimageUtils(imageUtils);
 
@@ -664,7 +661,7 @@ public class OrderFacadeImpl implements OrderFacade {
 		PersistableOrderApiPopulator populator = new PersistableOrderApiPopulator();
 		populator.setCurrencyService(currencyService);
 		populator.setProductAttributeService(productAttributeService);
-		populator.setProductService(productService);
+//		populator.setProductService(productService);
 		populator.setShoppingCartService(shoppingCartService);
 
 
@@ -688,7 +685,7 @@ public class OrderFacadeImpl implements OrderFacade {
 
 			OrderProductPopulator orderProductPopulator = new OrderProductPopulator();
 			orderProductPopulator.setProductAttributeService(productAttributeService);
-			orderProductPopulator.setProductService(productService);
+//			orderProductPopulator.setProductService(productService);
 
 			for (ShoppingCartEntryItem item : shoppingCartItems) {
 				OrderProductItem orderProduct = new OrderProductItem();

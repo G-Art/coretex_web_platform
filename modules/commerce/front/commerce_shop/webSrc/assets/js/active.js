@@ -10,22 +10,7 @@
     
     /*=====  End of variables  ======*/
 
-    /*=============================================
-    =     active and deactive search overlay            =
-    =============================================*/
-    
-    $('#search-icon, #search-icon-2').on('click', function(){
-		$('#search-overlay').addClass('active-search-overlay');
-		$('body').addClass('active-body-search-overlay');
-	});
 
-	$('#search-close-icon').on('click', function(){
-		$('#search-overlay').removeClass('active-search-overlay');
-		$('body').removeClass('active-body-search-overlay');
-	});
-
-    
-    /*=====  End of active and deactive search overlay  ======*/
 
     /*=============================================
     =            offcanvas menu            =

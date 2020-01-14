@@ -2,8 +2,8 @@ package com.coretex.commerce.mapper;
 
 import com.coretex.commerce.data.ProductData;
 import com.coretex.core.business.utils.ProductUtils;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.StoreItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.mapstruct.InheritConfiguration;
@@ -18,7 +18,7 @@ public interface ProductDataMapper extends GenericDataMapper<ProductItem, Produc
 	@Override
 	@Mappings({
 			@Mapping(target = "image", expression = "java(mapImageUrl(productItem))"),
-			@Mapping(target = "store", source = "merchantStore")
+			@Mapping(target = "store", source = "store")
 	})
 	ProductData fromItem(ProductItem productItem);
 
@@ -29,12 +29,12 @@ public interface ProductDataMapper extends GenericDataMapper<ProductItem, Produc
 	default String mapImageUrl(ProductItem productItem){
 		if(CollectionUtils.isNotEmpty(productItem.getImages())){
 			var first = IteratorUtils.first(productItem.getImages().iterator());
-			return ProductUtils.buildProductSmallImageUtils(productItem.getMerchantStore(), productItem.getSku(), first.getProductImage());
+			return ProductUtils.buildProductSmallImageUtils(productItem.getStore(), productItem.getCode(), first.getProductImage());
 		}
 		return null;
 	}
 
-	default String mapStore(MerchantStoreItem value) {
-		return value.getStoreName();
+	default String mapStore(StoreItem value) {
+		return value.getName();
 	}
 }

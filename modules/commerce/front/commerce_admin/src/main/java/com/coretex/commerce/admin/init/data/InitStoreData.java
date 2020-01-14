@@ -2,11 +2,10 @@ package com.coretex.commerce.admin.init.data;
 
 
 import com.coretex.commerce.admin.Constants;
+import com.coretex.commerce.core.services.CategoryService;
 import com.coretex.commerce.core.services.CustomerService;
+import com.coretex.commerce.core.services.ProductService;
 import com.coretex.commerce.core.services.StoreService;
-import com.coretex.core.business.services.catalog.category.CategoryService;
-import com.coretex.core.business.services.catalog.product.ProductService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.catalog.product.image.ProductImageService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
 import com.coretex.core.business.services.merchant.MerchantStoreService;
@@ -21,7 +20,6 @@ import com.coretex.core.model.content.ImageContentFile;
 import com.coretex.enums.commerce_core_model.GroupTypeEnum;
 import com.coretex.enums.commerce_core_model.OrderStatusEnum;
 import com.coretex.items.commerce_core_model.BillingItem;
-import com.coretex.items.commerce_core_model.CategoryItem;
 import com.coretex.items.commerce_core_model.DeliveryItem;
 import com.coretex.items.commerce_core_model.GroupItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
@@ -32,13 +30,14 @@ import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductPriceItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.cx_core.CurrencyItem;
 import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.cx_core.ManufacturerItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.cx_core.ZoneItem;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -64,9 +63,6 @@ public class InitStoreData implements InitData {
 
 	@Resource
 	protected ProductService productService;
-
-	@Resource
-	protected ProductAttributeService productAttributeService;
 
 	@Resource
 	protected ProductImageService productImageService;
@@ -107,7 +103,7 @@ public class InitStoreData implements InitData {
 	@Resource
 	private StoreService storeService;
 
-	public void initInitialData()  {
+	public void initInitialData() {
 
 
 		LOGGER.info("Starting the initialization of test data");
@@ -125,83 +121,72 @@ public class InitStoreData implements InitData {
 		var s = storeService.getByCode(DEFAULT_STORE);
 
 		CategoryItem book = new CategoryItem();
-		book.setMerchantStore(store);
+		book.setStore(s);
 		book.setCode("computerbooks");
 		book.setVisible(true);
 
 		book.setName("Computer Books");
-		book.setSeUrl("computer-books");
 
 		book.setName("Livres d'informatique", Locale.FRENCH);
 
 		categoryService.create(book);
 
 		CategoryItem novs = new CategoryItem();
-		novs.setMerchantStore(store);
+		novs.setStore(s);
 		novs.setCode("novels");
 		novs.setVisible(false);
 
 		novs.setName("Novels");
-		novs.setSeUrl("novels");
 
 		novs.setName("Romans", Locale.FRENCH);
 
 		categoryService.create(novs);
 
 		CategoryItem tech = new CategoryItem();
-		tech.setMerchantStore(store);
+		tech.setStore(s);
 		tech.setCode("tech");
 		tech.setVisible(true);
 
 		tech.setName("Technology");
-		tech.setSeUrl("technology");
 
 		tech.setName("Technologie", Locale.FRENCH);
 
 		tech.setParent(book);
-
+		book.getCategories().add(tech);
 		categoryService.create(tech);
-		categoryService.addChild(book, tech);
 
 		CategoryItem web = new CategoryItem();
-		web.setMerchantStore(store);
+		web.setStore(s);
 		web.setCode("web");
 		web.setVisible(true);
 
 		web.setName("Web");
-		web.setSeUrl("the-web");
 
 		web.setName("Web", Locale.FRENCH);
 
 		web.setParent(book);
-
+		book.getCategories().add(web);
 		categoryService.create(web);
-		categoryService.addChild(book, web);
-
 
 		CategoryItem fiction = new CategoryItem();
-		fiction.setMerchantStore(store);
+		fiction.setStore(s);
 		fiction.setCode("fiction");
 		fiction.setVisible(true);
 
 		fiction.setName("Fiction");
-		fiction.setSeUrl("fiction");
 
 		fiction.setName("Sc Fiction", Locale.FRENCH);
 
 		fiction.setParent(novs);
-
+		novs.getCategories().add(fiction);
 		categoryService.create(fiction);
-		categoryService.addChild(novs, fiction);
-
 
 		CategoryItem business = new CategoryItem();
-		business.setMerchantStore(store);
+		business.setStore(s);
 		business.setCode("business");
 		business.setVisible(true);
 
 		business.setName("Business");
-		business.setSeUrl("business");
 
 		business.setName("Affaires", Locale.FRENCH);
 
@@ -209,19 +194,17 @@ public class InitStoreData implements InitData {
 
 
 		CategoryItem cloud = new CategoryItem();
-		cloud.setMerchantStore(store);
+		cloud.setStore(s);
 		cloud.setCode("cloud");
 		cloud.setVisible(true);
 
 		cloud.setName("Cloud computing");
-		cloud.setSeUrl("cloud-computing");
 
 		cloud.setName("Programmation pour le cloud", Locale.FRENCH);
 
 		cloud.setParent(tech);
-
+		tech.getCategories().add(cloud);
 		categoryService.create(cloud);
-		categoryService.addChild(tech, cloud);
 
 		// Add products
 		// ProductTypeItem generalType = productTypeService.
@@ -266,15 +249,10 @@ public class InitStoreData implements InitData {
 		// PRODUCT 1
 
 		ProductItem product = new ProductItem();
-		product.setProductHeight(new BigDecimal(10));
-		product.setProductLength(new BigDecimal(3));
-		product.setProductWidth(new BigDecimal(6));
-		product.setSku("TB12345");
+		product.setCode("TB12345");
 		product.setManufacturer(manning);
-		product.setMerchantStore(store);
-		product.setProductShippable(true);
+		product.setStore(s);
 		product.setAvailable(true);
-		product.setProductVirtual(false);
 
 		// Availability
 		ProductAvailabilityItem availability = new ProductAvailabilityItem();
@@ -296,8 +274,6 @@ public class InitStoreData implements InitData {
 		product.getAvailabilities().add(availability);
 
 		product.setName("Spring in Action");
-		product.setSeUrl("Spring-in-Action");
-
 		product.getCategories().add(tech);
 		product.getCategories().add(web);
 
@@ -316,19 +292,12 @@ public class InitStoreData implements InitData {
 		// PRODUCT 2
 
 		ProductItem product2 = new ProductItem();
-		product2.setProductHeight(new BigDecimal(4));
-		product2.setProductLength(new BigDecimal(3));
-		product2.setProductWidth(new BigDecimal(1));
-		product2.setSku("TB2468");
+		product2.setCode("TB2468");
 		product2.setManufacturer(packt);
-		product2.setMerchantStore(store);
-		product2.setProductShippable(true);
+		product2.setStore(s);
 		product2.setAvailable(true);
-		product2.setProductVirtual(false);
 
 		product2.setName("Node Web Development");
-		product2.setSeUrl("Node-Web-Development");
-
 
 		product2.getCategories().add(tech);
 		product2.getCategories().add(web);
@@ -365,18 +334,12 @@ public class InitStoreData implements InitData {
 		// PRODUCT 3
 
 		ProductItem product3 = new ProductItem();
-		product3.setProductHeight(new BigDecimal(4));
-		product3.setProductLength(new BigDecimal(3));
-		product3.setProductWidth(new BigDecimal(1));
-		product3.setSku("NB1111");
+		product3.setCode("NB1111");
 		product3.setManufacturer(oreilley);
-		product3.setMerchantStore(store);
-		product3.setProductShippable(true);
+		product3.setStore(s);
 		product3.setAvailable(true);
-		product3.setProductVirtual(false);
 
 		product3.setName("Programming for PAAS");
-		product3.setSeUrl("programming-for-paas");
 
 		product3.getCategories().add(cloud);
 
@@ -412,18 +375,12 @@ public class InitStoreData implements InitData {
 
 		// PRODUCT 4
 		ProductItem product4 = new ProductItem();
-		product4.setProductHeight(new BigDecimal(4));
-		product4.setProductLength(new BigDecimal(3));
-		product4.setProductWidth(new BigDecimal(1));
-		product4.setSku("SF333345");
+		product4.setCode("SF333345");
 		product4.setManufacturer(sams);
-		product4.setMerchantStore(store);
-		product4.setProductShippable(true);
+		product4.setStore(s);
 		product4.setAvailable(true);
-		product4.setProductVirtual(false);
 
 		product4.setName("Android development");
-		product4.setSeUrl("android-application-development");
 
 		product4.getCategories().add(tech);
 
@@ -459,18 +416,12 @@ public class InitStoreData implements InitData {
 
 		// PRODUCT 5
 		ProductItem product5 = new ProductItem();
-		product5.setProductHeight(new BigDecimal(4));
-		product5.setProductLength(new BigDecimal(3));
-		product5.setProductWidth(new BigDecimal(1));
-		product5.setSku("SF333346");
+		product5.setCode("SF333346");
 		product5.setManufacturer(packt);
-		product5.setMerchantStore(store);
-		product5.setProductShippable(true);
+		product5.setStore(s);
 		product5.setAvailable(true);
-		product5.setProductVirtual(false);
 
 		product5.setName("Android 3.0 Cookbook");
-		product5.setSeUrl("android-3-cookbook");
 
 		product5.getCategories().add(tech);
 
@@ -509,18 +460,12 @@ public class InitStoreData implements InitData {
 		// PRODUCT 6
 
 		ProductItem product6 = new ProductItem();
-		product6.setProductHeight(new BigDecimal(4));
-		product6.setProductLength(new BigDecimal(3));
-		product6.setProductWidth(new BigDecimal(1));
-		product6.setSku("LL333444");
+		product6.setCode("LL333444");
 		product6.setManufacturer(novells);
-		product6.setMerchantStore(store);
-		product6.setProductShippable(true);
+		product6.setStore(s);
 		product6.setAvailable(true);
-		product5.setProductVirtual(false);
 
 		product6.setName("The Big Switch");
-		product6.setSeUrl("the-big-switch");
 
 		product6.getCategories().add(business);
 

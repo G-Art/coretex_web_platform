@@ -1,13 +1,13 @@
 package com.coretex.commerce.facades.impl;
 
-import com.coretex.commerce.data.minimal.MinimalProductData;
+import com.coretex.commerce.core.services.PageableService;
+import com.coretex.commerce.core.services.ProductService;
 import com.coretex.commerce.data.ProductData;
+import com.coretex.commerce.data.minimal.MinimalProductData;
 import com.coretex.commerce.facades.ProductFacade;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.minimal.MinimalProductDataMapper;
-import com.coretex.commerce.core.services.PageableService;
-import com.coretex.core.business.services.catalog.product.ProductService;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -1,33 +1,23 @@
 package com.coretex.core.business.services.catalog.category;
 
-import com.coretex.core.business.constants.Constants;
-
 import com.coretex.core.business.repositories.catalog.category.CategoryDao;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
-import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.core.LocaleItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.ProductItem;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CategoryItem;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
-@Service("categoryService")
+//@Service("categoryService")
 public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryItem> implements CategoryService {
 
 	private CategoryDao categoryDao;
 
-
-	@Resource
-	private ProductService productService;
 
 
 	public CategoryServiceImpl(CategoryDao categoryDao) {
@@ -41,14 +31,14 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 		StringBuilder lineage = new StringBuilder();
 		CategoryItem parent = category.getParent();
-		if (parent != null && parent.getUuid() != null) {
-			lineage.append(parent.getLineage()).append("/").append(parent.getUuid());
-			category.setDepth(parent.getDepth() + 1);
-		} else {
-			lineage.append("/");
-			category.setDepth(0);
-		}
-		category.setLineage(lineage.toString());
+//		if (parent != null && parent.getUuid() != null) {
+//			lineage.append(parent.getLineage()).append("/").append(parent.getUuid());
+//			category.setDepth(parent.getDepth() + 1);
+//		} else {
+//			lineage.append("/");
+//			category.setDepth(0);
+//		}
+//		category.setLineage(lineage.toString());
 		super.update(category);
 
 
@@ -126,7 +116,8 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 	@Override
 	public CategoryItem getBySeUrl(MerchantStoreItem store, String seUrl) {
-		return categoryDao.findByFriendlyUrl(store.getUuid(), seUrl);
+//		return categoryDao.findByFriendlyUrl(store.getUuid(), seUrl);
+		return null;
 	}
 
 
@@ -164,13 +155,17 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 	}
 
 	@Override
-	public List<CategoryItem> listByParent(CategoryItem category) {
-		Assert.notNull(category, "CategoryItem cannot be null");
-		return listByParent(category.getUuid());
+	public Stream<CategoryItem> listByParent(CategoryItem category) {
+		return listByParent(Objects.isNull(category) ? null : category.getUuid());
 	}
 
 	@Override
-	public List<CategoryItem> listByParent(UUID categoryUuid) {
+	public Stream<CategoryItem> listByRoot() {
+		return categoryDao.findByParent(null);
+	}
+
+	@Override
+	public Stream<CategoryItem> listByParent(UUID categoryUuid) {
 		return categoryDao.findByParent(categoryUuid);
 	}
 
@@ -179,8 +174,8 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 		//get category with lineage (subcategories)
 		StringBuilder lineage = new StringBuilder();
-		lineage.append(category.getLineage()).append(category.getUuid()).append(Constants.SLASH);
-		List<CategoryItem> categories = this.getListByLineage(category.getMerchantStore(), lineage.toString());
+//		lineage.append(category.getLineage()).append(category.getUuid()).append(Constants.SLASH);
+//		List<CategoryItem> categories = this.getListByLineage(category.getStore(), lineage.toString());
 
 		CategoryItem dbCategory = this.getByUUID(category.getUuid());
 
@@ -188,39 +183,19 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 		if (dbCategory != null && dbCategory.getUuid().equals(category.getUuid())) {
 
 
-			categories.add(dbCategory);
+//			categories.add(dbCategory);
 
 
-			Collections.reverse(categories);
+//			Collections.reverse(categories);
 
 			List<UUID> categoryIds = new ArrayList<>();
 
 
-			for (CategoryItem c : categories) {
-				categoryIds.add(c.getUuid());
-			}
-
-			List<ProductItem> products = productService.getProducts(categoryIds);
-
-			for (ProductItem product : products) {
-				ProductItem dbProduct = productService.getByUUID(product.getUuid());
-				Set<CategoryItem> productCategories = dbProduct.getCategories();
-				if (productCategories.size() > 1) {
-					for (CategoryItem c : categories) {
-						productCategories.remove(c);
-						productService.update(dbProduct);
-					}
-
-					if (product.getCategories() == null || product.getCategories().size() == 0) {
-						productService.delete(dbProduct);
-					}
-
-				} else {
-					productService.delete(dbProduct);
-				}
+//			for (CategoryItem c : categories) {
+//				categoryIds.add(c.getUuid());
+//			}
 
 
-			}
 
 			CategoryItem categ = this.getByUUID(category.getUuid());
 			categoryDao.delete(categ);
@@ -234,7 +209,7 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 	public void addChild(CategoryItem parent, CategoryItem child)  {
 
 
-		if (child == null || child.getMerchantStore() == null) {
+		if (child == null || child.getStore() == null) {
 			throw new RuntimeException("Child category and merchant store should not be null");
 		}
 
@@ -244,21 +219,21 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 				//assign to root
 				child.setParent(null);
-				child.setDepth(0);
+//				child.setDepth(0);
 				//child.setLineage(new StringBuilder().append("/").append(child.getUuid()).append("/").toString());
-				child.setLineage("/");
+//				child.setLineage("/");
 
 			} else {
 
 				CategoryItem p = this.getByUUID(parent.getUuid());//parent
 
 
-				String lineage = p.getLineage();
-				int depth = p.getDepth();//TODO sometimes null
+//				String lineage = p.getLineage();
+//				int depth = p.getDepth();//TODO sometimes null
 
 				child.setParent(p);
-				child.setDepth(depth + 1);
-				child.setLineage(new StringBuilder().append(lineage).append(p.getUuid()).append("/").toString());
+//				child.setDepth(depth + 1);
+//				child.setLineage(new StringBuilder().append(lineage).append(p.getUuid()).append("/").toString());
 
 
 			}
@@ -266,19 +241,19 @@ public class CategoryServiceImpl extends SalesManagerEntityServiceImpl<CategoryI
 
 			update(child);
 			StringBuilder childLineage = new StringBuilder();
-			childLineage.append(child.getLineage()).append(child.getUuid()).append("/");
-			List<CategoryItem> subCategories = getListByLineage(child.getMerchantStore(), childLineage.toString());
+//			childLineage.append(child.getLineage()).append(child.getUuid()).append("/");
+//			List<CategoryItem> subCategories = getListByLineage(child.getMerchantStore(), childLineage.toString());
 
 
 			//ajust all sub categories lineages
-			if (subCategories != null && subCategories.size() > 0) {
-				for (CategoryItem subCategory : subCategories) {
-					if (child.getUuid() != subCategory.getUuid()) {
-						addChild(child, subCategory);
-					}
-				}
-
-			}
+//			if (subCategories != null && subCategories.size() > 0) {
+//				for (CategoryItem subCategory : subCategories) {
+//					if (child.getUuid() != subCategory.getUuid()) {
+//						addChild(child, subCategory);
+//					}
+//				}
+//
+//			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

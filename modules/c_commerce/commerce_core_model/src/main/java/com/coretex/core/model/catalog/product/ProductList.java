@@ -1,10 +1,10 @@
 package com.coretex.core.model.catalog.product;
 
+import com.coretex.core.model.common.EntityList;
+import com.coretex.items.cx_core.ProductItem;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.coretex.core.model.common.EntityList;
-import com.coretex.items.commerce_core_model.ProductItem;
 
 public class ProductList extends EntityList {
 

@@ -1,7 +1,7 @@
 package com.coretex.shop.utils;
 
 import com.coretex.core.business.services.catalog.category.CategoryService;
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.shop.constants.Constants;
@@ -67,7 +67,7 @@ public class BreadcrumbsUtils {
 			BreadcrumbItem categoryBreadcrump = new BreadcrumbItem();
 			categoryBreadcrump.setItemType(BreadcrumbItemType.CATEGORY);
 			categoryBreadcrump.setLabel(c.getName());
-			categoryBreadcrump.setUrl(filePathUtils.buildCategoryUrl(store, contextPath, c.getSeUrl()));
+//			categoryBreadcrump.setUrl(filePathUtils.buildCategoryUrl(store, contextPath, c.getSeUrl()));
 			items.add(categoryBreadcrump);
 		}
 
@@ -114,7 +114,7 @@ public class BreadcrumbsUtils {
 				BreadcrumbItem categoryBreadcrump = new BreadcrumbItem();
 				categoryBreadcrump.setItemType(BreadcrumbItemType.CATEGORY);
 				categoryBreadcrump.setLabel(c.getName());
-				categoryBreadcrump.setUrl(filePathUtils.buildCategoryUrl(store, contextPath, c.getSeUrl()));
+//				categoryBreadcrump.setUrl(filePathUtils.buildCategoryUrl(store, contextPath, c.getSeUrl()));
 				items.add(categoryBreadcrump);
 			}
 

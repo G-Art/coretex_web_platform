@@ -1,6 +1,6 @@
 package com.coretex.shop.populator.catalog;
 
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import org.apache.commons.lang3.Validate;
 
 import com.coretex.core.business.exception.ConversionException;
@@ -20,17 +20,17 @@ public class ReadableCategoryPopulator extends
 
 		Validate.notNull(source, "CategoryItem must not be null");
 
-		target.setLineage(source.getLineage());
+//		target.setLineage(source.getLineage());
 
 		final com.coretex.shop.model.catalog.category.CategoryDescription desc = new com.coretex.shop.model.catalog.category.CategoryDescription();
-		desc.setFriendlyUrl(source.getSeUrl());
+//		desc.setFriendlyUrl(source.getSeUrl());
 		desc.setName(source.getName());
 		desc.setUuid(source.getUuid());
 		desc.setDescription(source.getName());
-		desc.setKeyWords(source.getMetatagKeywords());
-		desc.setHighlights(source.getCategoryHighlight());
-		desc.setTitle(source.getMetatagTitle());
-		desc.setMetaDescription(source.getMetatagDescription());
+//		desc.setKeyWords(source.getMetatagKeywords());
+//		desc.setHighlights(source.getCategoryHighlight());
+//		desc.setTitle(source.getMetatagTitle());
+//		desc.setMetaDescription(source.getMetatagDescription());
 
 		target.setDescription(desc);
 
@@ -43,12 +43,12 @@ public class ReadableCategoryPopulator extends
 
 		target.setCode(source.getCode());
 		target.setUuid(source.getUuid());
-		if (source.getDepth() != null) {
-			target.setDepth(source.getDepth());
-		}
-		target.setSortOrder(source.getSortOrder());
+//		if (source.getDepth() != null) {
+//			target.setDepth(source.getDepth());
+//		}
+//		target.setSortOrder(source.getSortOrder());
 		target.setVisible(source.getVisible());
-		target.setFeatured(source.getFeatured());
+//		target.setFeatured(source.getFeatured());
 
 		return target;
 

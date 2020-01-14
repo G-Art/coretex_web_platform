@@ -2,7 +2,7 @@ package com.coretex.shop.admin.model.catalog;
 
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
-import com.coretex.items.commerce_core_model.ProductItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.commerce_core_model.ProductPriceItem;
 import org.springframework.web.multipart.MultipartFile;
 

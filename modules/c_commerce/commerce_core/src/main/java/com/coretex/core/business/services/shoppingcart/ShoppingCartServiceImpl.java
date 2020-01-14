@@ -4,17 +4,15 @@ package com.coretex.core.business.services.shoppingcart;
 import com.coretex.core.business.repositories.shoppingcart.ShoppingCartDao;
 import com.coretex.core.business.repositories.shoppingcart.ShoppingCartItemDao;
 import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
-import com.coretex.core.business.services.catalog.product.attribute.ProductAttributeService;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
 import com.coretex.core.model.catalog.product.price.FinalPrice;
 import com.coretex.core.model.shipping.ShippingProduct;
-import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
+import com.coretex.items.cx_core.CustomerItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
@@ -38,16 +36,10 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	private ShoppingCartDao shoppingCartDao;
 
 	@Resource
-	private ProductService productService;
-
-	@Resource
 	private ShoppingCartItemDao shoppingCartItemDao;
 
 	@Resource
 	private PricingService pricingService;
-
-	@Resource
-	private ProductAttributeService productAttributeService;
 
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
@@ -63,7 +55,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	 */
 	@Override
 	@Transactional
-	public ShoppingCartItem getShoppingCart(final CustomerItem customer)  {
+	public ShoppingCartItem getShoppingCart(final CustomerItem customer) {
 
 		try {
 
@@ -86,7 +78,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	 * Save or update a {@link ShoppingCartItem} for a given customer
 	 */
 	@Override
-	public void saveOrUpdate(final ShoppingCartItem shoppingCart)  {
+	public void saveOrUpdate(final ShoppingCartItem shoppingCart) {
 
 		super.save(shoppingCart);
 	}
@@ -97,7 +89,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	 * method will remove the shopping cart if no items are attached.
 	 */
 	@Override
-	public ShoppingCartItem getById(final UUID id, final MerchantStoreItem store)  {
+	public ShoppingCartItem getById(final UUID id, final MerchantStoreItem store) {
 
 		try {
 			ShoppingCartItem shoppingCart = shoppingCartDao.findById(store.getUuid(), id);
@@ -157,7 +149,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	 */
 	@Override
 	@Transactional
-	public ShoppingCartItem getByCode(final String code, final MerchantStoreItem store)  {
+	public ShoppingCartItem getByCode(final String code, final MerchantStoreItem store) {
 
 		return shoppingCartDao.findByCode(store.getUuid(), code);
 
@@ -172,7 +164,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public ShoppingCartItem getByCustomer(final CustomerItem customer)  {
+	public ShoppingCartItem getByCustomer(final CustomerItem customer) {
 
 		try {
 			ShoppingCartItem shoppingCart = shoppingCartDao.findByCustomer(customer.getUuid());
@@ -246,7 +238,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	@Override
 	public ShoppingCartEntryItem populateShoppingCartItem(final ProductItem product) {
 		Validate.notNull(product, "ProductItem should not be null");
-		Validate.notNull(product.getMerchantStore(), "ProductItem.merchantStore should not be null");
+		Validate.notNull(product.getStore(), "ProductItem.merchantStore should not be null");
 
 		ShoppingCartEntryItem item = new ShoppingCartEntryItem();
 		item.setProduct(product);
@@ -269,7 +261,6 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 		// item.setAttributes(attributesList);
 		// }
 
-		item.setProductVirtual(product.getProductVirtual());
 
 		// set item price
 		FinalPrice price = pricingService.calculateProductPrice(product);
@@ -291,10 +282,6 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 
 		item.setProduct(product);
 
-		if (product.getProductVirtual() != null ? product.getProductVirtual() : false) {
-			item.setProductVirtual(true);
-		}
-
 		List<ProductAttributeItem> attributesList = new ArrayList<ProductAttributeItem>();//attributes maintained
 
 		// set item price
@@ -307,7 +294,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public List<ShippingProduct> createShippingProduct(final ShoppingCartItem cart)  {
+	public List<ShippingProduct> createShippingProduct(final ShoppingCartItem cart) {
 		/**
 		 * Determines if products are virtual
 		 */
@@ -315,16 +302,14 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 		List<ShippingProduct> shippingProducts = null;
 		for (ShoppingCartEntryItem item : items) {
 			ProductItem product = item.getProduct();
-			if (!product.getProductVirtual() && product.getProductShippable()) {
-				if (shippingProducts == null) {
-					shippingProducts = new ArrayList<>();
-				}
-				ShippingProduct shippingProduct = new ShippingProduct(product);
-				shippingProduct.setQuantity(item.getQuantity());
-				var finalPrice = pricingService.calculateProductPrice(item.getProduct(), Lists.newArrayList());
-				shippingProduct.setFinalPrice(finalPrice);
-				shippingProducts.add(shippingProduct);
+			if (shippingProducts == null) {
+				shippingProducts = new ArrayList<>();
 			}
+			ShippingProduct shippingProduct = new ShippingProduct(product);
+			shippingProduct.setQuantity(item.getQuantity());
+			var finalPrice = pricingService.calculateProductPrice(item.getProduct(), Lists.newArrayList());
+			shippingProduct.setFinalPrice(finalPrice);
+			shippingProducts.add(shippingProduct);
 		}
 
 		return shippingProducts;
@@ -332,7 +317,7 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public boolean isFreeShoppingCart(final ShoppingCartItem cart)  {
+	public boolean isFreeShoppingCart(final ShoppingCartItem cart) {
 		/**
 		 * Determines if products are free
 		 */
@@ -350,25 +335,14 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 	}
 
 	@Override
-	public boolean requiresShipping(final ShoppingCartItem cart)  {
+	public boolean requiresShipping(final ShoppingCartItem cart) {
 
-		Validate.notNull(cart, "Shopping cart cannot be null");
-		Validate.notNull(cart.getLineItems(), "ShoppingCartItem items cannot be null");
-		boolean requiresShipping = false;
-		for (ShoppingCartEntryItem item : cart.getLineItems()) {
-			ProductItem product = item.getProduct();
-			if (product.getProductShippable()) {
-				requiresShipping = true;
-				break;
-			}
-		}
-
-		return requiresShipping;
+		return true;
 
 	}
 
 	@Override
-	public void removeShoppingCart(final ShoppingCartItem cart)  {
+	public void removeShoppingCart(final ShoppingCartItem cart) {
 		shoppingCartDao.delete(cart);
 	}
 
@@ -390,36 +364,8 @@ public class ShoppingCartServiceImpl extends SalesManagerEntityServiceImpl<Shopp
 		return userShoppingModel;
 	}
 
-	private Set<ShoppingCartEntryItem> getShoppingCartItems(final ShoppingCartItem sessionCart, final MerchantStoreItem store,
-															final ShoppingCartItem cartModel) throws Exception {
-
-		Set<ShoppingCartEntryItem> shoppingCartItemsSet = null;
-		if (CollectionUtils.isNotEmpty(sessionCart.getLineItems())) {
-			shoppingCartItemsSet = new HashSet<>();
-			for (ShoppingCartEntryItem shoppingCartItem : sessionCart.getLineItems()) {
-				ProductItem product = productService.getByUUID(shoppingCartItem.getProduct().getUuid());
-				if (product == null) {
-					throw new Exception("Item with id " + shoppingCartItem.getProduct().getUuid() + " does not exist");
-				}
-
-				if (!product.getMerchantStore().getUuid().equals(store.getUuid())) {
-					throw new Exception("Item with id " + shoppingCartItem.getProduct().getUuid()
-							+ " does not belong to merchant " + store.getUuid());
-				}
-
-				ShoppingCartEntryItem item = populateShoppingCartItem(product);
-				item.setQuantity(shoppingCartItem.getQuantity());
-				item.setShoppingCart(cartModel);
-
-				shoppingCartItemsSet.add(item);
-			}
-
-		}
-		return shoppingCartItemsSet;
-	}
-
 	@Override
-	public boolean isFreeShoppingCart(List<ShoppingCartEntryItem> items)  {
+	public boolean isFreeShoppingCart(List<ShoppingCartEntryItem> items) {
 		ShoppingCartItem cart = new ShoppingCartItem();
 		Set<ShoppingCartEntryItem> cartItems = new HashSet<>(items);
 		cart.setLineItems(cartItems);

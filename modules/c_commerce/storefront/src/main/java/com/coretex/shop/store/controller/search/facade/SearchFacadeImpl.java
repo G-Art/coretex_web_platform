@@ -1,41 +1,20 @@
 package com.coretex.shop.store.controller.search.facade;
 
 import com.coretex.core.business.exception.ConversionException;
-
-import com.coretex.items.commerce_core_model.CategoryItem;
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.core.LocaleItem;
-import com.coretex.shop.store.api.exception.ConversionRuntimeException;
-import com.coretex.shop.store.api.exception.ServiceRuntimeException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import java.util.UUID;
-import java.util.stream.Collectors;
-import javax.annotation.Resource;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
 import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.search.SearchService;
 import com.coretex.core.business.utils.CoreConfiguration;
 import com.coretex.core.model.catalog.product.ProductCriteria;
-import com.coretex.core.model.catalog.product.ProductList;
-import com.coretex.items.core.LocaleItem;
 import com.coretex.core.model.search.IndexProduct;
 import com.coretex.core.model.search.SearchEntry;
 import com.coretex.core.model.search.SearchFacet;
 import com.coretex.core.model.search.SearchKeywords;
 import com.coretex.core.model.search.SearchResponse;
+import com.coretex.items.cx_core.CategoryItem;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.shop.model.ValueList;
 import com.coretex.shop.model.catalog.SearchProductList;
 import com.coretex.shop.model.catalog.SearchProductRequest;
@@ -43,8 +22,21 @@ import com.coretex.shop.model.catalog.category.ReadableCategory;
 import com.coretex.shop.model.catalog.product.ReadableProduct;
 import com.coretex.shop.populator.catalog.ReadableCategoryPopulator;
 import com.coretex.shop.populator.catalog.ReadableProductPopulator;
+import com.coretex.shop.store.api.exception.ConversionRuntimeException;
 import com.coretex.shop.store.model.search.AutoCompleteRequest;
 import com.coretex.shop.utils.ImageFilePath;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service("searchFacade")
@@ -52,9 +44,6 @@ public class SearchFacadeImpl implements SearchFacade {
 
 	@Resource
 	private SearchService searchService;
-
-	@Resource
-	private ProductService productService;
 
 	@Resource
 	private CategoryService categoryService;
@@ -84,11 +73,11 @@ public class SearchFacadeImpl implements SearchFacade {
 	public void indexAllData(MerchantStoreItem store) throws Exception {
 
 
-		List<ProductItem> products = productService.listByStore(store);
+//		List<ProductItem> products = productService.listByStore(store);
 
-		for (ProductItem product : products) {
-			searchService.index(store, product);
-		}
+//		for (ProductItem product : products) {
+//			searchService.index(store, product);
+//		}
 
 	}
 
@@ -126,15 +115,15 @@ public class SearchFacadeImpl implements SearchFacade {
 			searchCriteria.setProductIds(ids);
 			searchCriteria.setAvailable(true);
 
-			ProductList productList = productService.listByStore(merchantStore, language, searchCriteria);
+//			ProductList productList = productService.listByStore(merchantStore, language, searchCriteria);
 
-			List<ReadableProduct> readableProducts = productList.getProducts()
-					.stream()
-					.map(product -> convertProductToReadableProduct(product, merchantStore, language))
-					.collect(Collectors.toList());
+//			List<ReadableProduct> readableProducts = productList.getProducts()
+//					.stream()
+//					.map(product -> convertProductToReadableProduct(product, merchantStore, language))
+//					.collect(Collectors.toList());
 
-			returnList.getProducts().addAll(readableProducts);
-			returnList.setProductCount(productList.getProducts().size());
+//			returnList.getProducts().addAll(readableProducts);
+//			returnList.setProductCount(productList.getProducts().size());
 		}
 
 		//Facets

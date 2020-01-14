@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Input,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import {StoreData} from "../../../core/data/store.data";
 import {AuthService} from "../../../core/service/auth.service";
 
@@ -15,6 +25,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     @ViewChild('headerSticky', {static: false}) headerSticky: ElementRef;
 
     authorized = false;
+    @Output() toggleMobileMenuEvent = new EventEmitter<any>();
 
     constructor(private authService: AuthService) {
     }
@@ -22,7 +33,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     ngOnInit() {
     }
 
-    isLoggedIn(){
+    isLoggedIn() {
         return this.authService.isAuthenticated();
     }
 
@@ -40,23 +51,29 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         }
     }
 
+    toggleMobileMenu(){
+        this.toggleMobileMenuEvent.emit()
+    }
+
     ngAfterViewInit(): void {
 
+
         /*=============================================
-        =            mobile menu activation            =
+        =     active and deactive search overlay      =
         =============================================*/
 
-        $('#mobile-menu-trigger').on('click', function () {
-            $('#offcanvas-mobile-menu').removeClass('inactive').addClass('active');
+        $('#search-icon, #search-icon-2').on('click', function () {
+            $('#search-overlay').addClass('active-search-overlay');
+            $('body').addClass('active-body-search-overlay');
+        });
+
+        $('#search-close-icon').on('click', function () {
+            $('#search-overlay').removeClass('active-search-overlay');
+            $('body').removeClass('active-body-search-overlay');
         });
 
 
-        $('#offcanvas-menu-close-trigger').on('click', function () {
-            $('#offcanvas-mobile-menu').removeClass('active').addClass('inactive');
-        });
-
-        /*=====  End of mobile menu activation  ======*/
-
+        /*=====  End of active and deactive search overlay  ======*/
 
     }
 

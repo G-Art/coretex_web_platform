@@ -6,7 +6,7 @@ public class MinimalCustomerData extends GenericItemData {
 
 	private String email;
 	private String gender;
-	private String merchantStore;
+	private String store;
 	private Boolean active;
 	private String firstName;
 	private String lastName;
@@ -27,12 +27,12 @@ public class MinimalCustomerData extends GenericItemData {
 		this.gender = gender;
 	}
 
-	public String getMerchantStore() {
-		return merchantStore;
+	public String getStore() {
+		return store;
 	}
 
-	public void setMerchantStore(String merchantStore) {
-		this.merchantStore = merchantStore;
+	public void setStore(String store) {
+		this.store = store;
 	}
 
 	public Boolean getActive() {

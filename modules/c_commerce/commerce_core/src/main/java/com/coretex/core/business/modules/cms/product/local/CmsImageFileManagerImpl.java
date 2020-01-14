@@ -1,5 +1,20 @@
 package com.coretex.core.business.modules.cms.product.local;
 
+import com.coretex.core.business.constants.Constants;
+import com.coretex.core.business.modules.cms.impl.CMSManager;
+import com.coretex.core.business.modules.cms.impl.LocalCacheManagerImpl;
+import com.coretex.core.business.modules.cms.product.ProductAssetsManager;
+import com.coretex.core.model.catalog.product.file.ProductImageSize;
+import com.coretex.core.model.content.FileContentType;
+import com.coretex.core.model.content.ImageContentFile;
+import com.coretex.core.model.content.OutputContentFile;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.commerce_core_model.ProductImageItem;
+import com.coretex.items.cx_core.ProductItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -7,22 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import javax.annotation.PostConstruct;
-
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.coretex.core.business.constants.Constants;
-
-import com.coretex.core.business.modules.cms.impl.CMSManager;
-import com.coretex.core.business.modules.cms.impl.LocalCacheManagerImpl;
-import com.coretex.core.business.modules.cms.product.ProductAssetsManager;
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.core.model.catalog.product.file.ProductImageSize;
-import com.coretex.items.commerce_core_model.ProductImageItem;
-import com.coretex.core.model.content.FileContentType;
-import com.coretex.core.model.content.ImageContentFile;
-import com.coretex.core.model.content.OutputContentFile;
 
 /**
  * Manager for storing and deleting image files from the CMS which is a web server
@@ -93,12 +92,12 @@ public class CmsImageFileManagerImpl
 
 			// node path
 			StringBuilder nodePath = new StringBuilder();
-			nodePath.append(rootPath).append(productImage.getProduct().getMerchantStore().getCode());
+			nodePath.append(rootPath).append(productImage.getProduct().getStore().getCode());
 			Path merchantPath = Paths.get(nodePath.toString());
 			this.createDirectoryIfNorExist(merchantPath);
 
 			// product path
-			nodePath.append(Constants.SLASH).append(productImage.getProduct().getSku())
+			nodePath.append(Constants.SLASH).append(productImage.getProduct().getCode())
 					.append(Constants.SLASH);
 			Path dirPath = Paths.get(nodePath.toString());
 			this.createDirectoryIfNorExist(dirPath);
@@ -190,8 +189,8 @@ public class CmsImageFileManagerImpl
 
 			StringBuilder nodePath = new StringBuilder();
 			nodePath.append(buildRootPath()).append(Constants.SLASH)
-					.append(productImage.getProduct().getMerchantStore().getCode()).append(Constants.SLASH)
-					.append(productImage.getProduct().getSku());
+					.append(productImage.getProduct().getStore().getCode()).append(Constants.SLASH)
+					.append(productImage.getProduct().getCode());
 
 			// delete small
 			StringBuilder smallPath = new StringBuilder(nodePath);
@@ -226,8 +225,8 @@ public class CmsImageFileManagerImpl
 		try {
 			StringBuilder nodePath = new StringBuilder();
 			nodePath.append(buildRootPath()).append(Constants.SLASH)
-					.append(product.getMerchantStore().getCode()).append(Constants.SLASH)
-					.append(product.getSku());
+					.append(product.getStore().getCode()).append(Constants.SLASH)
+					.append(product.getCode());
 
 
 			Path path = Paths.get(nodePath.toString());

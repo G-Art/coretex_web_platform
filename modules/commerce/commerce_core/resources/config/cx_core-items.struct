@@ -11,6 +11,37 @@ elements {
                 description = "Stores"
             }
         }
+
+        ProductVariantProductRelation(source: Product, target: VariantProduct) {
+            source(variants) {
+                description = "Variants"
+                containerType = Set
+            }
+            target(baseProduct) {
+                description = "Base products"
+            }
+        }
+
+        CategoryCategoryRelation(source: 'Category', target: 'Category') {
+            source(categories) {
+                description = "Categories"
+                containerType = List
+            }
+            target(parent) {
+                description = "Parent category"
+            }
+        }
+
+        CategoryProductRelation(source: 'Category', target: Product) {
+            source(products) {
+                description = "Products"
+                containerType = List
+            }
+            target(categories) {
+                description = "Parent category"
+                containerType = Set
+            }
+        }
     }
 
     items {
@@ -128,6 +159,92 @@ elements {
                 defaultLanguage('Locale')
                 billing(Address)
                 delivery(Address)
+            }
+        }
+
+        Category {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                metaTitle(String){
+                    localized = true
+                }
+                metaKeywords(String){
+                    localized = true
+                }
+                metaDescription(String){
+                    localized = true
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                visible(Boolean){
+                    defaultValue = true
+                }
+                store(Store)
+            }
+        }
+
+
+        AbstractProduct(abstract: true) {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                available(Boolean){
+                    defaultValue = true
+                }
+                metaTitle(String){
+                    localized = true
+                }
+                metaKeywords(String){
+                    localized = true
+                }
+                metaDescription(String){
+                    localized = true
+                }
+                manufacturer(Manufacturer)
+                store(Store)
+            }
+        }
+
+        VariantProduct(extend:Product, table:false) {
+            attributes {
+                productLength(BigDecimal)
+                productWidth(BigDecimal)
+                productHeight(BigDecimal)
+                productWeight(BigDecimal)
+                productOrdered(Integer)
+            }
+        }
+
+        Product(extend:AbstractProduct, table:false) {
+            attributes {
+                dateAvailable(Date)
+                productShippable(Boolean){
+                    defaultValue = true
+                }
+                preOrder(Boolean){
+                    defaultValue = false
+                }
             }
         }
     }

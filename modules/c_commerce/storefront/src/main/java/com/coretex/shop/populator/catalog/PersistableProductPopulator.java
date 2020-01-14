@@ -6,15 +6,15 @@ import com.coretex.core.business.services.catalog.category.CategoryService;
 import com.coretex.core.business.services.catalog.product.manufacturer.ManufacturerService;
 import com.coretex.core.business.services.reference.language.LanguageService;
 import com.coretex.core.populators.AbstractDataPopulator;
-import com.coretex.items.commerce_core_model.CategoryItem;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductAttributeItem;
 import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ProductPriceItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.ManufacturerItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.shop.model.catalog.product.PersistableImage;
 import com.coretex.shop.model.catalog.product.PersistableProduct;
 import com.coretex.shop.model.catalog.product.ProductPriceEntity;
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
-import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -49,27 +48,12 @@ public class PersistableProductPopulator extends
 
 		try {
 
-			target.setSku(source.getSku());
+			target.setCode(source.getCode());
 			target.setAvailable(source.isAvailable());
-			target.setPreOrder(source.isPreOrder());
 			if (source.getUuid() != null) {
 				target.setUuid(null);
 			} else {
 				target.setUuid(source.getUuid());
-			}
-
-			target.setCondition(source.getCondition());
-
-
-			//RENTAL
-			target.setRentalDuration(source.getRentalDuration());
-			target.setRentalStatus(source.getRentalStatus());
-			target.setRentalPeriod(source.getRentalPeriod());
-
-			/** end RENTAL **/
-
-			if (!StringUtils.isBlank(source.getDateAvailable())) {
-				target.setDateAvailable(DateUtil.getDate(source.getDateAvailable()));
 			}
 
 			if (source.getManufacturer() != null) {
@@ -92,23 +76,6 @@ public class PersistableProductPopulator extends
 					target.setManufacturer(manuf);
 				}
 			}
-
-			target.setMerchantStore(store);
-
-
-			//target.setType(source.getType());//not implemented yet
-			target.setProductHeight(source.getProductHeight());
-			target.setProductLength(source.getProductLength());
-			target.setProductWeight(source.getProductWeight());
-			target.setProductWidth(source.getProductWidth());
-			target.setSortOrder(source.getSortOrder());
-			target.setProductVirtual(source.isProductVirtual());
-			target.setProductShippable(source.isProductShipeable());
-			if (source.getRating() != null) {
-				target.setProductReviewAvg(new BigDecimal(source.getRating()));
-			}
-			target.setProductReviewCount(source.getRatingCount());
-
 
 			if (CollectionUtils.isNotEmpty(source.getProductPrices())) {
 
@@ -206,9 +173,9 @@ public class PersistableProductPopulator extends
 					if (c == null) {
 						throw new ConversionException("CategoryItem id " + categ.getUuid() + " does not exist");
 					}
-					if (!c.getMerchantStore().getUuid().equals(store.getUuid())) {
-						throw new ConversionException("Invalid category id");
-					}
+//					if (!c.getMerchantStore().getUuid().equals(store.getUuid())) {
+//						throw new ConversionException("Invalid category id");
+//					}
 					target.getCategories().add(c);
 				}
 			}

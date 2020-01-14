@@ -2,29 +2,26 @@ package com.coretex.shop.utils;
 
 import com.coretex.core.business.modules.email.Email;
 import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.system.EmailService;
-import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
-import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.commerce_core_model.OrderProductItem;
 import com.coretex.items.commerce_core_model.OrderStatusHistoryItem;
+import com.coretex.items.commerce_core_model.OrderTotalItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.constants.ApplicationConstants;
 import com.coretex.shop.constants.EmailConstants;
 import com.coretex.shop.model.customer.PersistableCustomer;
 import com.coretex.shop.model.shop.ContactForm;
 import org.apache.commons.lang3.StringUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -46,9 +43,6 @@ public class EmailTemplatesUtils {
 
 	@Resource
 	private CountryService countryService;
-
-	@Resource
-	private ProductService productService;
 
 	@Resource
 	private ZoneService zoneService;
@@ -144,7 +138,7 @@ public class EmailTemplatesUtils {
 			StringBuilder orderTable = new StringBuilder();
 			orderTable.append(TABLE);
 			for (OrderProductItem product : order.getOrderProducts()) {
-				//ProductItem productModel = productService.getByCode(product.getSku(), language);
+				//ProductItem productModel = productService.getByCode(product.getCode(), language);
 				orderTable.append(TR);
 				orderTable.append(TD).append(product.getProductName()).append(" - ").append(product.getSku()).append(CLOSING_TD);
 				orderTable.append(TD).append(messages.getMessage("label.quantity", customerLocale)).append(": ").append(product.getProductQuantity()).append(CLOSING_TD);

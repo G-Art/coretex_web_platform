@@ -1,22 +1,19 @@
 package com.coretex.shop.store.controller.order;
 
-import com.coretex.core.business.services.catalog.product.ProductService;
+//import com.coretex.core.business.services.catalog.product.ProductService;
 import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.zone.ZoneService;
-import com.coretex.core.business.services.shipping.ShippingService;
-import com.coretex.core.business.services.shoppingcart.ShoppingCartService;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
-import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
+import com.coretex.items.cx_core.ZoneItem;
 import com.coretex.shop.constants.Constants;
 import com.coretex.shop.model.order.ReadableOrder;
 import com.coretex.shop.store.controller.AbstractController;
 import com.coretex.shop.store.controller.ControllerConstants;
 import com.coretex.shop.store.controller.order.facade.OrderFacade;
-import com.coretex.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
 import com.coretex.shop.utils.LabelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,20 +36,7 @@ public class ShoppingOrderConfirmationController extends AbstractController {
 			.getLogger(ShoppingOrderConfirmationController.class);
 
 	@Resource
-	private ShoppingCartFacade shoppingCartFacade;
-
-	@Resource
-	private ShoppingCartService shoppingCartService;
-
-	@Resource
-	private ShippingService shippingService;
-
-
-	@Resource
 	private OrderService orderService;
-
-	@Resource
-	private ProductService productService;
 
 	@Resource
 	private CountryService countryService;

@@ -1,13 +1,11 @@
 package com.coretex.shop.store.controller.order;
 
+import com.coretex.commerce.core.services.ProductService;
 import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.core.business.repositories.area.CityDao;
 import com.coretex.core.business.services.catalog.product.PricingService;
-import com.coretex.core.business.services.catalog.product.ProductService;
-import com.coretex.core.business.services.order.OrderService;
 import com.coretex.core.business.services.reference.country.CountryService;
 import com.coretex.core.business.services.reference.language.LanguageService;
-import com.coretex.core.business.services.reference.zone.ZoneService;
 import com.coretex.core.business.services.shipping.DeliveryService;
 import com.coretex.core.business.services.shipping.ShippingService;
 import com.coretex.core.model.order.OrderTotalSummary;
@@ -20,14 +18,13 @@ import com.coretex.items.commerce_core_model.DeliveryServiceItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.OrderItem;
 import com.coretex.items.commerce_core_model.OrderTotalItem;
-import com.coretex.items.commerce_core_model.ProductItem;
 import com.coretex.items.commerce_core_model.ShoppingCartEntryItem;
 import com.coretex.items.commerce_core_model.ShoppingCartItem;
 import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.CustomerItem;
+import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.newpost.NewPostDeliveryServiceItem;
-import com.coretex.newpost.api.NewPostApiService;
 import com.coretex.newpost.dao.NewPostDeliveryTypeDao;
 import com.coretex.newpost.data.NewPostDeliveryServiceData;
 import com.coretex.newpost.facades.NewPostFacade;
@@ -48,7 +45,6 @@ import com.coretex.shop.store.controller.ControllerConstants;
 import com.coretex.shop.store.controller.customer.facade.CustomerFacade;
 import com.coretex.shop.store.controller.order.facade.OrderFacade;
 import com.coretex.shop.store.controller.shoppingCart.facade.ShoppingCartFacade;
-import com.coretex.shop.utils.EmailTemplatesUtils;
 import com.coretex.shop.utils.LabelUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
@@ -56,10 +52,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -109,13 +103,7 @@ public class ShoppingOrderController extends AbstractController {
 	private ShippingService shippingService;
 
 	@Resource
-	private OrderService orderService;
-
-	@Resource
 	private CountryService countryService;
-
-	@Resource
-	private ZoneService zoneService;
 
 	@Resource
 	private OrderFacade orderFacade;
@@ -133,15 +121,6 @@ public class ShoppingOrderController extends AbstractController {
 	private ProductService productService;
 
 	@Resource
-	private PasswordEncoder passwordEncoder;
-
-	@Resource
-	private AuthenticationManager customerAuthenticationManager;
-
-	@Resource
-	private EmailTemplatesUtils emailTemplatesUtils;
-
-	@Resource
 	private DeliveryService deliveryService;
 
 	@Resource
@@ -149,9 +128,6 @@ public class ShoppingOrderController extends AbstractController {
 
 	@Resource
 	private NewPostDeliveryTypeDao newPostDeliveryTypeDao;
-
-	@Resource
-	private NewPostApiService newPostApiService;
 
 	@Resource
 	private NewPostFacade newPostFacade;
@@ -269,7 +245,6 @@ public class ShoppingOrderController extends AbstractController {
 
 		model.addAttribute("order", order);
 
-		/** template **/
 		StringBuilder template = new StringBuilder().append(ControllerConstants.Tiles.Checkout.checkout).append(".").append(store.getStoreTemplate());
 		return template.toString();
 

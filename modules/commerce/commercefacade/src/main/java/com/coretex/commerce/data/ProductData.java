@@ -2,19 +2,19 @@ package com.coretex.commerce.data;
 
 public class ProductData extends GenericItemData {
 
-	private String sku;
+	private String code;
 	private String name;
 	private String description;
 	private Boolean available;
 	private String store;
 	private String image;
 
-	public String getSku() {
-		return sku;
+	public String getCode() {
+		return code;
 	}
 
-	public void setSku(String sku) {
-		this.sku = sku;
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getName() {

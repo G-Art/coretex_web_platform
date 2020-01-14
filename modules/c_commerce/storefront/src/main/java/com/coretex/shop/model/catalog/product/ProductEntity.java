@@ -72,7 +72,7 @@ public class ProductEntity extends Product implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public String getSku() {
+	public String getCode() {
 		return sku;
 	}
 

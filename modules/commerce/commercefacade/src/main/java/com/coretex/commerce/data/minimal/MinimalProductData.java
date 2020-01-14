@@ -4,18 +4,10 @@ import com.coretex.commerce.data.GenericItemData;
 
 public class MinimalProductData extends GenericItemData {
 
-	private String sku;
+	private String code;
 	private String name;
 	private Boolean available;
-	private String merchantStore;
-
-	public String getSku() {
-		return sku;
-	}
-
-	public void setSku(String sku) {
-		this.sku = sku;
-	}
+	private String store;
 
 	public String getName() {
 		return name;
@@ -33,11 +25,19 @@ public class MinimalProductData extends GenericItemData {
 		this.available = available;
 	}
 
-	public String getMerchantStore() {
-		return merchantStore;
+	public String getCode() {
+		return code;
 	}
 
-	public void setMerchantStore(String merchantStore) {
-		this.merchantStore = merchantStore;
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getStore() {
+		return store;
+	}
+
+	public void setStore(String store) {
+		this.store = store;
 	}
 }

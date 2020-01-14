@@ -1,5 +1,22 @@
 package com.coretex.core.business.modules.cms.product.infinispan;
 
+import com.coretex.core.business.constants.Constants;
+import com.coretex.core.business.modules.cms.impl.CacheManager;
+import com.coretex.core.business.modules.cms.product.ProductAssetsManager;
+import com.coretex.core.model.catalog.product.file.ProductImageSize;
+import com.coretex.core.model.content.FileContentType;
+import com.coretex.core.model.content.ImageContentFile;
+import com.coretex.core.model.content.OutputContentFile;
+import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.commerce_core_model.ProductImageItem;
+import com.coretex.items.cx_core.ProductItem;
+import org.apache.commons.io.IOUtils;
+import org.infinispan.tree.Fqn;
+import org.infinispan.tree.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -9,26 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.PostConstruct;
-
-import com.coretex.items.commerce_core_model.ProductItem;
-import com.coretex.items.commerce_core_model.ProductImageItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import org.apache.commons.io.IOUtils;
-import org.infinispan.tree.Fqn;
-import org.infinispan.tree.Node;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.coretex.core.business.constants.Constants;
-
-import com.coretex.core.business.modules.cms.impl.CMSManager;
-import com.coretex.core.business.modules.cms.impl.CacheManager;
-import com.coretex.core.business.modules.cms.product.ProductAssetsManager;
-import com.coretex.core.model.catalog.product.file.ProductImageSize;
-import com.coretex.core.model.content.FileContentType;
-import com.coretex.core.model.content.ImageContentFile;
-import com.coretex.core.model.content.OutputContentFile;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
 
 /**
  * Manager for storing in retrieving image files from the CMS This is a layer on top of Infinispan
@@ -111,8 +108,8 @@ public class CmsImageFileManagerImpl implements ProductAssetsManager {
 
 			// node
 			StringBuilder nodePath = new StringBuilder();
-			nodePath.append(productImage.getProduct().getMerchantStore().getCode())
-					.append(Constants.SLASH).append(productImage.getProduct().getSku())
+			nodePath.append(productImage.getProduct().getStore().getCode())
+					.append(Constants.SLASH).append(productImage.getProduct().getCode())
 					.append(Constants.SLASH);
 
 
@@ -147,8 +144,8 @@ public class CmsImageFileManagerImpl implements ProductAssetsManager {
 	@Override
 	public OutputContentFile getProductImage(ProductImageItem productImage)  {
 
-		return getProductImage(productImage.getProduct().getMerchantStore().getCode(),
-				productImage.getProduct().getSku(), productImage.getProductImage());
+		return getProductImage(productImage.getProduct().getStore().getCode(),
+				productImage.getProduct().getCode(), productImage.getProductImage());
 
 	}
 
@@ -176,7 +173,7 @@ public class CmsImageFileManagerImpl implements ProductAssetsManager {
 
 			FileNameMap fileNameMap = URLConnection.getFileNameMap();
 			StringBuilder nodePath = new StringBuilder();
-			nodePath.append(product.getMerchantStore().getCode());
+			nodePath.append(product.getStore().getCode());
 
 			Node<String, Object> merchantNode = this.getNode(nodePath.toString());
 
@@ -254,8 +251,8 @@ public class CmsImageFileManagerImpl implements ProductAssetsManager {
 
 
 			StringBuilder nodePath = new StringBuilder();
-			nodePath.append(productImage.getProduct().getMerchantStore().getCode())
-					.append(Constants.SLASH).append(productImage.getProduct().getSku());
+			nodePath.append(productImage.getProduct().getStore().getCode())
+					.append(Constants.SLASH).append(productImage.getProduct().getCode());
 
 
 			Node<String, Object> productNode = this.getNode(nodePath.toString());
@@ -282,18 +279,16 @@ public class CmsImageFileManagerImpl implements ProductAssetsManager {
 
 
 			StringBuilder nodePath = new StringBuilder();
-			nodePath.append(product.getMerchantStore().getCode());
+			nodePath.append(product.getStore().getCode());
 
 
 			Node<String, Object> merchantNode = this.getNode(nodePath.toString());
 
-			merchantNode.remove(product.getSku());
+			merchantNode.remove(product.getCode());
 
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-
 		}
 
 	}

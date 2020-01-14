@@ -25,7 +25,7 @@ public class ReadableOrderProduct extends OrderProductEntity implements
 		this.productName = productName;
 	}
 
-	public String getSku() {
+	public String getCode() {
 		return sku;
 	}
 
