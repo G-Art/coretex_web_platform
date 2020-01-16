@@ -1,4 +1,5 @@
-import {Component, HostBinding, OnInit} from '@angular/core';
+import {Component, HostBinding, Input, OnInit} from '@angular/core';
+import {ProductData} from "../../../core/data/product.data";
 declare var $: any;
 
 @Component({
@@ -12,6 +13,9 @@ export class ProductCollectionItemComponent implements OnInit {
   columnsClass:string = 'col-lg-4';
 
   itemView:string = 'grid';
+
+  @Input()
+  product:ProductData;
 
   constructor() { }
 

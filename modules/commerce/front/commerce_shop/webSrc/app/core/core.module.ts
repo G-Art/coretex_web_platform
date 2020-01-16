@@ -9,6 +9,7 @@ import {AuthGuardService} from "./service/authguard.service";
 import {UserService} from "./service/user.service";
 import {CookieService} from "ngx-cookie-service";
 import {CategoryService} from "./service/category.service";
+import {SearchService} from "./service/search.service";
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {CategoryService} from "./service/category.service";
         UserService,
         LanguageService,
         CategoryService,
-        StoreService]
+        StoreService,
+        SearchService]
 })
 export class CoreModule {
     // Prevent reimport of the CoreModule

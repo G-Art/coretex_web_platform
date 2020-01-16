@@ -1,15 +1,18 @@
 package com.coretex.commerce.facades.impl;
 
 import com.coretex.commerce.core.services.CategoryService;
+import com.coretex.commerce.core.services.PageableService;
 import com.coretex.commerce.data.CategoryHierarchyData;
+import com.coretex.commerce.data.SearchPageResult;
 import com.coretex.commerce.data.minimal.MinimalCategoryData;
 import com.coretex.commerce.data.minimal.MinimalCategoryHierarchyData;
 import com.coretex.commerce.facades.CategoryFacade;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.minimal.MinimalCategoryDataMapper;
-import com.coretex.commerce.core.services.PageableService;
 import com.coretex.commerce.mapper.minimal.MinimalCategoryHierarchyDataMapper;
+import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.items.cx_core.CategoryItem;
+import com.coretex.items.cx_core.ProductItem;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -60,6 +63,18 @@ public class DefaultCategoryFacade implements CategoryFacade {
 		return categoryService
 				.listByRoot()
 				.map(minimalCategoryHierarchyDataMapper::fromItem);
+	}
+
+	@Override
+	public SearchPageResult getCategoryPage(String code, int page, int size) {
+		PageableSearchResult<ProductItem> searchResult = categoryService.categoryPage(code, size, page);
+		SearchPageResult searchPageResult = new SearchPageResult();
+		searchPageResult.setPage(page);
+		searchPageResult.setCount(size);
+		searchPageResult.setTotalCount(searchResult.getTotalCount().intValue());
+		searchPageResult.setTotalPages(searchResult.getTotalPages());
+
+		return searchPageResult;
 	}
 
 	@Override

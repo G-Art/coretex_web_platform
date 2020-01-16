@@ -1,5 +1,5 @@
 plugins {
-  id("com.github.node-gradle.node") version "2.2.0"
+  id "com.github.node-gradle.node" version "2.2.0"
 }
 
 node {
@@ -9,7 +9,13 @@ node {
   workDir = project.file("${project.projectDir}/jsbuild/nodejs")
   npmWorkDir = project.file("${project.projectDir}/jsbuild/npm")
 }
-
+repositories.whenObjectAdded {
+  if (it instanceof IvyArtifactRepository) {
+    metadataSources {
+      artifact()
+    }
+  }
+}
 
 //task runUiTests(type: NpmTask){
 //  args = ['test']

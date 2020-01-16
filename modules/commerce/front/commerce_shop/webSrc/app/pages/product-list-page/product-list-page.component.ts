@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
+import {SearchService} from "../../core/service/search.service";
+import {SearchResult} from "../../core/data/search.result.data";
 
 declare var $: any;
 
@@ -14,12 +16,13 @@ export class ProductListPageComponent implements OnInit {
 
     query: string;
 
+    searchResult:SearchResult;
+
     constructor(private activatedRoute: ActivatedRoute,
-                private router: Router) {
+                private search: SearchService) {
     }
 
     ngOnInit() {
-        this.init();
         this.activatedRoute.data.subscribe(data => {
             this.type = data.type;
         });
@@ -28,19 +31,18 @@ export class ProductListPageComponent implements OnInit {
             this.query = this.activatedRoute
                 .snapshot
                 .params.code;
+
+            this.search.searchCategory(this.query).subscribe(data => this.searchResult = data);
         } else {
             this.activatedRoute
                 .queryParams
                 .subscribe(params => this.query = params['q']);
+            this.search.searchQuery(this.query).subscribe(data => this.searchResult = data);
         }
 
         console.log(`${this.type} | ${this.query}`)
 
     }
 
-    private init() {
-
-
-    }
 
 }

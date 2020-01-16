@@ -8,8 +8,12 @@
 
                 <div class="breadcrumb-wrapper">
                     <ul class="breadcrumb-list">
-                        <li><a href="index.html">Home</a></li>
-                        <li class="active">Shop</li>
+                        <li *ngFor="let bc of searchResult.breadcrumb" [class.active]="bc.active">
+                            <a *ngIf="!bc.active else activeBc" routerLink="{{bc.link}}">{{bc.text}}</a>
+                            <ng-template #activeBc>
+                                {{bc.text}}
+                            </ng-template>
+                        </li>
                     </ul>
                 </div>
 
@@ -35,10 +39,10 @@
 
                 <div class="col-lg-9 order-1 order-lg-2">
                     <!--=======  shop content wrapper  =======-->
-                    <app-product-grid>
-                        <app-product-collection-item *ngFor="let n of [1,2,3,4,5,6,7,8,9,10,11,12]"
+                    <app-product-grid [searchResult]="searchResult">
+                        <app-product-collection-item *ngFor="let product of searchResult.products"
+                                                     [product]="product"
                                                      class="col-md-6 col-sm-6 col-12">
-
                         </app-product-collection-item>
                     </app-product-grid>
                     <!--=======  End of shop content wrapper  =======-->

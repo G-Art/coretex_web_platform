@@ -3,16 +3,13 @@
 <div *ngIf="itemView === 'grid' " class="single-grid-product">
     <div class="single-grid-product__image">
         <div class="product-badge-wrapper">
-            <span class="onsale">-17%</span>
-            <span class="hot">Hot</span>
+            <span *ngIf="product.discountBadgeInfo" class="onsale">{{product.discountBadgeInfo}}</span>
+            <span *ngIf="product.hotBadge" class="hot">Hot</span>
         </div>
-        <a href="product-details-basic.html" class="image-wrap">
-            <img src="/app/assets/img/products/product-9-1-600x800.jpg"
+        <a routerLink="/product/{{product.code}}" class="image-wrap">
+            <img *ngFor="let img of product.images" src="{{img.path}}"
                  class="img-fluid"
-                 alt="">
-            <img src="/app/assets/img/products/product-9-2-600x800.jpg"
-                 class="img-fluid"
-                 alt="">
+                 alt="{{img.alt}}">
         </a>
         <div class="product-hover-icon-wrapper">
             <span class="single-icon single-icon--quick-view">
@@ -52,31 +49,53 @@
         </div>
     </div>
     <div class="single-grid-product__content">
-        <h3 class="title"><a href="product-details-basic.html">Lighting Lamp</a></h3>
-        <div class="price"><span class="main-price discounted">$145</span> <span
-                class="discounted-price">$110</span></div>
-        <div class="rating">
-            <i class="fa fa-star active"></i>
-            <i class="fa fa-star active"></i>
-            <i class="fa fa-star active"></i>
-            <i class="fa fa-star active"></i>
-            <i class="fa fa-star"></i>
+        <h3 class="title">
+            <a routerLink="/product/{{product.code}}">{{product.title}}</a>
+        </h3>
+        <div class="price">
+            <span class="main-price discounted"
+                  [ngClass]="{'discounted' : product.priceDiscount}">{{product.price}}</span>
+            <span *ngIf="product.priceDiscount" class="discounted-price">{{product.priceDiscount}}</span>
         </div>
+        <!--        <div class="rating">-->
+        <!--            <i class="fa fa-star active"></i>-->
+        <!--            <i class="fa fa-star active"></i>-->
+        <!--            <i class="fa fa-star active"></i>-->
+        <!--            <i class="fa fa-star active"></i>-->
+        <!--            <i class="fa fa-star"></i>-->
+        <!--        </div>-->
         <div class="color">
             <ul>
-                <li><a class="active" href="#" data-tippy="Black"
+                <li>
+                    <a class="active" href="#" data-tippy="Black"
                        data-tippy-inertia="true" data-tippy-animation="shift-away"
                        data-tippy-delay="50" data-tippy-arrow="true"
-                       data-tippy-theme="roundborder"><span
-                        class="color-picker black"></span></a></li>
-                <li><a href="#" data-tippy="Blue" data-tippy-inertia="true"
-                       data-tippy-animation="shift-away" data-tippy-delay="50"
-                       data-tippy-arrow="true" data-tippy-theme="roundborder"><span
-                        class="color-picker blue"></span></a></li>
-                <li><a href="#" data-tippy="Brown" data-tippy-inertia="true"
-                       data-tippy-animation="shift-away" data-tippy-delay="50"
-                       data-tippy-arrow="true" data-tippy-theme="roundborder"><span
-                        class="color-picker brown"></span></a></li>
+                       data-tippy-theme="roundborder">
+                        <span class="color-picker black"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                       data-tippy="Blue"
+                       data-tippy-inertia="true"
+                       data-tippy-animation="shift-away"
+                       data-tippy-delay="50"
+                       data-tippy-arrow="true"
+                       data-tippy-theme="roundborder">
+                        <span class="color-picker blue"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                       data-tippy="Brown"
+                       data-tippy-inertia="true"
+                       data-tippy-animation="shift-away"
+                       data-tippy-delay="50"
+                       data-tippy-arrow="true"
+                       data-tippy-theme="roundborder">
+                        <span class="color-picker brown"></span>
+                    </a>
+                </li>
             </ul>
         </div>
         <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"
@@ -105,29 +124,28 @@
         </a>
 
         <div class="product-badge-wrapper">
-            <span class="onsale">-17%</span>
-            <span class="hot">Hot</span>
+            <span *ngIf="product.discountBadgeInfo" class="onsale">{{product.discountBadgeInfo}}</span>
+            <span *ngIf="product.hotBadge" class="hot">Hot</span>
         </div>
-        <a href="product-details-basic.html" class="image-wrap">
-            <img src="/app/assets/img/products/product-9-1-600x800.jpg"
+        <a routerLink="/product/{{product.code}}" class="image-wrap">
+            <img *ngFor="let img of product.images" src="{{img.path}}"
                  class="img-fluid"
-                 alt="">
-            <img src="/app/assets/img/products/product-9-2-600x800.jpg"
-                 class="img-fluid"
-                 alt="">
+                 alt="{{img.alt}}">
         </a>
 
 
     </div>
 
     <div class="single-list-product__content">
-        <h3 class="title"><a href="product-details-basic.html">Lighting Lamp</a></h3>
-        <div class="price"><span class="main-price discounted">$145</span> <span
-                class="discounted-price">$110</span></div>
-        <p class="product-short-desc">Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit. Dolorem quod optio quaerat in molestiae amet repudiandae
-            repellendus eveniet libero mollitia. Lorem ipsum dolor sit amet, consectetur
-            adipisicing elit.</p>
+        <h3 class="title">
+            <a routerLink="/product/{{product.code}}">{{product.title}}</a>
+        </h3>
+        <div class="price">
+            <span class="main-price discounted"
+                  [ngClass]="{'discounted' : product.priceDiscount}">{{product.price}}</span>
+            <span *ngIf="product.priceDiscount" class="discounted-price">{{product.priceDiscount}}</span>
+        </div>
+        <p class="product-short-desc">{{product.description}}</p>
 
         <div class="color">
             <ul>

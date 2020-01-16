@@ -1,5 +1,6 @@
-import {Component, ContentChildren, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, ContentChildren, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ProductCollectionItemComponent} from "../product-collection-item/product-collection-item.component";
+import {SearchResult} from "../../../core/data/search.result.data";
 
 declare var $: any;
 
@@ -9,6 +10,9 @@ declare var $: any;
     styleUrls: ['./product-grid.component.scss']
 })
 export class ProductGridComponent implements OnInit {
+
+    @Input()
+    searchResult:SearchResult;
 
     viewMode: string = 'grid';
 

@@ -43,5 +43,8 @@
         "confirmPassword.notEqual": "Password mismatch"
       }
     }
+  },
+  "list": {
+    "showing": "Showing {{start}}–{{count}} of {{totalCount}} results"
   }
 }

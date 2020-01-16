@@ -10,7 +10,11 @@
                 <!--=======  header left content  =======-->
 
                 <div class="shop-header__left">
-                    <p class="result-text d-inline-block mb-0">Showing 1–9 of 50 results</p>
+                    <p class="result-text d-inline-block mb-0">{{'list.showing' | translate:{
+                        'start': (searchResult.page * searchResult.count) + 1,
+                        'count': searchResult.count,
+                        'totalCount': searchResult.totalCount
+                    } }}</p>
                     <div class="view-mode-icons d-inline-block">
                         <a href="javascript:void(0)"
                            [ngClass]="{'active' : viewMode === 'grid'}"
@@ -66,7 +70,7 @@
 
     <!--=======  shop product wrapper  =======-->
 
-    <div class="shop-product-wrap shop-product-wrap--with-sidebar row {{viewMode}} {{gridClassName}}" >
+    <div class="shop-product-wrap shop-product-wrap--with-sidebar row {{viewMode}} {{gridClassName}}">
         <ng-content></ng-content>
     </div>
 
@@ -74,13 +78,24 @@
 
     <!--=======  pagination wrapper  =======-->
 
-    <div class="pagination-wrapper">
+    <div class="pagination-wrapper" *ngIf="searchResult.totalPages>1">
         <ul>
-            <li class="active"><a href="#">1</a></li>
+            <li *ngIf="searchResult.page>0">
+                <a href="#">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+            <li class="active">
+                <a href="#">1</a>
+            </li>
             <li><a href="#">2</a></li>
             <li><a href="#">3</a></li>
             <li><a href="#">4</a></li>
-            <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
         </ul>
     </div>
 
