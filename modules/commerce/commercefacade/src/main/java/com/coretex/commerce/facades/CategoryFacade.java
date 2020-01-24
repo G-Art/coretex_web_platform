@@ -1,7 +1,6 @@
 package com.coretex.commerce.facades;
 
 import com.coretex.commerce.data.CategoryHierarchyData;
-import com.coretex.commerce.data.SearchPageResult;
 import com.coretex.commerce.data.minimal.MinimalCategoryData;
 import com.coretex.commerce.data.minimal.MinimalCategoryHierarchyData;
 import com.coretex.items.cx_core.CategoryItem;
@@ -20,6 +19,5 @@ public interface CategoryFacade extends PageableDataTableFacade<CategoryItem, Mi
 
 	Stream<MinimalCategoryHierarchyData> rootCategories();
 
-	SearchPageResult getCategoryPage(String code, int page, int size);
 
 }

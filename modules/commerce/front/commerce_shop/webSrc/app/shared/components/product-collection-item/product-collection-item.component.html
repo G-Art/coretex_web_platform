@@ -6,7 +6,7 @@
             <span *ngIf="product.discountBadgeInfo" class="onsale">{{product.discountBadgeInfo}}</span>
             <span *ngIf="product.hotBadge" class="hot">Hot</span>
         </div>
-        <a routerLink="/product/{{product.code}}" class="image-wrap">
+        <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
             <img *ngFor="let img of product.images" src="{{img.path}}"
                  class="img-fluid"
                  alt="{{img.alt}}">
@@ -14,7 +14,8 @@
         <div class="product-hover-icon-wrapper">
             <span class="single-icon single-icon--quick-view">
                 <a class="cd-trigger"
-                   href="#qv-1"
+                   (click)="displayQuickView()"
+                   href="javascript:void(0)"
                    data-tippy="Quick View"
                    data-tippy-inertia="true"
                    data-tippy-animation="shift-away"
@@ -50,7 +51,7 @@
     </div>
     <div class="single-grid-product__content">
         <h3 class="title">
-            <a routerLink="/product/{{product.code}}">{{product.title}}</a>
+            <a routerLink="/product/{{product.code}}">{{product.name}}</a>
         </h3>
         <div class="price">
             <span class="main-price discounted"
@@ -127,7 +128,7 @@
             <span *ngIf="product.discountBadgeInfo" class="onsale">{{product.discountBadgeInfo}}</span>
             <span *ngIf="product.hotBadge" class="hot">Hot</span>
         </div>
-        <a routerLink="/product/{{product.code}}" class="image-wrap">
+        <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
             <img *ngFor="let img of product.images" src="{{img.path}}"
                  class="img-fluid"
                  alt="{{img.alt}}">

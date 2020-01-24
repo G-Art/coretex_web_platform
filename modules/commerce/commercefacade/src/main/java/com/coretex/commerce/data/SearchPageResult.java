@@ -11,7 +11,7 @@ public class SearchPageResult {
 
 	private BreadcrumbData[] breadcrumb;
 
-	private List<ProductData> products;
+	private List<ShortProductData> products;
 
 	public int getPage() {
 		return page;
@@ -53,11 +53,11 @@ public class SearchPageResult {
 		this.breadcrumb = breadcrumb;
 	}
 
-	public List<ProductData> getProducts() {
+	public List<ShortProductData> getProducts() {
 		return products;
 	}
 
-	public void setProducts(List<ProductData> products) {
+	public void setProducts(List<ShortProductData> products) {
 		this.products = products;
 	}
 }

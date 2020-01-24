@@ -60,6 +60,29 @@ public class DefaultSearchService extends AbstractJdbcService implements SearchS
 	}
 
 	@Override
+	public <T> PageableSearchResult<T> searchPageable(String query, long count) {
+		var selectOperationSpec = new PageableSelectOperationSpec<T>(query);
+		selectOperationSpec.setCount(count);
+		return searchPageable(selectOperationSpec);
+	}
+
+	@Override
+	public <T> PageableSearchResult<T> searchPageable(String query, long count, long page) {
+		var selectOperationSpec = new PageableSelectOperationSpec<T>(query);
+		selectOperationSpec.setCount(count);
+		selectOperationSpec.setPage(page);
+		return searchPageable(selectOperationSpec);
+	}
+
+	@Override
+	public <T> PageableSearchResult<T> searchPageable(String query, Map<String, Object> parameters, long count, long page) {
+		var selectOperationSpec = new PageableSelectOperationSpec<T>(query, parameters);
+		selectOperationSpec.setCount(count);
+		selectOperationSpec.setPage(page);
+		return searchPageable(selectOperationSpec);
+	}
+
+	@Override
 	public <T> PageableSearchResult<T> searchPageable(String query, Map<String, Object> parameters) {
 		var selectOperationSpec = new PageableSelectOperationSpec<T>(query, parameters);
 		return searchPageable(selectOperationSpec);

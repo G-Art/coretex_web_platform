@@ -5,6 +5,22 @@ public class BreadcrumbData {
 	private boolean active = false;
 	private String text;
 
+	public BreadcrumbData(String link, String text) {
+		this.link = link;
+		this.text = text;
+	}
+
+	public BreadcrumbData(boolean active, String text) {
+		this.active = active;
+		this.text = text;
+	}
+
+	public BreadcrumbData(String link, boolean active, String text) {
+		this.link = link;
+		this.active = active;
+		this.text = text;
+	}
+
 	public String getLink() {
 		return link;
 	}

@@ -19,6 +19,8 @@ export class ProductGridComponent implements OnInit {
     gridColumns: number = 3;
     gridClassName: string = 'three-column';
 
+    columnsClass: string = 'col-lg-4';
+
     @ViewChild('gridViewChangeTrigger', {static: false})
     gridViewChangeTrigger: ElementRef;
 
@@ -60,7 +62,7 @@ export class ProductGridComponent implements OnInit {
         this.gridColumns = value;
         this.gridClassName = this.gridMap.find(({columns}) => columns === value).className;
 
-        this.productCollectionItemComponents.forEach(c => c.setColumns(this.gridMap.find(({columns}) => columns === value).columnsClass))
+        this.columnsClass = this.gridMap.find(({columns}) => columns === value).columnsClass
     }
 
     ngOnInit() {

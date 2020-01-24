@@ -15,6 +15,12 @@ public interface SearchService{
 
 	<T> PageableSearchResult<T> searchPageable(String query);
 
+	<T> PageableSearchResult<T> searchPageable(String query, long count);
+
+	<T> PageableSearchResult<T> searchPageable(String query, long count, long page);
+
+	<T> PageableSearchResult<T> searchPageable(String query, Map<String, Object> parameters, long count, long page);
+
 	<T> PageableSearchResult<T> searchPageable(String query, Map<String, Object> parameters);
 
 	<T> PageableSearchResult<T> searchPageable(PageableSelectOperationSpec<T> spec);

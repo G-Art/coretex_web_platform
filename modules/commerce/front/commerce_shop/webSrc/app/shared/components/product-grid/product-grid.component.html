@@ -71,7 +71,12 @@
     <!--=======  shop product wrapper  =======-->
 
     <div class="shop-product-wrap shop-product-wrap--with-sidebar row {{viewMode}} {{gridClassName}}">
-        <ng-content></ng-content>
+        <app-product-collection-item *ngFor="let product of searchResult.products"
+                                     [itemView]="viewMode"
+                                     [columnsClass]="columnsClass"
+                                     [product]="product"
+                                     class="col-md-6 col-sm-6 col-12">
+        </app-product-collection-item>
     </div>
 
     <!--=======  End of shop product wrapper  =======-->

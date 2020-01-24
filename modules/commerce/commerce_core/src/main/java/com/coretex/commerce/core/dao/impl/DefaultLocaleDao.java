@@ -1,6 +1,7 @@
 package com.coretex.commerce.core.dao.impl;
 
 import com.coretex.commerce.core.dao.CustomLocaleDao;
+import com.coretex.core.activeorm.dao.LocaleDao;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.relations.cx_core.StoreLocaleRelation;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 @Component
-public class DefaultLocaleDao extends com.coretex.core.activeorm.dao.LocaleDao implements CustomLocaleDao {
+public class DefaultLocaleDao extends LocaleDao implements CustomLocaleDao {
 
 
 	@Override

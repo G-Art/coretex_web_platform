@@ -10,6 +10,7 @@ import {UserService} from "./service/user.service";
 import {CookieService} from "ngx-cookie-service";
 import {CategoryService} from "./service/category.service";
 import {SearchService} from "./service/search.service";
+import {ProductService} from "./service/product.service";
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import {SearchService} from "./service/search.service";
         LanguageService,
         CategoryService,
         StoreService,
+        ProductService,
         SearchService]
 })
 export class CoreModule {

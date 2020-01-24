@@ -316,6 +316,8 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 
 				builder.append("c.").append(name).append(" ").append(sortParams.get(name));
 			}
+		} else {
+			builder.append("ORDER BY c.").append(GenericItem.CREATE_DATE);
 		}
 
 	}

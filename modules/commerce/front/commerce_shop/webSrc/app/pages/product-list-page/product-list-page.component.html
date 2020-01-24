@@ -6,7 +6,7 @@
             <div class="col-lg-6 offset-lg-3">
                 <!--=======  breadcrumb wrapper  =======-->
 
-                <div class="breadcrumb-wrapper">
+                <div class="breadcrumb-wrapper" *ngIf="searchResult">
                     <ul class="breadcrumb-list">
                         <li *ngFor="let bc of searchResult.breadcrumb" [class.active]="bc.active">
                             <a *ngIf="!bc.active else activeBc" routerLink="{{bc.link}}">{{bc.text}}</a>
@@ -34,17 +34,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 order-2 order-lg-1">
-                    <app-sidebar></app-sidebar>
+                    <app-sidebar [searchResult]="searchResult"></app-sidebar>
                 </div>
 
                 <div class="col-lg-9 order-1 order-lg-2">
                     <!--=======  shop content wrapper  =======-->
-                    <app-product-grid [searchResult]="searchResult">
-                        <app-product-collection-item *ngFor="let product of searchResult.products"
-                                                     [product]="product"
-                                                     class="col-md-6 col-sm-6 col-12">
-                        </app-product-collection-item>
-                    </app-product-grid>
+                    <app-product-grid [searchResult]="searchResult"
+                                      *ngIf="searchResult"></app-product-grid>
                     <!--=======  End of shop content wrapper  =======-->
                 </div>
             </div>
@@ -61,89 +57,7 @@
 =            quick view         =
 =============================================-->
 
-<div id="qv-1" class="cd-quick-view">
-    <div class="cd-slider-wrapper">
-        <div class="product-badge-wrapper">
-            <span class="onsale">-17%</span>
-            <span class="hot">Hot</span>
-        </div>
-        <ul class="cd-slider">
-            <li class="selected"><img src="/app/assets/img/products/product-9-1-600x800.jpg" alt="Product 2"></li>
-            <li><img src="/app/assets/img/products/product-9-2-600x800.jpg" alt="Product 1"></li>
-        </ul> <!-- cd-slider -->
 
-        <ul class="cd-slider-pagination">
-            <li class="active"><a href="#0">1</a></li>
-            <li><a href="#1">2</a></li>
-        </ul> <!-- cd-slider-pagination -->
-
-        <ul class="cd-slider-navigation">
-            <li><a class="cd-prev" href="#0"><i class="fa fa-angle-left"></i></a></li>
-            <li><a class="cd-next" href="#0"><i class="fa fa-angle-right"></i></a></li>
-        </ul> <!-- cd-slider-navigation -->
-    </div> <!-- cd-slider-wrapper -->
-
-    <div class="quickview-item-info cd-item-info ps-scroll">
-
-        <h2 class="item-title">Atelier Ottoman Takumi Series</h2>
-        <p class="price">
-            <span class="main-price discounted">$360.00</span>
-            <span class="discounted-price">$300.00</span>
-        </p>
-
-        <p class="description">Upholstered velvet ottoman with antique stud detailing. Invite restrained glamour and on-trend colour into your design scheme with the Eichholtz Ponti Ottoman. Inspired by the neo-classical influences of Italian icon, Gio Ponti, this contemporary ottoman collection is presented in a choice of velvet and linen colourways.</p>
-
-
-        <div class="pro-qty d-inline-block">
-            <input type="text" value="1">
-        </div>
-
-        <div class="add-to-cart-btn d-inline-block">
-            <button class="theme-button theme-button--alt">ADD TO CART</button>
-        </div>
-
-        <div class="quick-view-other-info">
-            <div class="other-info-links">
-                <a href="javascript:void(0)"><i class="fa fa-heart-o"></i> ADD TO WISHLIST</a>
-                <a href="javascript:void(0)"><i class="fa fa-exchange"></i> COMPARE</a>
-            </div>
-            <table>
-                <tr class="single-info">
-                    <td class="quickview-title">SKU: </td>
-                    <td class="quickview-value">12345</td>
-                </tr>
-                <tr class="single-info">
-                    <td class="quickview-title">Categories: </td>
-                    <td class="quickview-value">
-                        <a href="#">Decor</a>,
-                        <a href="#">Living Room</a>,
-                        <a href="#">Furniture</a>
-                    </td>
-                </tr>
-                <tr class="single-info">
-                    <td class="quickview-title">Tags: </td>
-                    <td class="quickview-value">
-                        <a href="#">Decor</a>,
-                        <a href="#">Light</a>
-                    </td>
-                </tr>
-                <tr class="single-info">
-                    <td class="quickview-title">Share on: </td>
-                    <td class="quickview-value">
-                        <ul class="quickview-social-icons">
-                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                            <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
-                        </ul>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-
-    </div> <!-- cd-item-info -->
-    <a href="#0" class="cd-close">Close</a>
-</div>
+<app-product-quick-view></app-product-quick-view>
 
 <!--=====  End of quick view  ======-->

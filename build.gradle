@@ -17,12 +17,36 @@ buildscript {
         classpath(group: 'com.coretex.build.plugin', name: 'build.plugin', version: '1.0-Alpha')
     }
 }
-
 wrapper {
     gradleVersion = '6.0'
 }
 
+apply plugin: 'distribution'
 apply from: "gradle-build/config.gradle"
 apply plugin: 'build.plugin'
 apply from: "gradle-build/subprojects.gradle"
+
+
+distributions {
+    main {
+        distributionBaseName = 'gm-commerce'
+        contents {
+            from projectDir
+            exclude '**/src'
+            exclude 'tmp'
+            exclude '**/*.iml'
+            exclude '**/.idea'
+            exclude '**/.gradle'
+            exclude '**/node_modules'
+            exclude '**/jsbuild'
+            exclude '**/webSrc'
+            exclude '**/commerce_shop/template'
+            exclude '**/genSrc'
+            exclude 'build'
+        }
+    }
+}
+
+distTar.enabled = false
+distZip.enabled = false
 

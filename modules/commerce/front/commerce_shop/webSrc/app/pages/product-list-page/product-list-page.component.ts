@@ -14,9 +14,7 @@ export class ProductListPageComponent implements OnInit {
 
     type: string = 'category';
 
-    query: string;
-
-    searchResult:SearchResult;
+    searchResult: SearchResult;
 
     constructor(private activatedRoute: ActivatedRoute,
                 private search: SearchService) {
@@ -25,22 +23,22 @@ export class ProductListPageComponent implements OnInit {
     ngOnInit() {
         this.activatedRoute.data.subscribe(data => {
             this.type = data.type;
+            if (this.type === 'category') {
+                this.activatedRoute.params.subscribe(routeParams => {
+                    this.search.searchCategory(routeParams.code).subscribe(data => this.searchResult = data);
+                })
+            } else {
+                this.activatedRoute
+                    .queryParams
+                    .subscribe(params => {
+                        this.search.searchQuery(params['q']).subscribe(data => this.searchResult = data);
+                    });
+            }
         });
 
-        if (this.type === 'category') {
-            this.query = this.activatedRoute
-                .snapshot
-                .params.code;
 
-            this.search.searchCategory(this.query).subscribe(data => this.searchResult = data);
-        } else {
-            this.activatedRoute
-                .queryParams
-                .subscribe(params => this.query = params['q']);
-            this.search.searchQuery(this.query).subscribe(data => this.searchResult = data);
-        }
 
-        console.log(`${this.type} | ${this.query}`)
+        // console.log(`${this.type} | ${this.query}`)
 
     }
 

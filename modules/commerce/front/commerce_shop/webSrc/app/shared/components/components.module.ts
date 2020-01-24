@@ -13,6 +13,7 @@ import { ProductGridComponent } from './product-grid/product-grid.component';
 import { ProductCollectionItemComponent } from './product-collection-item/product-collection-item.component';
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { SubmenuComponent } from './navigation-menu/submenu/submenu.component';
+import { ProductQuickViewComponent } from './product-quick-view/product-quick-view.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { SubmenuComponent } from './navigation-menu/submenu/submenu.component';
         ProductGridComponent,
         ProductCollectionItemComponent,
         NavigationMenuComponent,
-        SubmenuComponent
+        SubmenuComponent,
+        ProductQuickViewComponent
     ],
     imports: [
         RoutingModule,
@@ -42,7 +44,8 @@ import { SubmenuComponent } from './navigation-menu/submenu/submenu.component';
         SidebarComponent,
         ProductGridComponent,
         ProductCollectionItemComponent,
-        NavigationMenuComponent
+        NavigationMenuComponent,
+        ProductQuickViewComponent
     ]
 
 })

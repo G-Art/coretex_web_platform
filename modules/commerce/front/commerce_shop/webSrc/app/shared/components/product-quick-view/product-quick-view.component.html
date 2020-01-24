@@ -1,0 +1,79 @@
+<div  #quickViewBlock class="cd-quick-view" >
+    <div class="cd-slider-wrapper" *ngIf="product">
+        <div class="product-badge-wrapper">
+            <span *ngIf="product.discountBadgeInfo" class="onsale">{{product.discountBadgeInfo}}</span>
+            <span *ngIf="product.hotBadge" class="hot">Hot</span>
+        </div>
+        <ul class="cd-slider">
+            <li *ngFor="let img of product.images; let i = index" class="{{i === 0 ? 'selected' : ''}}">
+                <img src="{{img.path}}" alt="{{img.alt}}">
+            </li>
+<!--            <li class="selected"><img src="/app/assets/img/products/product-9-1-600x800.jpg" alt="Product 2"></li>-->
+        </ul> <!-- cd-slider -->
+
+        <ul class="cd-slider-pagination">
+            <li *ngFor="let img of product.images; let i = index" class="{{i === 0 ? 'active' : ''}}">
+                <a href="#0">{{i}}</a>
+            </li>
+        </ul> <!-- cd-slider-pagination -->
+
+        <ul class="cd-slider-navigation">
+            <li><a class="cd-prev" href="#0"><i class="fa fa-angle-left"></i></a></li>
+            <li><a class="cd-next" href="#0"><i class="fa fa-angle-right"></i></a></li>
+        </ul> <!-- cd-slider-navigation -->
+    </div> <!-- cd-slider-wrapper -->
+
+    <div class="quickview-item-info cd-item-info ps-scroll" *ngIf="product">
+
+        <h2 class="item-title">{{product.name}}</h2>
+        <p class="price">
+            <span class="main-price"
+                  [ngClass]="{'discounted' : product.priceDiscount}">{{product.price}}</span>
+            <span *ngIf="product.priceDiscount" class="discounted-price">{{product.priceDiscount}}</span>
+        </p>
+
+        <p class="description">{{product.description}}</p>
+
+        <div class="pro-qty d-inline-block">
+            <input type="text" value="1">
+        </div>
+
+        <div class="add-to-cart-btn d-inline-block">
+            <button class="theme-button theme-button--alt">ADD TO CART</button>
+        </div>
+
+        <div class="quick-view-other-info">
+            <div class="other-info-links">
+                <a href="javascript:void(0)"><i class="fa fa-heart-o"></i> ADD TO WISHLIST</a>
+                <a href="javascript:void(0)"><i class="fa fa-exchange"></i> COMPARE</a>
+            </div>
+            <table>
+                <tr class="single-info">
+                    <td class="quickview-title">SKU: </td>
+                    <td class="quickview-value">{{product.code}}</td>
+                </tr>
+                <tr class="single-info">
+                    <td class="quickview-title">Tags: </td>
+                    <td class="quickview-value">
+                        <a href="#">Decor</a>,
+                        <a href="#">Light</a>
+                    </td>
+                </tr>
+                <tr class="single-info">
+                    <td class="quickview-title">Share on: </td>
+                    <td class="quickview-value">
+                        <ul class="quickview-social-icons">
+                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                            <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+    </div> <!-- cd-item-info -->
+    <a *ngIf="product" href="#0" class="cd-close">Close</a>
+</div>

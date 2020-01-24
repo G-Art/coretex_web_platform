@@ -23,11 +23,13 @@ const routes: Routes = [
             {
                 path: 'category/:code',
                 component: ProductListPageComponent,
+                runGuardsAndResolvers: 'pathParamsOrQueryParamsChange',
                 data: {type: 'category'}
             },
             {
                 path: 'search',
                 component: ProductListPageComponent,
+                runGuardsAndResolvers: 'pathParamsOrQueryParamsChange',
                 data: {type: 'search'}
             },
             {

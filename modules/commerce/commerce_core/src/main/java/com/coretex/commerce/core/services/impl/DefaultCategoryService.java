@@ -3,9 +3,7 @@ package com.coretex.commerce.core.services.impl;
 import com.coretex.commerce.core.dao.CategoryDao;
 import com.coretex.commerce.core.services.AbstractGenericItemService;
 import com.coretex.commerce.core.services.CategoryService;
-import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.items.cx_core.CategoryItem;
-import com.coretex.items.cx_core.ProductItem;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -37,8 +35,4 @@ public class DefaultCategoryService extends AbstractGenericItemService<CategoryI
 		return categoryDao.findByParent(categoryUuid);
 	}
 
-	@Override
-	public PageableSearchResult<ProductItem> categoryPage(String code, long count, long page) {
-		return null;
-	}
 }

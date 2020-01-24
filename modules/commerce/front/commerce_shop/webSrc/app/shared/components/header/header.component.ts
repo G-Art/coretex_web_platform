@@ -25,7 +25,8 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     @ViewChild('headerSticky', {static: false}) headerSticky: ElementRef;
 
     authorized = false;
-    @Output() toggleMobileMenuEvent = new EventEmitter<any>();
+    @Output()
+    toggleMobileMenuEvent = new EventEmitter<any>();
 
     constructor(private authService: AuthService) {
     }

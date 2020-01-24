@@ -4,6 +4,7 @@ export class ProductData extends AbstractData {
     code:string;
 
     title:string;
+    name:string;
 
     images:ImgData[];
 
