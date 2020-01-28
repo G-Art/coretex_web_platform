@@ -5,7 +5,7 @@ import com.coretex.commerce.data.minimal.MinimalProductData;
 import com.coretex.commerce.data.ProductData;
 import com.coretex.items.cx_core.ProductItem;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface ProductFacade extends PageableDataTableFacade<ProductItem, MinimalProductData> {
 
@@ -14,5 +14,5 @@ public interface ProductFacade extends PageableDataTableFacade<ProductItem, Mini
 	ProductData getByCode(String code);
 
 	Long count();
-	List<ProductData> getAll();
+	Stream<ProductData> getAll();
 }

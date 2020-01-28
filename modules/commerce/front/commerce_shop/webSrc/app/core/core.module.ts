@@ -11,6 +11,7 @@ import {CookieService} from "ngx-cookie-service";
 import {CategoryService} from "./service/category.service";
 import {SearchService} from "./service/search.service";
 import {ProductService} from "./service/product.service";
+import {CartService} from "./service/cart.service";
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import {ProductService} from "./service/product.service";
         CategoryService,
         StoreService,
         ProductService,
+        CartService,
         SearchService]
 })
 export class CoreModule {

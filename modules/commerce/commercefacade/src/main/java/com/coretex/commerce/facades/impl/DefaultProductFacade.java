@@ -8,6 +8,7 @@ import com.coretex.commerce.data.SearchPageResult;
 import com.coretex.commerce.data.minimal.MinimalProductData;
 import com.coretex.commerce.facades.ProductFacade;
 import com.coretex.commerce.mapper.GenericDataMapper;
+import com.coretex.commerce.mapper.ProductDataMapper;
 import com.coretex.commerce.mapper.ShortProductDataMapper;
 import com.coretex.commerce.mapper.minimal.MinimalProductDataMapper;
 import com.coretex.core.activeorm.services.PageableSearchResult;
@@ -17,8 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service("productFacade")
 public class DefaultProductFacade implements ProductFacade {
@@ -31,6 +32,9 @@ public class DefaultProductFacade implements ProductFacade {
 
 	@Resource
 	private ShortProductDataMapper shortProductDataMapper;
+
+	@Resource
+	private ProductDataMapper productDataMapper;
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultProductFacade.class);
 
@@ -58,7 +62,7 @@ public class DefaultProductFacade implements ProductFacade {
 
 	@Override
 	public ProductData getByCode(String code) {
-		return null;
+		return productDataMapper.fromItem(productService.getByCode(code));
 	}
 
 	@Override
@@ -67,8 +71,9 @@ public class DefaultProductFacade implements ProductFacade {
 	}
 
 	@Override
-	public List<ProductData> getAll() {
-		return null;
+	public Stream<ProductData> getAll() {
+		return productService.listReactive()
+				.map(productDataMapper::fromItem);
 	}
 
 

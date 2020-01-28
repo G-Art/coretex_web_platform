@@ -5,6 +5,7 @@
     "my_account": "Мой профиль",
     "shopping_cart": "Корзина",
     "checkout": "Заказ",
-    "order_tracking": "Заказы"
+    "order_tracking": "Заказы",
+    "logout": "Выход"
   }
 }

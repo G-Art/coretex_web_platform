@@ -62,7 +62,7 @@ public class AuthenticationController {
 			var authRequest = new AuthRequest();
 			authRequest.setName(rr.getEmail());
 			authRequest.setPassword(rr.getPassword());
-			return login(new AuthRequest(), request);
+			return login(authRequest, request);
 		}
 		return Mono.fromSupplier(() -> ResponseEntity.ok().body(register));
 	}
@@ -80,12 +80,8 @@ public class AuthenticationController {
 		StringBuilder sb = new StringBuilder("accessToken=");
 		sb.append(jwt)
 				.append(";expires=").append(expiryDate)
-				.append(";path=/")
-				.append(";HttpOnly");
+				.append(";path=/");
 
-//		if (request.isSecure()) {
-//			sb.append(";Secure");
-//		}
 		return sb.toString();
 	}
 

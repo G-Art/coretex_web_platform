@@ -469,8 +469,6 @@
 .header-icon{
     display: inline-block;
     &__list{
-        
-
         li{
             display: inline-block;
             margin-right: 20px;
@@ -488,11 +486,11 @@
                 margin-right: 0;
             }
 
-            & > a{
+            & > * > a{
                 position: relative;
                 @include font-prop(16px, #111, 400, 16px);
 
-                & > .item-count{
+                & .item-count{
                     position: absolute;
                     top: -10px;
                     right: -10px;

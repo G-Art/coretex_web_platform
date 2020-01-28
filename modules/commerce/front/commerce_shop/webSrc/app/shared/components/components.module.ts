@@ -14,6 +14,8 @@ import { ProductCollectionItemComponent } from './product-collection-item/produc
 import { NavigationMenuComponent } from './navigation-menu/navigation-menu.component';
 import { SubmenuComponent } from './navigation-menu/submenu/submenu.component';
 import { ProductQuickViewComponent } from './product-quick-view/product-quick-view.component';
+import { MiniCartComponent } from './mini-cart/mini-cart.component';
+import { WishlistComponent } from './wishlist/wishlist.component';
 
 
 @NgModule({
@@ -28,7 +30,9 @@ import { ProductQuickViewComponent } from './product-quick-view/product-quick-vi
         ProductCollectionItemComponent,
         NavigationMenuComponent,
         SubmenuComponent,
-        ProductQuickViewComponent
+        ProductQuickViewComponent,
+        MiniCartComponent,
+        WishlistComponent
     ],
     imports: [
         RoutingModule,

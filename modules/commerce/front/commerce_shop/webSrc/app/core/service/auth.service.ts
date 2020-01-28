@@ -34,7 +34,7 @@ export class AuthService {
 
     getRedirectUrl(): Observable<any> {
         let url: string = this.redirectUrl || '/';
-        return of(url);
+        return of([url]);
     }
 
     forbidden() {

@@ -1,5 +1,7 @@
 package com.coretex.commerce.data.requests;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.beans.Transient;
 import java.util.function.Function;
 
@@ -11,6 +13,7 @@ public class RegisterRequest {
 	private String lastName;
 	private String email;
 	private String password;
+	@JsonProperty("confirmPassword")
 	private String passwordConfirmation;
 
 	public String getFirstName() {

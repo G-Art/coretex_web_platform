@@ -5,7 +5,8 @@
     "my_account": "My account",
     "shopping_cart": "Shopping cart",
     "checkout": "Checkout",
-    "order_tracking": "Order Tracking"
+    "order_tracking": "Order Tracking",
+    "logout": "Logout"
   },
   "form": {
     "login": {

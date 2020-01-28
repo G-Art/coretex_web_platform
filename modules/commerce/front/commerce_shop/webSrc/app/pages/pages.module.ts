@@ -10,6 +10,7 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import {HomePageComponent} from "./home-page/home-page.component";
 import {ComponentsModule} from "../shared/components/components.module";
 import { ProductListPageComponent } from './product-list-page/product-list-page.component';
+import { ProductDetailPageComponent } from './product-detail-page/product-detail-page.component';
 
 @NgModule({
     declarations: [
@@ -17,7 +18,8 @@ import { ProductListPageComponent } from './product-list-page/product-list-page.
         AccountPageComponent,
         RegisterPageComponent,
         HomePageComponent,
-        ProductListPageComponent
+        ProductListPageComponent,
+        ProductDetailPageComponent
     ],
     imports: [
         FragmentsModule,

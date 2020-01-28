@@ -38,6 +38,10 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         return this.authService.isAuthenticated();
     }
 
+    logout(){
+        this.authService.logout();
+    }
+
     @HostListener('window:scroll', ['$event'])
     scrollHandler(event) {
         let $window = $(window),

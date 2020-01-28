@@ -1,0 +1,90 @@
+<a href="cart.html">
+    <i class="fa fa-shopping-basket"></i>
+    <span *ngIf="entries" class="item-count">{{entries.length}}</span>
+</a>
+<div class="minicart-wrapper">
+    <p class="minicart-wrapper__title">CART</p>
+    <ng-template [ngIf]="entries">
+        <div class="minicart-wrapper__items ps-scroll">
+            <div class="minicart-wrapper__items__single">
+                <a href="javascript:void(0)" class="close-icon"><i
+                        class="pe-7s-close"></i></a>
+                <div class="image">
+                    <a href="product-details-basic.html">
+                        <img src="/app/assets/img/products/product-1-90x100.jpg"
+                             class="img-fluid" alt="">
+                    </a>
+                </div>
+                <div class="content">
+                    <p class="product-title"><a href="product-details-basic.html">Atelier
+                        Fuji NC Chair</a></p>
+                    <p class="product-calculation"><span class="count">1</span> x
+                        <span class="price">$900</span></p>
+                </div>
+            </div>
+            <div class="minicart-wrapper__items__single">
+                <a href="javascript:void(0)" class="close-icon">
+                    <i class="pe-7s-close"></i>
+                </a>
+                <div class="image">
+                    <a href="product-details-basic.html">
+                        <img src="/app/assets/img/products/product-2-90x100.jpg"
+                             class="img-fluid" alt="">
+                    </a>
+                </div>
+                <div class="content">
+                    <p class="product-title">
+                        <a href="product-details-basic.html">Jane Lauren Rebel
+                            Sofa</a>
+                    </p>
+                    <p class="product-calculation">
+                        <span class="count">1</span> x <span
+                            class="price">$900</span>
+                    </p>
+                </div>
+            </div>
+            <div class="minicart-wrapper__items__single">
+                <a href="javascript:void(0)" class="close-icon"><i
+                        class="pe-7s-close"></i></a>
+                <div class="image">
+                    <a href="product-details-basic.html">
+                        <img src="/app/assets/img/products/product-1-90x100.jpg"
+                             class="img-fluid" alt="">
+                    </a>
+                </div>
+                <div class="content">
+                    <p class="product-title">
+                        <a href="product-details-basic.html">Atelier Fuji NC
+                            Chair</a>
+                    </p>
+                    <p class="product-calculation">
+                        <span class="count">1</span> x <span
+                            class="price">$900</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <p class="minicart-wrapper__subtotal">SUBTOTAL: <span>$1800</span></p>
+
+        <div class="minicart-wrapper__buttons">
+            <a href="cart.html"
+               class="theme-button theme-button--minicart-button">
+                VIEW CART
+            </a>
+            <a href="checkout.html"
+               class="theme-button theme-button--alt theme-button--minicart-button theme-button--minicart-button--alt mb-0">
+                CHECKOUT
+            </a>
+        </div>
+
+        <p class="minicart-wrapper__featuretext">
+            Free Shipping on All Orders Over $100!
+        </p>
+    </ng-template>
+
+    <ng-template [ngIf]="!entries">
+        <p class="minicart-wrapper__featuretext text-uppercase">Empty</p>
+    </ng-template>
+
+</div>

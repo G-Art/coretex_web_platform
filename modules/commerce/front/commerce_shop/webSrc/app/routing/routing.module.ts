@@ -8,6 +8,7 @@ import {AccountPageComponent} from "../pages/account-page/account-page.component
 import {AuthGuardService} from "../core/service/authguard.service";
 import {RegisterPageComponent} from "../pages/register-page/register-page.component";
 import {ProductListPageComponent} from "../pages/product-list-page/product-list-page.component";
+import {ProductDetailPageComponent} from "../pages/product-detail-page/product-detail-page.component";
 
 
 const routes: Routes = [
@@ -25,6 +26,10 @@ const routes: Routes = [
                 component: ProductListPageComponent,
                 runGuardsAndResolvers: 'pathParamsOrQueryParamsChange',
                 data: {type: 'category'}
+            },
+            {
+                path: 'product/:code',
+                component: ProductDetailPageComponent
             },
             {
                 path: 'search',
