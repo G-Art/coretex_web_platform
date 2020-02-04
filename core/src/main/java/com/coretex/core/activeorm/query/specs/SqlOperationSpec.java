@@ -17,6 +17,7 @@ public abstract class SqlOperationSpec<S extends Statement, O extends SqlOperati
 	private OperationFactory operationFactory;
 	private AbstractJdbcService abstractJdbcService;
 	private CortexContext cortexContext;
+	private boolean nativeQuery = false;
 	private Optional<String> query;
 	private Supplier<String> querySupplier = () -> {
 		throw new IllegalArgumentException("No query is defined");
@@ -37,6 +38,14 @@ public abstract class SqlOperationSpec<S extends Statement, O extends SqlOperati
 			query = Optional.of(newQuery);
 		}
 		return query.get();
+	}
+
+	public boolean isNativeQuery() {
+		return nativeQuery;
+	}
+
+	protected void setNativeQuery(boolean nativeQuery) {
+		this.nativeQuery = nativeQuery;
 	}
 
 	public CortexContext getCortexContext() {

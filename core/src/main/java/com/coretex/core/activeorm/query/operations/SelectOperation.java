@@ -28,12 +28,12 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 
 	private static Cache<Integer, Select> selectCache = CacheBuilder.newBuilder()
 			.softValues()
-			.maximumSize(255)
+			.maximumSize(512)
+			.concurrencyLevel(1)
 			.expireAfterAccess(20, TimeUnit.SECONDS)
 			.build();
 
 	private Stream<T> result;
-	private boolean transformed;
 
 	public SelectOperation(SelectOperationSpec<T> operationSpec, QueryTransformationProcessor<Select> transformationProcessor) {
 		super(operationSpec);
@@ -51,17 +51,15 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 
 	@Override
 	protected Select parseQuery(String query) {
-		this.transformed = true;
 		try {
-			return selectCache.get(query.hashCode(), ()-> {
+			return selectCache.get(query.hashCode(), () -> {
 				var select = super.parseQuery(query);
-				this.transformed = false;
+				doTransformation(select);
 				return select;
 			});
 		} catch (ExecutionException e) {
 			LOGGER.error("Cache calculation error", e);
 		}
-		transformed = false;
 		return super.parseQuery(query);
 	}
 
@@ -72,24 +70,21 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 
 	@Override
 	public void execute() {
-		doTransformation(getStatement());
-		result = getJdbcTemplate().query(getStatement().toString(),
+		result = getJdbcTemplate().query(getQuery(),
 				new SelectSqlParameterSource(getOperationSpec()),
 				extractorFunction.apply(this));
 	}
 
-	protected void doTransformation(Select statement){
-		if(!transformed){
-			transformationProcessor.transform(statement);
-		}
+	protected void doTransformation(Select statement) {
+		transformationProcessor.transform(statement);
 	}
 
-	public Stream<T> searchResultAsStream(){
+	public Stream<T> searchResultAsStream() {
 		this.execute();
 		return result;
 	}
 
-	public List<T> searchResult(){
+	public List<T> searchResult() {
 		return this.searchResultAsStream().collect(Collectors.toList());
 	}
 
@@ -97,8 +92,8 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 		return transformationProcessor;
 	}
 
-	private Class<T> getResultValueType(){
-        return this.getOperationSpec().getExpectedResultType();
+	private Class<T> getResultValueType() {
+		return this.getOperationSpec().getExpectedResultType();
 	}
 
 }

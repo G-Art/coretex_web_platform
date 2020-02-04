@@ -1,22 +1,17 @@
 package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
-import com.coretex.core.activeorm.query.operations.dataholders.InsertValueDataHolder;
 import com.coretex.core.activeorm.query.operations.dataholders.RemoveValueDataHolder;
 import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.RemoveOperationSpec;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.items.core.GenericItem;
-import com.coretex.items.core.MetaRelationTypeItem;
 import com.coretex.items.core.MetaTypeItem;
 import net.sf.jsqlparser.statement.delete.Delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.util.Assert;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.coretex.core.general.utils.AttributeTypeUtils.isRegularTypeAttribute;
@@ -68,7 +63,7 @@ public class RemoveOperation extends ModificationOperation<Delete, RemoveOperati
 
 	@Override
 	public void executeOperation() {
-		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getStatement().toString(),
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getQuery(),
 				new ModificationSqlParameterSource<RemoveValueDataHolder>(getOperationSpec().getValueDatas())));
 	}
 

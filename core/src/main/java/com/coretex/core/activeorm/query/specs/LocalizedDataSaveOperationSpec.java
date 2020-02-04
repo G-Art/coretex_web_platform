@@ -26,6 +26,7 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 
 	public LocalizedDataSaveOperationSpec(ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator, MetaAttributeTypeItem attributeTypeItem) {
 		super(initiator.getOperationSpec().getItem());
+		setNativeQuery(false);
 		this.initiator = initiator;
 		this.attributeTypeItem = attributeTypeItem;
 		this.setQuerySupplier(this::buildQuery);

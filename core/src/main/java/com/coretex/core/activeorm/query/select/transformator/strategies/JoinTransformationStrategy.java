@@ -6,6 +6,7 @@ import com.coretex.core.activeorm.query.select.scanners.ExpressionScanner;
 import com.coretex.core.activeorm.query.select.scanners.JoinScanner;
 import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.JoinDataInjectionPoint;
+import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaTypeItem;
 import com.google.common.collect.Lists;
@@ -121,6 +122,8 @@ public class JoinTransformationStrategy extends AbstractTransformationStrategy<J
 		getTransformationHelper().getCortexContext()
 				.getAllAttributes(typeItemBind)
 				.values()
+				.stream()
+				.filter(metaAttributeTypeItem -> Objects.nonNull(metaAttributeTypeItem.getColumnName()) )
 				.forEach(metaAttributeTypeItem -> selectItems.add(new SelectExpressionItem(new Column(table, metaAttributeTypeItem.getColumnName()))));
 		return selectItems;
 	}
@@ -141,7 +144,7 @@ public class JoinTransformationStrategy extends AbstractTransformationStrategy<J
 		Expression left = new Column(table, getTransformationHelper()
 				.getCortexContext().findAttribute(metaTypeItem.getTypeCode(), GenericItem.META_TYPE).getColumnName());
 
-		Set<MetaTypeItem> subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ? metaTypeItem.getSubtypes().stream()
+		Set<MetaTypeItem> subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ? ItemUtils.getAllSubtypes(metaTypeItem).stream()
 				.filter(sub -> sub.getTableName().equals(metaTypeItem.getTableName()))
 				.collect(Collectors.toSet()) : null;
 

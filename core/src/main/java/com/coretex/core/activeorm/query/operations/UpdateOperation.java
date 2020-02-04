@@ -1,7 +1,6 @@
 package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
-import com.coretex.core.activeorm.query.operations.dataholders.InsertValueDataHolder;
 import com.coretex.core.activeorm.query.operations.dataholders.UpdateValueDataHolder;
 import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.UpdateOperationSpec;
@@ -9,17 +8,13 @@ import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.core.general.utils.OperationUtils;
 import com.coretex.items.core.GenericItem;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Streams;
 import net.sf.jsqlparser.statement.update.Update;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,7 +61,7 @@ public class UpdateOperation extends ModificationOperation<Update, UpdateOperati
 
 	@Override
 	public void executeOperation() {
-		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getStatement().toString(),
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getQuery(),
 				new ModificationSqlParameterSource<UpdateValueDataHolder>(getOperationSpec().getUpdateValueDatas())));
 	}
 

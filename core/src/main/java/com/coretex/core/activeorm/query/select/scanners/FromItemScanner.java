@@ -35,7 +35,7 @@ public class FromItemScanner<Q> extends Scanner<FromItem, Q> {
 		Scanner prnt = getParent();
 		while (Objects.nonNull(prnt)){
 			if(prnt instanceof SelectBodyScanner){
-				if(table.getName().startsWith("#")){
+				if(table.getName().replaceAll("\"", "").startsWith("#")){
 					useInheritance = false;
 					table.setName(table.getName().replace("#", ""));
 				}

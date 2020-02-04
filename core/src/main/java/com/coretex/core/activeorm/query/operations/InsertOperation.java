@@ -9,11 +9,8 @@ import com.coretex.items.core.MetaAttributeTypeItem;
 import net.sf.jsqlparser.statement.insert.Insert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.util.Assert;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 
 public class InsertOperation extends ModificationOperation<Insert, InsertOperationSpec> {
@@ -49,7 +46,7 @@ public class InsertOperation extends ModificationOperation<Insert, InsertOperati
 
 	@Override
 	public void executeOperation() {
-		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getStatement().toString(),
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getQuery(),
 				new ModificationSqlParameterSource<InsertValueDataHolder>(getOperationSpec().getInsertValueDatas())));
 	}
 
