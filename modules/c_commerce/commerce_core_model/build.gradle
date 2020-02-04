@@ -12,9 +12,9 @@ dependencies {
         exclude group:'commons-digester', module:'commons-digester'
     }
     implementation group:'commons-digester', name:'commons-digester', version:'2.0'
-    implementation group: 'org.infinispan', name: 'infinispan-core', version: '9.4.15.Final'
-    implementation group: 'org.infinispan', name: 'infinispan-cachestore-jdbc', version: '9.4.15.Final'
-    implementation group: 'org.infinispan', name: 'infinispan-tree', version: '9.4.15.Final'
+    implementation group: 'org.infinispan', name: 'infinispan-core', version: '9.4.17.Final'
+    implementation group: 'org.infinispan', name: 'infinispan-cachestore-jdbc', version: '9.4.17.Final'
+    implementation group: 'org.infinispan', name: 'infinispan-tree', version: '9.4.17.Final'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
 
     // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple

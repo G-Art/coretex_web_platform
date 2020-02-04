@@ -3,11 +3,12 @@
 <div *ngIf="itemView === 'grid' " class="single-grid-product">
     <div class="single-grid-product__image">
         <div class="product-badge-wrapper">
-            <span *ngIf="product.discountBadgeInfo" class="onsale">{{product.discountBadgeInfo}}</span>
-            <span *ngIf="product.hotBadge" class="hot">Hot</span>
+            <span *ngIf="displaySizeVariant.discountBadgeInfo"
+                  class="onsale">{{displaySizeVariant.discountBadgeInfo}}</span>
+            <span *ngIf="displaySizeVariant.hotBadge" class="hot">Hot</span>
         </div>
         <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
-            <img *ngFor="let img of product.images" src="{{img.path}}"
+            <img *ngFor="let img of displayStyleVariant.images" src="/v1{{img.path}}"
                  class="img-fluid"
                  alt="{{img.alt}}">
         </a>
@@ -51,12 +52,13 @@
     </div>
     <div class="single-grid-product__content">
         <h3 class="title">
-            <a routerLink="/product/{{product.code}}">{{product.name}}</a>
+            <a routerLink="/product/{{product.code}}">{{displayStyleVariant.name}}</a>
         </h3>
         <div class="price">
             <span class="main-price discounted"
-                  [ngClass]="{'discounted' : product.priceDiscount}">{{product.price}}</span>
-            <span *ngIf="product.priceDiscount" class="discounted-price">{{product.priceDiscount}}</span>
+                  [ngClass]="{'discounted' : displaySizeVariant.priceDiscount}">{{displaySizeVariant.price}}</span>
+            <span *ngIf="displaySizeVariant.priceDiscount"
+                  class="discounted-price">{{displaySizeVariant.priceDiscount}}</span>
         </div>
         <!--        <div class="rating">-->
         <!--            <i class="fa fa-star active"></i>-->
@@ -67,34 +69,12 @@
         <!--        </div>-->
         <div class="color">
             <ul>
-                <li>
-                    <a class="active" href="#" data-tippy="Black"
-                       data-tippy-inertia="true" data-tippy-animation="shift-away"
-                       data-tippy-delay="50" data-tippy-arrow="true"
-                       data-tippy-theme="roundborder">
-                        <span class="color-picker black"></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#"
-                       data-tippy="Blue"
-                       data-tippy-inertia="true"
-                       data-tippy-animation="shift-away"
-                       data-tippy-delay="50"
-                       data-tippy-arrow="true"
-                       data-tippy-theme="roundborder">
-                        <span class="color-picker blue"></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#"
-                       data-tippy="Brown"
-                       data-tippy-inertia="true"
-                       data-tippy-animation="shift-away"
-                       data-tippy-delay="50"
-                       data-tippy-arrow="true"
-                       data-tippy-theme="roundborder">
-                        <span class="color-picker brown"></span>
+                <li *ngFor="let color of product.variants">
+                    <a [class.active]="color.uuid === displayStyleVariant.uuid" href="javascript:void(0);"
+                       (click)="setDisplayStyleVariant(color)">
+                        <span [style.background-color]="color.colorCssCode ? color.colorCssCode : '#a9a9a9'"
+                              class="color-picker">
+                        </span>
                     </a>
                 </li>
             </ul>
@@ -125,11 +105,12 @@
         </a>
 
         <div class="product-badge-wrapper">
-            <span *ngIf="product.discountBadgeInfo" class="onsale">{{product.discountBadgeInfo}}</span>
-            <span *ngIf="product.hotBadge" class="hot">Hot</span>
+            <span *ngIf="displaySizeVariant.discountBadgeInfo"
+                  class="onsale">{{displaySizeVariant.discountBadgeInfo}}</span>
+            <span *ngIf="displaySizeVariant.hotBadge" class="hot">Hot</span>
         </div>
         <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
-            <img *ngFor="let img of product.images" src="{{img.path}}"
+            <img *ngFor="let img of displayStyleVariant.images" src="/v1{{img.path}}"
                  class="img-fluid"
                  alt="{{img.alt}}">
         </a>
@@ -139,37 +120,33 @@
 
     <div class="single-list-product__content">
         <h3 class="title">
-            <a routerLink="/product/{{product.code}}">{{product.title}}</a>
+            <a routerLink="/product/{{product.code}}">{{displayStyleVariant.name}}</a>
         </h3>
         <div class="price">
             <span class="main-price discounted"
-                  [ngClass]="{'discounted' : product.priceDiscount}">{{product.price}}</span>
-            <span *ngIf="product.priceDiscount" class="discounted-price">{{product.priceDiscount}}</span>
+                  [ngClass]="{'discounted' : displaySizeVariant.priceDiscount}">{{displaySizeVariant.price}}</span>
+            <span *ngIf="displaySizeVariant.priceDiscount"
+                  class="discounted-price">{{displaySizeVariant.priceDiscount}}</span>
         </div>
-        <p class="product-short-desc">{{product.description}}</p>
+        <p class="product-short-desc">{{displayStyleVariant.description}}</p>
 
         <div class="color">
             <ul>
-                <li><a class="active" href="#" data-tippy="Black"
-                       data-tippy-inertia="true" data-tippy-animation="shift-away"
-                       data-tippy-delay="50" data-tippy-arrow="true"
-                       data-tippy-theme="roundborder"><span
-                        class="color-picker black"></span></a></li>
-                <li><a href="#" data-tippy="Blue" data-tippy-inertia="true"
-                       data-tippy-animation="shift-away" data-tippy-delay="50"
-                       data-tippy-arrow="true" data-tippy-theme="roundborder"><span
-                        class="color-picker blue"></span></a></li>
-                <li><a href="#" data-tippy="Brown" data-tippy-inertia="true"
-                       data-tippy-animation="shift-away" data-tippy-delay="50"
-                       data-tippy-arrow="true" data-tippy-theme="roundborder"><span
-                        class="color-picker brown"></span></a></li>
+                <li *ngFor="let color of product.variants">
+                    <a [class.active]="color.uuid === displayStyleVariant.uuid" href="javascript:void(0);"
+                       (click)="setDisplayStyleVariant(color)">
+                        <span [style.background-color]="color.colorCssCode ? color.colorCssCode : '#a9a9a9'"
+                              class="color-picker">
+                        </span>
+                    </a>
+                </li>
             </ul>
         </div>
 
         <div class="product-hover-icon-wrapper">
             <span class="single-icon single-icon--quick-view">
-                <a class="cd-trigger"
-                   href="#qv-1"
+                <a (click)="displayQuickView()"
+                   href="javascript:void(0)"
                    data-tippy="Quick View"
                    data-tippy-inertia="true"
                    data-tippy-animation="shift-away"

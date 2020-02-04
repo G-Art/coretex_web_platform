@@ -11,12 +11,16 @@ import com.coretex.core.model.content.OutputContentFile;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
 import com.coretex.items.commerce_core_model.ProductImageItem;
 import com.coretex.items.cx_core.ProductItem;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -135,7 +139,9 @@ public class CmsImageFileManagerImpl
 	public OutputContentFile getProductImage(ProductImageItem productImage)  {
 
 		// the web server takes care of the images
-		return null;
+		return getProductImage(productImage.getProduct().getStore().getCode(),
+				productImage.getProduct().getCode(),
+				productImage.getProductImage());
 
 	}
 
@@ -265,6 +271,30 @@ public class CmsImageFileManagerImpl
 	private OutputContentFile getProductImage(String merchantStoreCode, String productCode,
 											  String imageName, String size)  {
 
+		StringBuilder nodePath = new StringBuilder();
+		nodePath.append(this.buildRootPath()).append(merchantStoreCode)
+				.append(Constants.SLASH).append(productCode)
+				.append(Constants.SLASH).append(size).append(Constants.SLASH).append(imageName);
+
+		var path = Paths.get(nodePath.toString());
+		var contentImage = new OutputContentFile();
+		FileNameMap fileNameMap = URLConnection.getFileNameMap();
+		if(Files.exists(path)){
+			try(var input = Files.newInputStream(path)) {
+				ByteArrayOutputStream output = new ByteArrayOutputStream();
+				IOUtils.copy(input, output);
+				String contentType = fileNameMap.getContentTypeFor(imageName);
+
+				contentImage.setFile(output);
+				contentImage.setMimeType(contentType);
+				contentImage.setFileName(imageName);
+				return contentImage;
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+
+		}
+
 		return null;
 
 	}
@@ -280,7 +310,7 @@ public class CmsImageFileManagerImpl
 	private void createDirectoryIfNorExist(Path path) throws IOException {
 
 		if (Files.notExists(path)) {
-			Files.createDirectory(path);
+			Files.createDirectories(path);
 		}
 	}
 

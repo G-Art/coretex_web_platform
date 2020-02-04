@@ -7,6 +7,7 @@ import org.infinispan.configuration.cache.PersistenceConfigurationBuilder;
 import org.infinispan.configuration.cache.SingleFileStoreConfigurationBuilder;
 import org.infinispan.eviction.EvictionStrategy;
 import org.infinispan.manager.EmbeddedCacheManager;
+import org.infinispan.transaction.LockingMode;
 import org.infinispan.tree.TreeCache;
 import org.infinispan.tree.TreeCacheFactory;
 import org.slf4j.Logger;
@@ -46,6 +47,8 @@ public abstract class CacheManagerImpl implements CacheManager {
 			persistConfig.passivation(false);
 			final SingleFileStoreConfigurationBuilder fileStore =
 					new SingleFileStoreConfigurationBuilder(persistConfig).location(location);
+			var transaction = fileStore.transaction();
+			transaction.lockingMode(LockingMode.PESSIMISTIC);
 			fileStore.invocationBatching().enable();
 			fileStore.eviction().maxEntries(15);
 			fileStore.eviction().strategy(EvictionStrategy.REMOVE);

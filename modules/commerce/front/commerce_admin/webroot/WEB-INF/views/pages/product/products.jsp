@@ -88,9 +88,10 @@
                                        tableId="productTable"
                                        dataSourceLink="/product/paginated"
                                        rowId="uuid"
-                                       actionTarget="4" >
+                                       actionTarget="5" >
                 <jsp:attribute name="theader">
                     <tr>
+                        <th>Image</th>
                         <th>SKU</th>
                         <th>Name</th>
                         <th>Available</th>
@@ -100,6 +101,12 @@
                 </jsp:attribute>
                 <jsp:attribute name="columns">
                     [
+                        {"data": "image",
+                         "render": function (data, type, row) {
+                                 return `
+                                <img src="/v1\${data}" class="img-fluid">
+                            `}
+                        },
                         {"data": "code"},
                         {"data": "name"},
                         {"data": "available"},

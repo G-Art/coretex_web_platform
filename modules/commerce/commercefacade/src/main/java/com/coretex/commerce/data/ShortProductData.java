@@ -1,5 +1,7 @@
 package com.coretex.commerce.data;
 
+import java.util.Set;
+
 public class ShortProductData extends GenericItemData {
 
 	private String code;
@@ -11,7 +13,7 @@ public class ShortProductData extends GenericItemData {
 	private Boolean hotBadge;
 	private String discountBadgeInfo;
 
-	private ImageData[] images;
+	private Set<ShortVariantProductData> variants;
 
 
 	public String getCode() {
@@ -78,11 +80,11 @@ public class ShortProductData extends GenericItemData {
 		this.discountBadgeInfo = discountBadgeInfo;
 	}
 
-	public ImageData[] getImages() {
-		return images;
+	public Set<ShortVariantProductData> getVariants() {
+		return variants;
 	}
 
-	public void setImages(ImageData[] images) {
-		this.images = images;
+	public void setVariants(Set<ShortVariantProductData> variants) {
+		this.variants = variants;
 	}
 }

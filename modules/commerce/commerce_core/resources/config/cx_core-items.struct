@@ -226,13 +226,40 @@ elements {
             }
         }
 
-        VariantProduct(extend:Product, table:false) {
+        VariantProduct(extend:Product, table:false, abstract: true) {
             attributes {
+                forSale(Boolean)
                 productLength(BigDecimal)
                 productWidth(BigDecimal)
                 productHeight(BigDecimal)
                 productWeight(BigDecimal)
                 productOrdered(Integer)
+            }
+        }
+
+        SizeVariantProduct(extend:StyleVariantProduct, table:false) {
+            attributes {
+                size(String){
+                    localized = true
+                }
+            }
+        }
+
+        StyleVariantProduct(extend:VariantProduct, table:false) {
+            attributes {
+                style(StyleDescription)
+            }
+        }
+
+        StyleDescription {
+            attributes {
+                cssColorCode(String)
+                styleName(String){
+                    localized = true
+                }
+                multiColor(Boolean){
+                    defaultValue = false
+                }
             }
         }
 
@@ -250,6 +277,5 @@ elements {
     }
 
     enums {
-
     }
 }

@@ -1,6 +1,7 @@
 package com.coretex.commerce.admin.controllers.content;
 
 import com.coretex.commerce.admin.controllers.PageableDataTableAbstractController;
+import com.coretex.commerce.data.GenericItemData;
 import com.coretex.commerce.facades.CategoryFacade;
 import com.coretex.commerce.facades.ManufacturerFacade;
 import com.coretex.commerce.facades.ProductFacade;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.annotation.Resource;
 
-public abstract class AbstractContentController extends PageableDataTableAbstractController {
+public abstract class AbstractContentController<D extends GenericItemData> extends PageableDataTableAbstractController<D> {
 
 	@Resource
 	private CategoryFacade categoryFacade;
@@ -31,7 +32,7 @@ public abstract class AbstractContentController extends PageableDataTableAbstrac
 
 	@ModelAttribute("manufacturerCount")
 	public Long getManufacturersCount() {
-		return productFacade.count();
+		return manufacturerFacade.count();
 	}
 
 	protected CategoryFacade getCategoryFacade() {

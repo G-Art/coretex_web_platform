@@ -1,6 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ProductData} from "../../../core/data/product.data";
 import {ProductService} from "../../../core/service/product.service";
+import {ProductVariantData} from "../../../core/data/product-variant.data";
 
 declare var $: any;
 
@@ -14,7 +15,7 @@ export class ProductQuickViewComponent implements OnInit {
     @ViewChild('quickViewBlock', {static: false})
     quickViewBlock: ElementRef;
 
-    product: ProductData = null;
+    product: ProductVariantData = null;
 
     constructor(private productService: ProductService) {
 

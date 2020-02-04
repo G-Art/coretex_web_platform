@@ -110,15 +110,7 @@ public class CmsImageFileManagerImpl implements ProductAssetsManager {
 			StringBuilder nodePath = new StringBuilder();
 			nodePath.append(productImage.getProduct().getStore().getCode())
 					.append(Constants.SLASH).append(productImage.getProduct().getCode())
-					.append(Constants.SLASH);
-
-
-			if (contentImage.getFileContentType().name().equals(FileContentType.PRODUCT.name())) {
-				nodePath.append(SMALL);
-			} else if (contentImage.getFileContentType().name()
-					.equals(FileContentType.PRODUCTLG.name())) {
-				nodePath.append(LARGE);
-			}
+					.append(Constants.SLASH).append(SMALL);
 
 			Node<String, Object> productNode = this.getNode(nodePath.toString());
 

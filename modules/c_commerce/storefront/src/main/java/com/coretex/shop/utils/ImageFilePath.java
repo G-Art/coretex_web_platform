@@ -1,8 +1,9 @@
 package com.coretex.shop.utils;
 
-import com.coretex.items.cx_core.ProductItem;
-import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.cx_core.ManufacturerItem;
+import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.StoreItem;
 
 public interface ImageFilePath {
 
@@ -57,6 +58,10 @@ public interface ImageFilePath {
 	 * @return
 	 */
 	String buildProductImageUtils(MerchantStoreItem store, ProductItem product, String imageName);
+
+	String buildProductImageUtils(StoreItem store, ProductItem product, String imageName);
+
+	String buildProductImageUtils(ProductItem product, String imageName);
 
 	/**
 	 * Builds a default product image file path that can be used by image servlet

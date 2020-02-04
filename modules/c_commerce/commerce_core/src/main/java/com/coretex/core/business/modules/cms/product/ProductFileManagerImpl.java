@@ -1,5 +1,20 @@
 package com.coretex.core.business.modules.cms.product;
 
+import com.coretex.core.business.constants.Constants;
+import com.coretex.core.business.utils.CoreConfiguration;
+import com.coretex.core.business.utils.ProductImageCropUtils;
+import com.coretex.core.business.utils.ProductImageSizeUtils;
+import com.coretex.core.model.catalog.product.file.ProductImageSize;
+import com.coretex.core.model.content.FileContentType;
+import com.coretex.core.model.content.ImageContentFile;
+import com.coretex.core.model.content.OutputContentFile;
+import com.coretex.items.commerce_core_model.ProductImageItem;
+import com.coretex.items.cx_core.ProductItem;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -9,22 +24,6 @@ import java.io.InputStream;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.List;
-import javax.imageio.ImageIO;
-
-import com.coretex.items.cx_core.ProductItem;
-import com.coretex.items.commerce_core_model.ProductImageItem;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.coretex.core.business.constants.Constants;
-
-import com.coretex.core.business.utils.CoreConfiguration;
-import com.coretex.core.business.utils.ProductImageCropUtils;
-import com.coretex.core.business.utils.ProductImageSizeUtils;
-import com.coretex.core.model.catalog.product.file.ProductImageSize;
-import com.coretex.core.model.content.FileContentType;
-import com.coretex.core.model.content.ImageContentFile;
-import com.coretex.core.model.content.OutputContentFile;
 
 
 public class ProductFileManagerImpl extends ProductFileManager {
@@ -63,8 +62,7 @@ public class ProductFileManagerImpl extends ProductFileManager {
 	}
 
 
-	public void addProductImage(ProductImageItem productImage, ImageContentFile contentImage)
-			 {
+	public void addProductImage(ProductImageItem productImage, ImageContentFile contentImage) {
 
 
 		try {
@@ -131,16 +129,7 @@ public class ProductFileManagerImpl extends ProductFileManager {
 			String slargeImageHeight = configuration.getProperty(PRODUCT_IMAGE_HEIGHT_SIZE);
 			String slargeImageWidth = configuration.getProperty(PRODUCT_IMAGE_WIDTH_SIZE);
 
-			// String ssmallImageHeight = configuration.getProperty("SMALL_IMAGE_HEIGHT_SIZE");
-			// String ssmallImageWidth = configuration.getProperty("SMALL_IMAGE_WIDTH_SIZE");
-
-			//Resizes
-			if (!StringUtils.isBlank(slargeImageHeight) && !StringUtils.isBlank(slargeImageWidth)) { // &&
-				// !StringUtils.isBlank(ssmallImageHeight)
-				// &&
-				// !StringUtils.isBlank(ssmallImageWidth))
-				// {
-
+			if (!StringUtils.isBlank(slargeImageHeight) && !StringUtils.isBlank(slargeImageWidth)) {
 
 				FileNameMap fileNameMap = URLConnection.getFileNameMap();
 
@@ -176,10 +165,6 @@ public class ProductFileManagerImpl extends ProductFileManager {
 					}
 				}
 
-				// do not keep a large image for now, just take care of the regular image and a small image
-
-				// resize large
-				// ByteArrayOutputStream output = new ByteArrayOutputStream();
 				BufferedImage largeResizedImage =
 						ProductImageSizeUtils.resizeWithRatio(bufferedImage, largeImageWidth, largeImageHeight);
 
@@ -192,60 +177,14 @@ public class ProductFileManagerImpl extends ProductFileManager {
 				try (FileInputStream isLarge = new FileInputStream(tempLarge)) {
 
 
-					// IOUtils.copy(isLarge, output);
-
-
 					ImageContentFile largeContentImage = new ImageContentFile();
 					largeContentImage.setFileContentType(FileContentType.PRODUCT);
 					largeContentImage.setFileName(productImage.getProductImage());
 					largeContentImage.setFile(isLarge);
 
-
-					// largeContentImage.setBufferedImage(bufferedImage);
-
-					// largeContentImage.setFile(output);
-					// largeContentImage.setDefaultImage(false);
-					// largeContentImage.setImageName(new
-					// StringBuilder().append("L-").append(productImage.getProductImage()).toString());
-
-
 					uploadImage.addProductImage(productImage, largeContentImage);
 
-					// output.flush();
-					// output.close();
-
 					tempLarge.delete();
-
-					// now upload original
-
-
-
-					/*
-					 * //resize small BufferedImage smallResizedImage = ProductImageSizeUtils.resize(cropped,
-					 * smallImageWidth, smallImageHeight); File tempSmall = File.createTempFile(new
-					 * StringBuilder().append(productImage.getProduct().getUuid()).append("tmpSmall").toString(),
-					 * "." + extension ); ImageIO.write(smallResizedImage, extension, tempSmall);
-					 *
-					 * //byte[] is = IOUtils.toByteArray(new FileInputStream(tempSmall));
-					 *
-					 * FileInputStream isSmall = new FileInputStream(tempSmall);
-					 *
-					 * output = new ByteArrayOutputStream(); IOUtils.copy(isSmall, output);
-					 *
-					 *
-					 * smallContentImage = new InputContentImage(ImageContentType.PRODUCT);
-					 * smallContentImage.setFile(output); smallContentImage.setDefaultImage(false);
-					 * smallContentImage.setImageName(new
-					 * StringBuilder().append("S-").append(productImage.getProductImage()).toString());
-					 *
-					 * uploadImage.uploadProductImage(configuration, productImage, smallContentImage);
-					 *
-					 * output.flush(); output.close();
-					 *
-					 * tempSmall.delete();
-					 */
-
-
 				}
 			} else {
 				// small will be the same as the original
@@ -261,7 +200,7 @@ public class ProductFileManagerImpl extends ProductFileManager {
 	}
 
 
-	public OutputContentFile getProductImage(ProductImageItem productImage)  {
+	public OutputContentFile getProductImage(ProductImageItem productImage) {
 		// will return original
 		return getImage.getProductImage(productImage);
 	}
@@ -269,13 +208,13 @@ public class ProductFileManagerImpl extends ProductFileManager {
 
 	@Override
 	public List<OutputContentFile> getImages(final String merchantStoreCode,
-											 FileContentType imageContentType)  {
+											 FileContentType imageContentType) {
 		// will return original
 		return getImage.getImages(merchantStoreCode, FileContentType.PRODUCT);
 	}
 
 	@Override
-	public List<OutputContentFile> getImages(ProductItem product)  {
+	public List<OutputContentFile> getImages(ProductItem product) {
 		return getImage.getImages(product);
 	}
 
@@ -309,7 +248,7 @@ public class ProductFileManagerImpl extends ProductFileManager {
 
 
 	@Override
-	public void removeImages(final String merchantStoreCode)  {
+	public void removeImages(final String merchantStoreCode) {
 
 		this.removeImage.removeImages(merchantStoreCode);
 
@@ -345,7 +284,7 @@ public class ProductFileManagerImpl extends ProductFileManager {
 
 	@Override
 	public OutputContentFile getProductImage(String merchantStoreCode, String productCode,
-											 String imageName, ProductImageSize size){
+											 String imageName, ProductImageSize size) {
 		return getImage.getProductImage(merchantStoreCode, productCode, imageName, size);
 	}
 

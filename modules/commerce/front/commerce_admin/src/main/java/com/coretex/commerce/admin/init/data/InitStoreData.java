@@ -38,6 +38,7 @@ import com.coretex.items.cx_core.CurrencyItem;
 import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.ZoneItem;
 import com.google.common.collect.Lists;
 import org.apache.commons.io.IOUtils;
@@ -62,6 +63,9 @@ import static com.coretex.core.business.constants.Constants.DEFAULT_STORE;
 public class InitStoreData implements InitData {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InitStoreData.class);
+
+	@Resource
+	private InitProductUtil initProductUtil;
 
 	@Resource
 	protected ProductService productService;
@@ -261,40 +265,7 @@ public class InitStoreData implements InitData {
 		manufacturerService.create(novells);
 		manufacturerItemList.add(novells);
 
-
-		for (int i = 0; i<1000 ; i++){
-			// Gen test product
-
-			ProductItem product = new ProductItem();
-			product.setCode("b009"+i);
-			product.setManufacturer(manufacturerItemList.get(RandomUtils.nextInt(0, manufacturerItemList.size())));
-			product.setStore(s);
-			product.setAvailable(true);
-
-			// Availability
-			ProductAvailabilityItem availability = new ProductAvailabilityItem();
-			availability.setProductDateAvailable(date);
-			availability.setProductQuantity(RandomUtils.nextInt(0,10)+10*i);
-			availability.setRegion("*");
-			availability.setProduct(product);// associate with product
-
-
-			ProductPriceItem dprice = new ProductPriceItem();
-			dprice.setCode("basePrice_"+i);
-			dprice.setDefaultPrice(true);
-			dprice.setProductPriceAmount(new BigDecimal(39.99+10*i));
-			dprice.setProductAvailability(availability);
-
-			dprice.setName("Base price");
-
-			availability.getPrices().add(dprice);
-			product.getAvailabilities().add(availability);
-
-			product.setName("Test product name #"+i);
-			product.getCategories().add(allCategories.get(RandomUtils.nextInt(0, allCategories.size())));
-
-			productService.create(product);
-		}
+		generateTestProducts(300, manufacturerItemList, allCategories, s, date);
 
 		// PRODUCT 1
 
@@ -685,6 +656,21 @@ public class InitStoreData implements InitData {
 
 		LOGGER.info("Ending the initialization of test data");
 
+	}
+
+	private void generateTestProducts(int count, List<ManufacturerItem> manufacturerItemList, List<CategoryItem> allCategories, StoreItem store, Date date) {
+
+
+		for (int i = 0; i < count; i++) {
+			// Gen test product
+			var product = initProductUtil.createBaseProduct(i, store);
+
+			product.setManufacturer(manufacturerItemList.get(RandomUtils.nextInt(0, manufacturerItemList.size())));
+
+			product.getCategories().add(allCategories.get(RandomUtils.nextInt(0, allCategories.size())));
+
+			productService.create(product);
+		}
 	}
 
 	private void saveFile(InputStream fis, String name, ProductItem product) throws Exception {

@@ -15,7 +15,7 @@ public interface PageableDataTableFacade<I extends GenericItem, D extends Generi
 		var dataTableResults = new DataTableResults<D>();
 		dataTableResults.setDraw(draw);
 		dataTableResults.setRecordsTotal(String.valueOf(pageableList.getTotalCount()));
-		dataTableResults.setRecordsFiltered(String.valueOf(pageableList.getCount()));
+		dataTableResults.setRecordsFiltered(String.valueOf(pageableList.getTotalCount()));
 		dataTableResults.setListOfDataObjects(pageableList.getResult()
 				.stream()
 				.map(getDataMapper()::fromItem)

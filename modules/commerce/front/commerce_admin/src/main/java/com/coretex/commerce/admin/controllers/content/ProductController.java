@@ -1,6 +1,8 @@
 package com.coretex.commerce.admin.controllers.content;
 
+import com.coretex.commerce.data.minimal.MinimalProductData;
 import com.coretex.commerce.facades.PageableDataTableFacade;
+import com.coretex.items.cx_core.ProductItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +13,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/product")
-public class ProductController extends AbstractContentController {
+public class ProductController extends AbstractContentController<MinimalProductData> {
 
 
 	@RequestMapping(path = "",method = RequestMethod.GET)
@@ -25,7 +27,7 @@ public class ProductController extends AbstractContentController {
 	}
 
 	@Override
-	protected PageableDataTableFacade getPageableFacade() {
+	protected PageableDataTableFacade<ProductItem, MinimalProductData> getPageableFacade() {
 		return getProductFacade();
 	}
 

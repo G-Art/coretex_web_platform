@@ -1,18 +1,5 @@
 package com.coretex.core.business.services.catalog.product.image;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.UUID;
-
-import javax.annotation.Resource;
-
-import com.coretex.items.cx_core.ProductItem;
-import com.coretex.items.commerce_core_model.ProductImageItem;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-
-
 import com.coretex.core.business.modules.cms.product.ProductFileManager;
 import com.coretex.core.business.repositories.catalog.product.image.ProductImageDao;
 import com.coretex.core.business.services.common.generic.SalesManagerEntityServiceImpl;
@@ -20,6 +7,16 @@ import com.coretex.core.model.catalog.product.file.ProductImageSize;
 import com.coretex.core.model.content.FileContentType;
 import com.coretex.core.model.content.ImageContentFile;
 import com.coretex.core.model.content.OutputContentFile;
+import com.coretex.items.commerce_core_model.ProductImageItem;
+import com.coretex.items.cx_core.ProductItem;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+
+import javax.annotation.Resource;
+import java.io.InputStream;
+import java.util.List;
+import java.util.UUID;
 
 @Service("productImage")
 public class ProductImageServiceImpl extends SalesManagerEntityServiceImpl<ProductImageItem>
@@ -77,9 +74,6 @@ public class ProductImageServiceImpl extends SalesManagerEntityServiceImpl<Produ
 
 
 			productFileManager.addProductImage(productImage, inputImage);
-
-			//insert ProductImageItem
-			this.saveOrUpdate(productImage);
 
 
 		} catch (Exception e) {

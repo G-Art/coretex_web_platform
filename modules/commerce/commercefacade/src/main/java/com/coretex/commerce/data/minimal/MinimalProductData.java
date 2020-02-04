@@ -4,6 +4,7 @@ import com.coretex.commerce.data.GenericItemData;
 
 public class MinimalProductData extends GenericItemData {
 
+	private String image;
 	private String code;
 	private String name;
 	private Boolean available;
@@ -39,5 +40,13 @@ public class MinimalProductData extends GenericItemData {
 
 	public void setStore(String store) {
 		this.store = store;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 }
