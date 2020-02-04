@@ -1,5 +1,6 @@
 package com.coretex.data;
 
+import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaTypeItem;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +38,7 @@ public class MetaTypeDTO {
 		this.metaType = metaTypeItem.getMetaType() != null ? metaTypeItem.getMetaType().getTypeCode() : StringUtils.EMPTY;
 		this.itemClass = metaTypeItem.getItemClass().getCanonicalName();
 		this.parent = Objects.nonNull(metaTypeItem.getParent()) ?  metaTypeItem.getParent().getTypeCode() : "";
-		this.subtypes = Objects.nonNull(metaTypeItem.getSubtypes()) ? metaTypeItem.getSubtypes()
+		this.subtypes = Objects.nonNull(metaTypeItem.getSubtypes()) ? ItemUtils.getAllSubtypes(metaTypeItem)
 				.stream()
 				.map(MetaTypeItem::getTypeCode)
 				.collect(Collectors.toSet()) : Collections.EMPTY_SET;

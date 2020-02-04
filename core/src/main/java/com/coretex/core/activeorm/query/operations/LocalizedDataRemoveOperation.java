@@ -2,17 +2,9 @@ package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.specs.LocalizedDataRemoveOperationSpec;
-import com.coretex.core.activeorm.query.specs.LocalizedDataSaveOperationSpec;
 import net.sf.jsqlparser.statement.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class LocalizedDataRemoveOperation extends ModificationOperation<Statement, LocalizedDataRemoveOperationSpec> {
 
@@ -34,7 +26,7 @@ public class LocalizedDataRemoveOperation extends ModificationOperation<Statemen
 
 	@Override
 	public void executeOperation() {
-		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getStatement().toString(), getOperationSpec().getParams()));
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getQuery(), getOperationSpec().getParams()));
 	}
 
 	@Override

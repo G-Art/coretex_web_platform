@@ -2,18 +2,13 @@ package com.coretex.core.activeorm.query.specs;
 
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.operations.LocalizedDataRemoveOperation;
-import com.coretex.core.activeorm.query.operations.LocalizedDataSaveOperation;
 import com.coretex.core.activeorm.query.operations.ModificationOperation;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.items.core.MetaAttributeTypeItem;
-import com.google.common.collect.Maps;
 import net.sf.jsqlparser.statement.Statement;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class LocalizedDataRemoveOperationSpec extends ModificationOperationSpec<Statement, LocalizedDataRemoveOperation> {
 
@@ -26,6 +21,7 @@ public class LocalizedDataRemoveOperationSpec extends ModificationOperationSpec<
 
 	public LocalizedDataRemoveOperationSpec(ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator, MetaAttributeTypeItem attributeTypeItem) {
 		super(initiator.getOperationSpec().getItem());
+		setNativeQuery(false);
 		this.initiator = initiator;
 		this.attributeTypeItem = attributeTypeItem;
 		this.setQuerySupplier(this::buildQuery);

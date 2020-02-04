@@ -28,6 +28,7 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 	public ModificationOperationSpec(GenericItem item) {
 		metaTypeProvider = ApplicationContextProvider.getApplicationContext().getBean(MetaTypeProvider.class);
 		this.item = item;
+		setNativeQuery(true);
 	}
 
 	public ModificationOperationSpec(GenericItem item, boolean cascade) {

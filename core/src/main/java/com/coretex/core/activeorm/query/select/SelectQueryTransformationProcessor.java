@@ -7,30 +7,48 @@ import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
 import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.SelectBodyDataInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.strategies.AbstractTransformationStrategy;
+import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaTypeItem;
 import com.google.common.collect.Lists;
-import net.sf.jsqlparser.expression.*;
-import net.sf.jsqlparser.expression.operators.arithmetic.IntegerDivision;
+import net.sf.jsqlparser.expression.Alias;
+import net.sf.jsqlparser.expression.AllComparisonExpression;
+import net.sf.jsqlparser.expression.AnyComparisonExpression;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
-import net.sf.jsqlparser.expression.operators.relational.FullTextSearch;
-import net.sf.jsqlparser.expression.operators.relational.IsBooleanExpression;
-import net.sf.jsqlparser.expression.operators.relational.SimilarToExpression;
 import net.sf.jsqlparser.parser.SimpleNode;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
-import net.sf.jsqlparser.statement.DeclareStatement;
-import net.sf.jsqlparser.statement.ShowColumnsStatement;
-import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.select.AllColumns;
+import net.sf.jsqlparser.statement.select.AllTableColumns;
+import net.sf.jsqlparser.statement.select.Join;
+import net.sf.jsqlparser.statement.select.LateralSubSelect;
+import net.sf.jsqlparser.statement.select.OrderByElement;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectBody;
+import net.sf.jsqlparser.statement.select.SelectExpressionItem;
+import net.sf.jsqlparser.statement.select.SelectItem;
+import net.sf.jsqlparser.statement.select.SetOperation;
+import net.sf.jsqlparser.statement.select.SetOperationList;
+import net.sf.jsqlparser.statement.select.SubJoin;
+import net.sf.jsqlparser.statement.select.SubSelect;
+import net.sf.jsqlparser.statement.select.UnionOp;
+import net.sf.jsqlparser.statement.select.WithItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
@@ -289,7 +307,7 @@ public class SelectQueryTransformationProcessor implements QueryTransformationPr
 			if (Objects.nonNull(newPlainSelect.getWhere())) {
 				Expression left = new Column((Table) newPlainSelect.getFromItem(), cortexContext.findAttribute(metaTypeItem.getTypeCode(), GenericItem.META_TYPE).getColumnName());
 
-				Set<MetaTypeItem> subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ? metaTypeItem.getSubtypes().stream()
+				Set<MetaTypeItem> subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ? ItemUtils.getAllSubtypes(metaTypeItem).stream()
 						.filter(sub -> sub.getTableName().equals(metaTypeItem.getTableName()))
 						.collect(Collectors.toSet()) : null;
 
@@ -301,7 +319,7 @@ public class SelectQueryTransformationProcessor implements QueryTransformationPr
 
 				Expression left = new Column((Table) newPlainSelect.getFromItem(), cortexContext.findAttribute(metaTypeItem.getTypeCode(), GenericItem.META_TYPE).getColumnName());
 
-				Set<MetaTypeItem> subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ? metaTypeItem.getSubtypes().stream()
+				Set<MetaTypeItem> subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ? ItemUtils.getAllSubtypes(metaTypeItem).stream()
 						.filter(sub -> sub.getTableName().equals(metaTypeItem.getTableName()))
 						.collect(Collectors.toSet()) : null;
 

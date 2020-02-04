@@ -9,6 +9,7 @@ import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.SelectItemDataInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.dip.TableDataInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.dip.WrapperInjectionPoint;
+import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaTypeItem;
 import com.google.common.collect.Lists;
@@ -84,8 +85,13 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 		boolean hasOrderBy = CollectionUtils.isNotEmpty(plainSelect.getOrderByElements());
 		boolean hasLimit = Objects.nonNull(plainSelect.getLimit());
 		boolean hasOffset = Objects.nonNull(plainSelect.getOffset());
-		return (selectItemScanners.stream().anyMatch(selectItemScanner -> !selectItemScanner.isAllColumn()) && tableTransformationData.hasInheritance()) ||
-				(tableTransformationData.hasInheritance() && useInheritance && (hasOffset || hasLimit || hasOrderBy) );
+		return (selectItemScanners.stream().anyMatch(selectItemScanner ->
+				!selectItemScanner.isAllColumn()) &&
+				tableTransformationData.hasInheritance()) ||
+				(tableTransformationData.hasInheritance() &&
+						tableTransformationData.isUnionTable() &&
+						useInheritance &&
+						(hasOffset || hasLimit || hasOrderBy) );
 	}
 
 	private SelectBody adjustInheritance(TableTransformationData tableTransformationData, SelectBodyScanner originalPlainSelectScanner, boolean useSubtypes){
@@ -140,7 +146,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 				.getCortexContext().findAttribute(metaTypeItem.getTypeCode(), GenericItem.META_TYPE).getColumnName());
 		Set<MetaTypeItem> subTypeItemSet = null;
 		if(useSubtypes){
-			subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ? metaTypeItem.getSubtypes().stream()
+			subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ? ItemUtils.getAllSubtypes(metaTypeItem).stream()
 					.filter(sub -> sub.getTableName().equals(metaTypeItem.getTableName()))
 					.collect(Collectors.toSet()) : null;
 		}

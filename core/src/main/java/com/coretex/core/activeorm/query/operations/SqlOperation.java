@@ -16,20 +16,33 @@ import java.util.function.Supplier;
 public abstract class SqlOperation<S extends Statement, O extends SqlOperationSpec<S, ? extends SqlOperation>> {
 
 	private O operationSpec;
-	private S statement;
+
+	private Supplier<String> querySupplier;
 
 	private Supplier<NamedParameterJdbcTemplate> jdbcTemplateSupplier;
 
 	public SqlOperation(O operationSpec) {
 		this.operationSpec = operationSpec;
-		this.statement = parseQuery(operationSpec.getQuery());
+		var query = operationSpec.getQuery();
+		if (!operationSpec.isNativeQuery()) {
+			querySupplier = () -> {
+				S statement = parseQuery(query);
+				return statement.toString();
+			};
+		} else {
+			querySupplier = () -> query;
+		}
 	}
 
 	public O getOperationSpec() {
 		return operationSpec;
 	}
 
-	protected S parseQuery(String query){
+	public String getQuery() {
+		return querySupplier.get();
+	}
+
+	protected S parseQuery(String query) {
 		try {
 			return (S) CCJSqlParserUtil.parse(query);
 		} catch (JSQLParserException e) {
@@ -37,23 +50,19 @@ public abstract class SqlOperation<S extends Statement, O extends SqlOperationSp
 		}
 	}
 
-	protected S getStatement(){
-		return statement;
-	}
-
 	public abstract QueryType getQueryType();
 
 	public abstract void execute();
 
-	public NamedParameterJdbcTemplate getJdbcTemplate(){
+	public NamedParameterJdbcTemplate getJdbcTemplate() {
 		return jdbcTemplateSupplier.get();
 	}
 
-	protected void executeJdbcOperation(Consumer<NamedParameterJdbcTemplate> jdbcTemplateConsumer){
+	protected void executeJdbcOperation(Consumer<NamedParameterJdbcTemplate> jdbcTemplateConsumer) {
 		jdbcTemplateConsumer.accept(jdbcTemplateSupplier.get());
 	}
 
-	protected AbstractJdbcService getJdbcService(){
+	protected AbstractJdbcService getJdbcService() {
 		return getOperationSpec().getJdbcService();
 	}
 
@@ -61,7 +70,7 @@ public abstract class SqlOperation<S extends Statement, O extends SqlOperationSp
 		this.jdbcTemplateSupplier = jdbcTemplateSupplier;
 	}
 
-	public OperationFactory getOperationFactory(){
+	public OperationFactory getOperationFactory() {
 		return getOperationSpec().getOperationFactory();
 	}
 

@@ -19,7 +19,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
+public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	private final String typecode;
 
@@ -45,13 +45,18 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public Long count() {
-		SelectOperationSpec<Map<String,Long>> query = this.createCountSearchQuery();
+		return count(false);
+	}
+
+	@Override
+	public Long count(boolean strict) {
+		SelectOperationSpec<Map<String, Long>> query = this.createCountSearchQuery(strict);
 		var result = this.getSearchService().search(query).getResult();
-		if(CollectionUtils.isEmpty(result)){
+		if (CollectionUtils.isEmpty(result)) {
 			return 0L;
 		}
 		var resultMap = result.iterator().next();
-		if(!resultMap.containsKey("count")){
+		if (!resultMap.containsKey("count")) {
 			return 0L;
 		}
 		return result.iterator().next().get("count");
@@ -59,24 +64,43 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find() {
-		return findReactive().collect(Collectors.toList());
+		return find(false);
+	}
+	@Override
+	public List<I> find(boolean strict) {
+		return findReactive(strict).collect(Collectors.toList());
 	}
 
 	@Override
 	public Stream<I> findReactive() {
-		SelectOperationSpec<I> query = this.createSearchQuery();
+		return findReactive(false);
+	}
+
+	@Override
+	public Stream<I> findReactive(boolean strict) {
+		SelectOperationSpec<I> query = this.createSearchQuery(strict);
 		return this.getSearchService().search(query).getResultStream();
 	}
 
 	@Override
 	public I find(UUID uuid) {
-		return findSingle(Map.of("uuid", uuid), false);
+		return find(uuid, false);
 	}
 
 	@Override
-	public I findSingle(Map<String, ?> params, boolean throwAmbiguousException){
-		var result = find(params);
-		if(CollectionUtils.isNotEmpty(result) && result.size()>1 && throwAmbiguousException){
+	public I find(UUID uuid, boolean strict) {
+		return findSingle(Map.of("uuid", uuid), false, strict);
+	}
+
+	@Override
+	public I findSingle(Map<String, ?> params, boolean throwAmbiguousException) {
+		return findSingle(params, throwAmbiguousException, false);
+	}
+
+	@Override
+	public I findSingle(Map<String, ?> params, boolean throwAmbiguousException, boolean strict) {
+		var result = find(params, strict);
+		if (CollectionUtils.isNotEmpty(result) && result.size() > 1 && throwAmbiguousException) {
 			throw new AmbiguousResultException(String.format("Result contain more than one result (result count: %s)", result.size()));
 		}
 		return CollectionUtils.isNotEmpty(result) ? result.iterator().next() : null;
@@ -87,6 +111,7 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 		return findReactive(query).collect(Collectors.toList());
 	}
 
+
 	@Override
 	public Stream<I> findReactive(String query) {
 		SearchService ss = this.getSearchService();
@@ -96,7 +121,7 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find(String query, Map<String, Object> params) {
-		return findReactive(params).collect(Collectors.toList());
+		return findReactive(query, params).collect(Collectors.toList());
 	}
 
 	@Override
@@ -108,111 +133,201 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find(Map<String, ?> params) {
-		return findReactive(params).collect(Collectors.toList());
+		return find(params, false);
+	}
+
+	@Override
+	public List<I> find(Map<String, ?> params, boolean strict) {
+		return findReactive(params, strict).collect(Collectors.toList());
 	}
 
 	@Override
 	public Stream<I> findReactive(Map<String, ?> params) {
-		SelectOperationSpec<I> query = this.createSearchQuery(params);
+		return findReactive(params, false);
+	}
+
+	@Override
+	public Stream<I> findReactive(Map<String, ?> params, boolean strict) {
+		SelectOperationSpec<I> query = this.createSearchQuery(params, strict);
 		SearchResult<I> searchResult = this.getSearchService().search(query);
 		return searchResult.getResultStream();
 	}
 
 	@Override
 	public List<I> find(SortParameters sortParameters) {
-		return findReactive(sortParameters).collect(Collectors.toList());
+		return find(sortParameters, false);
+	}
+
+	@Override
+	public List<I> find(SortParameters sortParameters, boolean strict) {
+		return findReactive(sortParameters, strict).collect(Collectors.toList());
 	}
 
 	@Override
 	public Stream<I> findReactive(SortParameters sortParameters) {
-		SelectOperationSpec<I> query = this.createSearchQuery(sortParameters);
+		return findReactive(sortParameters, false);
+	}
+
+	@Override
+	public Stream<I> findReactive(SortParameters sortParameters, boolean strict) {
+		SelectOperationSpec<I> query = this.createSearchQuery(sortParameters, strict);
 		return this.getSearchService().search(query).getResultStream();
 	}
 
 	@Override
 	public List<I> find(Map<String, ?> params, SortParameters sortParameters) {
-		return findReactive(params, sortParameters).collect(Collectors.toList());
+		return find(params, sortParameters, false);
+	}
+
+	@Override
+	public List<I> find(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
+		return findReactive(params, sortParameters, strict).collect(Collectors.toList());
 	}
 
 	@Override
 	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters) {
-		var query = this.createSearchQuery(params, sortParameters);
+		return findReactive(params,sortParameters, false);
+	}
+
+	@Override
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
+		var query = this.createSearchQuery(params, sortParameters, strict);
 		return this.getSearchService().search(query).getResultStream();
 	}
 
 	@Override
 	public List<I> find(Map<String, ?> params, SortParameters sortParameters, long count) {
-		return findPageable(params, sortParameters, count).getResult();
+		return find(params, sortParameters, count, false);
+	}
+
+	@Override
+	public List<I> find(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict) {
+		return findPageable(params, sortParameters, count, strict).getResult();
 	}
 
 	@Override
 	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count) {
-		return findPageable(params, sortParameters, count).getResultStream();
+		return findReactive(params, sortParameters, count, false);
+	}
+
+	@Override
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict) {
+		return findPageable(params, sortParameters, count, strict).getResultStream();
 	}
 
 	@Override
 	public List<I> find(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
-		return findPageable(params, sortParameters, count, page).getResult();
+		return find(params, sortParameters, count, page, false);
+	}
+
+	@Override
+	public List<I> find(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict) {
+		return findPageable(params, sortParameters, count, page, strict).getResult();
 	}
 
 	@Override
 	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
-		return findPageable(params, sortParameters, count, page).getResultStream();
+		return findReactive(params, sortParameters, count, page, false);
+	}
+
+	@Override
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict) {
+		return findPageable(params, sortParameters, count, page, strict).getResultStream();
 	}
 
 	@Override
 	public PageableSearchResult<I> findPageable(Map<String, ?> params, SortParameters sortParameters, long count) {
-		var query = this.createSearchQuery(params, sortParameters, count);
+		return findPageable(params, sortParameters, count, false);
+	}
+	@Override
+	public PageableSearchResult<I> findPageable(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict) {
+		var query = this.createSearchQuery(params, sortParameters, count, strict);
 		return this.getSearchService().searchPageable(query);
 	}
 
 	@Override
 	public PageableSearchResult<I> findPageable(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
-		var query = this.createSearchQuery(params, sortParameters, count, page);
+		return findPageable(params, sortParameters, count, page, false);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict) {
+		var query = this.createSearchQuery(params, sortParameters, count, page, strict);
 		return this.getSearchService().searchPageable(query);
 	}
 
 	@Override
 	public PageableSearchResult<I> findPageable(Map<String, ?> params, long count) {
-		return findPageable(params, null, count);
+		return findPageable(params,  count, false);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(Map<String, ?> params, long count, boolean strict) {
+		return findPageable(params, null, count, strict);
 	}
 
 	@Override
 	public PageableSearchResult<I> findPageable(Map<String, ?> params, long count, long page) {
-		return findPageable(params, null, count, page);
+		return findPageable(params,  count, page, false);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(Map<String, ?> params, long count, long page, boolean strict) {
+		return findPageable(params, null, count, page, strict);
 	}
 
 	@Override
 	public PageableSearchResult<I> findPageable(Map<String, ?> params) {
-		return findPageable(params, null, -1);
+		return findPageable(params, false);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(Map<String, ?> params, boolean strict) {
+		return findPageable(params, null, -1, strict);
 	}
 
 	@Override
 	public PageableSearchResult<I> findPageable(long count, long page) {
-		return findPageable(null, count, page);
+		return findPageable( count, page, false);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(long count, long page, boolean strict) {
+		return findPageable(null, count, page, strict);
 	}
 
 	@Override
 	public PageableSearchResult<I> findPageable(long count) {
-		return findPageable(count, -1);
+		return findPageable(count,false);
+	}
+
+	@Override
+	public PageableSearchResult<I> findPageable(long count, boolean strict) {
+		return findPageable(count, -1, strict);
 	}
 
 	@Override
 	public PageableSearchResult<I> findPageable() {
-		return findPageable(null, null, -1);
+		return findPageable(false);
 	}
 
-	private SelectOperationSpec<I> createSearchQuery() {
-		StringBuilder builder = this.createQueryString();
-		return new SelectOperationSpec<>(builder.toString());
+	@Override
+	public PageableSearchResult<I> findPageable(boolean strict) {
+		return findPageable(null, null, -1, strict);
 	}
-	private SelectOperationSpec<Map<String, Long>> createCountSearchQuery() {
-		StringBuilder builder = this.createCountQueryString();
+
+	private SelectOperationSpec<I> createSearchQuery(boolean strict) {
+		StringBuilder builder = this.createQueryString(strict);
 		return new SelectOperationSpec<>(builder.toString());
 	}
 
-	private SelectOperationSpec<I> createSearchQuery(Map<String, ?> params) {
-		StringBuilder builder = this.createQueryString();
+	private SelectOperationSpec<Map<String, Long>> createCountSearchQuery(boolean strict) {
+		StringBuilder builder = this.createCountQueryString(strict);
+		return new SelectOperationSpec<>(builder.toString());
+	}
+
+	private SelectOperationSpec<I> createSearchQuery(Map<String, ?> params, boolean strict) {
+		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
 		SelectOperationSpec<I> query = new SelectOperationSpec<>(builder.toString());
 		if (params != null && !params.isEmpty()) {
@@ -222,14 +337,14 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 		return query;
 	}
 
-	private SelectOperationSpec<I> createSearchQuery(SortParameters sortParameters) {
-		StringBuilder builder = this.createQueryString();
+	private SelectOperationSpec<I> createSearchQuery(SortParameters sortParameters, boolean strict) {
+		StringBuilder builder = this.createQueryString(strict);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
 		return new SelectOperationSpec<>(builder.toString());
 	}
 
-	private SelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters) {
-		StringBuilder builder = this.createQueryString();
+	private SelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
+		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
 		SelectOperationSpec<I> query = new SelectOperationSpec<>(builder.toString());
@@ -240,12 +355,12 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 	}
 
 
-	private PageableSelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count) {
-		StringBuilder builder = this.createQueryString();
+	private PageableSelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict) {
+		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
 		var query = new PageableSelectOperationSpec<I>(builder.toString());
-		if(count > 0){
+		if (count > 0) {
 			query.setCount(count);
 		}
 
@@ -256,8 +371,8 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 		return query;
 	}
 
-	private PageableSelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
-		StringBuilder builder = this.createQueryString();
+	private PageableSelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict) {
+		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
 		var query = new PageableSelectOperationSpec<I>(builder.toString());
@@ -271,17 +386,27 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 		return query;
 	}
 
-	private StringBuilder createQueryString() {
+	private StringBuilder createQueryString(boolean strict) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT * ");
-		builder.append("FROM \"").append(this.typecode).append("\" AS c ");
+		builder.append("FROM \"");
+
+		if (strict) {
+			builder.append("#");
+		}
+		builder.append(this.typecode).append("\" AS c ");
 		return builder;
 	}
 
-	private StringBuilder createCountQueryString() {
+	private StringBuilder createCountQueryString(boolean strict) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT count(c.uuid) ");
-		builder.append("FROM \"").append(this.typecode).append("\" AS c ");
+		builder.append("FROM \"");
+
+		if (strict) {
+			builder.append("#");
+		}
+		builder.append(this.typecode).append("\" AS c ");
 		return builder;
 	}
 
@@ -290,8 +415,8 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 			builder.append("WHERE ");
 			boolean firstParam = true;
 
-			for (Iterator var5 = params.keySet().iterator(); var5.hasNext(); firstParam = false) {
-				String paramName = (String) var5.next();
+			for (Iterator<String> iterator = params.keySet().iterator(); iterator.hasNext(); firstParam = false) {
+				String paramName = iterator.next();
 				if (!firstParam) {
 					builder.append("AND ");
 				}
@@ -308,8 +433,8 @@ public class DefaultGenericDao <I extends GenericItem> implements Dao<I> {
 			boolean firstParam = true;
 			Map<String, SortOrder> sortParams = sortParameters.getSortParameters();
 
-			for (Iterator var6 = sortParams.keySet().iterator(); var6.hasNext(); firstParam = false) {
-				String name = (String) var6.next();
+			for (Iterator<String> iterator = sortParams.keySet().iterator(); iterator.hasNext(); firstParam = false) {
+				String name = iterator.next();
 				if (!firstParam) {
 					builder.append(", ");
 				}

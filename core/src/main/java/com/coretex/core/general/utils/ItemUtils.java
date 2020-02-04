@@ -1,15 +1,17 @@
 package com.coretex.core.general.utils;
 
-import java.lang.reflect.InvocationTargetException;
-
+import com.coretex.core.services.items.context.ItemContext;
+import com.coretex.core.services.items.exceptions.ItemCreationException;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaTypeItem;
+import com.coretex.meta.AbstractGenericItem;
+import com.google.common.collect.Sets;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 
-import com.coretex.core.services.items.context.ItemContext;
-import com.coretex.core.services.items.exceptions.ItemCreationException;
-import com.coretex.meta.AbstractGenericItem;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.isNull;
@@ -31,6 +33,15 @@ public final class ItemUtils {
 				InvocationTargetException ex) {
 			throw new ItemCreationException(ex.getMessage(), ex);
 		}
+	}
+
+	public static Set<MetaTypeItem> getAllSubtypes(MetaTypeItem item){
+		var subtypes = Sets.<MetaTypeItem>newHashSet();
+		if(CollectionUtils.isNotEmpty(item.getSubtypes())){
+			item.getSubtypes().forEach(subItem -> subtypes.addAll(getAllSubtypes(subItem)));
+			subtypes.addAll(item.getSubtypes());
+		}
+		return subtypes;
 	}
 
 	public static <T extends AbstractGenericItem> T createItem(Class<T> itemClass) {

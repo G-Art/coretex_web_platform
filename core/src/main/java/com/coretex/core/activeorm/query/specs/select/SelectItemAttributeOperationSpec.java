@@ -26,7 +26,7 @@ public class SelectItemAttributeOperationSpec<R> extends SelectOperationSpec<R> 
 
 	private static final String SELECT_REGULAR_FIELD_BY_UUID_TEMPLATE = "select item.%s from \"%s\" as item where item.uuid = :uuid";
 	private static final String SELECT_ITEM_FIELD_BY_UUID_TEMPLATE = "select item.* from \"%s\" as item left join \"%s\" as j on (j.%s = item.uuid) where j.uuid = :uuid";
-	private static final String SELECT_RELATION_ITEM_FIELD_BY_UUID_TEMPLATE = "select item.* FROM \"%s\" as item LEFT JOIN \"%s\" as rel ON item.uuid = rel.%s where rel.%s = :uuid";
+	private static final String SELECT_RELATION_ITEM_FIELD_BY_UUID_TEMPLATE = "select item.* FROM \"%s\" as item LEFT JOIN \"%s\" as rel ON item.uuid = rel.%s where rel.%s = :uuid ORDER BY rel.createDate";
 	private static final String SELECT_LOCALIZED_ITEM_FIELD_BY_UUID_TEMPLATE = "select item.localeiso, item.value FROM %s_LOC as item WHERE item.owner = :ownerUuid AND item.attribute = :uuid";
 
 	private MetaAttributeTypeItem metaAttributeTypeItem;
@@ -89,7 +89,7 @@ public class SelectItemAttributeOperationSpec<R> extends SelectOperationSpec<R> 
 			String sourceColumnName = getColumnName(metaRelationTypeItem, "source");
 			return String.format(SELECT_RELATION_ITEM_FIELD_BY_UUID_TEMPLATE,
 					metaAttributeTypeItem.getSource() ? metaRelationTypeItem.getSourceType().getTypeCode() : metaRelationTypeItem.getTargetType().getTypeCode(),
-					metaRelationTypeItem.getTableName(),
+					metaRelationTypeItem.getTypeCode(),
 					metaAttributeTypeItem.getSource() ? targetColumnName : sourceColumnName,
 					metaAttributeTypeItem.getSource() ? sourceColumnName : targetColumnName);
 		}
