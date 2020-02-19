@@ -14,13 +14,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @ComponentScan({"com.coretex.commerce"})
 @EnableWebSecurity
 @EnableWebMvc
-public class ApplicationConfiguration extends WebMvcConfigurerAdapter {
+public class ApplicationConfiguration implements WebMvcConfigurer {
 
 	private Logger LOG = LoggerFactory.getLogger(ApplicationConfiguration.class);
 

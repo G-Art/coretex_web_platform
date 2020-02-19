@@ -1,8 +1,8 @@
 package com.coretex.commerce.facades;
 
-import com.coretex.commerce.data.minimal.MinimalOrderData;
 import com.coretex.commerce.data.OrderData;
-import com.coretex.items.commerce_core_model.OrderItem;
+import com.coretex.commerce.data.minimal.MinimalOrderData;
+import com.coretex.items.cx_core.OrderItem;
 
 import java.util.UUID;
 

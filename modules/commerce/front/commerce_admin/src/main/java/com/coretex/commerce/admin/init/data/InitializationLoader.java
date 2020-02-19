@@ -2,29 +2,20 @@ package com.coretex.commerce.admin.init.data;
 
 import com.coretex.commerce.admin.init.permission.Permissions;
 import com.coretex.commerce.admin.init.permission.ShopPermission;
+import com.coretex.commerce.core.constants.Constants;
+import com.coretex.commerce.core.services.GroupService;
+import com.coretex.commerce.core.services.PermissionService;
 import com.coretex.commerce.core.services.StoreService;
+import com.coretex.commerce.core.utils.CoreConfiguration;
 import com.coretex.core.activeorm.services.ItemService;
-import com.coretex.core.business.constants.Constants;
-import com.coretex.core.business.constants.SystemConstants;
-import com.coretex.core.business.services.merchant.MerchantStoreService;
-import com.coretex.core.business.services.reference.init.InitializationDatabase;
-import com.coretex.core.business.services.system.MerchantConfigurationService;
-import com.coretex.core.business.services.system.SystemConfigurationService;
-import com.coretex.core.business.services.user.GroupService;
-import com.coretex.core.business.services.user.PermissionService;
-import com.coretex.core.business.utils.CoreConfiguration;
-import com.coretex.core.model.system.MerchantConfig;
-import com.coretex.enums.commerce_core_model.GroupTypeEnum;
-import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.PermissionItem;
-import com.coretex.items.commerce_core_model.SystemConfigurationItem;
+import com.coretex.enums.cx_core.GroupTypeEnum;
+import com.coretex.items.cx_core.GroupItem;
+import com.coretex.items.cx_core.PermissionItem;
 import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.UserItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -50,16 +41,6 @@ public class InitializationLoader {
 	private static final String DEFAULT_INITIAL_PASSWORD = "nimda";
 	private static final String DEFAULT_ADMIN_INITIAL_PASSWORD = "goodmood";
 	public final static String POPULATE_TEST_DATA = "POPULATE_TEST_DATA";
-	public final static String TEST_DATA_LOADED = "TEST_DATA_LOADED";
-	public final static String RECAPTCHA_URL = "shopizer.recapatcha_url";
-	public final static String RECAPTCHA_PRIVATE_KEY = "shopizer.recapatcha_private_key";
-	public final static String RECAPTCHA_PUBLIC_KEY = "shopizer.recapatcha_public_key";
-	public final static String SHOP_SCHEME = "SHOP_SCHEME";
-	public final static int MAX_DOWNLOAD_DAYS = 30;
-
-	@Resource
-	private MerchantConfigurationService merchantConfigurationService;
-
 
 	@Resource
 	private InitializationDatabase initializationDatabase;
@@ -69,9 +50,6 @@ public class InitializationLoader {
 
 	@Resource
 	private InitData initData;
-
-	@Resource
-	private SystemConfigurationService systemConfigurationService;
 
 	@Resource
 	@Qualifier("passwordEncoder")
@@ -85,9 +63,6 @@ public class InitializationLoader {
 
 	@Resource
 	private CoreConfiguration configuration;
-
-	@Resource
-	protected MerchantStoreService merchantService;
 
 	@Resource
 	private StoreService storeService;
@@ -126,8 +101,6 @@ public class InitializationLoader {
 
 				initializationDatabase.populate("goodmood-shop");
 
-				MerchantStoreItem store = merchantService.getByCode(Constants.DEFAULT_STORE);
-
 				//security groups and permissions
 
 				Map<String, GroupItem> groupMap = new HashMap<String, GroupItem>();
@@ -147,7 +120,7 @@ public class InitializationLoader {
 								groupMap.put(groupName, group);
 
 								List<GroupItem> groups = permission.getGroups();
-								if(Objects.isNull(groups)){
+								if (Objects.isNull(groups)) {
 									groups = Lists.newArrayList();
 								}
 								groups.add(group);
@@ -156,7 +129,7 @@ public class InitializationLoader {
 							} else {
 
 								List<GroupItem> groups = permission.getGroups();
-								if(Objects.isNull(groups)){
+								if (Objects.isNull(groups)) {
 									groups = Lists.newArrayList();
 								}
 								groups.add(groupMap.get(groupName));
@@ -170,14 +143,6 @@ public class InitializationLoader {
 				}
 
 				createDefaultAdmin();
-
-
-
-				MerchantConfig config = new MerchantConfig();
-				config.setAllowPurchaseItems(true);
-				config.setDisplayAddToCartOnFeaturedItems(true);
-
-				merchantConfigurationService.saveMerchantConfig(config, store);
 
 				loadData();
 
@@ -194,11 +159,8 @@ public class InitializationLoader {
 
 	public void createDefaultAdmin() {
 
-		//TODO create all groups and permissions
 
-		MerchantStoreItem store = merchantService.getByCode(com.coretex.core.business.constants.Constants.DEFAULT_STORE);
-
-		var s = storeService.getByCode(com.coretex.core.business.constants.Constants.DEFAULT_STORE);
+		var s = storeService.getByCode(Constants.DEFAULT_STORE);
 
 		String password = passwordEncoder.encode(DEFAULT_INITIAL_PASSWORD);
 
@@ -258,33 +220,9 @@ public class InitializationLoader {
 
 	}
 
-	private void loadData()  {
-
-		String loadTestData = configuration.getProperty(POPULATE_TEST_DATA);
-		boolean loadData = !StringUtils.isBlank(loadTestData) && loadTestData.equals(SystemConstants.CONFIG_VALUE_TRUE);
-
-
-		if (loadData) {
-
-			SystemConfigurationItem configuration = systemConfigurationService.getByKey(TEST_DATA_LOADED);
-
-			if (configuration != null) {
-				if (configuration.getKey().equals(TEST_DATA_LOADED)) {
-					if (configuration.getValue().equals(SystemConstants.CONFIG_VALUE_TRUE)) {
-						return;
-					}
-				}
-			}
+	private void loadData() {
 
 			initData.initInitialData();
-
-			configuration = new SystemConfigurationItem();
-			configuration.setKey(TEST_DATA_LOADED);
-			configuration.setValue(SystemConstants.CONFIG_VALUE_TRUE);
-			systemConfigurationService.create(configuration);
-
-
-		}
 	}
 
 

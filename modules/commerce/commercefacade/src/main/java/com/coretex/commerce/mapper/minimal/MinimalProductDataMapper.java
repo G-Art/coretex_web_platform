@@ -1,11 +1,11 @@
 package com.coretex.commerce.mapper.minimal;
 
 import com.coretex.commerce.core.services.ProductService;
+import com.coretex.commerce.core.utils.ProductUtils;
 import com.coretex.commerce.data.minimal.MinimalProductData;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.LocaleDataMapper;
 import com.coretex.commerce.mapper.ReferenceMapper;
-import com.coretex.core.business.utils.ProductUtils;
 import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.cx_core.StoreItem;
 import org.mapstruct.InheritConfiguration;

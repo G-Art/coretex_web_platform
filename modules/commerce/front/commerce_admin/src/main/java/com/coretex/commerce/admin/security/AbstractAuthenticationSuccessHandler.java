@@ -1,6 +1,6 @@
 package com.coretex.commerce.admin.security;
 
-import com.coretex.core.business.services.user.UserService;
+import com.coretex.commerce.core.services.UserService;
 import com.coretex.items.cx_core.UserItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

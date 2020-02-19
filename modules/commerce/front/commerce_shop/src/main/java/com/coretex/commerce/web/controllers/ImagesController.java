@@ -1,9 +1,9 @@
 package com.coretex.commerce.web.controllers;
 
-import com.coretex.core.business.services.catalog.product.image.ProductImageService;
-import com.coretex.core.model.catalog.product.file.ProductImageSize;
-import com.coretex.core.model.content.FileContentType;
-import com.coretex.core.model.content.OutputContentFile;
+import com.coretex.commerce.core.dto.FileContentType;
+import com.coretex.commerce.core.manager.OutputContentFile;
+import com.coretex.commerce.core.manager.ProductImageSize;
+import com.coretex.commerce.core.services.ProductImageService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

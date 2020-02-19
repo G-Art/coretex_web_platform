@@ -1,7 +1,7 @@
 <%--@elvariable id="user" type="com.coretex.commerce.data.UserData"--%>
 <%--@elvariable id="currentUser" type="com.coretex.commerce.data.UserData"--%>
 <%--@elvariable id="languages" type="java.util.List<com.coretex.commerce.data.LocaleData>"--%>
-<%--@elvariable id="stores" type="java.util.List<com.coretex.commerce.data.MerchantStoreData>"--%>
+<%--@elvariable id="stores" type="java.util.List<com.coretex.commerce.data.StoreData>"--%>
 <%--@elvariable id="groups" type="java.util.List<com.coretex.commerce.data.GroupData>"--%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="tags-account" tagdir="/WEB-INF/tags/account" %>
@@ -123,8 +123,8 @@
                                             <div class="d-flex flex-grow-1">
                                                 <select name="merchantStore" class="form-control js-select-store">
                                                     <c:forEach var="store" items="${stores}">
-                                                        <option ${store.uuid == user.merchantStore.uuid ? 'selected' : ''}
-                                                                value="${store.uuid}">${store.storeName}</option>
+                                                        <option ${store.uuid == user.store.uuid ? 'selected' : ''}
+                                                                value="${store.uuid}">${store.name}</option>
                                                     </c:forEach>
                                                 </select>
                                             </div>

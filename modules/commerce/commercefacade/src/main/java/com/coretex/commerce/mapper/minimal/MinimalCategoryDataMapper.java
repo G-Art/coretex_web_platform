@@ -4,7 +4,7 @@ import com.coretex.commerce.data.minimal.MinimalCategoryData;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.ReferenceMapper;
 import com.coretex.items.cx_core.CategoryItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
+import com.coretex.items.cx_core.StoreItem;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -30,7 +30,7 @@ public interface MinimalCategoryDataMapper extends GenericDataMapper<CategoryIte
 	@InheritConfiguration(name = "fromItem")
 	void updateFromItem(CategoryItem source, @MappingTarget MinimalCategoryData target);
 
-	default String mapStore(MerchantStoreItem value) {
-		return value.getStoreName();
+	default String mapStore(StoreItem value) {
+		return value.getName();
 	}
 }

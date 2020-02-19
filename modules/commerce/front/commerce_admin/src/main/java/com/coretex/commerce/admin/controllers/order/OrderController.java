@@ -4,7 +4,7 @@ import com.coretex.commerce.admin.controllers.PageableDataTableAbstractControlle
 import com.coretex.commerce.data.minimal.MinimalOrderData;
 import com.coretex.commerce.facades.OrderFacade;
 import com.coretex.commerce.facades.PageableDataTableFacade;
-import com.coretex.items.commerce_core_model.OrderItem;
+import com.coretex.items.cx_core.OrderItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;

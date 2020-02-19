@@ -1,10 +1,8 @@
 package com.coretex.newpost.data;
 
-import com.coretex.core.data.shipping.DeliveryServiceData;
-
 import java.util.List;
 
-public class NewPostDeliveryServiceData extends DeliveryServiceData {
+public class NewPostDeliveryServiceData {
 
 	private List<NewPostDeliveryTypeData> deliveryTypes;
 	private String apiKey;

@@ -9,4 +9,37 @@
 
     <context:component-scan base-package="com.coretex.commerce.core" />
 
+    <!-- Product images manager -->
+    <bean id="productFileManager"
+                class="com.coretex.commerce.core.manager.ProductFileManagerImpl">
+        <property name="uploadImage">
+            <ref bean="${config.cms.method}ProductAssetsManager"/>
+        </property>
+        <property name="getImage">
+            <ref bean="${config.cms.method}ProductAssetsManager"/>
+        </property>
+        <property name="removeImage">
+            <ref bean="${config.cms.method}ProductAssetsManager"/>
+        </property>
+        <!-- *** Don't remove, required for this bean only *** -->
+        <!--        <beans:property name="configuration">-->
+        <!--            <beans:ref bean="coreConfiguration"/>-->
+        <!--        </beans:property>-->
+    </bean>
+
+    <bean id="httpdProductAssetsManager"
+                class="com.coretex.commerce.core.manager.CmsImageFileManagerImpl"
+                factory-method="getInstance">
+        <!-- internal implementation -->
+        <property name="cacheManager">
+            <ref bean="httpdAssetsManager"/>
+        </property>
+    </bean>
+
+    <!-- httpd -->
+    <bean id="httpdAssetsManager"
+                class="com.coretex.commerce.core.manager.LocalCacheManagerImpl">
+        <constructor-arg value="${config.cms.http.path.location}"/><!-- where files are copied on disk -->
+    </bean>
+
 </beans>

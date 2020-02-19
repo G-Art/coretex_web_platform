@@ -1,6 +1,6 @@
 package com.coretex.commerce.admin.init.permission;
 
-import com.coretex.items.commerce_core_model.GroupItem;
+import com.coretex.items.cx_core.GroupItem;
 
 import javax.validation.Valid;
 import java.io.Serializable;

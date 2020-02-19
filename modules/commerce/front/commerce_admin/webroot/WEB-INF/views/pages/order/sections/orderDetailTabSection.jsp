@@ -25,24 +25,24 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="product" items="${order.orderProducts}" varStatus="status">
+            <c:forEach var="entity" items="${order.entries}" varStatus="status">
                 <tr data-toggle="collapse" data-target="#line${status.index}" class="accordion-toggle">
-                    <td>${product.productName}</td>
-                    <td>${order.currency.symbol}${product.oneTimeCharge}</td>
-                    <td>${product.productQuantity}</td>
-                    <td>${order.currency.symbol}${product.productQuantity * product.oneTimeCharge}</td>
+                    <td>${entity.product.name}</td>
+                    <td>${order.currency.symbol}${entity.totalPrice}</td>
+                    <td>${entity.quantity}</td>
+                    <td>${order.currency.symbol}${entity.totalPrice}</td>
                 </tr>
                 <tr>
                     <td colspan="4" class="hiddenRow">
                         <div class="accordian-body collapse" id="line${status.index}">
-                            <c:if test="${product.originalProduct != null}">
-                                <c:set var="originalProduct" value="${product.originalProduct}"/>
+                            <c:if test="${entity.product != null}">
+                                <c:set var="originalProduct" value="${entity.product}"/>
                                 <div class="row">
                                     <div class="col-4">
                                         <div class="masonry-media">
                                             <a class="media-middle" href="javascript:void(0);">
                                                 <img class="img-fluid img-thumbnail"
-                                                     src="${applicationBaseUrl}${originalProduct.image}"
+                                                     src="${applicationBaseUrl}/v1${originalProduct.image}"
                                                      alt="${originalProduct.name}">
                                             </a>
                                         </div>
@@ -71,14 +71,12 @@
                     </td>
                 </tr>
             </c:forEach>
-            <c:forEach var="orderTotal" items="${order.orderTotal}" varStatus="status">
-                <tr style=" ${status.first ? 'border-top-style: solid; border-color: #01a9ac; border-top-width: 3px;': ''}">
+                <tr style="border-top-style: solid; border-color: #01a9ac; border-top-width: 3px;">
                     <th colspan="3" scope="row">
-                        <s:message code="${orderTotal.orderTotalCode}" text="${orderTotal.title}"/>
+                        Total
                     </th>
-                    <td>${order.currency.symbol}${orderTotal.value}</td>
+                    <td>${order.currency.symbol}${order.total}</td>
                 </tr>
-            </c:forEach>
             </tbody>
         </table>
     </div>

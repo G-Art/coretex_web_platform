@@ -1,14 +1,12 @@
 package com.coretex.commerce.admin.security;
 
 import com.coretex.commerce.admin.Constants;
+import com.coretex.commerce.core.services.GroupService;
 import com.coretex.commerce.core.services.StoreService;
-import com.coretex.core.business.services.merchant.MerchantStoreService;
-import com.coretex.core.business.services.user.GroupService;
-import com.coretex.core.business.services.user.UserService;
-import com.coretex.enums.commerce_core_model.GroupTypeEnum;
-import com.coretex.items.commerce_core_model.GroupItem;
-import com.coretex.items.commerce_core_model.MerchantStoreItem;
-import com.coretex.items.commerce_core_model.PermissionItem;
+import com.coretex.commerce.core.services.UserService;
+import com.coretex.enums.cx_core.GroupTypeEnum;
+import com.coretex.items.cx_core.GroupItem;
+import com.coretex.items.cx_core.PermissionItem;
 import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.UserItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,9 +41,6 @@ public class UserServicesImpl implements WebUserServices {
 
 	@Resource
 	private UserService userService;
-
-	@Resource
-	private MerchantStoreService merchantService;
 
 	@Resource
 	private StoreService storeService;
@@ -115,11 +110,7 @@ public class UserServicesImpl implements WebUserServices {
 
 	public void createDefaultAdmin()  {
 
-		//TODO create all groups and permissions
-
-		MerchantStoreItem store = merchantService.getByCode(com.coretex.core.business.constants.Constants.DEFAULT_STORE);
-
-		var s = storeService.getByCode(com.coretex.core.business.constants.Constants.DEFAULT_STORE);
+		var s = storeService.getByCode(com.coretex.commerce.core.constants.Constants.DEFAULT_STORE);
 
 		String password = passwordEncoder.encode(DEFAULT_INITIAL_PASSWORD);
 

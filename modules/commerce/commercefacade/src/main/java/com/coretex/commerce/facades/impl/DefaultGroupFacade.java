@@ -1,9 +1,9 @@
 package com.coretex.commerce.facades.impl;
 
+import com.coretex.commerce.core.services.GroupService;
 import com.coretex.commerce.data.GroupData;
 import com.coretex.commerce.facades.GroupFacade;
 import com.coretex.commerce.mapper.GroupDataMapper;
-import com.coretex.core.business.services.user.GroupService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

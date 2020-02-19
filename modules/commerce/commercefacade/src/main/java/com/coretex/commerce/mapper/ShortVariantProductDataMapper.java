@@ -17,7 +17,7 @@ import org.mapstruct.Mappings;
 
 import java.util.Objects;
 
-import static com.coretex.core.business.utils.ProductUtils.buildProductSmallImageUtils;
+import static com.coretex.commerce.core.utils.ProductUtils.buildProductSmallImageUtils;
 
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public interface ShortVariantProductDataMapper extends GenericDataMapper<VariantProductItem, ShortVariantProductData>{

@@ -1,12 +1,12 @@
 package com.coretex.commerce.admin.init.data;
 
-import com.coretex.core.business.services.catalog.product.image.ProductImageService;
-import com.coretex.core.model.content.FileContentType;
-import com.coretex.core.model.content.ImageContentFile;
-import com.coretex.items.commerce_core_model.ProductAvailabilityItem;
-import com.coretex.items.commerce_core_model.ProductImageItem;
-import com.coretex.items.commerce_core_model.ProductPriceItem;
+import com.coretex.commerce.core.dto.FileContentType;
+import com.coretex.commerce.core.dto.ImageContentFile;
+import com.coretex.commerce.core.services.ProductImageService;
+import com.coretex.items.cx_core.ProductAvailabilityItem;
+import com.coretex.items.cx_core.ProductImageItem;
 import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.ProductPriceItem;
 import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.StyleDescriptionItem;
 import com.coretex.items.cx_core.StyleVariantProductItem;

@@ -4,7 +4,7 @@ import com.coretex.commerce.data.minimal.MinimalUserData;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.LocaleDataMapper;
 import com.coretex.commerce.mapper.ReferenceMapper;
-import com.coretex.items.commerce_core_model.GroupItem;
+import com.coretex.items.cx_core.GroupItem;
 import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.UserItem;
 import org.mapstruct.Mapper;

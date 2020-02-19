@@ -1,10 +1,8 @@
 package com.coretex.newpost.data;
 
-import com.coretex.core.data.GenericData;
-
 import java.util.Map;
 
-public class NewPostDeliveryTypeData extends GenericData {
+public class NewPostDeliveryTypeData  {
 
 	public String code;
 	public Map<String, String> name;

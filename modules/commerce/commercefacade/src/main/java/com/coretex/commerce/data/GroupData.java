@@ -1,6 +1,6 @@
 package com.coretex.commerce.data;
 
-import com.coretex.enums.commerce_core_model.GroupTypeEnum;
+import com.coretex.enums.cx_core.GroupTypeEnum;
 
 public class GroupData extends GenericItemData {
 

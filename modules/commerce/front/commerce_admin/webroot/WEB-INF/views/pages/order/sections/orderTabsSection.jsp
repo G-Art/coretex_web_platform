@@ -26,7 +26,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Store</th>
-                                                    <td>${order.merchant.storeName}</td>
+                                                    <td>${order.store.name}</td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Total</th>
@@ -48,13 +48,13 @@
                                                 <tr>
                                                     <th scope="row">Email</th>
                                                     <td>
-                                                        <a href="mailto:${order.email}">${order.email}</a>
+                                                        <a href="mailto:${order.customer.email}">${order.customer.email}</a>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Phone</th>
                                                     <td>
-                                                        <a href="tel:${order.phone}">${order.phone}</a>
+                                                        <a href="tel:${order.customer.delivery.phone}">${order.customer.delivery.phone}</a>
                                                     </td>
                                                 </tr>
                                             </tbody>

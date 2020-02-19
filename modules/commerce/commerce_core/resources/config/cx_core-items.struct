@@ -1,6 +1,39 @@
 elements {
 
     relations {
+
+        ProductProductAvailabilityRelation(source: Product, target: ProductAvailability) {
+            source(availabilities) {
+                description = "Availabilities"
+                containerType = Set
+            }
+            target(product) {
+                description = "Product"
+            }
+        }
+
+        ProductAvailabilityProductPriceRelation(source: ProductAvailability, target: ProductPrice) {
+            source(prices) {
+                description = "Prices"
+                containerType = Set
+            }
+            target(productAvailability) {
+                description = "Product availability"
+            }
+        }
+
+        ProductProductImageRelation(source: Product, target: ProductImage) {
+            source(images) {
+                description = "Images "
+                containerType = Set
+                associated = true
+            }
+            target(product) {
+                description = "Product"
+            }
+        }
+
+
         StoreLocaleRelation(source: Store, target: 'Locale') {
             source(languages) {
                 description = "Supported languages"
@@ -42,9 +75,107 @@ elements {
                 containerType = Set
             }
         }
+
+        PermissionGroupRelation(source: Permission, target: Group){
+            source(groups) {
+                description = "Groups"
+                containerType = List
+            }
+            target(permissions) {
+                description = "Permissions"
+                containerType = Set
+            }
+        }
+
+        PrincipleGroupRelation(source: Principle, target: Group){
+            source(groups) {
+                description = "Groups"
+                containerType = List
+            }
+            target(users) {
+                description = "Users"
+                containerType = List
+            }
+        }
+
+        OrderProductOrderRelation(source: OrderEntry, target: AbstractOrder){
+            source(order) {
+                 description = "Order"
+            }
+            target(entries) {
+                description = "Entries"
+                associated = true
+                containerType = Set
+            }
+        }
+
     }
 
     items {
+
+        Area {
+            attributes {
+                code(String)
+                name(String) {
+                    localized = true
+                }
+                center(City)
+            }
+        }
+
+        Settlement {
+            attributes {
+                name(String) {
+                    localized = true
+                }
+                code(String)
+                population(Integer)
+                longitude(Double)
+                latitude(Double)
+            }
+        }
+
+        City(extend: Settlement) {
+            attributes {
+                areaCenter(Boolean){
+                    defaultValue = false
+                }
+                capital(Boolean){
+                    defaultValue = false
+                }
+            }
+        }
+
+        DeliveryService(abstract: true) {
+            attributes {
+                code(String) {
+                    optional=false
+                    unique=true
+                }
+                name(String) {
+                    localized = true
+                }
+                image(String)
+                active(Boolean) {
+                    defaultValue = true
+                }
+            }
+        }
+
+        DeliveryType(abstract: true) {
+            attributes {
+                code(String) {
+                    optional=false
+                    unique=true
+                }
+                name(String) {
+                    localized = true
+                }
+                active(Boolean) {
+                    defaultValue = true
+                }
+            }
+        }
 
         Zone {
             attributes {
@@ -162,6 +293,21 @@ elements {
             }
         }
 
+        Group {
+            attributes {
+                groupName(String){
+                    unique = true
+                }
+                groupType(GroupType)
+            }
+        }
+
+        Permission {
+            attributes {
+                permissionName(String)
+            }
+        }
+
         Category {
             attributes {
                 code(String){
@@ -193,6 +339,43 @@ elements {
             }
         }
 
+        AbstractOrder(abstract: true) {
+            attributes {
+                lastModified(Date)
+                total(BigDecimal)
+                currency('Currency')
+                store(Store)
+                customer(Customer)
+                locale('Locale')
+            }
+        }
+
+        Order(extend: AbstractOrder, table: false) {
+            attributes {
+                status(OrderStatus)
+                datePurchased(Date)
+                orderDateFinished(Date)
+                customerAgreement(Boolean)
+                confirmedAddress(Boolean)
+            }
+        }
+
+        Cart(extend: AbstractOrder, table: false){
+            attributes {
+            }
+        }
+
+        OrderEntry {
+            attributes {
+                product(Product)
+                quantity(Integer)
+                calculated(Boolean){
+                    defaultValue = false
+                }
+                price(BigDecimal)
+                totalPrice(BigDecimal)
+            }
+        }
 
         AbstractProduct(abstract: true) {
             attributes {
@@ -274,8 +457,88 @@ elements {
                 }
             }
         }
+
+        ProductImage {
+            attributes {
+                productImage(String)
+                defaultImage(Boolean){
+                    defaultValue = false
+                }
+                imageType(Integer)
+                imageCrop(Boolean){
+                    defaultValue = false
+                }
+                altTag(String){
+                    localized = true
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                productImageUrl(String)
+            }
+        }
+
+        ProductPrice {
+            attributes {
+                code(String){
+                    unique = true
+                    optional = false
+                }
+                name(String){
+                    localized = true
+                }
+                title(String){
+                    localized = true
+                }
+                description(String){
+                    localized = true
+                }
+                productPriceAmount(BigDecimal)
+                productPriceSpecialStartDate(Date)
+                productPriceSpecialEndDate(Date)
+                productPriceSpecialAmount(BigDecimal)
+                defaultPrice(Boolean){
+                    defaultValue = false
+                }
+
+            }
+        }
+
+        ProductAvailability {
+            attributes {
+                productQuantity(Integer)
+                productDateAvailable(Date)
+                region(String)
+                regionVariant(String)
+                productStatus(Boolean)
+                productIsAlwaysFreeShipping(Boolean){
+                    defaultValue = false
+                }
+                productQuantityOrderMin(Integer)
+                productQuantityOrderMax(Integer)
+            }
+        }
     }
 
     enums {
+
+        GroupType {
+            admin
+            customer
+        }
+
+        OrderStatus {
+            ordered
+            processed
+            delivered
+            refunded
+            canceled
+        }
     }
 }

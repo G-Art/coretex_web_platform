@@ -5,28 +5,16 @@ import java.util.Set;
 
 public class OrderData extends GenericItemData {
 
-	private BigDecimal total;
-	private String name;
-	private String status;
-	private String date;
-	private MerchantStoreData merchant;
+	private Set<OrderEntryData> entries;
+	private StoreData store;
 	private CurrencyData currency;
-	private AddressData delivery;
-	private AddressData billing;
-	private String phone;
-	private String email;
-	private BigDecimal currencyValue;
-	private String orderDateFinished;
-	private String ipAddress;
+	private CustomerData customer;
+	private LocaleData locale;
+	private BigDecimal total;
 	private Boolean customerAgreement;
 	private Boolean confirmedAddress;
-	private String paymentType;
-	private Set<OrderProductData> orderProducts;
-	private Set<OrderTotalData> orderTotal;
-
-//	orderHistory: Set<OrderStatusHistoryItem>
-//	orderAttributes: Set<OrderAttributeItem>
-
+	private String status;
+	private String date;
 
 	public BigDecimal getTotal() {
 		return total;
@@ -34,14 +22,6 @@ public class OrderData extends GenericItemData {
 
 	public void setTotal(BigDecimal total) {
 		this.total = total;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getStatus() {
@@ -52,20 +32,12 @@ public class OrderData extends GenericItemData {
 		this.status = status;
 	}
 
-	public String getDate() {
-		return date;
+	public StoreData getStore() {
+		return store;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	public MerchantStoreData getMerchant() {
-		return merchant;
-	}
-
-	public void setMerchant(MerchantStoreData merchant) {
-		this.merchant = merchant;
+	public void setStore(StoreData store) {
+		this.store = store;
 	}
 
 	public CurrencyData getCurrency() {
@@ -76,61 +48,6 @@ public class OrderData extends GenericItemData {
 		this.currency = currency;
 	}
 
-	public AddressData getDelivery() {
-		return delivery;
-	}
-
-	public void setDelivery(AddressData delivery) {
-		this.delivery = delivery;
-	}
-
-	public AddressData getBilling() {
-		return billing;
-	}
-
-	public void setBilling(AddressData billing) {
-		this.billing = billing;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public BigDecimal getCurrencyValue() {
-		return currencyValue;
-	}
-
-	public void setCurrencyValue(BigDecimal currencyValue) {
-		this.currencyValue = currencyValue;
-	}
-
-	public String getOrderDateFinished() {
-		return orderDateFinished;
-	}
-
-	public void setOrderDateFinished(String orderDateFinished) {
-		this.orderDateFinished = orderDateFinished;
-	}
-
-	public String getIpAddress() {
-		return ipAddress;
-	}
-
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
-	}
 
 	public Boolean getCustomerAgreement() {
 		return customerAgreement;
@@ -148,27 +65,35 @@ public class OrderData extends GenericItemData {
 		this.confirmedAddress = confirmedAddress;
 	}
 
-	public String getPaymentType() {
-		return paymentType;
+	public Set<OrderEntryData> getEntries() {
+		return entries;
 	}
 
-	public void setPaymentType(String paymentType) {
-		this.paymentType = paymentType;
+	public void setEntries(Set<OrderEntryData> entries) {
+		this.entries = entries;
 	}
 
-	public Set<OrderProductData> getOrderProducts() {
-		return orderProducts;
+	public LocaleData getLocale() {
+		return locale;
 	}
 
-	public void setOrderProducts(Set<OrderProductData> orderProducts) {
-		this.orderProducts = orderProducts;
+	public void setLocale(LocaleData locale) {
+		this.locale = locale;
 	}
 
-	public Set<OrderTotalData> getOrderTotal() {
-		return orderTotal;
+	public String getDate() {
+		return date;
 	}
 
-	public void setOrderTotal(Set<OrderTotalData> orderTotal) {
-		this.orderTotal = orderTotal;
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public CustomerData getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerData customer) {
+		this.customer = customer;
 	}
 }

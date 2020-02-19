@@ -5,10 +5,11 @@ import com.coretex.commerce.core.services.AbstractGenericItemService;
 import com.coretex.commerce.core.services.StoreService;
 import com.coretex.items.cx_core.StoreItem;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-@Component
+@Service
 public class DefaultStoreService extends AbstractGenericItemService<StoreItem> implements StoreService {
 
 	public DefaultStoreService(StoreDao storeDao) {

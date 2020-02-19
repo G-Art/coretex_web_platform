@@ -61,7 +61,7 @@
                                 <tr>
                                     <th scope="row">Store</th>
                                     <td>
-                                        <label class="label label-inverse-info-border">${user.merchantStore.storeName}</label>
+                                        <label class="label label-inverse-info-border">${user.store.name}</label>
                                     </td>
                                 </tr>
 

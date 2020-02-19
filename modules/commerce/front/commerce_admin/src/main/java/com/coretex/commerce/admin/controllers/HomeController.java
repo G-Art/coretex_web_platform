@@ -1,6 +1,6 @@
 package com.coretex.commerce.admin.controllers;
 
-import com.coretex.core.business.services.order.OrderService;
+import com.coretex.commerce.core.services.OrderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,7 @@ public class HomeController extends AbstractController {
 
 		LocalDate date = LocalDate.now();
 		LocalDate firstDayOfYear = date.with(TemporalAdjusters.firstDayOfYear());
-		var staticForPeriod = orderService.getStaticForPeriod(Date.from(firstDayOfYear.atStartOfDay()
+		var staticForPeriod = orderService.getStatisticForPeriod(Date.from(firstDayOfYear.atStartOfDay()
 				.atZone(ZoneId.systemDefault())
 				.toInstant()));
 		model.addAttribute("orderCount", staticForPeriod.get("count"));

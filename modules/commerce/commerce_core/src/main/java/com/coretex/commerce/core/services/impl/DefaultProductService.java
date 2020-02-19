@@ -4,7 +4,7 @@ import com.coretex.commerce.core.dao.ProductDao;
 import com.coretex.commerce.core.services.AbstractGenericItemService;
 import com.coretex.commerce.core.services.ProductService;
 import com.coretex.core.activeorm.services.PageableSearchResult;
-import com.coretex.items.commerce_core_model.ProductImageItem;
+import com.coretex.items.cx_core.ProductImageItem;
 import com.coretex.items.cx_core.ProductItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
