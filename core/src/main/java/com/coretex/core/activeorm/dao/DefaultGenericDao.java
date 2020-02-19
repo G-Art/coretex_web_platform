@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -96,7 +97,6 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 	public I findSingle(Map<String, ?> params, boolean throwAmbiguousException) {
 		return findSingle(params, throwAmbiguousException, false);
 	}
-
 	@Override
 	public I findSingle(Map<String, ?> params, boolean throwAmbiguousException, boolean strict) {
 		var result = find(params, strict);
@@ -107,10 +107,18 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 	}
 
 	@Override
+	public Optional<I> findOne(Map<String, ?> params, boolean throwAmbiguousException) {
+		return Optional.ofNullable(findSingle(params, throwAmbiguousException));
+	}
+	@Override
+	public Optional<I> findOne(Map<String, ?> params, boolean throwAmbiguousException, boolean strict) {
+		return Optional.ofNullable(findSingle(params, throwAmbiguousException, strict));
+	}
+
+	@Override
 	public List<I> find(String query) {
 		return findReactive(query).collect(Collectors.toList());
 	}
-
 
 	@Override
 	public Stream<I> findReactive(String query) {

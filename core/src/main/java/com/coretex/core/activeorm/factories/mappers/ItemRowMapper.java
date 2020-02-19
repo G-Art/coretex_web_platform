@@ -1,10 +1,10 @@
 package com.coretex.core.activeorm.factories.mappers;
 
 import com.coretex.core.general.utils.AttributeTypeUtils;
+import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
-import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaEnumTypeItem;
@@ -57,8 +57,8 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 		MetaTypeItem typeMetaType = ((MetaTypeItem) mapOfColValues.get(metaTypeAttributeTypeItem.getColumnName()).apply(metaTypeAttributeTypeItem));
 		Class<T> targetClass = typeMetaType.getItemClass();
 
-		if(ItemUtils.isSystemType(typeMetaType)){
-			if(ItemUtils.isMetaAttributeType(typeMetaType)){
+		if (ItemUtils.isSystemType(typeMetaType)) {
+			if (ItemUtils.isMetaAttributeType(typeMetaType)) {
 				return (T) cortexContext.findMetaAttributeTypeItem((UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
 			}
 			return (T) cortexContext.findMetaType((UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
@@ -69,6 +69,9 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 		cortexContext.getAllAttributes(typeMetaType.getTypeCode()).values().stream()
 				.filter(metaAttributeTypeItem -> !(metaAttributeTypeItem.getAttributeType() instanceof MetaRelationTypeItem))
 				.filter(metaAttributeTypeItem -> mapOfColValues.containsKey(metaAttributeTypeItem.getColumnName()))
+				.filter(metaAttributeTypeItem ->  metaAttributeTypeItem.getAttributeType() instanceof MetaTypeItem &&
+												 (((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes() == null ||
+												 ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes().isEmpty()))
 				.forEach(metaAttributeTypeItem -> item.initValue(metaAttributeTypeItem.getAttributeName(), mapOfColValues.get(metaAttributeTypeItem.getColumnName()).apply(metaAttributeTypeItem)));
 		return ItemUtils.createItem(targetClass, item);
 
@@ -92,9 +95,9 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 					return cortexContext.findMetaType((UUID) JdbcUtils.getResultSetValue(rs, index));
 				}
 				if (AttributeTypeUtils.isEnumTypeAttribute(metaAttributeTypeItem)) {
-					return cortexContext.findMetaEnumValueTypeItem(((MetaEnumTypeItem) metaAttributeTypeItem.getAttributeType()).getEnumClass(), (UUID)  JdbcUtils.getResultSetValue(rs, index));
+					return cortexContext.findMetaEnumValueTypeItem(((MetaEnumTypeItem) metaAttributeTypeItem.getAttributeType()).getEnumClass(), (UUID) JdbcUtils.getResultSetValue(rs, index));
 				}
-				if (AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem)){
+				if (AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem)) {
 					return cortexContext.getTypeTranslator(((RegularTypeItem) metaAttributeTypeItem.getAttributeType()).getRegularClass()).read(rs, index);
 				} else {
 					Class<AbstractGenericItem> itemClass = ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getItemClass();
