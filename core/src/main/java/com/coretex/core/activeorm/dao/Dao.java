@@ -5,6 +5,7 @@ import com.coretex.meta.AbstractGenericItem;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -28,6 +29,9 @@ public interface Dao<I extends AbstractGenericItem> {
 
 	I findSingle(Map<String, ?> params, boolean throwAmbiguousException);
 	I findSingle(Map<String, ?> params, boolean throwAmbiguousException, boolean strict);
+
+	Optional<I> findOne(Map<String, ?> params, boolean throwAmbiguousException);
+	Optional<I> findOne(Map<String, ?> params, boolean throwAmbiguousException, boolean strict);
 
 	List<I> find(String query);
 	Stream<I> findReactive(String query);
