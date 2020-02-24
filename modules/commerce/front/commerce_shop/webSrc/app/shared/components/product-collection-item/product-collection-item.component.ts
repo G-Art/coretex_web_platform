@@ -2,6 +2,7 @@ import {Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output,
 import {ProductData} from "../../../core/data/product.data";
 import {ProductService} from "../../../core/service/product.service";
 import {ProductVariantData} from "../../../core/data/product-variant.data";
+import {CartService} from "../../../core/service/cart.service";
 
 declare var $: any;
 
@@ -22,6 +23,8 @@ export class ProductCollectionItemComponent implements OnInit {
 
     private _product: ProductData;
 
+    private atcClicked: boolean = false;
+
     get product(): ProductData {
         return this._product;
     }
@@ -39,7 +42,7 @@ export class ProductCollectionItemComponent implements OnInit {
     @ViewChild('imageWrapper', {static: false})
     imageWrapper: ElementRef;
 
-    constructor(private productService: ProductService) {
+    constructor(private productService: ProductService, private cartService: CartService) {
     }
 
     ngOnInit() {
@@ -64,6 +67,14 @@ export class ProductCollectionItemComponent implements OnInit {
     }
 
     addToCart() {
-
+        if (!this.atcClicked) {
+            this.atcClicked = true;
+            if (this.displayStyleVariant.variants.length > 1) {
+                this.cartService.addToCart(this.displayStyleVariant.variants[0], 1);
+            } else {
+                this.cartService.addToCart(this.displaySizeVariant, 1);
+            }
+            this.atcClicked = false;
+        }
     }
 }

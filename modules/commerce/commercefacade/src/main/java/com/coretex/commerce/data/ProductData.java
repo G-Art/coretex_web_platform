@@ -7,7 +7,7 @@ public class ProductData extends GenericItemData {
 	private String description;
 	private Boolean available;
 	private String store;
-	private String image;
+	private ImageData[] images;
 
 	public String getCode() {
 		return code;
@@ -41,12 +41,12 @@ public class ProductData extends GenericItemData {
 		this.store = store;
 	}
 
-	public String getImage() {
-		return image;
+	public ImageData[] getImages() {
+		return images;
 	}
 
-	public void setImage(String image) {
-		this.image = image;
+	public void setImages(ImageData[] images) {
+		this.images = images;
 	}
 
 	public String getDescription() {

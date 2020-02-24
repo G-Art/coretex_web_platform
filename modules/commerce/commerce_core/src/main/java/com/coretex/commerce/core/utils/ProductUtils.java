@@ -1,5 +1,7 @@
 package com.coretex.commerce.core.utils;
 
+import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.ProductPriceItem;
 import com.coretex.items.cx_core.StoreItem;
 
 public class ProductUtils {
@@ -20,5 +22,19 @@ public class ProductUtils {
 	public static String buildProductImageUtils(StoreItem store, String sku, String imageName, String size) {
 		return "/static" + PRODUCTS_URI + SLASH + store.getCode() + SLASH +
 				sku + SLASH + size + SLASH + imageName;
+	}
+
+	public static ProductPriceItem getDefaultPrice(ProductItem productItem){
+		return productItem.getAvailabilities()
+				.stream()
+				.filter(productAvailabilityItem -> productAvailabilityItem.getPrices()
+						.stream()
+						.anyMatch(ProductPriceItem::getDefaultPrice))
+				.findFirst()
+				.flatMap(productAvailabilityItem -> productAvailabilityItem.getPrices()
+						.stream()
+						.filter(ProductPriceItem::getDefaultPrice)
+						.findFirst())
+				.orElse(null);
 	}
 }

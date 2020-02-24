@@ -1,71 +1,35 @@
 <a href="cart.html">
     <i class="fa fa-shopping-basket"></i>
-    <span *ngIf="entries" class="item-count">{{entries.length}}</span>
+    <span *ngIf="miniCart.entries" class="item-count">{{miniCart.productCount}}</span>
 </a>
 <div class="minicart-wrapper">
     <p class="minicart-wrapper__title">CART</p>
-    <ng-template [ngIf]="entries">
+    <ng-template [ngIf]="miniCart.entries && miniCart.entries.length > 0">
         <div class="minicart-wrapper__items ps-scroll">
-            <div class="minicart-wrapper__items__single">
-                <a href="javascript:void(0)" class="close-icon"><i
-                        class="pe-7s-close"></i></a>
-                <div class="image">
-                    <a href="product-details-basic.html">
-                        <img src="/app/assets/img/products/product-1-90x100.jpg"
-                             class="img-fluid" alt="">
-                    </a>
-                </div>
-                <div class="content">
-                    <p class="product-title"><a href="product-details-basic.html">Atelier
-                        Fuji NC Chair</a></p>
-                    <p class="product-calculation"><span class="count">1</span> x
-                        <span class="price">$900</span></p>
-                </div>
-            </div>
-            <div class="minicart-wrapper__items__single">
-                <a href="javascript:void(0)" class="close-icon">
+            <div class="minicart-wrapper__items__single" *ngFor="let entry of miniCart.entries">
+                <a href="javascript:void(0)" class="close-icon" (click)="removeEntry(entry)">
                     <i class="pe-7s-close"></i>
                 </a>
-                <div class="image">
-                    <a href="product-details-basic.html">
-                        <img src="/app/assets/img/products/product-2-90x100.jpg"
-                             class="img-fluid" alt="">
+                <div class="image" style="width: 90px; height: 100px;">
+                    <a routerLink="/product/{{entry.product.code}}">
+                        <img *ngIf="entry.product.images || entry.product.images.length > 0"
+                             src="/v1{{entry.product.images[0].path}}"
+                             class="img-fluid" alt="{{entry.product.images[0].alt}}">
                     </a>
                 </div>
                 <div class="content">
                     <p class="product-title">
-                        <a href="product-details-basic.html">Jane Lauren Rebel
-                            Sofa</a>
+                        <a routerLink="/product/{{entry.product.code}}">{{entry.product.name}}</a>
                     </p>
                     <p class="product-calculation">
-                        <span class="count">1</span> x <span
-                            class="price">$900</span>
-                    </p>
-                </div>
-            </div>
-            <div class="minicart-wrapper__items__single">
-                <a href="javascript:void(0)" class="close-icon"><i
-                        class="pe-7s-close"></i></a>
-                <div class="image">
-                    <a href="product-details-basic.html">
-                        <img src="/app/assets/img/products/product-1-90x100.jpg"
-                             class="img-fluid" alt="">
-                    </a>
-                </div>
-                <div class="content">
-                    <p class="product-title">
-                        <a href="product-details-basic.html">Atelier Fuji NC
-                            Chair</a>
-                    </p>
-                    <p class="product-calculation">
-                        <span class="count">1</span> x <span
-                            class="price">$900</span>
+                        <span class="count">{{entry.quantity}}</span> x
+                        <span class="price">{{entry.price}}</span>
                     </p>
                 </div>
             </div>
         </div>
 
-        <p class="minicart-wrapper__subtotal">SUBTOTAL: <span>$1800</span></p>
+        <p class="minicart-wrapper__subtotal">SUBTOTAL: <span>{{miniCart.total}}</span></p>
 
         <div class="minicart-wrapper__buttons">
             <a href="cart.html"
@@ -83,7 +47,7 @@
         </p>
     </ng-template>
 
-    <ng-template [ngIf]="!entries">
+    <ng-template [ngIf]="!miniCart.entries || miniCart.entries.length == 0">
         <p class="minicart-wrapper__featuretext text-uppercase">Empty</p>
     </ng-template>
 

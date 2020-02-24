@@ -1,26 +1,26 @@
 package com.coretex.commerce.mapper;
 
-import com.coretex.commerce.core.utils.ProductUtils;
+import com.coretex.commerce.data.ImageData;
 import com.coretex.commerce.data.ProductData;
 import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.VariantProductItem;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.IteratorUtils;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 
-import java.util.Objects;
+import static com.coretex.commerce.core.utils.ProductUtils.buildProductSmallImageUtils;
 
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public interface ProductDataMapper extends GenericDataMapper<ProductItem, ProductData>{
 
 	@Override
 	@Mappings({
-			@Mapping(target = "image", expression = "java(mapImageUrl(productItem))"),
+			@Mapping(target = "images", expression = "java(mapImageUrl(productItem))"),
 			@Mapping(target = "store", source = "store")
 	})
 	ProductData fromItem(ProductItem productItem);
@@ -29,21 +29,23 @@ public interface ProductDataMapper extends GenericDataMapper<ProductItem, Produc
 	@InheritConfiguration(name = "fromItem")
 	void updateFromItem(ProductItem productItem, @MappingTarget ProductData productData);
 
-	default String mapImageUrl(ProductItem productItem){
-		if(CollectionUtils.isNotEmpty(productItem.getImages())){
-			var first = IteratorUtils.first(productItem.getImages().iterator());
-			return ProductUtils.buildProductSmallImageUtils(productItem.getStore(), productItem.getCode(), first.getProductImage());
-		}
-		if(productItem instanceof VariantProductItem){
-			var baseProduct = ((VariantProductItem) productItem).getBaseProduct();
-			if(Objects.nonNull(baseProduct)){
-				if(CollectionUtils.isNotEmpty(baseProduct.getImages())){
-					var first = IteratorUtils.first(baseProduct.getImages().iterator());
-					return ProductUtils.buildProductSmallImageUtils(baseProduct.getStore(), baseProduct.getCode(), first.getProductImage());
+	default ImageData[] mapImageUrl(ProductItem productItem){
+		var images = Lists.<ImageData>newArrayList();
+		if(CollectionUtils.isEmpty(productItem.getImages())){
+			if(productItem instanceof VariantProductItem){
+				var baseProduct = ((VariantProductItem) productItem).getBaseProduct();
+				if(baseProduct instanceof VariantProductItem){
+					images.addAll(Lists.newArrayList(mapImageUrl((VariantProductItem) baseProduct)));
 				}
 			}
+		}else {
+			productItem.getImages()
+					.stream()
+					.limit(2)
+					.forEach(image -> images.add(new ImageData(buildProductSmallImageUtils(image.getProduct().getStore(), image.getProduct().getCode(), image.getProductImage()))));
 		}
-		return null;
+
+		return images.toArray(new ImageData[0]);
 	}
 
 	default String mapStore(StoreItem value) {

@@ -47,7 +47,9 @@ public class AuthenticationController {
 		return userRepository.findByUsername(ar.getName()).map((userDetails) -> {
 			if (passwordEncoder.encode(ar.getPassword()).equals(userDetails.getPassword())) {
 				var generateToken = jwtUtil.generateToken(userDetails);
-				return ResponseEntity.ok().headers(generateCookieHeader(generateToken, request)).body(new AuthResponse(generateToken));
+				return ResponseEntity.ok()
+						.headers(generateCookieHeader(generateToken, request))
+						.body(new AuthResponse(generateToken));
 			} else {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			}
