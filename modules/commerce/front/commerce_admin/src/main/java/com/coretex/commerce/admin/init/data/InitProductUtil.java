@@ -7,6 +7,7 @@ import com.coretex.items.cx_core.ProductAvailabilityItem;
 import com.coretex.items.cx_core.ProductImageItem;
 import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.cx_core.ProductPriceItem;
+import com.coretex.items.cx_core.SizeVariantProductItem;
 import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.StyleDescriptionItem;
 import com.coretex.items.cx_core.StyleVariantProductItem;
@@ -158,7 +159,7 @@ public class InitProductUtil {
 	}
 
 	public VariantProductItem creteSizeVariant(int index, StoreItem store, String codePrefix) {
-		var product = new StyleVariantProductItem();
+		var product = new SizeVariantProductItem();
 		product.setCode(codePrefix + "-s00" + index);
 
 		product.setName("Test size variant product name en #" + index, Locale.ENGLISH);
@@ -180,6 +181,7 @@ public class InitProductUtil {
 				" Вперше цей текст був застосований для набору шрифтових зразків невідомим друкарем у XVI столітті. #" + index, LocaleUtils.toLocale("ua"));
 		product.setStore(store);
 		product.setAvailable(true);
+		product.setSize("Size #"+index+10);
 
 		// Availability
 		ProductAvailabilityItem availability = new ProductAvailabilityItem();

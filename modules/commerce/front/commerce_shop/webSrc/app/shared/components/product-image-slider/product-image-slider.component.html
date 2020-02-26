@@ -1,0 +1,67 @@
+<div class="row row-5">
+    <div class="col-md-9 order-1 order-md-2">
+        <div class="big-image-wrapper">
+
+            <div class="enlarge-icon">
+                <a class="btn-zoom-popup" href="javascript:void(0)"
+                   data-tippy="Click to enlarge" data-tippy-placement="left"
+                   data-tippy-inertia="true" data-tippy-animation="shift-away"
+                   data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder"><i
+                        class="pe-7s-expand1"></i></a>
+            </div>
+            <app-slick-slider
+                    [styleClasses]="'product-details-big-image-slider-wrapper product-details-big-image-slider-wrapper--side-space theme-slick-slider'"
+                    [slidesToShow]="1"
+                    [slidesToScroll]="1"
+                    [arrows]="false"
+                    [autoplay]="false"
+                    [autoplaySpeed]="5000"
+                    [fade]="true"
+                    [speed]="500"
+                    [prevArrow]="{buttonClass: 'slick-prev', iconClass: 'fa fa-angle-left' }"
+                    [nextArrow]="{buttonClass: 'slick-next', iconClass: 'fa fa-angle-right' }"
+                    [slick_responsive]="[
+                                                            {breakpoint:1501, settings: {slidesToShow: 1, arrows: false} },
+                                                            {breakpoint:1199, settings: {slidesToShow: 1, arrows: false} },
+                                                            {breakpoint:991, settings: {slidesToShow: 1, arrows: false, slidesToScroll: 1} },
+                                                            {breakpoint:767, settings: {slidesToShow: 1, arrows: false, slidesToScroll: 1} },
+                                                            {breakpoint:575, settings: {slidesToShow: 1, arrows: false, slidesToScroll: 1} },
+                                                            {breakpoint:479, settings: {slidesToShow: 1, arrows: false, slidesToScroll: 1} }
+                                                        ]">
+                <div *ngFor="let img of productStyleVariant.images" class="single-image">
+                    <img src="/v1{{img.path}}" class="img-fluid" [alt]="img.alt">
+                </div>
+            </app-slick-slider>
+        </div>
+    </div>
+
+    <div class="col-md-3 order-2 order-md-1">
+        <app-slick-slider
+                [styleClasses]="'product-details-small-image-slider-wrapper  product-details-small-image-slider-wrapper--vertical-space theme-slick-slider'"
+                [slidesToShow]="3"
+                [slidesToScroll]="1"
+                [centerMode]="false"
+                [arrows]="true"
+                [vertical]="true"
+                [autoplay]="false"
+                [autoplaySpeed]="5000"
+                [speed]="500"
+                [asNavFor]="'.product-details-big-image-slider-wrapper'"
+                [focusOnSelect]="true"
+                [prevArrow]="{buttonClass: 'slick-prev', iconClass: 'fa fa-angle-up' }"
+                [nextArrow]="{buttonClass: 'slick-next', iconClass: 'fa fa-angle-down' }"
+                [slick_responsive]='[
+                                                        {breakpoint:1501, settings: {slidesToShow: 3, arrows: true} },
+                                                        {breakpoint:1199, settings: {slidesToShow: 3, arrows: true} },
+                                                        {breakpoint:991, settings: {slidesToShow: 3, arrows: true, slidesToScroll: 1} },
+                                                        {breakpoint:767, settings: {slidesToShow: 3, arrows: false, slidesToScroll: 1, vertical: false, centerMode: true} },
+                                                        {breakpoint:575, settings: {slidesToShow: 3, arrows: false, slidesToScroll: 1, vertical: false, centerMode: true} },
+                                                        {breakpoint:479, settings: {slidesToShow: 2, arrows: false, slidesToScroll: 1, vertical: false, centerMode: true} }
+                                                    ]'>
+            <div *ngFor="let img of productStyleVariant.images" class="single-image">
+                <img src="/v1{{img.path}}" class="img-fluid" [alt]="img.alt">
+            </div>
+
+        </app-slick-slider>
+    </div>
+</div>

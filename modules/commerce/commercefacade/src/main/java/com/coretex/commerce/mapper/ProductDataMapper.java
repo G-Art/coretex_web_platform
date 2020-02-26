@@ -3,7 +3,6 @@ package com.coretex.commerce.mapper;
 import com.coretex.commerce.data.ImageData;
 import com.coretex.commerce.data.ProductData;
 import com.coretex.items.cx_core.ProductItem;
-import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.VariantProductItem;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
@@ -15,7 +14,9 @@ import org.mapstruct.Mappings;
 
 import static com.coretex.commerce.core.utils.ProductUtils.buildProductSmallImageUtils;
 
-@Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
+@Mapper(componentModel = "spring", uses = {
+		ReferenceMapper.class,
+		VariantProductDataMapper.class})
 public interface ProductDataMapper extends GenericDataMapper<ProductItem, ProductData>{
 
 	@Override
@@ -48,7 +49,4 @@ public interface ProductDataMapper extends GenericDataMapper<ProductItem, Produc
 		return images.toArray(new ImageData[0]);
 	}
 
-	default String mapStore(StoreItem value) {
-		return value.getName();
-	}
 }

@@ -16,6 +16,9 @@ import { SubmenuComponent } from './navigation-menu/submenu/submenu.component';
 import { ProductQuickViewComponent } from './product-quick-view/product-quick-view.component';
 import { MiniCartComponent } from './mini-cart/mini-cart.component';
 import { WishlistComponent } from './wishlist/wishlist.component';
+import {DirectivesModule} from "../directives/directives.module";
+import { SlickSliderComponent } from './slick-slider/slick-slider.component';
+import { ProductImageSliderComponent } from './product-image-slider/product-image-slider.component';
 
 
 @NgModule({
@@ -32,9 +35,12 @@ import { WishlistComponent } from './wishlist/wishlist.component';
         SubmenuComponent,
         ProductQuickViewComponent,
         MiniCartComponent,
-        WishlistComponent
+        WishlistComponent,
+        SlickSliderComponent,
+        ProductImageSliderComponent
     ],
     imports: [
+        DirectivesModule,
         RoutingModule,
         FragmentsModule,
         ReactiveFormsModule,
@@ -49,7 +55,12 @@ import { WishlistComponent } from './wishlist/wishlist.component';
         ProductGridComponent,
         ProductCollectionItemComponent,
         NavigationMenuComponent,
-        ProductQuickViewComponent
+        ProductQuickViewComponent,
+        SlickSliderComponent,
+        ProductImageSliderComponent
+    ],
+    entryComponents: [
+        ProductImageSliderComponent
     ]
 
 })

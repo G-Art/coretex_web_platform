@@ -28,7 +28,7 @@
 <div class="page-content-wrapper">
     <!--=======  single product slider details area  =======-->
 
-    <div class="single-product-slider-details-area">
+    <div class="single-product-slider-details-area" >
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
@@ -36,140 +36,53 @@
 
                     <div class="product-details-slider-area product-details-slider-area--side-move">
 
-                        <div class="product-badge-wrapper">
-                            <span class="hot">Hot</span>
+                        <div class="product-badge-wrapper" *ngIf="productDetailVariant">
+                            <span *ngIf="productDetailVariant.discountBadgeInfo"
+                                  class="onsale">{{productDetailVariant.discountBadgeInfo}}</span>
+                            <span *ngIf="productDetailVariant.hotBadge" class="hot">Hot</span>
                         </div>
 
-                        <div class="row row-5">
-                            <div class="col-md-9 order-1 order-md-2">
-                                <div class="big-image-wrapper">
-                                    <div class="enlarge-icon">
-                                        <a class="btn-zoom-popup" href="javascript:void(0)"
-                                           data-tippy="Click to enlarge" data-tippy-placement="left"
-                                           data-tippy-inertia="true" data-tippy-animation="shift-away"
-                                           data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder"><i
-                                                class="pe-7s-expand1"></i></a>
-                                    </div>
-                                    <div class="product-details-big-image-slider-wrapper product-details-big-image-slider-wrapper--side-space theme-slick-slider"
-                                         data-slick-setting='{
-                    "slidesToShow": 1,
-                    "slidesToScroll": 1,
-                    "arrows": false,
-                    "autoplay": false,
-                    "autoplaySpeed": 5000,
-                    "fade": true,
-                    "speed": 500,
-                    "prevArrow": {"buttonClass": "slick-prev", "iconClass": "fa fa-angle-left" },
-                    "nextArrow": {"buttonClass": "slick-next", "iconClass": "fa fa-angle-right" }
-                }' data-slick-responsive='[
-                    {"breakpoint":1501, "settings": {"slidesToShow": 1, "arrows": false} },
-                    {"breakpoint":1199, "settings": {"slidesToShow": 1, "arrows": false} },
-                    {"breakpoint":991, "settings": {"slidesToShow": 1, "arrows": false, "slidesToScroll": 1} },
-                    {"breakpoint":767, "settings": {"slidesToShow": 1, "arrows": false, "slidesToScroll": 1} },
-                    {"breakpoint":575, "settings": {"slidesToShow": 1, "arrows": false, "slidesToScroll": 1} },
-                    {"breakpoint":479, "settings": {"slidesToShow": 1, "arrows": false, "slidesToScroll": 1} }
-                ]'>
-                                        <div class="single-image">
-                                            <img src="/app/assets/img/products/big1-1.jpg" class="img-fluid" alt="">
-                                        </div>
-                                        <div class="single-image">
-                                            <img src="/app/assets/img/products/big1-2.jpg" class="img-fluid" alt="">
-                                        </div>
-                                        <div class="single-image">
-                                            <img src="/app/assets/img/products/big1-3.jpg" class="img-fluid" alt="">
-                                        </div>
-                                        <div class="single-image">
-                                            <img src="/app/assets/img/products/big1-4.jpg" class="img-fluid" alt="">
-                                        </div>
-                                        <div class="single-image">
-                                            <img src="/app/assets/img/products/big1-5.jpg" class="img-fluid" alt="">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3 order-2 order-md-1">
-                                <div class="product-details-small-image-slider-wrapper product-details-small-image-slider-wrapper--vertical-space theme-slick-slider"
-                                     data-slick-setting='{
-                "slidesToShow": 3,
-                "slidesToScroll": 1,
-                "centerMode": false,
-                "arrows": true,
-                "vertical": true,
-                "autoplay": false,
-                "autoplaySpeed": 5000,
-                "speed": 500,
-                "asNavFor": ".product-details-big-image-slider-wrapper",
-                "focusOnSelect": true,
-                "prevArrow": {"buttonClass": "slick-prev", "iconClass": "fa fa-angle-up" },
-                "nextArrow": {"buttonClass": "slick-next", "iconClass": "fa fa-angle-down" }
-            }' data-slick-responsive='[
-                {"breakpoint":1501, "settings": {"slidesToShow": 3, "arrows": true} },
-                {"breakpoint":1199, "settings": {"slidesToShow": 3, "arrows": true} },
-                {"breakpoint":991, "settings": {"slidesToShow": 3, "arrows": true, "slidesToScroll": 1} },
-                {"breakpoint":767, "settings": {"slidesToShow": 3, "arrows": false, "slidesToScroll": 1, "vertical": false, "centerMode": true} },
-                {"breakpoint":575, "settings": {"slidesToShow": 3, "arrows": false, "slidesToScroll": 1, "vertical": false, "centerMode": true} },
-                {"breakpoint":479, "settings": {"slidesToShow": 2, "arrows": false, "slidesToScroll": 1, "vertical": false, "centerMode": true} }
-            ]'>
-                                    <div class="single-image">
-                                        <img src="/app/assets/img/products/big1-1.jpg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="single-image">
-                                        <img src="/app/assets/img/products/big1-2.jpg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="single-image">
-                                        <img src="/app/assets/img/products/big1-3.jpg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="single-image">
-                                        <img src="/app/assets/img/products/big1-4.jpg" class="img-fluid" alt="">
-                                    </div>
-                                    <div class="single-image">
-                                        <img src="/app/assets/img/products/big1-5.jpg" class="img-fluid" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        <ng-template #imageContainer></ng-template>
 
                     </div>
 
                     <!--=======  End of product details slider area  =======-->
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6" *ngIf="productDetailVariant">
                     <!--=======  product details description area  =======-->
 
                     <div class="product-details-description-wrapper">
                         <h2 class="item-title">{{productDetail.name}}</h2>
-                        <p class="price">
-                            <span class="main-price discounted">$360.00</span>
-                            <span class="discounted-price">$300.00</span>
+                        <p class="price" *ngIf="productDetailVariant">
+                            <span class="main-price"
+                                  [ngClass]="{'discounted' : productDetailVariant.priceDiscount}">{{productDetailVariant.price}}</span>
+                            <span *ngIf="productDetailVariant.priceDiscount"
+                                  class="discounted-price">{{productDetailVariant.priceDiscount}}</span>
                         </p>
 
                         <p class="description">{{productDetail.description}}</p>
 
-                        <div class="product-color">
+                        <div class="product-color" *ngIf="productDetailVariant">
                             <span class="product-details-title">COLOR: </span>
                             <ul>
-                                <li><a class="active" href="#" data-tippy="Black" data-tippy-inertia="true"
-                                       data-tippy-animation="shift-away" data-tippy-delay="50" data-tippy-arrow="true"
-                                       data-tippy-theme="roundborder"><span class="color-picker black"></span></a></li>
-                                <li><a href="#" data-tippy="Blue" data-tippy-inertia="true"
-                                       data-tippy-animation="shift-away" data-tippy-delay="50" data-tippy-arrow="true"
-                                       data-tippy-theme="roundborder"><span class="color-picker blue"></span></a></li>
-                                <li><a href="#" data-tippy="Brown" data-tippy-inertia="true"
-                                       data-tippy-animation="shift-away" data-tippy-delay="50" data-tippy-arrow="true"
-                                       data-tippy-theme="roundborder"><span class="color-picker brown"></span></a></li>
+                                <li *ngFor="let color of productDetail.variants">
+                                    <a [class.active]="color.uuid === productStyleVariant.uuid"
+                                       href="javascript:void(0);"
+                                       (click)="changeColorVariant(color)">
+                                        <span [style.background-color]="color.colorCssCode ? color.colorCssCode : '#a9a9a9'"
+                                              class="color-picker">
+                                        </span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
 
-                        <div class="product-size">
+                        <div class="product-size" *ngIf="productStyleVariant">
                             <span class="product-details-title">SIZE: </span>
-                            <select class="nice-select">
-                                <option value="0">Choose size</option>
-                                <option value="1">S</option>
-                                <option value="2">L</option>
-                                <option value="3">XL</option>
-                                <option value="4">XXL</option>
+                            <select class="nice-select" #select (change)='changeSizeVariant(select.value)'>
+                                <option *ngFor="let size of productStyleVariant.variants"
+                                        [selected]="size.uuid == productDetailVariant.uuid"
+                                        [value]="size.code">{{size.size}}</option>
                             </select>
 
                         </div>
@@ -262,7 +175,7 @@
         <!--=======  description tab content  =======-->
 
 
-        <div class="single-product-description-tab-content">
+        <div class="single-product-description-tab-content" *ngIf="productDetail">
 
             <div class="tab-content">
 
@@ -274,14 +187,7 @@
                                 <!--=======  description content  =======-->
 
                                 <div class="description-content">
-                                    <p class="long-desc">Inspired by the simplistic style of traditional Scandinavian
-                                        design, this cone shaped ceiling pendant adds an understated elegance to any
-                                        interior design scheme.
-                                        Strung on a 3m coloured cord, this simple yet stylish ceiling light can be hung
-                                        above your breakfast bar or dining table to enhance your surroundings.
-                                        A modern interpretation of a classic pendant light, Annular is available in a
-                                        choice of muted colourways and will look wonderful hung alone, or as a cluster
-                                        for greater visual impact.</p>
+                                    <p class="long-desc">{{productDetail.description}}</p>
 
                                     <p><b>Light source: Integrated LED (non-replaceable) with 30,000 hour life span.</b>
                                     </p>
@@ -497,25 +403,24 @@
             <div class="row">
                 <div class="col-lg-12">
                     <!--=======  product slider wrapper  =======-->
-
-                    <div class="product-slider-wrapper theme-slick-slider" data-slick-setting='{
-                        "slidesToShow": 4,
-                        "slidesToScroll": 4,
-                        "arrows": true,
-                        "dots": true,
-                        "autoplay": false,
-                        "speed": 500,
-                        "prevArrow": {"buttonClass": "slick-prev", "iconClass": "fa fa-angle-left" },
-                        "nextArrow": {"buttonClass": "slick-next", "iconClass": "fa fa-angle-right" }
-                    }' data-slick-responsive='[
-                        {"breakpoint":1501, "settings": {"slidesToShow": 4, "slidesToScroll": 4, "arrows": false} },
-                        {"breakpoint":1199, "settings": {"slidesToShow": 3, "slidesToScroll": 3, "arrows": false} },
-                        {"breakpoint":991, "settings": {"slidesToShow": 2,"slidesToScroll": 2, "arrows": true, "dots": false} },
-                        {"breakpoint":767, "settings": {"slidesToShow": 2,"slidesToScroll": 2,  "arrows": true, "dots": false} },
-                        {"breakpoint":575, "settings": {"slidesToShow": 2, "slidesToScroll": 2,"arrows": false, "dots": true} },
-                        {"breakpoint":479, "settings": {"slidesToShow": 1,"slidesToScroll": 1, "arrows": true, "dots": false} }
-                    ]'>
-
+                    <app-slick-slider
+                            [styleClasses]="'product-slider-wrapper theme-slick-slider'"
+                            [slidesToShow]='4'
+                            [slidesToScroll]='4'
+                            [arrows]='true'
+                            [dots]='true'
+                            [autoplay]='false'
+                            [speed]='500'
+                            [prevArrow]='{buttonClass: "slick-prev", iconClass: "fa fa-angle-left" }'
+                            [nextArrow]='{buttonClass: "slick-next", iconClass: "fa fa-angle-right" }'
+                            [slick_responsive]='[
+                                            {breakpoint:1501, settings: {slidesToShow: 4, slidesToScroll: 4, arrows: false} },
+                                            {breakpoint:1199, settings: {slidesToShow: 3, slidesToScroll: 3, arrows: false} },
+                                            {breakpoint:991, settings: {slidesToShow: 2,slidesToScroll: 2, arrows: true, dots: false} },
+                                            {breakpoint:767, settings: {slidesToShow: 2,slidesToScroll: 2, arrows: true, dots: false} },
+                                            {breakpoint:575, settings: {slidesToShow: 2,slidesToScroll: 2, arrows: false, dots: true} },
+                                            {breakpoint:479, settings: {slidesToShow: 1,slidesToScroll: 1, arrows: true, dots: false} }
+                                        ]'>
                         <div class="col">
                             <!--=======  single short view product  =======-->
 
@@ -1083,8 +988,8 @@
 
                             <!--=======  End of single short view product  =======-->
                         </div>
+                    </app-slick-slider>
 
-                    </div>
 
                     <!--=======  End of product slider wrapper  =======-->
                 </div>

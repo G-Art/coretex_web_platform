@@ -15,6 +15,7 @@ import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 import { LoginComponent } from './shared/components/login/login.component';
 import {ComponentsModule} from "./shared/components/components.module";
+import {DirectivesModule} from "./shared/directives/directives.module";
 
 @NgModule({
     declarations: [
@@ -35,7 +36,8 @@ import {ComponentsModule} from "./shared/components/components.module";
                 deps: [HttpClient]
             }
         }),
-        ComponentsModule
+        ComponentsModule,
+        DirectivesModule
     ],
     providers: [],
     exports: [

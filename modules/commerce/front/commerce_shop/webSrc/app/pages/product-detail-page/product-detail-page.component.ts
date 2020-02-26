@@ -1,7 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
 import {ProductService} from "../../core/service/product.service";
 import {ProductDetailData} from "../../core/data/product-detail.data";
+import {ProductVariantData} from "../../core/data/product-variant.data";
+import {Location} from "@angular/common";
+import {ProductImageSliderComponent} from "../../shared/components/product-image-slider/product-image-slider.component";
 
 declare var $: any;
 
@@ -12,109 +15,84 @@ declare var $: any;
 })
 export class ProductDetailPageComponent implements OnInit {
 
+    @ViewChild("imageContainer", {static: true, read: ViewContainerRef}) imageContainer: ViewContainerRef;
+
     productDetail: ProductDetailData;
 
+    productDetailVariant: ProductVariantData;
+
+    productStyleVariant: ProductVariantData;
+
     constructor(private activatedRoute: ActivatedRoute,
-                private productService: ProductService) {
+                private productService: ProductService,
+                private router: Router,
+                private location: Location,
+                private componentFactoryResolver: ComponentFactoryResolver) {
     }
 
     ngOnInit() {
-        this.init();
-
         this.activatedRoute.params.subscribe(routeParams => {
             this.productService.getProductDetail(routeParams.code)
-                .subscribe(data => this.productDetail = data);
-        })
+                .subscribe(data => {
+                    this.productDetail = data;
+                    let variants = this.productDetail.variants;
+                    if (routeParams.vcode) {
+                        this.defineVariants(variants, routeParams.vcode);
+                        this.createInitImageViewContainer(this.productStyleVariant);
+                    } else {
+                        this.defineVariants(variants, null);
+                        this.location.replaceState(`/product/${this.productDetail.code}/v/${this.productDetailVariant.code}`);
+                    }
 
+                });
+        });
     }
 
-    private init() {
-        /*=============================================
-=            slick slider active            =
-=============================================*/
-        let $html = $('html');
-        let $body = $('body');
-        let $themeSlickSlider = $('.theme-slick-slider');
-
-        /*For RTL*/
-        if ($html.attr("dir") == "rtl" || $body.attr("dir") == "rtl") {
-            $themeSlickSlider.attr("dir", "rtl");
-        }
-
-        $themeSlickSlider.each(function () {
-
-            /*Setting Variables*/
-            var $this = $(this),
-                $setting = $this.data('slick-setting'),
-                $autoPlay = $setting.autoplay ? $setting.autoplay : false,
-                $autoPlaySpeed = parseInt($setting.autoplaySpeed, 10) || 2000,
-                $speed = parseInt($setting.speed, 10) || 2000,
-                $asNavFor = $setting.asNavFor ? $setting.asNavFor : null,
-                $appendArrows = $setting.appendArrows ? $setting.appendArrows : $this,
-                $appendDots = $setting.appendDots ? $setting.appendDots : $this,
-                $arrows = $setting.arrows ? $setting.arrows : false,
-                $prevArrow = $setting.prevArrow ? '<button class="' + $setting.prevArrow.buttonClass + '"><i class="' + $setting.prevArrow.iconClass + '"></i></button>' : '<button class="slick-prev">previous</button>',
-                $nextArrow = $setting.nextArrow ? '<button class="' + $setting.nextArrow.buttonClass + '"><i class="' + $setting.nextArrow.iconClass + '"></i></button>' : '<button class="slick-next">next</button>',
-                $centerMode = $setting.centerMode ? $setting.centerMode : false,
-                $centerPadding = $setting.centerPadding ? $setting.centerPadding : '50px',
-                $dots = $setting.dots ? $setting.dots : false,
-                $fade = $setting.fade ? $setting.fade : false,
-                $focusOnSelect = $setting.focusOnSelect ? $setting.focusOnSelect : false,
-                $infinite = $setting.infinite ? $setting.infinite : true,
-                $pauseOnHover = $setting.pauseOnHover ? $setting.pauseOnHover : true,
-                $rows = parseInt($setting.rows, 10) || 1,
-                $slidesToShow = parseInt($setting.slidesToShow, 10) || 1,
-                $slidesToScroll = parseInt($setting.slidesToScroll, 10) || 1,
-                $swipe = $setting.swipe ? $setting.swipe : true,
-                $swipeToSlide = $setting.swipeToSlide ? $setting.swipeToSlide : false,
-                $variableWidth = $setting.variableWidth ? $setting.variableWidth : false,
-                $vertical = $setting.vertical ? $setting.vertical : false,
-                $verticalSwiping = $setting.verticalSwiping ? $setting.verticalSwiping : false,
-                $rtl = $setting.rtl || $html.attr('dir="rtl"') || $body.attr('dir="rtl"') ? true : false;
-
-            /*Responsive Variable, Array & Loops*/
-            var $responsiveSetting = typeof $this.data('slick-responsive') !== 'undefined' ? $this.data('slick-responsive') : '',
-                $responsiveSettingLength = $responsiveSetting.length,
-                $responsiveArray = [];
-            for (var i = 0; i < $responsiveSettingLength; i++) {
-                $responsiveArray[i] = $responsiveSetting[i];
-
+    private defineVariants(variants: ProductVariantData[], vcode: string) {
+        if (variants.length > 0) {
+            if (!vcode) {
+                this.productStyleVariant = variants[0];
+                this.productDetailVariant = this.productStyleVariant.variants.length > 0 ? this.productStyleVariant.variants[0] : variants[0];
             }
 
-            /*Slider Start*/
-            $this.slick({
-                autoplay: $autoPlay,
-                autoplaySpeed: $autoPlaySpeed,
-                speed: $speed,
-                asNavFor: $asNavFor,
-                appendArrows: $appendArrows,
-                appendDots: $appendDots,
-                arrows: $arrows,
-                dots: $dots,
-                centerMode: $centerMode,
-                centerPadding: $centerPadding,
-                fade: $fade,
-                focusOnSelect: $focusOnSelect,
-                infinite: $infinite,
-                pauseOnHover: $pauseOnHover,
-                rows: $rows,
-                slidesToShow: $slidesToShow,
-                slidesToScroll: $slidesToScroll,
-                swipe: $swipe,
-                swipeToSlide: $swipeToSlide,
-                variableWidth: $variableWidth,
-                vertical: $vertical,
-                verticalSwiping: $verticalSwiping,
-                rtl: $rtl,
-                prevArrow: $prevArrow,
-                nextArrow: $nextArrow,
-                responsive: $responsiveArray
-            });
+            for (let v of variants) {
+                if (v.code == vcode) {
+                    this.productStyleVariant = v;
+                    this.productDetailVariant = v;
+                } else if (v.variants.length > 0) {
+                    let size = v.variants.find(v => v.code == vcode);
+                    if(size){
+                        this.productStyleVariant = v;
+                        this.productDetailVariant = size;
+                    }
+                }
+            }
+        }
+    }
 
-        });
+    changeColorVariant(colorVariant: ProductVariantData) {
+        this.productStyleVariant = colorVariant;
+        this.productDetailVariant = this.productStyleVariant.variants.length > 0 ? this.productStyleVariant.variants[0] : colorVariant;
+        this.location.replaceState(`/product/${this.productDetail.code}/v/${this.productDetailVariant.code}`);
+        this.createInitImageViewContainer(this.productStyleVariant);
+    }
 
+    changeSizeVariant(sizeCode: string) {
+        this.productDetailVariant = this.productStyleVariant.variants.find(value => value.code == sizeCode);
+        this.location.replaceState(`/product/${this.productDetail.code}/v/${this.productDetailVariant.code}`);
+    }
 
-        /*=====  End of slick slider active  ======*/
+    createInitImageViewContainer(style: ProductVariantData){
+        this.imageContainer.clear();
+        let componentFactory = this.componentFactoryResolver.resolveComponentFactory(ProductImageSliderComponent);
+        let productImageSliderComponentComponentRef = this.imageContainer.createComponent(componentFactory);
+        productImageSliderComponentComponentRef.instance.productStyleVariant = style;
+    }
+
+    ngAfterViewInit() {
+        this.init();
+    }
+    private init() {
 
         /*=============================================
         =            quantity counter            =
@@ -141,48 +119,8 @@ export class ProductDetailPageComponent implements OnInit {
 
         /*=====  End of quantity counter  ======*/
 
-        /*=============================================
-        =            zoom and light gallery active            =
-        =============================================*/
 
-        $('.product-details-big-image-slider-wrapper .single-image').zoom();
-
-        //lightgallery
-        var productThumb = $(".product-details-big-image-slider-wrapper .single-image img"),
-            imageSrcLength = productThumb.length,
-            images = [];
-        for (var i = 0; i < imageSrcLength; i++) {
-            images[i] = {"src": productThumb[i].src};
-        }
-
-        $('.btn-zoom-popup').on('click', function () {
-            $(this).lightGallery({
-                thumbnail: false,
-                dynamic: true,
-                autoplayControls: false,
-                download: false,
-                actualSize: false,
-                share: false,
-                hash: false,
-                index: 0,
-                dynamicEl: images
-            });
-        });
-
-        /*=====  End of zoom active  ======*/
-
-
-        /*=============================================
-        =            sidevar sticky active            =
-        =============================================*/
-
-        $('.sidebar-sticky').stickySidebar({
-            topSpacing: 90,
-            bottomSpacing: -90,
-            minWidth: 768
-        });
-
-        /*=====  End of sidevar sticky active  ======*/
     }
+
 
 }

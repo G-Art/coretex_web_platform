@@ -11,6 +11,7 @@ import {HomePageComponent} from "./home-page/home-page.component";
 import {ComponentsModule} from "../shared/components/components.module";
 import { ProductListPageComponent } from './product-list-page/product-list-page.component';
 import { ProductDetailPageComponent } from './product-detail-page/product-detail-page.component';
+import {DirectivesModule} from "../shared/directives/directives.module";
 
 @NgModule({
     declarations: [
@@ -27,7 +28,8 @@ import { ProductDetailPageComponent } from './product-detail-page/product-detail
         RoutingModule,
         HttpClientModule,
         CoreModule,
-        ComponentsModule
+        ComponentsModule,
+        DirectivesModule
     ],
     exports: [
         FragmentsModule

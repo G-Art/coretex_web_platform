@@ -32,6 +32,10 @@ const routes: Routes = [
                 component: ProductDetailPageComponent
             },
             {
+                path: 'product/:code/v/:vcode',
+                component: ProductDetailPageComponent
+            },
+            {
                 path: 'search',
                 component: ProductListPageComponent,
                 runGuardsAndResolvers: 'pathParamsOrQueryParamsChange',

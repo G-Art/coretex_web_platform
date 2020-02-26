@@ -1,5 +1,7 @@
 package com.coretex.commerce.data;
 
+import java.util.List;
+
 public class ProductData extends GenericItemData {
 
 	private String code;
@@ -8,6 +10,9 @@ public class ProductData extends GenericItemData {
 	private Boolean available;
 	private String store;
 	private ImageData[] images;
+	private String priceDiscount;
+	private String price;
+	private List<VariantProductData> variants;
 
 	public String getCode() {
 		return code;
@@ -55,5 +60,29 @@ public class ProductData extends GenericItemData {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getPriceDiscount() {
+		return priceDiscount;
+	}
+
+	public void setPriceDiscount(String priceDiscount) {
+		this.priceDiscount = priceDiscount;
+	}
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
+
+	public List<VariantProductData> getVariants() {
+		return variants;
+	}
+
+	public void setVariants(List<VariantProductData> variants) {
+		this.variants = variants;
 	}
 }
