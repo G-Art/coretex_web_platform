@@ -17,8 +17,6 @@ export class ProductImageSliderComponent implements OnInit {
 
   ngOnInit() {
 
-
-
   }
 
   ngAfterViewInit() {

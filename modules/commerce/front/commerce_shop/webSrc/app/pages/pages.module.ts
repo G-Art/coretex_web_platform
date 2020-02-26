@@ -12,6 +12,7 @@ import {ComponentsModule} from "../shared/components/components.module";
 import { ProductListPageComponent } from './product-list-page/product-list-page.component';
 import { ProductDetailPageComponent } from './product-detail-page/product-detail-page.component';
 import {DirectivesModule} from "../shared/directives/directives.module";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
     declarations: [
@@ -29,7 +30,8 @@ import {DirectivesModule} from "../shared/directives/directives.module";
         HttpClientModule,
         CoreModule,
         ComponentsModule,
-        DirectivesModule
+        DirectivesModule,
+        FormsModule
     ],
     exports: [
         FragmentsModule

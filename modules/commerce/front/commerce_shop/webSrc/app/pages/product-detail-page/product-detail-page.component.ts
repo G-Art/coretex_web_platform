@@ -1,10 +1,11 @@
-import {Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef, NgModule} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {ProductService} from "../../core/service/product.service";
 import {ProductDetailData} from "../../core/data/product-detail.data";
 import {ProductVariantData} from "../../core/data/product-variant.data";
 import {Location} from "@angular/common";
 import {ProductImageSliderComponent} from "../../shared/components/product-image-slider/product-image-slider.component";
+import {CartService} from "../../core/service/cart.service";
 
 declare var $: any;
 
@@ -17,6 +18,10 @@ export class ProductDetailPageComponent implements OnInit {
 
     @ViewChild("imageContainer", {static: true, read: ViewContainerRef}) imageContainer: ViewContainerRef;
 
+    private atcClicked: boolean = false;
+
+    qty = 1;
+
     productDetail: ProductDetailData;
 
     productDetailVariant: ProductVariantData;
@@ -27,7 +32,8 @@ export class ProductDetailPageComponent implements OnInit {
                 private productService: ProductService,
                 private router: Router,
                 private location: Location,
-                private componentFactoryResolver: ComponentFactoryResolver) {
+                private componentFactoryResolver: ComponentFactoryResolver,
+                private cartService: CartService) {
     }
 
     ngOnInit() {
@@ -42,6 +48,13 @@ export class ProductDetailPageComponent implements OnInit {
                     } else {
                         this.defineVariants(variants, null);
                         this.location.replaceState(`/product/${this.productDetail.code}/v/${this.productDetailVariant.code}`);
+                        this.createInitImageViewContainer(this.productStyleVariant);
+                    }
+
+                    if(!this.productStyleVariant){
+                        this.defineVariants(variants, null);
+                        this.location.replaceState(`/product/${this.productDetail.code}/v/${this.productDetailVariant.code}`);
+                        this.createInitImageViewContainer(this.productStyleVariant);
                     }
 
                 });
@@ -89,38 +102,12 @@ export class ProductDetailPageComponent implements OnInit {
         productImageSliderComponentComponentRef.instance.productStyleVariant = style;
     }
 
-    ngAfterViewInit() {
-        this.init();
+    addToCart() {
+        if (!this.atcClicked) {
+            this.atcClicked = true;
+                this.cartService.addToCart(this.productDetailVariant, this.qty);
+            this.atcClicked = false;
+        }
     }
-    private init() {
-
-        /*=============================================
-        =            quantity counter            =
-        =============================================*/
-
-        $('.pro-qty').append('<a href="#" class="inc qty-btn"><i class="pe-7s-plus"></i></a>');
-        $('.pro-qty').prepend('<a href="#" class= "dec qty-btn"><i class="pe-7s-less"></i></a>');
-        $('.qty-btn').on('click', function (e) {
-            e.preventDefault();
-            var $button = $(this);
-            var oldValue = $button.parent().find('input').val();
-            if ($button.hasClass('inc')) {
-                var newVal = parseFloat(oldValue) + 1;
-            } else {
-                // Don't allow decrementing below zero
-                if (oldValue > 0) {
-                    var newVal = parseFloat(oldValue) - 1;
-                } else {
-                    newVal = 0;
-                }
-            }
-            $button.parent().find('input').val(newVal);
-        });
-
-        /*=====  End of quantity counter  ======*/
-
-
-    }
-
 
 }
