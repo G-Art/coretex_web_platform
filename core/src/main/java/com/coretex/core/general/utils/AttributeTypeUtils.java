@@ -1,10 +1,13 @@
 package com.coretex.core.general.utils;
 
-import com.coretex.items.core.*;
+import com.coretex.items.core.MetaAttributeTypeItem;
+import com.coretex.items.core.MetaEnumTypeItem;
+import com.coretex.items.core.MetaRelationTypeItem;
+import com.coretex.items.core.MetaTypeItem;
+import com.coretex.items.core.RegularTypeItem;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.equalsAny;
@@ -70,6 +73,9 @@ public class AttributeTypeUtils {
         return nonNull(attribute.getContainerType()) && Collection.class.isAssignableFrom(attribute.getContainerType());
     }
 
+    public static boolean isItemAttribute(MetaAttributeTypeItem attribute) {
+        return MetaTypeItem.ITEM_TYPE.equals(attribute.getAttributeTypeCode());
+    }
     public static boolean isRelationAttribute(MetaAttributeTypeItem attribute) {
         return MetaRelationTypeItem.ITEM_TYPE.equals(attribute.getAttributeTypeCode());
     }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <bean id="abstractLoadAttributeValueStrategy" abstract="true"
+          class="com.coretex.core.services.items.context.provider.strategies.AbstractLoadAttributeValueStrategy">
+        <constructor-arg index="0" ref="selectQueryTransformationProcessor"/>
+        <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
+        <lookup-method name="getRowMapperFactory" bean="rowMapperFactory"/>
+    </bean>
+
+    <bean id="generalRegularAttributeLoadValueStrategy" parent="abstractLoadAttributeValueStrategy"
+          class="com.coretex.core.services.items.context.provider.strategies.impl.GeneralRegularAttributeLoadValueStrategy">
+        <property name="localizedRegularAttributeLoadValueStrategy" ref="localizedRegularAttributeLoadValueStrategy"/>
+        <property name="regularAttributeLoadValueStrategy" ref="regularAttributeLoadValueStrategy"/>
+    </bean>
+
+    <bean id="localizedRegularAttributeLoadValueStrategy" parent="abstractLoadAttributeValueStrategy"
+          class="com.coretex.core.services.items.context.provider.strategies.impl.LocalizedRegularAttributeLoadValueStrategy"/>
+    <bean id="regularAttributeLoadValueStrategy" parent="abstractLoadAttributeValueStrategy"
+          class="com.coretex.core.services.items.context.provider.strategies.impl.RegularAttributeLoadValueStrategy"/>
+
+
+    <bean id="itemAttributeLoadValueStrategy" parent="abstractLoadAttributeValueStrategy"
+          class="com.coretex.core.services.items.context.provider.strategies.impl.ItemAttributeLoadValueStrategy"/>
+
+    <bean id="relationAttributeLoadValueStrategy" parent="abstractLoadAttributeValueStrategy"
+          class="com.coretex.core.services.items.context.provider.strategies.impl.RelationAttributeLoadValueStrategy"/>
+
+    <bean id="enumAttributeLoadValueStrategy" parent="abstractLoadAttributeValueStrategy"
+          class="com.coretex.core.services.items.context.provider.strategies.impl.EnumAttributeLoadValueStrategy"/>
+
+    <util:map id="attributeLoadValueStrategies" value-type="com.coretex.core.services.items.context.provider.strategies.LoadAttributeValueStrategy">
+        <entry key="#{T(com.coretex.items.core.MetaRelationTypeItem).ITEM_TYPE}" value-ref="relationAttributeLoadValueStrategy"/>
+        <entry key="#{T(com.coretex.items.core.MetaTypeItem).ITEM_TYPE}" value-ref="itemAttributeLoadValueStrategy"/>
+        <entry key="#{T(com.coretex.items.core.RegularTypeItem).ITEM_TYPE}" value-ref="generalRegularAttributeLoadValueStrategy"/>
+        <entry key="#{T(com.coretex.items.core.MetaEnumTypeItem).ITEM_TYPE}" value-ref="enumAttributeLoadValueStrategy"/>
+    </util:map>
+
+    <bean id="loadAttributeValueStrategyProvider" class="com.coretex.core.services.items.context.provider.strategies.LoadAttributeValueStrategyProvider">
+        <property name="loadAttributeValueStrategyMap" ref="attributeLoadValueStrategies"/>
+    </bean>
+
+</beans>

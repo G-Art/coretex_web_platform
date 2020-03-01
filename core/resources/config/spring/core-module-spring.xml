@@ -16,6 +16,7 @@
     <context:spring-configured />
 
     <import resource="core-query-transformation-spring.xml"/>
+    <import resource="core-attribute-load-spring.xml"/>
 
     <bean id="abstractJdbcService" class="com.coretex.core.activeorm.services.AbstractJdbcService">
         <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
@@ -49,10 +50,8 @@
     </bean>
 
     <bean id="defaultAttributeProvider" class="com.coretex.core.services.items.context.provider.impl.DefaultAttributeProvider">
+        <property name="loadAttributeValueStrategyProvider" ref="loadAttributeValueStrategyProvider"/>
         <property name="metaTypeProvider" ref="defaultMetaTypeProvider"/>
-        <property name="transformationProcessor" ref="selectQueryTransformationProcessor"/>
-        <property name="rowMapperFactory" ref="rowMapperFactory"/>
-        <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
     </bean>
 
     <bean id="defaultItemContextFactory" class="com.coretex.core.services.items.context.factory.impl.DefaultItemContextFactory">

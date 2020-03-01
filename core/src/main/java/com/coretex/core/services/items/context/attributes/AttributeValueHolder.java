@@ -7,10 +7,8 @@ import com.google.common.collect.ForwardingList;
 import com.google.common.collect.ForwardingSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -60,7 +58,7 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 		originalValue = provider.getValue(attributeName, owner);
 		if(originalValue instanceof Collection){
 			var collection = originalValue instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
-			Collections.addAll(collection, ((Collection) originalValue).toArray());
+			collection.addAll((Collection<?>) originalValue);
 			value = collection;
 		}else{
 			value = originalValue;
@@ -78,7 +76,7 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 	public void set(Object newValue) {
 		if(newValue instanceof Collection){
 			var collection = newValue instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
-			Collections.addAll(collection, ((Collection) newValue).toArray());
+			collection.addAll((Collection<?>) newValue);
 			value = collection;
 		}else{
 			value = newValue;
@@ -91,7 +89,7 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 	public void flush() {
 		if(value instanceof Collection){
 			var collection = value instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
-			Collections.addAll(collection, ((Collection) value).toArray());
+			collection.addAll((Collection<?>) value);
 			originalValue = collection;
 		}else{
 			originalValue = value;
@@ -103,7 +101,8 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 	public boolean isDirty() {
 		boolean collectionDirty = false;
 		if(Objects.nonNull(originalValue) && originalValue instanceof Collection){
-			collectionDirty = ((Collection) originalValue).stream().anyMatch(o -> o instanceof GenericItem && ((GenericItem) o).getItemContext().isDirty());
+			collectionDirty = ((Collection<?>) originalValue).stream()
+					.anyMatch(o -> o instanceof GenericItem && ((GenericItem) o).getItemContext().isDirty());
 		}
 		return owner.isNew() || dirty || collectionDirty;
 	}
@@ -132,11 +131,11 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 		}
 		@Override public boolean add(Object elem) {
 			dirty = true;
-			return standardAdd(elem); // implements in terms of add(int, E)
+			return standardAdd(elem);
 		}
 		@Override public boolean addAll(Collection<?> c) {
 			dirty = true;
-			return standardAddAll(c); // implements in terms of add
+			return standardAddAll(c);
 		}
 	}
 
@@ -151,7 +150,7 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 		}
 		@Override public boolean addAll(Collection<?> c) {
 			dirty = true;
-			return standardAddAll(c); // implements in terms of add
+			return standardAddAll(c);
 		}
 	}
 
