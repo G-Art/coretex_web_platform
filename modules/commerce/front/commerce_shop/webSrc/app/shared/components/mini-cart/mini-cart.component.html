@@ -1,4 +1,4 @@
-<a href="cart.html">
+<a routerLink="/cart">
     <i class="fa fa-shopping-basket"></i>
     <span *ngIf="miniCart.entries" class="item-count">{{miniCart.productCount}}</span>
 </a>
@@ -32,7 +32,7 @@
         <p class="minicart-wrapper__subtotal">SUBTOTAL: <span>{{miniCart.total}}</span></p>
 
         <div class="minicart-wrapper__buttons">
-            <a href="cart.html"
+            <a routerLink="/cart"
                class="theme-button theme-button--minicart-button">
                 VIEW CART
             </a>

@@ -8,6 +8,7 @@ import com.coretex.items.cx_core.AbstractOrderItem;
 import com.coretex.items.cx_core.CartItem;
 import com.coretex.items.cx_core.OrderEntryItem;
 import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.VariantProductItem;
 import com.google.common.collect.Sets;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class DefaultOrderEntryService extends AbstractGenericItemService<OrderEn
 	}
 
 	@Override
-	public OrderEntryItem newOrderEntry(AbstractOrderItem abstractOrder, ProductItem product) {
+	public OrderEntryItem newOrderEntry(AbstractOrderItem abstractOrder, VariantProductItem product) {
 		var orderEntry = newOrderEntry(abstractOrder);
 		orderEntry.setProduct(product);
 		var price = ProductUtils.getDefaultPrice(product);
@@ -44,14 +45,14 @@ public class DefaultOrderEntryService extends AbstractGenericItemService<OrderEn
 
 
 	@Override
-	public OrderEntryItem newOrderEntry(AbstractOrderItem abstractOrder, ProductItem product, int quantity) {
+	public OrderEntryItem newOrderEntry(AbstractOrderItem abstractOrder, VariantProductItem product, int quantity) {
 		var orderEntry = newOrderEntry(abstractOrder, product);
 		orderEntry.setQuantity(quantity);
 		return orderEntry;
 	}
 
 	@Override
-	public OrderEntryItem findOrCreateOrderEntry(CartItem cart, ProductItem product) {
+	public OrderEntryItem findOrCreateOrderEntry(CartItem cart, VariantProductItem product) {
 		return cart.getEntries()
 				.stream()
 				.filter(orderEntryItem -> orderEntryItem.getProduct().getUuid().equals(product.getUuid()))
@@ -64,9 +65,14 @@ public class DefaultOrderEntryService extends AbstractGenericItemService<OrderEn
 		Sets.newHashSet(cart.getEntries())
 				.stream()
 				.filter(orderEntryItem -> orderEntryItem.getProduct().getUuid().equals(product.getUuid()))
-				 .forEach(orderEntryItem ->  {
-				 	cart.getEntries().remove(orderEntryItem);
-				 	repository.delete(orderEntryItem);
-				 });
+				.forEach(orderEntryItem -> {
+					removeEntity(cart, orderEntryItem);
+				});
+	}
+
+	@Override
+	public void removeEntity(CartItem cart, OrderEntryItem entryItem) {
+		cart.getEntries().remove(entryItem);
+		repository.delete(entryItem);
 	}
 }

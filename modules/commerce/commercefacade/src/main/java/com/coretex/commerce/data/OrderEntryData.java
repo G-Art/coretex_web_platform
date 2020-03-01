@@ -4,16 +4,16 @@ import java.math.BigDecimal;
 
 public class OrderEntryData extends GenericItemData {
 
-	ProductData product;
+	VariantProductData product;
 	Integer quantity;
 	Boolean calculated;
 	BigDecimal price;
 
-	public ProductData getProduct() {
+	public VariantProductData getProduct() {
 		return product;
 	}
 
-	public void setProduct(ProductData product) {
+	public void setProduct(VariantProductData product) {
 		this.product = product;
 	}
 

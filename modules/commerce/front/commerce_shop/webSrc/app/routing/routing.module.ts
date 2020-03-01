@@ -9,6 +9,7 @@ import {AuthGuardService} from "../core/service/authguard.service";
 import {RegisterPageComponent} from "../pages/register-page/register-page.component";
 import {ProductListPageComponent} from "../pages/product-list-page/product-list-page.component";
 import {ProductDetailPageComponent} from "../pages/product-detail-page/product-detail-page.component";
+import {CartPageComponent} from "../pages/cart-page/cart-page.component";
 
 
 const routes: Routes = [
@@ -26,6 +27,10 @@ const routes: Routes = [
                 component: ProductListPageComponent,
                 runGuardsAndResolvers: 'pathParamsOrQueryParamsChange',
                 data: {type: 'category'}
+            },
+            {
+                path: 'cart',
+                component: CartPageComponent
             },
             {
                 path: 'product/:code',

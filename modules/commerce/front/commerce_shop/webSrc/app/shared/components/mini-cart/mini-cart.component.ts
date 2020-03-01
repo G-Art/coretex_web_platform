@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MiniCartData} from "../../../core/data/mini-cart.data";
+import {CartData} from "../../../core/data/cart.data";
 import {CartService} from "../../../core/service/cart.service";
 import {CartEntryData} from "../../../core/data/cart-entry.data";
 
@@ -10,7 +10,7 @@ import {CartEntryData} from "../../../core/data/cart-entry.data";
 })
 export class MiniCartComponent implements OnInit {
 
-    miniCart: MiniCartData = new MiniCartData();
+    miniCart: CartData = new CartData();
 
     constructor(private cartService: CartService) {
     }
@@ -28,7 +28,7 @@ export class MiniCartComponent implements OnInit {
             this.miniCart.productCount = productCount;
             return this.miniCart
         });
-        this.cartService.updateMiniCart.subscribe(cart => {
+        this.cartService.updateCart.subscribe(cart => {
             if (cart) {
                 this.miniCart = cart;
 
@@ -40,7 +40,7 @@ export class MiniCartComponent implements OnInit {
 
                 this.miniCart.productCount = productCount
             } else {
-                this.miniCart = new MiniCartData();
+                this.miniCart = new CartData();
             }
         })
     }

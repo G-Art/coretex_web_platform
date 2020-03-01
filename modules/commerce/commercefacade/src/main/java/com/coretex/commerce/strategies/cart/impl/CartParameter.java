@@ -1,12 +1,14 @@
 package com.coretex.commerce.strategies.cart.impl;
 
 import com.coretex.items.cx_core.CartItem;
-import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.OrderEntryItem;
+import com.coretex.items.cx_core.VariantProductItem;
 
 public class CartParameter {
 
 	private CartItem cart;
-	private ProductItem product;
+	private OrderEntryItem entryItem;
+	private VariantProductItem product;
 	private int quantity;
 
 	public CartItem getCart() {
@@ -17,11 +19,11 @@ public class CartParameter {
 		this.cart = cart;
 	}
 
-	public ProductItem getProduct() {
+	public VariantProductItem getProduct() {
 		return product;
 	}
 
-	public void setProduct(ProductItem product) {
+	public void setProduct(VariantProductItem product) {
 		this.product = product;
 	}
 
@@ -31,5 +33,13 @@ public class CartParameter {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	public OrderEntryItem getEntryItem() {
+		return entryItem;
+	}
+
+	public void setEntryItem(OrderEntryItem entryItem) {
+		this.entryItem = entryItem;
 	}
 }

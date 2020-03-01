@@ -1,0 +1,160 @@
+<!--====================  breadcrumb area ====================-->
+
+<div class="breadcrumb-area section-space--breadcrumb">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3">
+                <!--=======  breadcrumb wrapper  =======-->
+
+                <div class="breadcrumb-wrapper">
+                    <h2 class="page-title">Shopping Cart</h2>
+                    <ul class="breadcrumb-list">
+                        <li><a href="index.html">Home</a></li>
+                        <li class="active">Shopping Cart</li>
+                    </ul>
+                </div>
+
+                <!--=======  End of breadcrumb wrapper  =======-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--====================  End of breadcrumb area  ====================-->
+
+<!--====================  page content wrapper ====================-->
+
+<div class="page-content-wrapper">
+    <!--=======  shopping cart wrapper  =======-->
+
+    <div class="shopping-cart-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!--=======  cart table  =======-->
+
+                    <div class="cart-table-container" *ngIf="cart">
+                        <table class="cart-table">
+                            <thead>
+                            <tr>
+                                <th class="product-name" colspan="2">Product</th>
+                                <th class="product-price">Price</th>
+                                <th class="product-quantity">Quantity</th>
+                                <th class="product-subtotal">Total</th>
+                                <th class="product-remove">&nbsp;</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr *ngFor="let entry of cart.entries">
+                                <td class="product-thumbnail">
+                                    <a href="javascript:void(0)">
+                                        <img src="/v1{{entry.product.images[0].path}}" class="img-fluid"
+                                             alt="{{entry.product.images[0].alt}}">
+                                    </a>
+                                </td>
+                                <td class="product-name">
+                                    <a href="javascript:void(0)">{{entry.product.name}}</a>
+                                    <span class="product-variation">Color: {{entry.product.colorCssCode}}
+                                        , Size: {{entry.product.size}}</span>
+                                </td>
+
+                                <td class="product-price"><span class="price">{{entry.price}}</span></td>
+
+                                <td class="product-quantity">
+                                    <div class="pro-qty d-inline-block mx-0">
+                                        <a href="javascript:void(0)"
+                                           (click)="decQuantity(entry)"
+                                           class="dec qty-btn">
+                                            <i class="pe-7s-less"></i>
+                                        </a>
+                                        <input type="text" [(ngModel)]="entry.quantity" (ngModelChange)="qtyChange(entry)">
+                                        <a href="javascript:void(0)"
+                                           (click)="incQuantity(entry)"
+                                           class="inc qty-btn">
+                                            <i class="pe-7s-plus"></i>
+                                        </a>
+
+                                    </div>
+                                </td>
+
+                                <td class="total-price"><span class="price">{{entry.price * entry.quantity}}</span></td>
+
+                                <td class="product-remove">
+                                    <a href="javascript:void(0)" (click)="removeEntry(entry)">
+                                        <i class="pe-7s-close"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!--=======  End of cart table  =======-->
+                </div>
+                <div class="col-lg-12">
+                    <!--=======  coupon area  =======-->
+
+                    <div class="cart-coupon-area">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <!--=======  coupon form  =======-->
+
+                                <div class="coupon-form">
+                                    <form action="#">
+                                        <div class="row row-5">
+                                            <div class="col-md-7 col-sm-7">
+                                                <input type="text" placeholder="Enter your coupon code">
+                                            </div>
+                                            <div class="col-md-5 col-sm-5">
+                                                <button class="theme-button theme-button--silver">APPLY COUPON</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!--=======  End of coupon form  =======-->
+                            </div>
+
+<!--                            <div class="col-lg-6 text-left text-lg-right">-->
+<!--                                &lt;!&ndash;=======  update cart button  =======&ndash;&gt;-->
+
+<!--                                <button class="theme-button">UPDATE CART</button>-->
+
+<!--                                &lt;!&ndash;=======  End of update cart button  =======&ndash;&gt;-->
+<!--                            </div>-->
+                        </div>
+                    </div>
+
+                    <!--=======  End of coupon area  =======-->
+                </div>
+
+                <div class="col-lg-6 offset-lg-6">
+                    <div class="cart-calculation-area" *ngIf="cart">
+                        <h2 class="cart-calculation-area__title">Cart totals</h2>
+
+                        <table class="cart-calculation-table">
+                            <tr>
+                                <th>SUBTOTAL</th>
+                                <td class="subtotal">{{cart.total}}</td>
+                            </tr>
+                            <tr>
+                                <th>TOTAL</th>
+                                <td class="total">{{cart.total}}</td>
+                            </tr>
+                        </table>
+
+                        <div class="cart-calculation-button">
+                            <button class="theme-button theme-button--alt theme-button--checkout">PROCEED TO CHECKOUT
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--=======  End of shopping cart wrapper  =======-->
+</div>
+
+<!--====================  End of page content wrapper  ====================-->

@@ -8,7 +8,7 @@ public class MinimalOrderData extends GenericItemData {
 	private String name;
 	private String status;
 	private String date;
-	private String merchant;
+	private String store;
 
 	public double getTotal() {
 		return total;
@@ -42,11 +42,11 @@ public class MinimalOrderData extends GenericItemData {
 		this.date = date;
 	}
 
-	public String getMerchant() {
-		return merchant;
+	public String getStore() {
+		return store;
 	}
 
-	public void setMerchant(String merchant) {
-		this.merchant = merchant;
+	public void setStore(String store) {
+		this.store = store;
 	}
 }

@@ -1,0 +1,87 @@
+import {Component, OnInit} from '@angular/core';
+import {CartService} from "../../core/service/cart.service";
+import {CartData} from "../../core/data/cart.data";
+import {Route, Router} from "@angular/router";
+import {CartEntryData} from "../../core/data/cart-entry.data";
+
+@Component({
+    selector: 'app-cart-page',
+    templateUrl: './cart-page.component.html',
+    styleUrls: ['./cart-page.component.scss']
+})
+export class CartPageComponent implements OnInit {
+
+    private cartUpdate = false;
+    cart: CartData;
+
+    constructor(private cartService: CartService,
+                private router: Router) {
+    }
+
+    ngOnInit() {
+        this.cartService
+            .getCurrentCart()
+            .subscribe(cart => {
+                this.cart = cart;
+                if (!cart.entries || cart.entries.length == 0) {
+                    this.router.navigate([`/`])
+                }
+            });
+
+        this.cartService.updateCart.subscribe(cart => {
+            if (cart && cart.entries && cart.entries.length > 0) {
+                this.cart = cart;
+
+                let productCount: number = 0;
+
+                for (const entry of this.cart.entries) {
+                    productCount += entry.quantity;
+                }
+
+                this.cart.productCount = productCount
+            } else {
+                this.router.navigate([`/`])
+            }
+        })
+    }
+
+    decQuantity(entry: CartEntryData) {
+        if (!this.cartUpdate) {
+            if (entry.quantity > 0) {
+                entry.quantity--;
+            }
+            this.cartService.updateEntryQuantity(entry, () => {
+                this.cartUpdate = false;
+            })
+        }
+    }
+
+    incQuantity(entry: CartEntryData) {
+        if (!this.cartUpdate) {
+            entry.quantity++;
+            this.cartService.updateEntryQuantity(entry, () => {
+                this.cartUpdate = false;
+            })
+        }
+    }
+
+    qtyChange(entry: CartEntryData) {
+        if (!this.cartUpdate) {
+            if (entry.quantity < 0) {
+                entry.quantity = 0;
+            }
+            this.cartService.updateEntryQuantity(entry, () => {
+                this.cartUpdate = false;
+            })
+        }
+    }
+
+    removeEntry(entry: CartEntryData) {
+        if (!this.cartUpdate) {
+            entry.quantity = 0;
+            this.cartService.updateEntryQuantity(entry, () => {
+                this.cartUpdate = false;
+            })
+        }
+    }
+}

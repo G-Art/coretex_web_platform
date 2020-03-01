@@ -61,7 +61,7 @@
                     [
                         {"data": "name"},
                         {"data": "total"},
-                        {"data": "merchant"},
+                        {"data": "store"},
                         {"data": "date"},
                         {"data": "status"}
                     ]

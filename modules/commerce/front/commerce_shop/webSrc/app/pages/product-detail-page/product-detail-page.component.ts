@@ -105,8 +105,9 @@ export class ProductDetailPageComponent implements OnInit {
     addToCart() {
         if (!this.atcClicked) {
             this.atcClicked = true;
-                this.cartService.addToCart(this.productDetailVariant, this.qty);
-            this.atcClicked = false;
+                this.cartService.addToCart(this.productDetailVariant, this.qty, () => {
+                    this.atcClicked = false;
+                });
         }
     }
 

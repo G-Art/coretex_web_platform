@@ -13,6 +13,7 @@ import { ProductListPageComponent } from './product-list-page/product-list-page.
 import { ProductDetailPageComponent } from './product-detail-page/product-detail-page.component';
 import {DirectivesModule} from "../shared/directives/directives.module";
 import {FormsModule} from "@angular/forms";
+import { CartPageComponent } from './cart-page/cart-page.component';
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import {FormsModule} from "@angular/forms";
         RegisterPageComponent,
         HomePageComponent,
         ProductListPageComponent,
-        ProductDetailPageComponent
+        ProductDetailPageComponent,
+        CartPageComponent
     ],
     imports: [
         FragmentsModule,

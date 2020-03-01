@@ -11,7 +11,7 @@ public interface CartFacade extends PageableDataTableFacade<CartItem, CartData> 
 
 	CartData createCart();
 
-	CartData updateCart(CartData cartData, UUID uuid, Integer quantity);
+	CartData updateCart(CartData cartData, UUID entry, Integer quantity);
 
 	CartData addToCart(CartData cartData, UUID product, Integer quantity);
 }

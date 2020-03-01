@@ -2,7 +2,7 @@ import {AbstractData} from "./abstract.data";
 import {ImgData} from "./img.data";
 import {ProductVariantData} from "./product-variant.data";
 import {CartEntryData} from "./cart-entry.data";
-export class MiniCartData extends AbstractData {
+export class CartData extends AbstractData {
 
     entries?:CartEntryData[];
 

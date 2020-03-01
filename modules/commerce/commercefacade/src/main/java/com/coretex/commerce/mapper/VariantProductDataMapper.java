@@ -38,6 +38,7 @@ public interface VariantProductDataMapper extends GenericDataMapper<VariantProdu
 		if(productItem instanceof SizeVariantProductItem){
 			return ((SizeVariantProductItem) productItem).getSize();
 		}
+
 		return null;
 	}
 

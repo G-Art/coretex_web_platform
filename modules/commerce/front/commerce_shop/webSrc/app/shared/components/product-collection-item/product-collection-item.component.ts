@@ -70,11 +70,15 @@ export class ProductCollectionItemComponent implements OnInit {
         if (!this.atcClicked) {
             this.atcClicked = true;
             if (this.displayStyleVariant.variants.length > 1) {
-                this.cartService.addToCart(this.displayStyleVariant.variants[0], 1);
+                this.cartService.addToCart(this.displayStyleVariant.variants[0], 1, () => {
+                    this.atcClicked = false;
+                });
             } else {
-                this.cartService.addToCart(this.displaySizeVariant, 1);
+                this.cartService.addToCart(this.displaySizeVariant, 1, () => {
+                    this.atcClicked = false;
+                });
             }
-            this.atcClicked = false;
+
         }
     }
 }

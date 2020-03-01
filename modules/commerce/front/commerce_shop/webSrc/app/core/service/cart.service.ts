@@ -3,24 +3,23 @@ import {ProductVariantData} from "../data/product-variant.data";
 import {HttpClient} from "@angular/common/http";
 import {map, share} from "rxjs/operators";
 import {environment} from "../../../environments/environment";
-import {MiniCartData} from "../data/mini-cart.data";
-import {QuickViewData} from "../data/quick-view.data";
+import {CartData} from "../data/cart.data";
 import {Observable, of} from "rxjs";
-import {StoreData} from "../data/store.data";
+import {CartEntryData} from "../data/cart-entry.data";
 
 @Injectable()
 export class CartService {
 
-    updateMiniCart: EventEmitter<MiniCartData>;
+    updateCart: EventEmitter<CartData>;
 
     apiUrl = environment.baseApiUrl;
 
     constructor(private http: HttpClient) {
-        this.updateMiniCart = new EventEmitter<MiniCartData>();
+        this.updateCart = new EventEmitter<CartData>();
     }
 
-    getCurrentCart(): Observable<MiniCartData> {
-        return this.http.get<MiniCartData>(`${this.apiUrl + '/cart/current'}`, {
+    getCurrentCart(): Observable<CartData> {
+        return this.http.get<CartData>(`${this.apiUrl + '/cart/current'}`, {
             observe: 'response'
         }).pipe(
             map(response => {
@@ -34,8 +33,31 @@ export class CartService {
         );
     }
 
-    addToCart(product: ProductVariantData, qty: number) {
-        this.http.post<MiniCartData>(`${this.apiUrl + '/cart/add'}`,
+
+    updateEntryQuantity(entry : CartEntryData, next?: () => void){
+        this.http.post<CartData>(`${this.apiUrl + '/cart/update'}`,
+            {"entry": entry.uuid, "quantity": entry.quantity},
+            {
+                observe: 'response'
+            }).pipe(
+            map(response => {
+                if (response.status === 400) {
+                    return null;
+                } else if (response.status === 200) {
+                    return response.body;
+                }
+            }),
+            share()
+        ).subscribe(data => {
+            this.updateCart.emit(data);
+            if(next){
+                next()
+            }
+        });
+    }
+
+    addToCart(product: ProductVariantData, qty: number, next?: () => void) {
+        this.http.post<CartData>(`${this.apiUrl + '/cart/add'}`,
             {"product": product.uuid, "quantity": qty},
             {
                 observe: 'response'
@@ -49,7 +71,10 @@ export class CartService {
             }),
             share()
         ).subscribe(data => {
-            this.updateMiniCart.emit(data);
+            this.updateCart.emit(data);
+            if(next){
+                next()
+            }
         });
 
     }

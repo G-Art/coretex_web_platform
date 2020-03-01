@@ -367,7 +367,7 @@ elements {
 
         OrderEntry {
             attributes {
-                product(Product)
+                product(VariantProduct)
                 quantity(Integer)
                 calculated(Boolean){
                     defaultValue = false

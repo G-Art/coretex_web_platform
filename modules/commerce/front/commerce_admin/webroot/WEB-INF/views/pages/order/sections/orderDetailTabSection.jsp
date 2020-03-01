@@ -42,7 +42,7 @@
                                         <div class="masonry-media">
                                             <a class="media-middle" href="javascript:void(0);">
                                                 <img class="img-fluid img-thumbnail"
-                                                     src="${applicationBaseUrl}/v1${originalProduct.image}"
+                                                     src="${applicationBaseUrl}/v1${originalProduct.images[0].path}"
                                                      alt="${originalProduct.name}">
                                             </a>
                                         </div>

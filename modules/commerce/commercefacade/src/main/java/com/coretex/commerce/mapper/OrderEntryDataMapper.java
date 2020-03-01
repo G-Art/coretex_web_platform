@@ -9,7 +9,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring",
 		uses = {
 				ReferenceMapper.class,
-				ProductDataMapper.class})
+				VariantProductDataMapper.class})
 public abstract class OrderEntryDataMapper implements GenericDataMapper<OrderEntryItem, OrderEntryData> {
 
 	@Override
