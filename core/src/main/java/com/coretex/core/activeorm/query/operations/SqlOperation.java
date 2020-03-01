@@ -8,6 +8,8 @@ import com.coretex.core.activeorm.services.AbstractJdbcService;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.function.Consumer;
@@ -15,6 +17,7 @@ import java.util.function.Supplier;
 
 public abstract class SqlOperation<S extends Statement, O extends SqlOperationSpec<S, ? extends SqlOperation>> {
 
+	private Logger LOG = LoggerFactory.getLogger(SqlOperation.class);
 	private O operationSpec;
 
 	private Supplier<String> querySupplier;
@@ -24,6 +27,9 @@ public abstract class SqlOperation<S extends Statement, O extends SqlOperationSp
 	public SqlOperation(O operationSpec) {
 		this.operationSpec = operationSpec;
 		var query = operationSpec.getQuery();
+		if(LOG.isDebugEnabled()){
+			LOG.debug("Sql operation by query [{}]", query);
+		}
 		if (!operationSpec.isNativeQuery()) {
 			querySupplier = () -> {
 				S statement = parseQuery(query);

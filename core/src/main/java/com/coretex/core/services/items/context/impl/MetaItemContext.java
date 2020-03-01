@@ -1,7 +1,9 @@
 package com.coretex.core.services.items.context.impl;
 
+import com.coretex.core.services.bootstrap.meta.MetaAttributeValueProvider;
 import com.coretex.core.services.items.context.ItemContext;
 
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 
@@ -15,7 +17,11 @@ public final class MetaItemContext extends ItemContext {
 	public MetaItemContext(ItemContextBuilder builder) {
 		super(builder);
 		checkState(nonNull(getUuid()), "Uuid is mandatory value to build initial type context");
+	}
 
+	@Override
+	public Collection<String> loadedAttributes() {
+		return ((MetaAttributeValueProvider)getProvider()).getItemState().keySet();
 	}
 
 	@Override

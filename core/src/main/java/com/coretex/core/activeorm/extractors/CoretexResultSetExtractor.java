@@ -2,7 +2,6 @@ package com.coretex.core.activeorm.extractors;
 
 import com.coretex.core.activeorm.factories.RowMapperFactory;
 import com.coretex.core.activeorm.query.operations.SelectOperation;
-import com.coretex.core.activeorm.query.specs.select.SelectItemAttributeOperationSpec;
 import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaTypeItem;
@@ -17,7 +16,9 @@ import org.springframework.jdbc.support.rowset.ResultSetWrappingSqlRowSet;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class CoretexResultSetExtractor<T> implements ResultSetExtractor<List<T>> {
@@ -42,12 +43,12 @@ public class CoretexResultSetExtractor<T> implements ResultSetExtractor<List<T>>
 			if (hasMetaTypeColumn(rowSet)) {
 				return extractData(rowSet, getRowMapper(GenericItem.class));
 			}
-			if(selectOperation.getOperationSpec() instanceof SelectItemAttributeOperationSpec){
-				var rowMapper = ((SelectItemAttributeOperationSpec) selectOperation.getOperationSpec()).createRowMapper();
-				if(Objects.nonNull(rowMapper)){
-					return extractData(rowSet, rowMapper);
-				}
-			}
+//			if(selectOperation.getOperationSpec() instanceof SelectItemAttributeOperationSpec){
+//				var rowMapper = ((SelectItemAttributeOperationSpec) selectOperation.getOperationSpec()).createRowMapper();
+//				if(Objects.nonNull(rowMapper)){
+//					return extractData(rowSet, rowMapper);
+//				}
+//			}
 			return extractData(rowSet, getRowMapper(Map.class));
 		} catch (Exception e) {
 //			if (LOG.isDebugEnabled()) LOG.debug("Meta type column not found", e);

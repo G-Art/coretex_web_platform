@@ -33,6 +33,10 @@ public class MetaAttributeValueProvider implements AttributeProvider {
 		}
 	}
 
+	public ImmutableMap<String, Object> getItemState() {
+		return itemState;
+	}
+
 	private ImmutableMap<String, Object> freezeAttributes(Map<String, Object> itemValues) {
 		Builder<String , Object> builder = ImmutableMap.builder();
 		for (Map.Entry<String, Object> valueEntry : itemValues.entrySet()) {

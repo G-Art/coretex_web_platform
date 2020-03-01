@@ -2,7 +2,6 @@ package com.coretex.core.activeorm.extractors;
 
 import com.coretex.core.activeorm.factories.RowMapperFactory;
 import com.coretex.core.activeorm.query.operations.SelectOperation;
-import com.coretex.core.activeorm.query.specs.select.SelectItemAttributeOperationSpec;
 import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaTypeItem;
@@ -51,14 +50,7 @@ public class CoretexReactiveResultSetExtractor<T> implements ResultSetExtractor<
 		}
 		try {
 			if (hasMetaTypeColumn(rowSet)) {
-
 				return extractData(rowSet, getRowMapper(GenericItem.class), parallel);
-			}
-			if(selectOperation.getOperationSpec() instanceof SelectItemAttributeOperationSpec){
-				var rowMapper = ((SelectItemAttributeOperationSpec) selectOperation.getOperationSpec()).createRowMapper();
-				if(Objects.nonNull(rowMapper)){
-					return extractData(rowSet, rowMapper, parallel);
-				}
 			}
 			return extractData(rowSet, getRowMapper(Map.class), parallel);
 		} catch (Exception e) {

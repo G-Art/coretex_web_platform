@@ -1,14 +1,20 @@
 package com.coretex.core.services.items.context.impl;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.attributes.AttributeValueHolder;
 import com.coretex.core.services.items.context.attributes.LocalizedAttributeValueHolder;
 import com.coretex.items.core.GenericItem;
 import com.coretex.meta.AbstractGenericItem;
+import com.google.common.collect.Sets;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.isNull;
@@ -17,7 +23,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * @author Gerasimenko (g-art) Artem "gerasimenko.art@gmail.com"
- *         create by 13-02-2016
+ * create by 13-02-2016
  */
 public class DefaultItemContextImpl extends ItemContext {
 
@@ -28,7 +34,7 @@ public class DefaultItemContextImpl extends ItemContext {
 		super(builder);
 		attributeHolders = new HashMap<>();
 		localizedAttributeHolders = new HashMap<>();
-		if(isNew()){
+		if (isNew()) {
 			attributeHolders.put(GenericItem.META_TYPE, AttributeValueHolder.createLazyValueHolder(GenericItem.META_TYPE, this));
 		}
 	}
@@ -37,13 +43,13 @@ public class DefaultItemContextImpl extends ItemContext {
 	@SuppressWarnings("unchecked")
 	public <T> T getValue(String attributeName) {
 
-		if(AbstractGenericItem.UUID.equals(attributeName)){
+		if (AbstractGenericItem.UUID.equals(attributeName)) {
 			return (T) getUuid();
 		}
 
 		HolderProcessor<AttributeValueHolder, T> holderProcessor = new HolderProcessor<>(attributeHolders,
 				() -> AttributeValueHolder.createLazyValueHolder(attributeName, this),
-				holder -> (T)holder.get(getProvider()),
+				holder -> (T) holder.get(getProvider()),
 				AttributeValueHolder::isLoaded);
 
 		return holderProcessor.getValue(attributeName);
@@ -60,7 +66,7 @@ public class DefaultItemContextImpl extends ItemContext {
 
 		HolderProcessor<LocalizedAttributeValueHolder, Map<Locale, T>> holderProcessor = new HolderProcessor<>(localizedAttributeHolders,
 				() -> LocalizedAttributeValueHolder.initValueHolder(attributeName, this, getProvider().getValue(attributeName, this)),
-				holder -> (Map<Locale, T>)holder.getAll(getProvider()),
+				holder -> (Map<Locale, T>) holder.getAll(getProvider()),
 				LocalizedAttributeValueHolder::isLoaded);
 
 		return holderProcessor.getValue(attributeName);
@@ -71,7 +77,7 @@ public class DefaultItemContextImpl extends ItemContext {
 	public <T> T getLocalizedValue(String attributeName, Locale locale) {
 		HolderProcessor<LocalizedAttributeValueHolder, T> holderProcessor = new HolderProcessor<>(localizedAttributeHolders,
 				() -> LocalizedAttributeValueHolder.initValueHolder(attributeName, this, getProvider().getValue(attributeName, this)),
-				holder -> (T)holder.get(getProvider(), locale),
+				holder -> (T) holder.get(getProvider(), locale),
 				LocalizedAttributeValueHolder::isLoaded);
 
 		return holderProcessor.getValue(attributeName);
@@ -82,7 +88,7 @@ public class DefaultItemContextImpl extends ItemContext {
 
 		if (AbstractGenericItem.UUID.equals(attributeName)) {
 			setUuid((UUID) value);
-		}else {
+		} else {
 			AttributeValueHolder valueHolder = attributeHolders.get(attributeName);
 			if (isNull(valueHolder)) {
 				Object initialValue = getProvider().getValue(attributeName, this);
@@ -103,7 +109,7 @@ public class DefaultItemContextImpl extends ItemContext {
 	public <T> void setLocalizedValue(String attributeName, T value, Locale locale) {
 		LocalizedAttributeValueHolder valueHolder = localizedAttributeHolders.get(attributeName);
 		if (isNull(valueHolder)) {
-			Map<String, Object>  initialValue = getProvider().getValue(attributeName, this);
+			Map<String, Object> initialValue = getProvider().getValue(attributeName, this);
 			valueHolder = LocalizedAttributeValueHolder.initValueHolder(attributeName, this, initialValue);
 			localizedAttributeHolders.put(attributeName, valueHolder);
 		}
@@ -112,8 +118,18 @@ public class DefaultItemContextImpl extends ItemContext {
 
 	@Override
 	public void initValue(String attributeName, Object initialValue) {
-		AttributeValueHolder valueHolder = AttributeValueHolder.initValueHolder(attributeName, this, initialValue);
-		attributeHolders.put(attributeName, valueHolder);
+		if (AbstractGenericItem.UUID.equals(attributeName)) {
+			setUuid((UUID) initialValue);
+		} else {
+			AttributeValueHolder valueHolder = AttributeValueHolder.initValueHolder(attributeName, this, initialValue);
+			attributeHolders.put(attributeName, valueHolder);
+		}
+	}
+
+	@Override
+	public Collection<String> loadedAttributes() {
+		return Sets.union(attributeHolders.keySet(),
+				          attributeHolders.keySet());
 	}
 
 	@Override
@@ -129,13 +145,13 @@ public class DefaultItemContextImpl extends ItemContext {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T getOriginValue(String attributeName) {
-		if(AbstractGenericItem.UUID.equals(attributeName)){
+		if (AbstractGenericItem.UUID.equals(attributeName)) {
 			return (T) getUuid();
 		}
 
 		HolderProcessor<AttributeValueHolder, T> holderProcessor = new HolderProcessor<>(attributeHolders,
 				() -> AttributeValueHolder.createLazyValueHolder(attributeName, this),
-				holder -> (T)holder.getOriginalValue(getProvider()),
+				holder -> (T) holder.getOriginalValue(getProvider()),
 				AttributeValueHolder::isLoaded);
 
 		return holderProcessor.getValue(attributeName);
@@ -152,7 +168,7 @@ public class DefaultItemContextImpl extends ItemContext {
 
 		HolderProcessor<LocalizedAttributeValueHolder, T> holderProcessor = new HolderProcessor<>(localizedAttributeHolders,
 				() -> LocalizedAttributeValueHolder.createLazyValueHolder(attributeName, this),
-				holder -> (T)holder.getOriginalValue(getProvider(), locale),
+				holder -> (T) holder.getOriginalValue(getProvider(), locale),
 				LocalizedAttributeValueHolder::isLoaded);
 
 		return holderProcessor.getValue(attributeName);
@@ -164,7 +180,7 @@ public class DefaultItemContextImpl extends ItemContext {
 
 		HolderProcessor<LocalizedAttributeValueHolder, Map<Locale, T>> holderProcessor = new HolderProcessor<>(localizedAttributeHolders,
 				() -> LocalizedAttributeValueHolder.createLazyValueHolder(attributeName, this),
-				holder -> (Map<Locale, T>)holder.getOriginalValues(getProvider()),
+				holder -> (Map<Locale, T>) holder.getOriginalValues(getProvider()),
 				LocalizedAttributeValueHolder::isLoaded);
 
 		return holderProcessor.getValue(attributeName);
@@ -213,7 +229,6 @@ public class DefaultItemContextImpl extends ItemContext {
 	}
 
 
-
 	private final class HolderProcessor<H, T> {
 
 		private Map<String, H> holders;
@@ -228,7 +243,7 @@ public class DefaultItemContextImpl extends ItemContext {
 			this.isLoadedF = isLoadedF;
 		}
 
-		public T getValue(String attributeName){
+		public T getValue(String attributeName) {
 			H valueHolder = holders.get(attributeName);
 
 			if (isNull(valueHolder)) {

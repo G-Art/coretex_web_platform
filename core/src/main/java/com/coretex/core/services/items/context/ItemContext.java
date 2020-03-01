@@ -1,11 +1,12 @@
 package com.coretex.core.services.items.context;
 
+import com.coretex.core.services.items.context.impl.ItemContextBuilder;
+import com.coretex.core.services.items.context.provider.AttributeProvider;
+
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-
-import com.coretex.core.services.items.context.impl.ItemContextBuilder;
-import com.coretex.core.services.items.context.provider.AttributeProvider;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,6 +30,8 @@ public abstract class ItemContext {
 		uuid = builder.getUuid();
 		provider = builder.getProvider();
 	}
+
+	public abstract Collection<String> loadedAttributes();
 
 	public abstract boolean isNew();
 

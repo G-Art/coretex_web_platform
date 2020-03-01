@@ -67,11 +67,11 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 		ItemContext item = itemContextFactory.create(targetClass, (UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
 
 		cortexContext.getAllAttributes(typeMetaType.getTypeCode()).values().stream()
-				.filter(metaAttributeTypeItem -> !(metaAttributeTypeItem.getAttributeType() instanceof MetaRelationTypeItem))
 				.filter(metaAttributeTypeItem -> mapOfColValues.containsKey(metaAttributeTypeItem.getColumnName()))
-				.filter(metaAttributeTypeItem ->  metaAttributeTypeItem.getAttributeType() instanceof MetaTypeItem &&
+				.filter(metaAttributeTypeItem ->  AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem) ||
+												 (AttributeTypeUtils.isItemAttribute(metaAttributeTypeItem) &&
 												 (((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes() == null ||
-												 ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes().isEmpty()))
+												 ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes().isEmpty())))
 				.forEach(metaAttributeTypeItem -> item.initValue(metaAttributeTypeItem.getAttributeName(), mapOfColValues.get(metaAttributeTypeItem.getColumnName()).apply(metaAttributeTypeItem)));
 		return ItemUtils.createItem(targetClass, item);
 
