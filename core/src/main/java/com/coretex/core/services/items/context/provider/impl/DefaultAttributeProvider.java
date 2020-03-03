@@ -49,7 +49,7 @@ public class DefaultAttributeProvider implements AttributeProvider {
 		if (isCollection(attribute)) {
 			Class containerType = attribute.getContainerType();
 			if (Set.class.isAssignableFrom(containerType)) {
-				return (T) Sets.newHashSet();
+				return (T) Sets.newLinkedHashSet();
 			}
 			return (T) Lists.newArrayList();
 		}

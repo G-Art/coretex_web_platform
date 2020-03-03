@@ -82,7 +82,6 @@ public class RegularAttributeLoadValueStrategy extends AbstractLoadAttributeValu
 							}
 						}
 					}
-					LOG.info(resultRow.toString());
 
 					return (T) resultRow;
 
@@ -119,21 +118,6 @@ public class RegularAttributeLoadValueStrategy extends AbstractLoadAttributeValu
 				resultRow
 		);
 
-
-//		RegularTypeItem attributeType = (RegularTypeItem) attribute.getAttributeType();
-//		if (resultRow.getClass().isAssignableFrom(attributeType.getRegularClass())) {
-//			return resultRow;
-//		} else {
-//			if (resultRow instanceof String && attributeType.getRegularClass().isAssignableFrom(Class.class)) {
-//				try {
-//					return Class.forName((String) resultRow);
-//				} catch (ClassNotFoundException e) {
-//					throw new QueryException("Cant retrieve a class", e);
-//				}
-//			}
-//		}
-
-//		return result;
 	}
 
 	private Object enrichContextAndGetResult(ItemContext ctx, List<MetaAttributeTypeItem> metaAttributeTypeItems, MetaAttributeTypeItem attribute, List<Object> resultRow) {

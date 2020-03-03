@@ -68,11 +68,10 @@
                                        tableId="recentOrder"
                                        dataSourceLink="/order/paginated"
                                        rowId="uuid"
-                                       actionTarget="5"
+                                       actionTarget="4"
                                        actionPath="/order">
                 <jsp:attribute name="theader">
                     <tr>
-                        <th>Name</th>
                         <th>Total</th>
                         <th>Store</th>
                         <th>Date</th>
@@ -82,9 +81,8 @@
                 </jsp:attribute>
                 <jsp:attribute name="columns">
                     [
-                        {"data": "name"},
                         {"data": "total"},
-                        {"data": "merchant"},
+                        {"data": "store"},
                         {"data": "date"},
                         {"data": "status"}
                     ]

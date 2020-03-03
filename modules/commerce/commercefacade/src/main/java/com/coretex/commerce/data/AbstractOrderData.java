@@ -1,22 +1,22 @@
 package com.coretex.commerce.data;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 public class AbstractOrderData extends GenericItemData {
 
-	private Set<OrderEntryData> entries;
+	private LinkedHashSet<OrderEntryData> entries;
 	private StoreData store;
 	private CurrencyData currency;
 	private CustomerData customer;
 	private LocaleData locale;
 	private BigDecimal total;
 
-	public Set<OrderEntryData> getEntries() {
+	public LinkedHashSet<OrderEntryData> getEntries() {
 		return entries;
 	}
 
-	public void setEntries(Set<OrderEntryData> entries) {
+	public void setEntries(LinkedHashSet<OrderEntryData> entries) {
 		this.entries = entries;
 	}
 

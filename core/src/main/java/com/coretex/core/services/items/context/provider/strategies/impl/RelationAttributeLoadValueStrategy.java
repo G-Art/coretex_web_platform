@@ -81,7 +81,7 @@ public class RelationAttributeLoadValueStrategy extends AbstractLoadAttributeVal
 			if (isCollection(attribute)){
 				Class containerType = attribute.getContainerType();
 				if (Objects.nonNull(containerType) && Set.class.isAssignableFrom(containerType)) {
-					return Sets.newHashSet();
+					return Sets.newLinkedHashSet();
 				}
 				return Lists.newArrayList();
 			}
@@ -91,7 +91,7 @@ public class RelationAttributeLoadValueStrategy extends AbstractLoadAttributeVal
 		if(isCollection(attribute)){
 			Class containerType = attribute.getContainerType();
 			if (Objects.nonNull(containerType) && Set.class.isAssignableFrom(containerType)) {
-				return Sets.newHashSet(searchResult);
+				return Sets.newLinkedHashSet(searchResult);
 			}
 			return Lists.newArrayList(searchResult);
 		}
