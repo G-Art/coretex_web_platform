@@ -19,5 +19,7 @@ public interface CategoryFacade extends PageableDataTableFacade<CategoryItem, Mi
 
 	Stream<MinimalCategoryHierarchyData> rootCategories();
 
+	List<MinimalCategoryData> categories();
+
 
 }

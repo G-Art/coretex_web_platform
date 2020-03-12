@@ -46,6 +46,7 @@
 
     <script type="text/javascript" src="<c:url value="/resources/assets/js/script.js"/>"></script>
 
+
 	</jsp:attribute>
     <jsp:body>
         <div class="page-body">
@@ -55,7 +56,7 @@
                         <div class="page-header-title">
                             <div class="d-inline">
                                 <h4>Order </h4>
-                                <span class="text-lowercase">${order.uuid}</span>
+                                <span>UUID: ${order.uuid}</span>
                             </div>
                         </div>
                     </div>

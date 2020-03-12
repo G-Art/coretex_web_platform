@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.UUID;
 
 @Component
 public class ReferenceMapper {
@@ -23,6 +24,21 @@ public class ReferenceMapper {
 		}
 
 		var result = searchService.search(new SelectItemsOperationSpec<>(reference.getUuid(), targetClass)).getResult();
+		if(CollectionUtils.isNotEmpty(result)){
+			return result.iterator().next();
+		}
+		else {
+			return null;
+		}
+	}
+
+	public < T extends GenericItem> T resolve(UUID reference, @TargetType Class<T> targetClass){
+
+		if(Objects.isNull(reference)){
+			return null;
+		}
+
+		var result = searchService.search(new SelectItemsOperationSpec<>(reference, targetClass)).getResult();
 		if(CollectionUtils.isNotEmpty(result)){
 			return result.iterator().next();
 		}

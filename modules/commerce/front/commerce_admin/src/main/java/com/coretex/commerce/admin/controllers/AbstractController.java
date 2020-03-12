@@ -5,11 +5,14 @@ import com.coretex.commerce.admin.facades.UserFacade;
 import com.coretex.commerce.admin.services.SessionService;
 import com.coretex.commerce.data.CurrencyData;
 import com.coretex.commerce.data.LocaleData;
+import com.coretex.commerce.data.StoreData;
 import com.coretex.commerce.data.UserData;
+import com.coretex.commerce.facades.StoreFacade;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class AbstractController {
 
@@ -25,6 +28,9 @@ public class AbstractController {
 
 	@Resource
 	private UserFacade userFacade;
+
+	@Resource
+	private StoreFacade storeFacade;
 
 	protected String redirect(String path){
 		return String.format("%s%s", REDIRECT_PREFIX, path);
@@ -49,6 +55,12 @@ public class AbstractController {
 
 	protected void removeAttribute(final String key) {
 		sessionService.removeSessionAttribute(key);
+	}
+
+
+	@ModelAttribute("stores")
+	public Collection<StoreData> getStores() {
+		return storeFacade.getAll().collect(Collectors.toSet());
 	}
 
 	@ModelAttribute("languages")

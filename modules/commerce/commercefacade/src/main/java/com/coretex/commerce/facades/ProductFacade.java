@@ -1,10 +1,13 @@
 package com.coretex.commerce.facades;
 
-import com.coretex.commerce.data.SearchPageResult;
-import com.coretex.commerce.data.minimal.MinimalProductData;
+import com.coretex.commerce.data.DataTableResults;
 import com.coretex.commerce.data.ProductData;
+import com.coretex.commerce.data.SearchPageResult;
+import com.coretex.commerce.data.forms.ProductForm;
+import com.coretex.commerce.data.minimal.MinimalProductData;
 import com.coretex.items.cx_core.ProductItem;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public interface ProductFacade extends PageableDataTableFacade<ProductItem, MinimalProductData> {
@@ -12,7 +15,12 @@ public interface ProductFacade extends PageableDataTableFacade<ProductItem, Mini
 	SearchPageResult getCategoryPage(String code, int page, int size);
 
 	ProductData getByCode(String code);
+	ProductData getByUUID(UUID uuid);
+
+	DataTableResults<MinimalProductData> getVariantsForProduct(UUID uuid, String draw, long page, Long length);
 
 	Long count();
 	Stream<ProductData> getAll();
+
+	ProductItem save(ProductForm productform);
 }

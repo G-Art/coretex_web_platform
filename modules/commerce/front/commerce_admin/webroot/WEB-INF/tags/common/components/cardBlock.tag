@@ -6,6 +6,7 @@
 <%@ attribute name="minimizeCardButton" required="false" type="java.lang.Boolean" %>
 
 <%@ attribute name="cardBlock" required="true" fragment="true" %>
+<%@ attribute name="cardHeader" required="false" fragment="true" %>
 
 <c:if test="${empty fullCardButton}">
     <c:set var="fullCardButton" value="true"/>
@@ -32,6 +33,7 @@
                     </ul>
                 </div>
             </c:if>
+            <jsp:invoke fragment="cardHeader"/>
         </div>
     </c:if>
 

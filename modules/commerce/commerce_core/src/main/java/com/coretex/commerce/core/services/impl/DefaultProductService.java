@@ -6,16 +6,19 @@ import com.coretex.commerce.core.services.ProductService;
 import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.items.cx_core.ProductImageItem;
 import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.VariantProductItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class DefaultProductService extends AbstractGenericItemService<ProductItem> implements ProductService {
 
 	private ProductDao productDao;
+
 
 	public DefaultProductService(ProductDao repository) {
 		super(repository);
@@ -25,6 +28,11 @@ public class DefaultProductService extends AbstractGenericItemService<ProductIte
 	@Override
 	public ProductItem getByCode(String code) {
 		return productDao.getByCode(code);
+	}
+
+	@Override
+	public PageableSearchResult<VariantProductItem> variants(UUID uuid, long count, long page) {
+		return productDao.getVariants(uuid, count, page);
 	}
 
 	@Override

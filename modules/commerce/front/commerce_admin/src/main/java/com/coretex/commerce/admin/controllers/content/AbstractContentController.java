@@ -20,6 +20,7 @@ public abstract class AbstractContentController<D extends GenericItemData> exten
 	@Resource
 	private ManufacturerFacade manufacturerFacade;
 
+
 	@ModelAttribute("categoriesCount")
 	public Long getCategoriesCount() {
 		return categoryFacade.count();

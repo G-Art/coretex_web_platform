@@ -11,7 +11,7 @@
                     <i class="pe-7s-close"></i>
                 </a>
                 <div class="image" style="width: 90px; height: 100px;">
-                    <a routerLink="/product/{{entry.product.code}}">
+                    <a routerLink="/product/{{entry.product.baseProductCode}}/v/{{entry.product.code}}">
                         <img *ngIf="entry.product.images || entry.product.images.length > 0"
                              src="/v1{{entry.product.images[0].path}}"
                              class="img-fluid" alt="{{entry.product.images[0].alt}}">
@@ -19,7 +19,7 @@
                 </div>
                 <div class="content">
                     <p class="product-title">
-                        <a routerLink="/product/{{entry.product.code}}">{{entry.product.name}}</a>
+                        <a routerLink="/product/{{entry.product.baseProductCode}}/v/{{entry.product.code}}">{{entry.product.name}}</a>
                     </p>
                     <p class="product-calculation">
                         <span class="count">{{entry.quantity}}</span> x

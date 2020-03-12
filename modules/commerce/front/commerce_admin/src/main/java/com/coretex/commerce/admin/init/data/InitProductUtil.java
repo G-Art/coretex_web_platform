@@ -3,6 +3,7 @@ package com.coretex.commerce.admin.init.data;
 import com.coretex.commerce.core.dto.FileContentType;
 import com.coretex.commerce.core.dto.ImageContentFile;
 import com.coretex.commerce.core.services.ProductImageService;
+import com.coretex.commerce.core.utils.ProductUtils;
 import com.coretex.items.cx_core.ProductAvailabilityItem;
 import com.coretex.items.cx_core.ProductImageItem;
 import com.coretex.items.cx_core.ProductItem;
@@ -222,10 +223,10 @@ public class InitProductUtil {
 		cmsContentImage.setFile(inputStream);
 		cmsContentImage.setFileContentType(FileContentType.PRODUCT);
 
-
 		ProductImageItem productImage = new ProductImageItem();
 		productImage.setProductImage(name);
 		productImage.setProduct(product);
+		productImage.setProductImageUrl(ProductUtils.buildProductSmallImageUtils(product.getStore(), product.getCode(), name));
 		product.getImages().add(productImage);
 
 		productImageService.addProductImage(product, productImage, cmsContentImage);

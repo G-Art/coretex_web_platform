@@ -70,9 +70,8 @@ elements {
                 description = "Products"
                 containerType = List
             }
-            target(categories) {
-                description = "Parent category"
-                containerType = Set
+            target(category) {
+                description = "Category"
             }
         }
 

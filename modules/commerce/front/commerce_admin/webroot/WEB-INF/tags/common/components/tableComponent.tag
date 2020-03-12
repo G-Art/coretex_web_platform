@@ -12,6 +12,7 @@
 <%@ attribute name="ordering" required="false" type="java.lang.Boolean" %>
 <%@ attribute name="searching" required="false" type="java.lang.Boolean" %>
 
+<%@ attribute name="cardHeader" required="false" fragment="true" %>
 <%@ attribute name="theader" required="true" fragment="true" %>
 <%@ attribute name="columns" required="true" fragment="true" %>
 
@@ -40,6 +41,9 @@
                                      description="${description}"
                                      minimizeCardButton="${fullCardButton}"
                                      fullCardButton="${fullCardButton}">
+                <jsp:attribute name="cardHeader">
+                    <jsp:invoke fragment="cardHeader"/>
+                </jsp:attribute>
                 <jsp:attribute name="cardBlock">
                     <script>
                         $(document).ready(function () {

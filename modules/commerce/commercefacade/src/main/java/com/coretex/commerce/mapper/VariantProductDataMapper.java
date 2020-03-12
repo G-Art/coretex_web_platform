@@ -15,18 +15,21 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 
+import java.math.RoundingMode;
 import java.util.Objects;
 
 import static com.coretex.commerce.core.utils.ProductUtils.buildProductSmallImageUtils;
 
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
-public interface VariantProductDataMapper extends GenericDataMapper<VariantProductItem, VariantProductData>{
+public interface VariantProductDataMapper extends GenericDataMapper<VariantProductItem, VariantProductData> {
 	@Override
 	@Mappings({
 			@Mapping(target = "images", expression = "java(this.mapImageUrl(productItem))"),
 			@Mapping(target = "price", expression = "java(this.getPrice(productItem))"),
 			@Mapping(target = "colorCssCode", expression = "java(this.getColorCode(productItem))"),
-			@Mapping(target = "size", expression = "java(this.getSize(productItem))")
+			@Mapping(target = "size", expression = "java(this.getSize(productItem))"),
+			@Mapping(target = "baseProductCode", expression = "java(this.getBaseProductCode(productItem))"),
+			@Mapping(target = "colorName", expression = "java(this.getColorName(productItem))")
 	})
 	VariantProductData fromItem(VariantProductItem productItem);
 
@@ -34,33 +37,52 @@ public interface VariantProductDataMapper extends GenericDataMapper<VariantProdu
 	@InheritConfiguration(name = "fromItem")
 	void updateFromItem(VariantProductItem productItem, @MappingTarget VariantProductData productData);
 
-	default String getSize(ProductItem productItem){
-		if(productItem instanceof SizeVariantProductItem){
+	default String getBaseProductCode(ProductItem productItem) {
+		if (productItem instanceof VariantProductItem) {
+			return getBaseProductCode(((VariantProductItem) productItem).getBaseProduct());
+		}
+
+		return productItem.getCode();
+	}
+
+	default String getSize(ProductItem productItem) {
+		if (productItem instanceof SizeVariantProductItem) {
 			return ((SizeVariantProductItem) productItem).getSize();
 		}
 
 		return null;
 	}
 
-	default String getColorCode(ProductItem productItem){
-		if(productItem instanceof StyleVariantProductItem && Objects.nonNull(((StyleVariantProductItem) productItem).getStyle())){
+	default String getColorCode(ProductItem productItem) {
+		if (productItem instanceof StyleVariantProductItem && Objects.nonNull(((StyleVariantProductItem) productItem).getStyle())) {
 			var style = ((StyleVariantProductItem) productItem).getStyle();
 			return style.getCssColorCode();
 		}
-		if(productItem instanceof SizeVariantProductItem){
+		if (productItem instanceof SizeVariantProductItem) {
 			return getColorCode(((SizeVariantProductItem) productItem).getBaseProduct());
 		}
 		return null;
 	}
 
-	default ImageData[] mapImageUrl(VariantProductItem productItem){
+	default String getColorName(ProductItem productItem) {
+		if (productItem instanceof StyleVariantProductItem && Objects.nonNull(((StyleVariantProductItem) productItem).getStyle())) {
+			var style = ((StyleVariantProductItem) productItem).getStyle();
+			return style.getStyleName();
+		}
+		if (productItem instanceof SizeVariantProductItem) {
+			return getColorName(((SizeVariantProductItem) productItem).getBaseProduct());
+		}
+		return null;
+	}
+
+	default ImageData[] mapImageUrl(VariantProductItem productItem) {
 		var images = Lists.<ImageData>newArrayList();
-		if(CollectionUtils.isEmpty(productItem.getImages())){
+		if (CollectionUtils.isEmpty(productItem.getImages())) {
 			var baseProduct = productItem.getBaseProduct();
-			if(baseProduct instanceof VariantProductItem){
+			if (baseProduct instanceof VariantProductItem) {
 				images.addAll(Lists.newArrayList(mapImageUrl((VariantProductItem) baseProduct)));
 			}
-		}else {
+		} else {
 			productItem.getImages()
 					.stream()
 					.limit(2)
@@ -70,13 +92,15 @@ public interface VariantProductDataMapper extends GenericDataMapper<VariantProdu
 		return images.toArray(new ImageData[0]);
 	}
 
-	default String getPrice(ProductItem productItem){
+	default String getPrice(ProductItem productItem) {
 		return productItem.getAvailabilities().stream()
 				.findFirst()
 				.map(productAvailabilityItem ->
 						productAvailabilityItem.getPrices().stream()
 								.findFirst()
-								.map(productPriceItem -> productPriceItem.getProductPriceAmount().toPlainString())
+								.map(productPriceItem -> productPriceItem.getProductPriceAmount()
+										.setScale(2, RoundingMode.HALF_UP)
+										.toPlainString())
 								.orElse("0.00"))
 				.orElse("0.00");
 	}

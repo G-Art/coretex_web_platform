@@ -317,7 +317,7 @@ public class InitStoreData implements InitData {
 
 			product.setManufacturer(manufacturerItemList.get(RandomUtils.nextInt(0, manufacturerItemList.size())));
 
-			product.getCategories().add(allCategories.get(RandomUtils.nextInt(0, allCategories.size())));
+			product.setCategory(allCategories.get(RandomUtils.nextInt(0, allCategories.size())));
 
 			productService.create(product);
 

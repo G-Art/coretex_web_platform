@@ -64,6 +64,13 @@ public class DefaultCategoryFacade implements CategoryFacade {
 	}
 
 	@Override
+	public List<MinimalCategoryData> categories() {
+		return categoryService.listReactive()
+				.map(minimalCategoryDataMapper::fromItem)
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public PageableService<CategoryItem> getPageableService() {
 		return categoryService;
 	}

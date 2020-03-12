@@ -5,10 +5,13 @@ import com.coretex.core.activeorm.dao.DefaultGenericDao;
 import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.VariantProductItem;
 import com.coretex.relations.cx_core.CategoryProductRelation;
+import com.coretex.relations.cx_core.ProductVariantProductRelation;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class DefaultProductDao extends DefaultGenericDao<ProductItem> implements ProductDao {
@@ -20,6 +23,16 @@ public class DefaultProductDao extends DefaultGenericDao<ProductItem> implements
 	@Override
 	public ProductItem getByCode(String code) {
 		return findSingle(Map.of(ProductItem.CODE, code), true);
+	}
+
+	@Override
+	public PageableSearchResult<VariantProductItem> getVariants(UUID uuid, long count, long page) {
+		return getSearchService().searchPageable(
+				"SELECT p.* FROM " + VariantProductItem.ITEM_TYPE + " AS p " +
+						"JOIN " + ProductVariantProductRelation.ITEM_TYPE + " AS cpr ON cpr.target = p.uuid " +
+						"WHERE cpr.source = :uuid ORDER BY p." + ProductItem.CREATE_DATE,
+				Map.of("uuid", uuid),
+				count, page);
 	}
 
 	@Override

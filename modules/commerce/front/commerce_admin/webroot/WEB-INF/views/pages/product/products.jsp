@@ -25,7 +25,8 @@
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/select2/css/select2.min.css"/>">
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/switchery/css/switchery.min.css"/>">
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/bootstrap-tagsinput/css/bootstrap-tagsinput.css"/>">
-	</jsp:attribute>
+	    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/css/component.css"/>"/>
+    </jsp:attribute>
 
     <jsp:attribute name="pageScripts">
         <script>
@@ -61,12 +62,28 @@
                 src="<c:url value="/resources/bower_components/select2/js/select2.full.min.js"/>"></script>
         <script type="text/javascript"
                 src="<c:url value="/resources/bower_components/bootstrap-tagsinput/js/bootstrap-tagsinput.js"/>"></script>
+        <script type="text/javascript"
+                src="<c:url value="/resources/assets/js/modalEffects.js"/>"></script>
+        <script type="text/javascript"
+                src="<c:url value="/resources/assets/js/classie.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resources/assets/js/script.js"/>"></script>
+        <script>
+            'use strict';
+            $(document).ready(function() {
+                $(".close_btn").on("click", function() {
+                    $('.pname').val('');
+                    $('.jFiler-items').css('display','none');
+                    $('.stock').val('');
+                    $('.pamount').val('');
+                });
+            } );
+        </script>
 
 	</jsp:attribute>
     <jsp:body>
         <!-- Page-header start -->
         <div class="page-header">
+
             <div class="row align-items-end">
                 <div class="col-lg-8">
                     <div class="page-header-title">
@@ -88,7 +105,14 @@
                                        tableId="productTable"
                                        dataSourceLink="/product/paginated"
                                        rowId="uuid"
-                                       actionTarget="5" >
+                                       actionTarget="5"
+                                       actionPath="/product" >
+                <jsp:attribute name="cardHeader">
+                    <button type="button" class="btn btn-primary waves-effect waves-light f-right d-inline-block md-trigger"
+                            data-modal="modal-13">
+                        <i class="icofont icofont-plus m-r-5"></i> Add Product
+                    </button>
+                </jsp:attribute>
                 <jsp:attribute name="theader">
                     <tr>
                         <th>Image</th>
@@ -103,9 +127,12 @@
                     [
                         {"data": "image",
                          "render": function (data, type, row) {
-                                 return `
-                                <img src="/v1\${data}" class="img-fluid">
-                            `}
+                                if(data){
+                                    return  `<img style="max-width: 200px;" src="/v1\${data}" class="img-fluid">`
+                                }else {
+                                    return  `<img style="max-width: 200px;" src="<c:url value="/resources/assets/images/service/no_image.svg"/>" class="img-fluid">`
+                                }
+                            }
                         },
                         {"data": "code"},
                         {"data": "name"},
@@ -115,6 +142,28 @@
                 </jsp:attribute>
             </components:tableComponent>
 
+            <!-- Add Contact Start Model start-->
+            <div class="md-modal md-effect-13 addcontact" id="modal-13">
+                <div class="md-content">
+                    <h3 class="f-26">Add Product</h3>
+                    <div>
+                        <form action="<c:url value="/product/new"/>" method="get">
+
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="icofont icofont-user"></i></span>
+                                <input type="text" name="code" class="form-control pname" placeholder="Code">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary waves-effect m-r-20 f-w-600 d-inline-block save_btn">Create</button>
+                                <button type="button" class="btn btn-primary waves-effect m-r-20 f-w-600 md-close d-inline-block close_btn">Close</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <div class="md-overlay"></div>
+            <!-- Add Contact Ends Model end-->
         </div>
         <!-- Page-body end -->
 
