@@ -2,6 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ProductData} from "../../../core/data/product.data";
 import {ProductService} from "../../../core/service/product.service";
 import {ProductVariantData} from "../../../core/data/product-variant.data";
+import {CartService} from "../../../core/service/cart.service";
 
 declare var $: any;
 
@@ -15,9 +16,14 @@ export class ProductQuickViewComponent implements OnInit {
     @ViewChild('quickViewBlock', {static: false})
     quickViewBlock: ElementRef;
 
-    product: ProductVariantData = null;
+    qty = 1;
 
-    constructor(private productService: ProductService) {
+    product: ProductVariantData = null;
+    sizeVariantProduct: ProductVariantData = null;
+    baseProduct: ProductData = null;
+    private atcClicked: boolean = false;
+
+    constructor(private productService: ProductService, private cartService: CartService) {
 
     }
 
@@ -26,6 +32,8 @@ export class ProductQuickViewComponent implements OnInit {
             .productQuickView
             .subscribe(next => {
                 this.product = next.product;
+                this.sizeVariantProduct = this.product.variants.find(o => true);
+                this.baseProduct = next.baseProduct;
                 this.openQuickView(next.imageWrapper)
             })
     }
@@ -235,4 +243,21 @@ export class ProductQuickViewComponent implements OnInit {
 
     }
 
+    setDisplayStyleVariant(styleProduct: ProductVariantData) {
+        this.product = styleProduct;
+        this.sizeVariantProduct = this.product.variants.find(o => true);
+    }
+
+    changeSizeVariant(sizeUUid: string) {
+        this.sizeVariantProduct = this.product.variants.find(v => v.code === sizeUUid);
+    }
+
+    addToCart() {
+        if (!this.atcClicked) {
+            this.atcClicked = true;
+            this.cartService.addToCart(this.sizeVariantProduct, this.qty, () => {
+                this.atcClicked = false;
+            });
+        }
+    }
 }

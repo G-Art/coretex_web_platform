@@ -2,10 +2,13 @@ import {Component, Input, OnInit} from '@angular/core';
 import {SearchResult} from "../../../core/data/search.result.data";
 import {ActivatedRoute} from "@angular/router";
 import {SearchService} from "../../../core/service/search.service";
+import {fadeInAnimation} from "../../../core/animation/fadeInAnimation.animation";
 
 declare var $: any;
 
 @Component({
+    animations : [fadeInAnimation],
+    host: { '[@fadeInAnimation]': '' },
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss']

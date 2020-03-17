@@ -12,11 +12,13 @@ import {CategoryService} from "./service/category.service";
 import {SearchService} from "./service/search.service";
 import {ProductService} from "./service/product.service";
 import {CartService} from "./service/cart.service";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 @NgModule({
     declarations: [],
     imports: [
+        BrowserAnimationsModule,
         CommonModule,
         HttpClientModule,
         RouterModule,

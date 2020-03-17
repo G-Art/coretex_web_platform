@@ -1,44 +1,79 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
 import {SearchService} from "../../core/service/search.service";
 import {SearchResult} from "../../core/data/search.result.data";
+import {ActivatedRoute} from "@angular/router";
+import {Subject} from "rxjs";
+import {fadeInAnimation} from "../../core/animation/fadeInAnimation.animation";
 
 declare var $: any;
 
 @Component({
+    animations : [fadeInAnimation],
+    host: { '[@fadeInAnimation]': '' },
     selector: 'app-product-list-page',
     templateUrl: './product-list-page.component.html',
     styleUrls: ['./product-list-page.component.scss']
 })
 export class ProductListPageComponent implements OnInit {
 
+    private categoryCode: string;
+    private page:number = 0;
+
+    private onParamChange = new Subject<void>();
+
     type: string = 'category';
+
+    showSkeleton:boolean = false;
 
     searchResult: SearchResult;
 
-    constructor(private activatedRoute: ActivatedRoute,
-                private search: SearchService) {
+    constructor(private search: SearchService,
+                private activatedRoute: ActivatedRoute) {
     }
 
     ngOnInit() {
+        this.showSkeleton = true;
+        this.onParamChange.subscribe(value => {
+            this.showSkeleton = true;
+            this.search.searchCategory(this.categoryCode, this.page);
+        });
+        this.search
+            .searchResult
+            .subscribe(next => {
+                this.searchResult = next;
+                this.showSkeleton = false;
+            });
+
         this.activatedRoute.data.subscribe(data => {
             this.type = data.type;
             if (this.type === 'category') {
                 this.activatedRoute.params.subscribe(routeParams => {
-                    this.search.searchCategory(routeParams.code).subscribe(data => this.searchResult = data);
-                })
+                    this.categoryCode = routeParams.code;
+                    this.onParamChange.next();
+                });
+
             } else {
-                this.activatedRoute
-                    .queryParams
-                    .subscribe(params => {
-                        this.search.searchQuery(params['q']).subscribe(data => this.searchResult = data);
-                    });
+                // this.activatedRoute
+                //     .queryParams
+                //     .subscribe(params => {
+                //         this.search.searchQuery(params['q']).subscribe(data => this.searchResult = data);
+                //     });
             }
         });
 
+        this.activatedRoute.queryParams.subscribe(params => {
+            let page = params['page'];
+            if(page != null || page != undefined){
+                this.page = page;
+
+            }else {
+                this.page = 0;
+            }
+            this.onParamChange.next();
+        })
 
 
-        // console.log(`${this.type} | ${this.query}`)
+
 
     }
 

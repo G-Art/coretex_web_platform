@@ -1,4 +1,4 @@
-<div  #quickViewBlock class="cd-quick-view" >
+<div #quickViewBlock class="cd-quick-view">
     <div class="cd-slider-wrapper" *ngIf="product">
         <div class="product-badge-wrapper">
             <span *ngIf="product.discountBadgeInfo" class="onsale">{{product.discountBadgeInfo}}</span>
@@ -8,7 +8,7 @@
             <li *ngFor="let img of product.images; let i = index" class="{{i === 0 ? 'selected' : ''}}">
                 <img src="/v1{{img.path}}" alt="{{img.alt}}">
             </li>
-<!--            <li class="selected"><img src="/app/assets/img/products/product-9-1-600x800.jpg" alt="Product 2"></li>-->
+            <!--            <li class="selected"><img src="/app/assets/img/products/product-9-1-600x800.jpg" alt="Product 2"></li>-->
         </ul> <!-- cd-slider -->
 
         <ul class="cd-slider-pagination">
@@ -28,18 +28,50 @@
         <h2 class="item-title">{{product.name}}</h2>
         <p class="price">
             <span class="main-price"
-                  [ngClass]="{'discounted' : product.priceDiscount}">{{product.price}}</span>
-            <span *ngIf="product.priceDiscount" class="discounted-price">{{product.priceDiscount}}</span>
+                  [ngClass]="{'discounted' : sizeVariantProduct.priceDiscount}">{{sizeVariantProduct.price}}</span>
+            <span *ngIf="sizeVariantProduct.priceDiscount"
+                  class="discounted-price">{{sizeVariantProduct.priceDiscount}}</span>
         </p>
 
         <p class="description">{{product.description}}</p>
+        <div class="product-details-description-wrapper">
+            <div class="product-color">
+                <span class="product-details-title">COLOR: </span>
+                <ul>
+                    <li *ngFor="let color of baseProduct.variants">
+                        <a [class.active]="color.uuid === product.uuid"
+                           href="javascript:void(0);"
+                           (click)="setDisplayStyleVariant(color)">
+                        <span [style.background-color]="color.colorCssCode ? color.colorCssCode : '#a9a9a9'"
+                              class="color-picker">
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="product-size" style=" display: flex; align-items: center;">
+                <span class="product-details-title">SIZE: </span><span
+                    *ngIf="product.variants.length == 1">{{sizeVariantProduct.size}}</span>
+                <select *ngIf="product.variants.length>1" class="nice-select" #select
+                        (change)='changeSizeVariant(select.value)'>
+                    <option *ngFor="let size of product.variants"
+                            [selected]="size.uuid == sizeVariantProduct.uuid"
+                            [value]="size.code">{{size.size}}</option>
+                </select>
+
+            </div>
+        </div>
 
         <div class="pro-qty d-inline-block">
-            <input type="text" value="1">
+            <a href="javascript:void(0)" (click)="qty > 1 ? qty = qty-1 : qty" class= "dec qty-btn"><i class="pe-7s-less"></i></a>
+            <input type="text" [(ngModel)]="qty" >
+            <a href="javascript:void(0)" (click)="qty = qty+1"  class="inc qty-btn"><i class="pe-7s-plus"></i></a>
+
         </div>
 
         <div class="add-to-cart-btn d-inline-block">
-            <button class="theme-button theme-button--alt">ADD TO CART</button>
+            <a (click)="addToCart()" class="theme-button theme-button--alt">ADD TO CART</a>
         </div>
 
         <div class="quick-view-other-info">
@@ -49,18 +81,18 @@
             </div>
             <table>
                 <tr class="single-info">
-                    <td class="quickview-title">SKU: </td>
-                    <td class="quickview-value">{{product.code}}</td>
+                    <td class="quickview-title">SKU:</td>
+                    <td class="quickview-value">{{sizeVariantProduct.code}}</td>
                 </tr>
                 <tr class="single-info">
-                    <td class="quickview-title">Tags: </td>
+                    <td class="quickview-title">Tags:</td>
                     <td class="quickview-value">
                         <a href="#">Decor</a>,
                         <a href="#">Light</a>
                     </td>
                 </tr>
                 <tr class="single-info">
-                    <td class="quickview-title">Share on: </td>
+                    <td class="quickview-title">Share on:</td>
                     <td class="quickview-value">
                         <ul class="quickview-social-icons">
                             <li><a href="#"><i class="fa fa-facebook"></i></a></li>

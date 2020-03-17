@@ -19,9 +19,10 @@ export class ProductService {
         this.productQuickView = new EventEmitter<QuickViewData>();
     }
 
-    showQuickViewFor(product: ProductData, imageWrapper: ElementRef) {
+    showQuickViewFor(product: ProductData, imageWrapper: ElementRef, baseProduct: ProductData) {
         let qw = new QuickViewData();
         qw.product = product;
+        qw.baseProduct = baseProduct;
         qw.imageWrapper = imageWrapper;
         this.productQuickView.emit(qw)
     }

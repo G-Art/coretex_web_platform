@@ -1,5 +1,6 @@
 package com.coretex.commerce.facades.impl;
 
+import com.coretex.commerce.core.services.CategoryService;
 import com.coretex.commerce.core.services.PageableService;
 import com.coretex.commerce.core.services.ProductService;
 import com.coretex.commerce.data.BreadcrumbData;
@@ -16,13 +17,17 @@ import com.coretex.commerce.mapper.VariantProductDataMapper;
 import com.coretex.commerce.mapper.forms.ProductFormMapper;
 import com.coretex.commerce.mapper.minimal.MinimalProductDataMapper;
 import com.coretex.core.activeorm.services.PageableSearchResult;
+import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.cx_core.VariantProductItem;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,6 +37,9 @@ public class DefaultProductFacade implements ProductFacade {
 
 	@Resource
 	private ProductService productService;
+
+	@Resource
+	private CategoryService categoryService;
 
 	@Resource
 	private MinimalProductDataMapper minimalProductDataMapper;
@@ -59,17 +67,31 @@ public class DefaultProductFacade implements ProductFacade {
 		searchPageResult.setTotalCount(searchResult.getTotalCount().intValue());
 		searchPageResult.setTotalPages(searchResult.getTotalPages());
 
-		var bc = new BreadcrumbData[2];
-		bc[0] = new BreadcrumbData("/", "Home");
-		bc[1] = new BreadcrumbData(true, "Technical");
+		var category = categoryService.findByCode(code);
 
-		searchPageResult.setBreadcrumb(bc);
+		var categories = buildBreadcrumbData(category);
+		categories.get(categories.size()-1).setActive(true);
 
+		searchPageResult.setBreadcrumb(categories.toArray(new BreadcrumbData[0]));
+
+		LOG.info("Convert products ...");
 		searchPageResult.setProducts(searchResult.getResultStream()
 				.map(shortProductDataMapper::fromItem)
 				.collect(Collectors.toList()));
-
+		LOG.info("Convert products end");
 		return searchPageResult;
+	}
+
+	List<BreadcrumbData> buildBreadcrumbData(CategoryItem categoryItem){
+		var categories = Lists.<BreadcrumbData>newLinkedList();
+		if(Objects.nonNull(categoryItem.getParent())){
+			categories.addAll(buildBreadcrumbData(categoryItem.getParent()));
+		}else{
+			categories.add(new BreadcrumbData("/", "Home"));
+		}
+		categories.add(new BreadcrumbData("/category/"+categoryItem.getCode(), categoryItem.getName()));
+
+		return categories;
 	}
 
 	@Override

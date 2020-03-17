@@ -5,5 +5,6 @@ export class QuickViewData {
 
     imageWrapper: ElementRef;
 
-    product: ProductData
+    product: ProductData;
+    baseProduct: ProductData;
 }

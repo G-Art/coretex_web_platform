@@ -12,4 +12,6 @@ public interface CategoryService extends GenericItemService<CategoryItem> {
 
 	Stream<CategoryItem> listByParent(UUID categoryUuid);
 
+	CategoryItem findByCode(String code);
+
 }

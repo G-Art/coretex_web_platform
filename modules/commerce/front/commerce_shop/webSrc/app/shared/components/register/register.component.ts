@@ -3,8 +3,11 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../../../core/service/auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../../../core/service/user.service";
+import {fadeInAnimation} from "../../../core/animation/fadeInAnimation.animation";
 
 @Component({
+    animations: [fadeInAnimation],
+    host: { '[@fadeInAnimation]': '' },
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss']

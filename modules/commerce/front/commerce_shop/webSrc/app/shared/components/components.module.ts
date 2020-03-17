@@ -5,7 +5,7 @@ import {FooterComponent} from "./footer/footer.component";
 import {LoginComponent} from "./login/login.component";
 import {FragmentsModule} from "../fragments/fragments.module";
 import {RoutingModule} from "../../routing/routing.module";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { RegisterComponent } from './register/register.component';
 import { AppEqualValidatorDirective } from './register/app-equal-validator.directive';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -19,6 +19,10 @@ import { WishlistComponent } from './wishlist/wishlist.component';
 import {DirectivesModule} from "../directives/directives.module";
 import { SlickSliderComponent } from './slick-slider/slick-slider.component';
 import { ProductImageSliderComponent } from './product-image-slider/product-image-slider.component';
+import {SkeletonSidebarComponent} from "./skeleton/skeleton-sidebar/skeleton-sidebar.component";
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
+import { SkeletonProductCollectionItemComponent } from './skeleton/skeleton-product-collection-item/skeleton-product-collection-item.component';
+import { PaginationComponent } from './pagination/pagination.component';
 
 
 @NgModule({
@@ -29,6 +33,7 @@ import { ProductImageSliderComponent } from './product-image-slider/product-imag
         RegisterComponent,
         AppEqualValidatorDirective,
         SidebarComponent,
+        SkeletonSidebarComponent,
         ProductGridComponent,
         ProductCollectionItemComponent,
         NavigationMenuComponent,
@@ -37,14 +42,18 @@ import { ProductImageSliderComponent } from './product-image-slider/product-imag
         MiniCartComponent,
         WishlistComponent,
         SlickSliderComponent,
-        ProductImageSliderComponent
+        ProductImageSliderComponent,
+        SkeletonProductCollectionItemComponent,
+        PaginationComponent
     ],
     imports: [
         DirectivesModule,
         RoutingModule,
         FragmentsModule,
         ReactiveFormsModule,
-        CommonModule
+        CommonModule,
+        NgxSkeletonLoaderModule,
+        FormsModule
     ],
     exports: [
         HeaderComponent,
@@ -57,7 +66,8 @@ import { ProductImageSliderComponent } from './product-image-slider/product-imag
         NavigationMenuComponent,
         ProductQuickViewComponent,
         SlickSliderComponent,
-        ProductImageSliderComponent
+        ProductImageSliderComponent,
+        SkeletonSidebarComponent
     ],
     entryComponents: [
         ProductImageSliderComponent

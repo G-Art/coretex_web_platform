@@ -2,10 +2,13 @@ import {Component, HostListener, OnInit} from '@angular/core';
 import {StoreData} from "../../core/data/store.data";
 import {StoreService} from "../../core/service/store.service";
 import {TranslateService} from "@ngx-translate/core";
+import {fadeInAnimation} from "../../core/animation/fadeInAnimation.animation";
 
 declare var $: any;
 
 @Component({
+  animations : [fadeInAnimation],
+  host: { '[@fadeInAnimation]': '' },
   selector: 'app-login-layout',
   templateUrl: './login-layout.component.html',
   styleUrls: ['./login-layout.component.css']

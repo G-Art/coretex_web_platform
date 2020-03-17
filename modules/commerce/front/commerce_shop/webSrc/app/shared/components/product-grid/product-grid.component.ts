@@ -1,15 +1,21 @@
 import {Component, ContentChildren, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ProductCollectionItemComponent} from "../product-collection-item/product-collection-item.component";
 import {SearchResult} from "../../../core/data/search.result.data";
+import {fadeInAnimation} from "../../../core/animation/fadeInAnimation.animation";
 
 declare var $: any;
 
 @Component({
+    animations : [fadeInAnimation],
+    host: { '[@fadeInAnimation]': '' },
     selector: 'app-product-grid',
     templateUrl: './product-grid.component.html',
     styleUrls: ['./product-grid.component.scss']
 })
 export class ProductGridComponent implements OnInit {
+
+    @Input()
+    showSkeleton:boolean = true;
 
     @Input()
     searchResult:SearchResult;

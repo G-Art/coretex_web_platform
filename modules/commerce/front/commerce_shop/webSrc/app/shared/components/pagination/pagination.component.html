@@ -1,0 +1,23 @@
+<ul>
+    <li *ngIf="currentPage>0">
+        <a [routerLink]="['./']" [queryParams]="{page: currentPage-1}" queryParamsHandling="merge">
+            <i class="fa fa-angle-left"></i>
+        </a>
+    </li>
+
+
+    <li *ngIf="currentPage>0">
+        <a [routerLink]="['./']" [queryParams]="{page: currentPage-1}" queryParamsHandling="merge">{{currentPage}}</a>
+    </li>
+    <li class="active">
+        <a [routerLink]="['./']" [queryParams]="{page: currentPage}" queryParamsHandling="merge">{{currentPage+1}}</a>
+    </li>
+    <li *ngIf="currentPage < totalPages-1">
+        <a [routerLink]="['./']" [queryParams]="{page: currentPage+1}" queryParamsHandling="merge">{{currentPage+2}}</a>
+    </li>
+    <li *ngIf="currentPage < totalPages-1">
+        <a [routerLink]="['./']" [queryParams]="{page: currentPage+1}" queryParamsHandling="merge">
+            <i class="fa fa-angle-right"></i>
+        </a>
+    </li>
+</ul>

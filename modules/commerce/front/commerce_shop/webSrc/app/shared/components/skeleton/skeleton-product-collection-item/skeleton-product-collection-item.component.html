@@ -1,0 +1,99 @@
+<!--=======  grid view product  =======-->
+
+<div *ngIf="itemView === 'grid' " class="single-grid-product">
+    <div class="single-grid-product__image">
+            <ngx-skeleton-loader [count]="1"
+                                 [theme]="{
+                                             'height': columnsClass === 'col-lg-6' ?  '560px' : (columnsClass === 'col-lg-3' ? '260px' : '360px'),
+                                             'border-radius': '2px'
+                                             }"></ngx-skeleton-loader>
+    </div>
+    <div class="single-grid-product__content">
+        <h3 class="title">
+            <ngx-skeleton-loader [count]="1"
+                                 [theme]="{
+                                             'width': '175px', 'height': '20px',
+                                             'border-radius': '5px'
+                                             }"></ngx-skeleton-loader>
+        </h3>
+        <div class="price">
+            <ngx-skeleton-loader [count]="1"
+                                 [theme]="{
+                                             'width': '40px', 'height': '15px',
+                                             'border-radius': '5px', 'margin': '0 0 3px 0'
+                                             }"></ngx-skeleton-loader>
+        </div>
+        <div class="color">
+            <ngx-skeleton-loader [count]="3"
+                                 appearance="circle"
+                                 [theme]="{
+                                             'width': '17px', 'height': '17px', 'margin': '0 5px 3px 0'
+                                             }"></ngx-skeleton-loader>
+        </div>
+    </div>
+</div>
+
+<!--=======  End of grid view product  =======-->
+
+<!--=======  list view product  =======-->
+
+<div *ngIf="itemView === 'list'" class="single-list-product">
+
+    <div class="single-list-product__image">
+
+        <ngx-skeleton-loader [count]="1"
+                             [theme]="{
+                                             'height': '348px',
+                                             'border-radius': '2px'
+                                             }"></ngx-skeleton-loader>
+
+
+    </div>
+
+    <div class="single-list-product__content">
+        <h3 class="title">
+            <ngx-skeleton-loader [count]="1"
+                                 [theme]="{
+                                             'width': '175px', 'height': '20px',
+                                             'border-radius': '5px'
+                                             }"></ngx-skeleton-loader>
+        </h3>
+        <div class="price">
+            <ngx-skeleton-loader [count]="1"
+                                 [theme]="{
+                                             'width': '40px', 'height': '15px',
+                                             'border-radius': '5px'
+                                             }"></ngx-skeleton-loader>
+        </div>
+        <ngx-skeleton-loader [count]="3"></ngx-skeleton-loader>
+
+        <div class="color">
+            <ngx-skeleton-loader [count]="4"
+                                 appearance="circle"
+                                 [theme]="{
+                                             'width': '17px', 'height': '17px', 'margin': '0 5px 3px 0'
+                                             }"></ngx-skeleton-loader>
+        </div>
+
+        <div class="product-hover-icon-wrapper">
+                <ngx-skeleton-loader [count]="1"
+                                     [theme]="{
+                                             'width': '195px', 'height': '35px'
+                                             }"></ngx-skeleton-loader>
+            <!--            <span class="single-icon single-icon&#45;&#45;compare">-->
+            <!--                <a href="#"-->
+            <!--                   data-tippy="Compare"-->
+            <!--                   data-tippy-inertia="true"-->
+            <!--                   data-tippy-animation="shift-away"-->
+            <!--                   data-tippy-delay="50"-->
+            <!--                   data-tippy-arrow="true"-->
+            <!--                   data-tippy-theme="sharpborder">-->
+            <!--                    <i class="fa fa-exchange"></i>-->
+            <!--                </a>-->
+            <!--            </span>-->
+        </div>
+
+    </div>
+</div>
+
+<!--=======  End of list view product  =======-->

@@ -3,8 +3,11 @@ import {CartService} from "../../core/service/cart.service";
 import {CartData} from "../../core/data/cart.data";
 import {Route, Router} from "@angular/router";
 import {CartEntryData} from "../../core/data/cart-entry.data";
+import {fadeInAnimation} from "../../core/animation/fadeInAnimation.animation";
 
 @Component({
+    animations : [fadeInAnimation],
+    host: { '[@fadeInAnimation]': '' },
     selector: 'app-cart-page',
     templateUrl: './cart-page.component.html',
     styleUrls: ['./cart-page.component.scss']

@@ -6,10 +6,13 @@ import {ProductVariantData} from "../../core/data/product-variant.data";
 import {Location} from "@angular/common";
 import {ProductImageSliderComponent} from "../../shared/components/product-image-slider/product-image-slider.component";
 import {CartService} from "../../core/service/cart.service";
+import {fadeInAnimation} from "../../core/animation/fadeInAnimation.animation";
 
 declare var $: any;
 
 @Component({
+    animations : [fadeInAnimation],
+    host: { '[@fadeInAnimation]': '' },
     selector: 'app-product-detail-page',
     templateUrl: './product-detail-page.component.html',
     styleUrls: ['./product-detail-page.component.scss']

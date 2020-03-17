@@ -3,10 +3,13 @@ import {ProductData} from "../../../core/data/product.data";
 import {ProductService} from "../../../core/service/product.service";
 import {ProductVariantData} from "../../../core/data/product-variant.data";
 import {CartService} from "../../../core/service/cart.service";
+import {fadeInAnimation} from "../../../core/animation/fadeInAnimation.animation";
 
 declare var $: any;
 
 @Component({
+    animations : [fadeInAnimation],
+    host: { '[@fadeInAnimation]': '' },
     selector: 'app-product-collection-item',
     templateUrl: './product-collection-item.component.html',
     styleUrls: ['./product-collection-item.component.scss']
@@ -33,7 +36,9 @@ export class ProductCollectionItemComponent implements OnInit {
     set product(value: ProductData) {
         this._product = value;
         this.displayStyleVariant = this._product.variants.find(o => true);
-        this.displaySizeVariant = this.displayStyleVariant.variants.find(o => true);
+        if(this.displayStyleVariant){
+            this.displaySizeVariant = this.displayStyleVariant.variants.find(o => true);
+        }
     }
 
     displayStyleVariant: ProductVariantData;
@@ -63,7 +68,7 @@ export class ProductCollectionItemComponent implements OnInit {
     }
 
     displayQuickView() {
-        this.productService.showQuickViewFor(this.displayStyleVariant, this.imageWrapper)
+        this.productService.showQuickViewFor(this.displayStyleVariant, this.imageWrapper, this.product)
     }
 
     addToCart() {

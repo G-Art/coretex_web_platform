@@ -1,8 +1,11 @@
 import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {StoreData} from "../../core/data/store.data";
+import {fadeInAnimation} from "../../core/animation/fadeInAnimation.animation";
 declare var $: any;
 
 @Component({
+  animations : [fadeInAnimation],
+  host: { '[@fadeInAnimation]': '' },
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss']

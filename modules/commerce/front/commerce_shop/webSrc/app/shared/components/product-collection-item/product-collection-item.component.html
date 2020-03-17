@@ -8,9 +8,9 @@
             <span *ngIf="displaySizeVariant.hotBadge" class="hot">Hot</span>
         </div>
         <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
-            <img *ngFor="let img of displayStyleVariant.images" src="/v1{{img.path}}"
+            <img *ngFor="let img of displayStyleVariant.images" [src]="'/v1'+img.path"
                  class="img-fluid"
-                 alt="{{img.alt}}">
+                 [alt]="img.alt">
         </a>
         <div class="product-hover-icon-wrapper">
             <span class="single-icon single-icon--quick-view">
@@ -68,13 +68,13 @@
                 </li>
             </ul>
         </div>
-        <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"
-           data-tippy-inertia="true" data-tippy-animation="shift-away"
-           data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder"
-           data-tippy-placement="left">
-            <i class="fa fa-heart-o"></i>
-            <i class="fa fa-heart"></i>
-        </a>
+<!--        <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"-->
+<!--           data-tippy-inertia="true" data-tippy-animation="shift-away"-->
+<!--           data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder"-->
+<!--           data-tippy-placement="left">-->
+<!--            <i class="fa fa-heart-o"></i>-->
+<!--            <i class="fa fa-heart"></i>-->
+<!--        </a>-->
     </div>
 </div>
 
@@ -85,13 +85,13 @@
 <div *ngIf="itemView === 'list'" class="single-list-product">
 
     <div class="single-list-product__image">
-        <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"
-           data-tippy-inertia="true" data-tippy-animation="shift-away"
-           data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder"
-           data-tippy-placement="left">
-            <i class="fa fa-heart-o"></i>
-            <i class="fa fa-heart"></i>
-        </a>
+<!--        <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"-->
+<!--           data-tippy-inertia="true" data-tippy-animation="shift-away"-->
+<!--           data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder"-->
+<!--           data-tippy-placement="left">-->
+<!--            <i class="fa fa-heart-o"></i>-->
+<!--            <i class="fa fa-heart"></i>-->
+<!--        </a>-->
 
         <div class="product-badge-wrapper">
             <span *ngIf="displaySizeVariant.discountBadgeInfo"
@@ -99,9 +99,9 @@
             <span *ngIf="displaySizeVariant.hotBadge" class="hot">Hot</span>
         </div>
         <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
-            <img *ngFor="let img of displayStyleVariant.images" src="/v1{{img.path}}"
+            <img *ngFor="let img of displayStyleVariant.images" [src]="'/v1'+img.path"
                  class="img-fluid"
-                 alt="{{img.alt}}">
+                 [alt]="img.alt">
         </a>
 
 

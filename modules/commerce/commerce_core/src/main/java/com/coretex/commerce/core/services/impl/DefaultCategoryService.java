@@ -6,6 +6,7 @@ import com.coretex.commerce.core.services.CategoryService;
 import com.coretex.items.cx_core.CategoryItem;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -33,6 +34,11 @@ public class DefaultCategoryService extends AbstractGenericItemService<CategoryI
 	@Override
 	public Stream<CategoryItem> listByParent(UUID categoryUuid) {
 		return categoryDao.findByParent(categoryUuid);
+	}
+
+	@Override
+	public CategoryItem findByCode(String code) {
+		return categoryDao.findSingle(Map.of(CategoryItem.CODE, code), true);
 	}
 
 }

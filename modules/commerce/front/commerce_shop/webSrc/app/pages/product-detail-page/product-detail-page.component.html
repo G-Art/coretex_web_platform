@@ -77,9 +77,10 @@
                             </ul>
                         </div>
 
-                        <div class="product-size" *ngIf="productStyleVariant && productStyleVariant.variants.length>1">
-                            <span class="product-details-title">SIZE: </span>
-                            <select class="nice-select" #select (change)='changeSizeVariant(select.value)'>
+                        <div class="product-size" *ngIf="productStyleVariant ">
+                            <span class="product-details-title">SIZE: </span><span
+                                *ngIf="productStyleVariant.variants.length == 1">{{productDetailVariant.size}}</span>
+                            <select *ngIf="productStyleVariant.variants.length>1" class="nice-select" #select (change)='changeSizeVariant(select.value)'>
                                 <option *ngFor="let size of productStyleVariant.variants"
                                         [selected]="size.uuid == productDetailVariant.uuid"
                                         [value]="size.code">{{size.size}}</option>

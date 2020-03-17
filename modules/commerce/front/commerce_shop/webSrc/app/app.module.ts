@@ -9,9 +9,10 @@ import {CoreModule} from "./core/core.module";
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
-import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
+import {LoginLayoutComponent} from './layouts/login-layout/login-layout.component';
 import {ComponentsModule} from "./shared/components/components.module";
 import {DirectivesModule} from "./shared/directives/directives.module";
+import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import {DirectivesModule} from "./shared/directives/directives.module";
         PagesModule,
         RoutingModule,
         CoreModule,
+        NgxSkeletonLoaderModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -36,8 +38,7 @@ import {DirectivesModule} from "./shared/directives/directives.module";
         DirectivesModule
     ],
     providers: [],
-    exports: [
-    ],
+    exports: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {
