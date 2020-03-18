@@ -15,6 +15,7 @@ import {DirectivesModule} from "../shared/directives/directives.module";
 import {FormsModule} from "@angular/forms";
 import { CartPageComponent } from './cart-page/cart-page.component';
 import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
+import { CheckoutPageComponent } from './checkout-page/checkout-page.component';
 
 @NgModule({
     declarations: [
@@ -24,7 +25,8 @@ import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
         HomePageComponent,
         ProductListPageComponent,
         ProductDetailPageComponent,
-        CartPageComponent
+        CartPageComponent,
+        CheckoutPageComponent
     ],
     imports: [
         FragmentsModule,

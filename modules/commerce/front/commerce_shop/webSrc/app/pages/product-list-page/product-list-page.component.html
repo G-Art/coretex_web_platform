@@ -6,7 +6,7 @@
             <div class="col-lg-6 offset-lg-3">
                 <!--=======  breadcrumb wrapper  =======-->
 
-                <div class="breadcrumb-wrapper" *ngIf="searchResult">
+                <div class="breadcrumb-wrapper" *ngIf="!showSkeleton">
                     <ul class="breadcrumb-list">
                         <li *ngFor="let bc of searchResult.breadcrumb" [class.active]="bc.active">
                             <a *ngIf="!bc.active else activeBc" routerLink="{{bc.link}}">{{bc.text}}</a>
@@ -15,6 +15,9 @@
                             </ng-template>
                         </li>
                     </ul>
+                </div>
+                <div class="breadcrumb-wrapper" *ngIf="showSkeleton">
+                    <ngx-skeleton-loader count="1"></ngx-skeleton-loader>
                 </div>
 
                 <!--=======  End of breadcrumb wrapper  =======-->

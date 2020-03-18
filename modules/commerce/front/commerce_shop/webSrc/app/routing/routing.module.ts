@@ -10,6 +10,7 @@ import {RegisterPageComponent} from "../pages/register-page/register-page.compon
 import {ProductListPageComponent} from "../pages/product-list-page/product-list-page.component";
 import {ProductDetailPageComponent} from "../pages/product-detail-page/product-detail-page.component";
 import {CartPageComponent} from "../pages/cart-page/cart-page.component";
+import {CheckoutPageComponent} from "../pages/checkout-page/checkout-page.component";
 
 
 const routes: Routes = [
@@ -31,6 +32,10 @@ const routes: Routes = [
             {
                 path: 'cart',
                 component: CartPageComponent
+            },
+            {
+                path: 'checkout',
+                component: CheckoutPageComponent
             },
             {
                 path: 'product/:code',

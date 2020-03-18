@@ -36,15 +36,15 @@
                class="theme-button theme-button--minicart-button">
                 VIEW CART
             </a>
-            <a href="checkout.html"
+            <a routerLink="/checkout"
                class="theme-button theme-button--alt theme-button--minicart-button theme-button--minicart-button--alt mb-0">
                 CHECKOUT
             </a>
         </div>
 
-        <p class="minicart-wrapper__featuretext">
-            Free Shipping on All Orders Over $100!
-        </p>
+<!--        <p class="minicart-wrapper__featuretext">-->
+<!--            Free Shipping on All Orders Over $100!-->
+<!--        </p>-->
     </ng-template>
 
     <ng-template [ngIf]="!miniCart.entries || miniCart.entries.length == 0">

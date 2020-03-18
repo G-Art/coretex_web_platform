@@ -73,12 +73,9 @@ public class DefaultProductFacade implements ProductFacade {
 		categories.get(categories.size()-1).setActive(true);
 
 		searchPageResult.setBreadcrumb(categories.toArray(new BreadcrumbData[0]));
-
-		LOG.info("Convert products ...");
 		searchPageResult.setProducts(searchResult.getResultStream()
 				.map(shortProductDataMapper::fromItem)
 				.collect(Collectors.toList()));
-		LOG.info("Convert products end");
 		return searchPageResult;
 	}
 
