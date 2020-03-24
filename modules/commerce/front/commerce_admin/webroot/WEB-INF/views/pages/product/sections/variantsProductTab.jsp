@@ -1,5 +1,6 @@
 <%--@elvariable id="product" type="com.coretex.commerce.data.forms.ProductForm"--%>
 <%--@elvariable id="stores" type="java.util.List<com.coretex.commerce.data.StoreData>"--%>
+<%--@elvariable id="variantTypes" type="java.util.Set<String>"--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form-tags" tagdir="/WEB-INF/tags/common/form" %>
 <%@ taglib prefix="components" tagdir="/WEB-INF/tags/common/components" %>
@@ -11,7 +12,14 @@
                                rowId="uuid"
                                actionTarget="5"
                                actionPath="/product/${product.uuid}/variant">
-                <jsp:attribute name="theader">
+        <jsp:attribute name="cardHeader">
+                    <button type="button"
+                            class="btn btn-primary waves-effect waves-light f-right d-inline-block md-trigger"
+                            data-modal="modal-variant">
+                        <i class="icofont icofont-plus m-r-5"></i> Add Product
+                    </button>
+                </jsp:attribute>
+        <jsp:attribute name="theader">
                     <tr>
                         <th>Image</th>
                         <th>SKU</th>
@@ -28,7 +36,8 @@
                                 if(data){
                                     return  `<img style="max-width: 200px;" src="/v1\${data}" class="img-fluid">`
                                 }else {
-                                    return  `<img style="max-width: 200px;" src="<c:url value="/resources/assets/images/service/no_image.svg"/>" class="img-fluid">`
+                                    return  `<img style="max-width: 200px;" src="<c:url
+                                                  value="/resources/assets/images/service/no_image.svg"/>" class="img-fluid">`
                                 }
                             }
                         },
@@ -39,4 +48,5 @@
                     ]
                 </jsp:attribute>
     </components:tableComponent>
+
 </c:if>

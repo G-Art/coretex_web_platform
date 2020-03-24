@@ -60,11 +60,11 @@
                                 "rowId": '${rowId}',
                                 "columns": <jsp:invoke fragment="columns"/>
                                 <c:if test="${not empty actionTarget}">,
-                                "initComplete": function () {
-                                    <c:if test="${not empty actionPath}">
-                                    $("button.edit-${tableId}-button").click( edit_${tableId} );
-                                    </c:if>
-                                },
+                                <%--"initComplete": function () {--%>
+                                <%--    <c:if test="${not empty actionPath}">--%>
+                                <%--    $("button.edit-${tableId}-button").click( edit_${tableId} );--%>
+                                <%--    </c:if>--%>
+                                <%--},--%>
                                 "columnDefs": [{
                                     "targets": ${actionTarget},
                                     // "data": null,
@@ -73,6 +73,7 @@
                                         return `<div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
                                         <div class="btn-group btn-group-sm" style="float: none;">
                                             <button  type="button" data-item-uuid="\${row['${rowId}']}"
+                                            onclick="edit_${tableId}(this)"
                                                      class="edit-${tableId}-button tabledit-edit-button btn btn-primary waves-effect waves-light"
                                                      style="float: none;margin: 5px;">
                                                 <span class="icofont icofont-ui-edit"></span>
@@ -83,15 +84,14 @@
                                 }]
                                 </c:if>
                             });
-                            <c:if test="${not empty actionPath}">
-                            function edit_${tableId}( event ) {
-                                let target = event.currentTarget;
+
+                        });
+                        <c:if test="${not empty actionPath}">
+                            function edit_${tableId}(target) {
                                 window.location.pathname = "${pageContext.request.contextPath}${actionPath}/" + target.dataset.itemUuid;
                                 console.log("Edit: "+target.dataset.itemUuid);
                             }
-                            </c:if>
-                        });
-
+                        </c:if>
 
                     </script>
 

@@ -3,6 +3,7 @@ package com.coretex.core.activeorm.query.operations;
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.dataholders.InsertValueDataHolder;
 import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
+import com.coretex.core.activeorm.query.specs.CascadeInsertOperationSpec;
 import com.coretex.core.activeorm.query.specs.InsertOperationSpec;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
@@ -46,7 +47,11 @@ public class InsertOperation extends ModificationOperation<Insert, InsertOperati
 
 	@Override
 	public void executeOperation() {
-		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getQuery(),
+		var query = getQuery();
+		if(LOG.isDebugEnabled()){
+			LOG.debug(String.format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), getOperationSpec() instanceof CascadeInsertOperationSpec));
+		}
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query,
 				new ModificationSqlParameterSource<InsertValueDataHolder>(getOperationSpec().getInsertValueDatas())));
 	}
 

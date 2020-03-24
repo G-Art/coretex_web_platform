@@ -29,7 +29,6 @@ public class PageableSelectOperation<T> extends SelectOperation<T> {
 	public void execute() {
 		super.execute();
 		Select countStatement = parseQuery(pageableSelectOperationSpec.getTotalCountQuery());
-		doTransformation(countStatement);
 		var results = getJdbcTemplate().query(countStatement.toString(),
 				new SelectSqlParameterSource(getOperationSpec()),
 				getExtractorFunction().apply(this)).collect(Collectors.toList());

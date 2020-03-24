@@ -27,9 +27,6 @@ public abstract class SqlOperation<S extends Statement, O extends SqlOperationSp
 	public SqlOperation(O operationSpec) {
 		this.operationSpec = operationSpec;
 		var query = operationSpec.getQuery();
-		if(LOG.isDebugEnabled()){
-			LOG.debug("Sql operation by query [{}]", query);
-		}
 		if (!operationSpec.isNativeQuery()) {
 			querySupplier = () -> {
 				S statement = parseQuery(query);

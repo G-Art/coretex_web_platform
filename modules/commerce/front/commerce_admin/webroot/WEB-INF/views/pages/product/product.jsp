@@ -1,4 +1,4 @@
-<%--@elvariable id="product" type="com.coretex.commerce.data.ProductData"--%>
+<%--@elvariable id="product" type="com.coretex.commerce.data.forms.ProductForm"--%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -35,6 +35,7 @@
               href="<c:url value="/resources/bower_components/switchery/css/switchery.min.css"/>">
         <link rel="stylesheet" type="text/css"
               href="<c:url value="/resources/bower_components/bootstrap-tagsinput/css/bootstrap-tagsinput.css"/>">
+        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/css/component.css"/>"/>
 	</jsp:attribute>
 
     <jsp:attribute name="pageScripts">
@@ -70,9 +71,24 @@
                 src="<c:url value="/resources/bower_components/switchery/js/switchery.min.js"/>"></script>
         <script type="text/javascript"
                 src="<c:url value="/resources/bower_components/bootstrap-tagsinput/js/bootstrap-tagsinput.js"/>"></script>
+        <script type="text/javascript"
+                src="<c:url value="/resources/assets/js/modalEffects.js"/>"></script>
+        <script type="text/javascript"
+                src="<c:url value="/resources/assets/js/classie.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resources/assets/js/script.js"/>"></script>
 <%--        <script src="https://cdn.ckeditor.com/ckeditor5/17.0.0/inline/ckeditor.js"></script>--%>
 <%--        <script src="<c:url value="/resources/assets/pages/ckeditor/ckeditor.js"/>"></script>--%>
+        <script>
+            'use strict';
+            $(document).ready(function() {
+                $(".close_btn").on("click", function() {
+                    $('.pname').val('');
+                    $('.jFiler-items').css('display','none');
+                    $('.stock').val('');
+                    $('.pamount').val('');
+                });
+            } );
+        </script>
          <script>
              let elemprimary = document.querySelector('.js-success');
              let switchery = new Switchery(elemprimary, {
@@ -90,7 +106,7 @@
                 <div class="col-lg-8">
                     <div class="page-header-title">
                         <div class="d-inline">
-                            <h4>Product</h4>
+                            <h4>Product <c:if test="${not empty baseProduct}"> ${product.variantType} </c:if> </h4>
                             <span>${product.uuid == null ? 'Create' : 'Edit - '.concat(product.uuid)}</span>
                         </div>
                     </div>

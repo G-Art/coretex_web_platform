@@ -4,14 +4,9 @@ import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.specs.LocalizedDataSaveOperationSpec;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.core.services.bootstrap.DbDialectService;
-import com.coretex.core.utils.TypeUtil;
-import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
-import com.coretex.items.core.RegularTypeItem;
 import com.coretex.server.ApplicationContextProvider;
 import net.sf.jsqlparser.statement.Statement;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -49,11 +44,19 @@ public class LocalizedDataSaveOperation extends ModificationOperation<Statement,
 
 		if(fetcher.hasValuesForInsert()){
 			Map<Locale, Object> insertValues = fetcher.getInsertValues();
-			executeJdbcOperation(jdbcTemplate -> jdbcTemplate.batchUpdate(getOperationSpec().getInsertQuery(), buildParams(insertValues)));
+			var query = getOperationSpec().getInsertQuery();
+			if(LOG.isDebugEnabled()){
+				LOG.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));
+			}
+			executeJdbcOperation(jdbcTemplate -> jdbcTemplate.batchUpdate(query, buildParams(insertValues)));
 		}
 		if(fetcher.hasValuesForUpdate()){
 			Map<Locale, Object> updateValues = fetcher.getUpdateValues();
-			executeJdbcOperation(jdbcTemplate -> jdbcTemplate.batchUpdate(getOperationSpec().getUpdateQuery(), buildParams(updateValues)));
+			var query = getOperationSpec().getUpdateQuery();
+			if(LOG.isDebugEnabled()){
+				LOG.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));
+			}
+			executeJdbcOperation(jdbcTemplate -> jdbcTemplate.batchUpdate(query, buildParams(updateValues)));
 		}
 	}
 

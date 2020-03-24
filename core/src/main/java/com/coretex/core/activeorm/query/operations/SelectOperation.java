@@ -70,7 +70,11 @@ public class SelectOperation<T> extends SqlOperation<Select, SelectOperationSpec
 
 	@Override
 	public void execute() {
-		result = getJdbcTemplate().query(getQuery(),
+		var query = getQuery();
+		if(LOGGER.isDebugEnabled()){
+			LOGGER.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));
+		}
+		result = getJdbcTemplate().query(query,
 				new SelectSqlParameterSource(getOperationSpec()),
 				extractorFunction.apply(this));
 	}

@@ -3,6 +3,7 @@ package com.coretex.core.activeorm.query.operations;
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.dataholders.RemoveValueDataHolder;
 import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
+import com.coretex.core.activeorm.query.specs.CascadeRemoveOperationSpec;
 import com.coretex.core.activeorm.query.specs.RemoveOperationSpec;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.items.core.GenericItem;
@@ -63,7 +64,11 @@ public class RemoveOperation extends ModificationOperation<Delete, RemoveOperati
 
 	@Override
 	public void executeOperation() {
-		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getQuery(),
+		var query = getQuery();
+		if(LOG.isDebugEnabled()){
+			LOG.debug(String.format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), getOperationSpec() instanceof CascadeRemoveOperationSpec));
+		}
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query,
 				new ModificationSqlParameterSource<RemoveValueDataHolder>(getOperationSpec().getValueDatas())));
 	}
 

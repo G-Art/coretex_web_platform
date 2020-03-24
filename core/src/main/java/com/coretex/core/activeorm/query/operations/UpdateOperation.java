@@ -3,6 +3,7 @@ package com.coretex.core.activeorm.query.operations;
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.dataholders.UpdateValueDataHolder;
 import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
+import com.coretex.core.activeorm.query.specs.CascadeUpdateOperationSpec;
 import com.coretex.core.activeorm.query.specs.UpdateOperationSpec;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.core.general.utils.OperationUtils;
@@ -61,7 +62,11 @@ public class UpdateOperation extends ModificationOperation<Update, UpdateOperati
 
 	@Override
 	public void executeOperation() {
-		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getQuery(),
+		var query = getQuery();
+		if(LOG.isDebugEnabled()){
+			LOG.debug(String.format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), getOperationSpec() instanceof CascadeUpdateOperationSpec));
+		}
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query,
 				new ModificationSqlParameterSource<UpdateValueDataHolder>(getOperationSpec().getUpdateValueDatas())));
 	}
 

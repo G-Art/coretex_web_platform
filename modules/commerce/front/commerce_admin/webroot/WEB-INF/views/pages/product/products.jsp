@@ -102,7 +102,7 @@
             <content:contentInfoBlocks/>
             <components:tableComponent title="All products"
                                        description="List of products"
-                                       tableId="productTable"
+                                       tableId="productsTable"
                                        dataSourceLink="/product/paginated"
                                        rowId="uuid"
                                        actionTarget="5"
@@ -142,7 +142,6 @@
                 </jsp:attribute>
             </components:tableComponent>
 
-            <!-- Add Contact Start Model start-->
             <div class="md-modal md-effect-13 addcontact" id="modal-13">
                 <div class="md-content">
                     <h3 class="f-26">Add Product</h3>
@@ -163,7 +162,6 @@
                 </div>
             </div>
             <div class="md-overlay"></div>
-            <!-- Add Contact Ends Model end-->
         </div>
         <!-- Page-body end -->
 

@@ -1,5 +1,6 @@
 <%--@elvariable id="product" type="com.coretex.commerce.data.forms.ProductForm"--%>
 <%--@elvariable id="stores" type="java.util.List<com.coretex.commerce.data.StoreData>"--%>
+<%--@elvariable id="baseProduct" type="com.coretex.items.cx_core.ProductItem"--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tags-account" tagdir="/WEB-INF/tags/account" %>
 <%@ taglib prefix="tags-common" tagdir="/WEB-INF/tags/common" %>
@@ -7,11 +8,40 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <form id="productForm" action="<c:url value="/product/save"/>" method="post" class="md-float-material card-block">
+        <c:choose>
+            <c:when test="${not empty baseProduct}">
+                <c:url var="productSaveUrl" value="/product/${baseProduct.uuid}/variant/save"/>
+            </c:when>
+            <c:otherwise>
+                <c:url var="productSaveUrl" value="/product/save"/>
+            </c:otherwise>
+        </c:choose>
+
+        <form id="productForm" action="${productSaveUrl}" method="post"
+              class="md-float-material card-block">
+            <c:if test="${not empty baseProduct}">
+                <input type="hidden" name="variantType" value="${product.variantType}">
+            </c:if>
             <input type="hidden" name="uuid" value="${product.uuid}">
             <components:cardBlock title="Product"
                                   description="${product.uuid == null ? 'Create' : 'Edit - '.concat(product.uuid)}">
-                    <jsp:attribute name="cardBlock">
+                <jsp:attribute name="cardHeader">
+                    <c:if test="${baseProduct != null}">
+                        <c:choose>
+                            <c:when test="${baseProduct.metaType.typeCode eq 'Product'}">
+                                <c:url var="back" value="/product/${baseProduct.uuid}"/>
+                            </c:when>
+                            <c:otherwise>
+                                <c:url var="back" value="/product/${baseProduct.baseProduct.uuid}/variant/${baseProduct.uuid}"/>
+                            </c:otherwise>
+                        </c:choose>
+                        <a href="${back}"
+                                class="btn btn-primary f-right d-inline-block">
+                            <i class="icofont icofont-arrow-left m-r-5"></i> Back
+                        </a>
+                    </c:if>
+                </jsp:attribute>
+                <jsp:attribute name="cardBlock">
 
                         <tags-account:accountTabsComonent>
                             <jsp:attribute name="tabs">
@@ -57,6 +87,43 @@
                     </jsp:attribute>
             </components:cardBlock>
         </form>
+        <div class="md-modal md-effect-13 addcontact" id="modal-variant">
+            <div class="md-content">
+                <h3 class="f-26">Add Product</h3>
+                <div>
+                    <form action="<c:url value="/product/${product.uuid}/variant/new"/>" method="get">
 
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="icofont icofont-user"></i>
+                                </span>
+                            </div>
+                            <input type="text" name="code" class="form-control pname" placeholder="Code">
+
+                        </div>
+                        <div class="input-group">
+                            <select name="variantType" class="form-control">
+                                <c:forEach var="type" items="${variantTypes}">
+                                    <option value="${type}">${type}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit"
+                                    class="btn btn-primary waves-effect m-r-20 f-w-600 d-inline-block save_btn">
+                                Create
+                            </button>
+                            <button type="button"
+                                    class="btn btn-primary waves-effect m-r-20 f-w-600 md-close d-inline-block close_btn">
+                                Close
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="md-overlay"></div>
     </div>
 </div>

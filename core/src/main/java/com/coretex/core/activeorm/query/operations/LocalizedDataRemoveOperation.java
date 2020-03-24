@@ -26,7 +26,11 @@ public class LocalizedDataRemoveOperation extends ModificationOperation<Statemen
 
 	@Override
 	public void executeOperation() {
-		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(getQuery(), getOperationSpec().getParams()));
+		var query = getQuery();
+		if(LOG.isDebugEnabled()){
+			LOG.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));
+		}
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query, getOperationSpec().getParams()));
 	}
 
 	@Override

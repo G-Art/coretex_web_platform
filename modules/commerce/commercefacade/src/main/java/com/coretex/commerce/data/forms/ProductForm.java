@@ -1,6 +1,7 @@
 package com.coretex.commerce.data.forms;
 
 import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.VariantProductItem;
 import com.google.common.collect.Maps;
 
 import java.util.Locale;
@@ -22,6 +23,9 @@ public class ProductForm {
 	private UUID store;
 	private UUID category;
 
+
+	private String variantType;
+
 	public ProductForm() {
 	}
 
@@ -37,6 +41,11 @@ public class ProductForm {
 		this.available = product.getAvailable();
 		this.manufacturer = product.getManufacturer() == null ? null : product.getManufacturer().getUuid();
 		this.store = product.getStore() == null ? null : product.getStore().getUuid();
+
+		if(product instanceof VariantProductItem){
+			this.variantType = product.getMetaType().getTypeCode();
+		}
+
 	}
 
 	private Map<String, String> convertLocale(Map<Locale, String> localized) {
@@ -134,5 +143,13 @@ public class ProductForm {
 
 	public void setCategory(UUID category) {
 		this.category = category;
+	}
+
+	public String getVariantType() {
+		return variantType;
+	}
+
+	public void setVariantType(String variantType) {
+		this.variantType = variantType;
 	}
 }

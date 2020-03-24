@@ -15,6 +15,7 @@ import com.coretex.commerce.mapper.ProductDataMapper;
 import com.coretex.commerce.mapper.ShortProductDataMapper;
 import com.coretex.commerce.mapper.VariantProductDataMapper;
 import com.coretex.commerce.mapper.forms.ProductFormMapper;
+import com.coretex.commerce.mapper.forms.VariantProductMapper;
 import com.coretex.commerce.mapper.minimal.MinimalProductDataMapper;
 import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.items.cx_core.CategoryItem;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -55,6 +57,9 @@ public class DefaultProductFacade implements ProductFacade {
 
 	@Resource
 	private ProductFormMapper productFormMapper;
+
+	@Resource
+	private Map<String, VariantProductMapper<?>> variantMappers;
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultProductFacade.class);
 
@@ -135,8 +140,17 @@ public class DefaultProductFacade implements ProductFacade {
 	}
 
 	@Override
-	public ProductItem save(ProductForm productForm) {
-		var productItem = productFormMapper.toItem(productForm);
+	public ProductItem save(ProductForm productForm, UUID uuid) {
+		ProductItem productItem;
+		if(Objects.nonNull(productForm.getVariantType())){
+			productItem = variantMappers.get(productForm.getVariantType()).toItem(productForm);
+			var baseProduct = productService.getByUUID(uuid);
+			((VariantProductItem)productItem).setBaseProduct(baseProduct);
+
+		}else{
+			productItem = productFormMapper.toItem(productForm);
+		}
+
 		productService.save(productItem);
 		return productItem;
 	}

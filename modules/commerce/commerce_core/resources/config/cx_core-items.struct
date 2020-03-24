@@ -6,6 +6,7 @@ elements {
             source(availabilities) {
                 description = "Availabilities"
                 containerType = Set
+                associated = true
             }
             target(product) {
                 description = "Product"
@@ -16,6 +17,7 @@ elements {
             source(prices) {
                 description = "Prices"
                 containerType = Set
+                associated = true
             }
             target(productAvailability) {
                 description = "Product availability"
@@ -49,6 +51,7 @@ elements {
             source(variants) {
                 description = "Variants"
                 containerType = Set
+                associated = true
             }
             target(baseProduct) {
                 description = "Base products"

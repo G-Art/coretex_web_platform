@@ -22,5 +22,5 @@ public interface ProductFacade extends PageableDataTableFacade<ProductItem, Mini
 	Long count();
 	Stream<ProductData> getAll();
 
-	ProductItem save(ProductForm productform);
+	ProductItem save(ProductForm productform, UUID uuid);
 }

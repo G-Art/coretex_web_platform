@@ -24,6 +24,10 @@
         <appender-ref ref="FILE" />
     </logger>
 
+    <logger name="com.coretex.core.activeorm.query" level="debug" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </logger>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

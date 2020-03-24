@@ -2,11 +2,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
     <context:component-scan base-package="com.coretex.commerce.core" />
 
+    <util:map id="variantMappers" value-type="com.coretex.commerce.mapper.forms.VariantProductMapper">
+        <entry key="#{T(com.coretex.items.cx_core.SizeVariantProductItem).ITEM_TYPE}" value-ref="sizeVariantProductMapperImpl"/>
+        <entry key="#{T(com.coretex.items.cx_core.StyleVariantProductItem).ITEM_TYPE}" value-ref="styleVariantProductMapperImpl"/>
+    </util:map>
 </beans>
