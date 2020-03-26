@@ -5,6 +5,7 @@
 
 <%@ attribute name="description" required="false" %>
 <%@ attribute name="actionTarget" required="false" %>
+<%@ attribute name="deleteActionPath" required="false" %>
 <%@ attribute name="actionPath" required="false" %>
 
 <%@ attribute name="fullCardButton" required="false" type="java.lang.Boolean" %>
@@ -60,11 +61,6 @@
                                 "rowId": '${rowId}',
                                 "columns": <jsp:invoke fragment="columns"/>
                                 <c:if test="${not empty actionTarget}">,
-                                <%--"initComplete": function () {--%>
-                                <%--    <c:if test="${not empty actionPath}">--%>
-                                <%--    $("button.edit-${tableId}-button").click( edit_${tableId} );--%>
-                                <%--    </c:if>--%>
-                                <%--},--%>
                                 "columnDefs": [{
                                     "targets": ${actionTarget},
                                     // "data": null,
@@ -72,13 +68,23 @@
                                     'render': function (data, type, row) {
                                         return `<div class="tabledit-toolbar btn-toolbar" style="text-align: left;">
                                         <div class="btn-group btn-group-sm" style="float: none;">
-                                            <button  type="button" data-item-uuid="\${row['${rowId}']}"
-                                            onclick="edit_${tableId}(this)"
-                                                     class="edit-${tableId}-button tabledit-edit-button btn btn-primary waves-effect waves-light"
-                                                     style="float: none;margin: 5px;">
+                                            <button type="button" data-item-uuid="\${row['${rowId}']}"
+                                                    onclick="edit_${tableId}(this)"
+                                                    class="edit-${tableId}-button tabledit-edit-button btn btn-primary waves-effect waves-light"
+                                                    style="float: none;margin: 5px;">
                                                 <span class="icofont icofont-ui-edit"></span>
                                             </button>
                                         </div>
+                                        <c:if test="${not empty deleteActionPath}">
+                                            <div class="btn-group btn-group-sm" style="float: none;">
+                                                <button type="button"
+                                                        onclick="removeItemModalPanel('${pageContext.request.contextPath}${deleteActionPath}/\${row['${rowId}']}')"
+                                                        class="tabledit-delete-button btn btn-danger waves-effect waves-light removeItem"
+                                                        style="float: none;margin: 5px;">
+                                                    <span class="icofont icofont-close"></span>
+                                                </button>
+                                            </div>
+                                        </c:if>
                                     </div>`
                                     }
                                 }]

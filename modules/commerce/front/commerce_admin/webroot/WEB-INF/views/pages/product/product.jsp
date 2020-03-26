@@ -35,6 +35,8 @@
               href="<c:url value="/resources/bower_components/switchery/css/switchery.min.css"/>">
         <link rel="stylesheet" type="text/css"
               href="<c:url value="/resources/bower_components/bootstrap-tagsinput/css/bootstrap-tagsinput.css"/>">
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/bower_components/sweetalert/css/sweetalert.css"/>"/>
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/css/component.css"/>"/>
 	</jsp:attribute>
 
@@ -74,7 +76,9 @@
         <script type="text/javascript"
                 src="<c:url value="/resources/assets/js/modalEffects.js"/>"></script>
         <script type="text/javascript"
-                src="<c:url value="/resources/assets/js/classie.js"/>"></script>
+                src="<c:url value="/resources/assets/js/modalEffects.js"/>"></script>
+        <script type="text/javascript"
+                src="<c:url value="/resources/bower_components/sweetalert/js/sweetalert.min.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resources/assets/js/script.js"/>"></script>
 <%--        <script src="https://cdn.ckeditor.com/ckeditor5/17.0.0/inline/ckeditor.js"></script>--%>
 <%--        <script src="<c:url value="/resources/assets/pages/ckeditor/ckeditor.js"/>"></script>--%>

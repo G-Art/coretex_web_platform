@@ -25,7 +25,8 @@
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/select2/css/select2.min.css"/>">
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/switchery/css/switchery.min.css"/>">
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/bootstrap-tagsinput/css/bootstrap-tagsinput.css"/>">
-	    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/css/component.css"/>"/>
+	    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/sweetalert/css/sweetalert.css"/>"/>
+        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/css/component.css"/>"/>
     </jsp:attribute>
 
     <jsp:attribute name="pageScripts">
@@ -64,6 +65,8 @@
                 src="<c:url value="/resources/bower_components/bootstrap-tagsinput/js/bootstrap-tagsinput.js"/>"></script>
         <script type="text/javascript"
                 src="<c:url value="/resources/assets/js/modalEffects.js"/>"></script>
+        <script type="text/javascript"
+                src="<c:url value="/resources/bower_components/sweetalert/js/sweetalert.min.js"/>"></script>
         <script type="text/javascript"
                 src="<c:url value="/resources/assets/js/classie.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resources/assets/js/script.js"/>"></script>
@@ -106,7 +109,8 @@
                                        dataSourceLink="/product/paginated"
                                        rowId="uuid"
                                        actionTarget="5"
-                                       actionPath="/product" >
+                                       actionPath="/product"
+                                       deleteActionPath="/product/remove">
                 <jsp:attribute name="cardHeader">
                     <button type="button" class="btn btn-primary waves-effect waves-light f-right d-inline-block md-trigger"
                             data-modal="modal-13">

@@ -11,7 +11,8 @@
                                dataSourceLink="/product/variant/${product.uuid}/paginated"
                                rowId="uuid"
                                actionTarget="5"
-                               actionPath="/product/${product.uuid}/variant">
+                               actionPath="/product/${product.uuid}/variant"
+                               deleteActionPath="/product/remove" >
         <jsp:attribute name="cardHeader">
                     <button type="button"
                             class="btn btn-primary waves-effect waves-light f-right d-inline-block md-trigger"

@@ -32,14 +32,19 @@
                                 <c:url var="back" value="/product/${baseProduct.uuid}"/>
                             </c:when>
                             <c:otherwise>
-                                <c:url var="back" value="/product/${baseProduct.baseProduct.uuid}/variant/${baseProduct.uuid}"/>
+                                <c:url var="back"
+                                       value="/product/${baseProduct.baseProduct.uuid}/variant/${baseProduct.uuid}"/>
                             </c:otherwise>
                         </c:choose>
                         <a href="${back}"
-                                class="btn btn-primary f-right d-inline-block">
+                           class="btn btn-primary f-left d-inline-block">
                             <i class="icofont icofont-arrow-left m-r-5"></i> Back
                         </a>
                     </c:if>
+                    <button type="button" data-request-url = "<c:url value="/product/remove/${product.uuid}"/>"
+                            class="btn btn-danger f-right d-inline-block removeItem">
+                        <i class="icofont icofont-close m-r-5"></i> Remove
+                    </button>
                 </jsp:attribute>
                 <jsp:attribute name="cardBlock">
 
@@ -76,10 +81,6 @@
                                     <button type="submit"
                                             class="btn btn-primary waves-effect waves-light m-r-10">
                                         Save
-                                    </button>
-                                    <button type="submit"
-                                            class="btn btn-warning waves-effect waves-light">
-                                        Discard
                                     </button>
                                 </div>
                             </div>

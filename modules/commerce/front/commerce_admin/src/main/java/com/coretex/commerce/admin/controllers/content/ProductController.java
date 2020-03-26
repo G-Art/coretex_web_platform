@@ -90,14 +90,13 @@ public class ProductController extends AbstractContentController<MinimalProductD
 		return "product/product";
 	}
 
-	@RequestMapping(path = {"/remove/{uuid}"}, method = RequestMethod.GET)
+	@RequestMapping(path = {"/remove/{uuid}"}, method = {RequestMethod.GET, RequestMethod.DELETE})
 	public String removeProduct(@PathVariable(value = "uuid") UUID uuid,
 								RedirectAttributes redirectAttributes) {
-
 		productService.delete(productService.getByUUID(uuid));
 		redirectAttributes.addFlashAttribute("message", "Product removed");
 
-		return redirect("/product/" + uuid);
+		return redirect("/product");
 	}
 
 	@RequestMapping(path = {"/save", "/{uuid}/variant/save"}, method = RequestMethod.POST)
