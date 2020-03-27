@@ -6,15 +6,16 @@
             <div class="col-lg-6 offset-lg-3">
                 <!--=======  breadcrumb wrapper  =======-->
 
-                <div class="breadcrumb-wrapper">
-                    <h2 class="page-title">Shop</h2>
+                <div class="breadcrumb-wrapper" *ngIf="!showSkeleton">
                     <ul class="breadcrumb-list">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="shop-left-sidebar.html">Shop</a></li>
                         <li class="active">Shop product</li>
                     </ul>
                 </div>
-
+                <div class="breadcrumb-wrapper" *ngIf="showSkeleton">
+                    <ngx-skeleton-loader count="1"></ngx-skeleton-loader>
+                </div>
                 <!--=======  End of breadcrumb wrapper  =======-->
             </div>
         </div>
@@ -28,13 +29,14 @@
 <div class="page-content-wrapper">
     <!--=======  single product slider details area  =======-->
 
-    <div class="single-product-slider-details-area" >
+    <div class="single-product-slider-details-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6">
                     <!--=======  product details slider area  =======-->
 
-                    <div class="product-details-slider-area product-details-slider-area--side-move">
+                    <div class="product-details-slider-area product-details-slider-area--side-move"
+                         [hidden]="showSkeleton">
 
                         <div class="product-badge-wrapper" *ngIf="productDetailVariant">
                             <span *ngIf="productDetailVariant.discountBadgeInfo"
@@ -45,10 +47,19 @@
                         <ng-template #imageContainer></ng-template>
 
                     </div>
+                    <div class="product-details-slider-area product-details-slider-area--side-move"
+                         *ngIf="showSkeleton">
+                        <ngx-skeleton-loader [count]="1"
+                                             [theme]="{
+                                             'height': '567px',
+                                             'border-radius': '2px'
+                                             }"></ngx-skeleton-loader>
+
+                    </div>
 
                     <!--=======  End of product details slider area  =======-->
                 </div>
-                <div class="col-lg-6" *ngIf="productDetailVariant">
+                <div class="col-lg-6" *ngIf="!showSkeleton && productDetailVariant">
                     <!--=======  product details description area  =======-->
 
                     <div class="product-details-description-wrapper">
@@ -80,7 +91,8 @@
                         <div class="product-size" *ngIf="productStyleVariant ">
                             <span class="product-details-title">SIZE: </span><span
                                 *ngIf="productStyleVariant.variants.length == 1">{{productDetailVariant.size}}</span>
-                            <select *ngIf="productStyleVariant.variants.length>1" class="nice-select" #select (change)='changeSizeVariant(select.value)'>
+                            <select *ngIf="productStyleVariant.variants.length>1" class="nice-select" #select
+                                    (change)='changeSizeVariant(select.value)'>
                                 <option *ngFor="let size of productStyleVariant.variants"
                                         [selected]="size.uuid == productDetailVariant.uuid"
                                         [value]="size.code">{{size.size}}</option>
@@ -89,9 +101,11 @@
                         </div>
 
                         <div class="pro-qty d-inline-block">
-                            <a href="javascript:void(0)" (click)="qty > 1 ? qty = qty-1 : qty" class= "dec qty-btn"><i class="pe-7s-less"></i></a>
-                            <input type="text" [(ngModel)]="qty" >
-                            <a href="javascript:void(0)" (click)="qty = qty+1"  class="inc qty-btn"><i class="pe-7s-plus"></i></a>
+                            <a href="javascript:void(0)" (click)="qty > 1 ? qty = qty-1 : qty" class="dec qty-btn"><i
+                                    class="pe-7s-less"></i></a>
+                            <input type="text" [(ngModel)]="qty">
+                            <a href="javascript:void(0)" (click)="qty = qty+1" class="inc qty-btn"><i
+                                    class="pe-7s-plus"></i></a>
                         </div>
 
                         <div class="add-to-cart-btn d-inline-block">
@@ -111,34 +125,90 @@
                             </div>
 
                             <table>
-<!--                                <tr class="single-info">-->
-<!--                                    <td class="quickview-title">Brand:</td>-->
-<!--                                    <td class="quickview-value">BELLE NETWORK</td>-->
-<!--                                </tr>-->
+                                <!--                                <tr class="single-info">-->
+                                <!--                                    <td class="quickview-title">Brand:</td>-->
+                                <!--                                    <td class="quickview-value">BELLE NETWORK</td>-->
+                                <!--                                </tr>-->
                                 <tr class="single-info">
                                     <td class="quickview-title">SKU:</td>
                                     <td class="quickview-value">{{productDetailVariant.code}}</td>
                                 </tr>
-<!--                                <tr class="single-info">-->
-<!--                                    <td class="quickview-title">Tags:</td>-->
-<!--                                    <td class="quickview-value">-->
-<!--                                        <a href="#">Decor</a>,-->
-<!--                                        <a href="#">Light</a>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
-<!--                                <tr class="single-info">-->
-<!--                                    <td class="quickview-title">Share on:</td>-->
-<!--                                    <td class="quickview-value">-->
-<!--                                        <ul class="quickview-social-icons">-->
-<!--                                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>-->
-<!--                                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>-->
-<!--                                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>-->
-<!--                                            <li><a href="#"><i class="fa fa-pinterest"></i></a></li>-->
-<!--                                        </ul>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
+                                <!--                                <tr class="single-info">-->
+                                <!--                                    <td class="quickview-title">Tags:</td>-->
+                                <!--                                    <td class="quickview-value">-->
+                                <!--                                        <a href="#">Decor</a>,-->
+                                <!--                                        <a href="#">Light</a>-->
+                                <!--                                    </td>-->
+                                <!--                                </tr>-->
+                                <!--                                <tr class="single-info">-->
+                                <!--                                    <td class="quickview-title">Share on:</td>-->
+                                <!--                                    <td class="quickview-value">-->
+                                <!--                                        <ul class="quickview-social-icons">-->
+                                <!--                                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>-->
+                                <!--                                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>-->
+                                <!--                                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>-->
+                                <!--                                            <li><a href="#"><i class="fa fa-pinterest"></i></a></li>-->
+                                <!--                                        </ul>-->
+                                <!--                                    </td>-->
+                                <!--                                </tr>-->
                             </table>
                         </div>
+                    </div>
+
+                    <!--=======  End of product details description area  =======-->
+                </div>
+                <div class="col-lg-6" *ngIf="showSkeleton">
+                    <!--=======  product details description area  =======-->
+
+                    <div class="product-details-description-wrapper">
+                        <h2 class="item-title">
+                            <ngx-skeleton-loader count="1"
+                                                 [theme]="{
+                                             'width': '255px', 'height': '40px'
+                                             }"></ngx-skeleton-loader>
+                        </h2>
+                        <p class="price">
+                            <span class="main-price">
+                                <ngx-skeleton-loader count="1"
+                                                     [theme]="{
+                                             'width': '55px', 'height': '30px'
+                                             }"></ngx-skeleton-loader>
+                            </span>
+                        </p>
+
+                        <p class="description">
+                            <ngx-skeleton-loader count="3"></ngx-skeleton-loader>
+                        </p>
+
+                        <div class="product-color">
+                            <ngx-skeleton-loader count="3"
+                                                 appearance="circle"
+                                                 [theme]="{
+                                             'width': '17px', 'height': '17px', 'margin': '0 5px 3px 0'
+                                             }"></ngx-skeleton-loader>
+                        </div>
+
+                        <div class="product-size">
+                            <ngx-skeleton-loader count="1"
+                                                 [theme]="{
+                                             'width': '95px', 'height': '35px'
+                                             }"></ngx-skeleton-loader>
+                        </div>
+
+                        <div class="pro-qty d-inline-block">
+                            <ngx-skeleton-loader [count]="1"
+                                                 [theme]="{
+                                             'width': '95px', 'height': '35px'
+                                             }"></ngx-skeleton-loader>
+                        </div>
+
+                        <div class="add-to-cart-btn d-inline-block">
+                            <ngx-skeleton-loader [count]="1"
+                                                 [theme]="{
+                                             'width': '155px', 'height': '45px'
+                                             }"></ngx-skeleton-loader>
+                        </div>
+
                     </div>
 
                     <!--=======  End of product details description area  =======-->
@@ -151,7 +221,7 @@
 
     <!--=======  single product description tab area  =======-->
 
-    <div class="single-product-description-tab-area section-space">
+    <div class="single-product-description-tab-area section-space" *ngIf="!showSkeleton">
         <!--=======  description tab navigation  =======-->
 
         <div class="description-tab-navigation">
@@ -381,618 +451,6 @@
 
     </div>
 
-    <!--=======  End of single product description tab area  =======-->
-
-    <!--====================  related product slider area ====================-->
-
-<!--    <div class="product-slider-area section-space">-->
-<!--        <div class="container">-->
-<!--            <div class="row">-->
-<!--                <div class="col-lg-12">-->
-
-<!--                    <div class="section-title-area text-center">-->
-<!--                        <h2 class="section-title">RELATED PRODUCTS</h2>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="row">-->
-<!--                <div class="col-lg-12">-->
-<!--                    &lt;!&ndash;=======  product slider wrapper  =======&ndash;&gt;-->
-<!--                    <app-slick-slider-->
-<!--                            [styleClasses]="'product-slider-wrapper theme-slick-slider'"-->
-<!--                            [slidesToShow]='4'-->
-<!--                            [slidesToScroll]='4'-->
-<!--                            [arrows]='true'-->
-<!--                            [dots]='true'-->
-<!--                            [autoplay]='false'-->
-<!--                            [speed]='500'-->
-<!--                            [prevArrow]='{buttonClass: "slick-prev", iconClass: "fa fa-angle-left" }'-->
-<!--                            [nextArrow]='{buttonClass: "slick-next", iconClass: "fa fa-angle-right" }'-->
-<!--                            [slick_responsive]='[-->
-<!--                                            {breakpoint:1501, settings: {slidesToShow: 4, slidesToScroll: 4, arrows: false} },-->
-<!--                                            {breakpoint:1199, settings: {slidesToShow: 3, slidesToScroll: 3, arrows: false} },-->
-<!--                                            {breakpoint:991, settings: {slidesToShow: 2,slidesToScroll: 2, arrows: true, dots: false} },-->
-<!--                                            {breakpoint:767, settings: {slidesToShow: 2,slidesToScroll: 2, arrows: true, dots: false} },-->
-<!--                                            {breakpoint:575, settings: {slidesToShow: 2,slidesToScroll: 2, arrows: false, dots: true} },-->
-<!--                                            {breakpoint:479, settings: {slidesToShow: 1,slidesToScroll: 1, arrows: true, dots: false} }-->
-<!--                                        ]'>-->
-<!--                        <div class="col">-->
-<!--                            &lt;!&ndash;=======  single short view product  =======&ndash;&gt;-->
-
-<!--                            <div class="single-grid-product">-->
-<!--                                <div class="single-grid-product__image">-->
-<!--                                    <div class="product-badge-wrapper">-->
-<!--                                        <span class="onsale">-17%</span>-->
-<!--                                        <span class="hot">Hot</span>-->
-<!--                                    </div>-->
-<!--                                    <a href="product-details-basic.html" class="image-wrap">-->
-<!--                                        <img src="/app/assets/img/products/product-9-1-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                        <img src="/app/assets/img/products/product-9-2-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                    </a>-->
-<!--                                    <div class="product-hover-icon-wrapper">-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;quick-view"><a class="cd-trigger"-->
-<!--                                                                                             href="#qv-1"-->
-<!--                                                                                             data-tippy="Quick View"-->
-<!--                                                                                             data-tippy-inertia="true"-->
-<!--                                                                                             data-tippy-animation="shift-away"-->
-<!--                                                                                             data-tippy-delay="50"-->
-<!--                                                                                             data-tippy-arrow="true"-->
-<!--                                                                                             data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-search"></i></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;add-to-cart"><a href="#"-->
-<!--                                                                                              data-tippy="Add to cart"-->
-<!--                                                                                              data-tippy-inertia="true"-->
-<!--                                                                                              data-tippy-animation="shift-away"-->
-<!--                                                                                              data-tippy-delay="50"-->
-<!--                                                                                              data-tippy-arrow="true"-->
-<!--                                                                                              data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-shopping-basket"></i> <span>ADD TO CART</span></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;compare"><a href="#" data-tippy="Compare"-->
-<!--                                                                                          data-tippy-inertia="true"-->
-<!--                                                                                          data-tippy-animation="shift-away"-->
-<!--                                                                                          data-tippy-delay="50"-->
-<!--                                                                                          data-tippy-arrow="true"-->
-<!--                                                                                          data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-exchange"></i></a></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="single-grid-product__content">-->
-<!--                                    <h3 class="title"><a href="product-details-basic.html">Lighting Lamp</a></h3>-->
-<!--                                    <div class="price"><span class="main-price discounted">$145</span> <span-->
-<!--                                            class="discounted-price">$110</span></div>-->
-<!--                                    <div class="rating">-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star"></i>-->
-<!--                                    </div>-->
-<!--                                    <div class="color">-->
-<!--                                        <ul>-->
-<!--                                            <li><a class="active" href="#" data-tippy="Black" data-tippy-inertia="true"-->
-<!--                                                   data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                                   data-tippy-arrow="true" data-tippy-theme="roundborder"><span-->
-<!--                                                    class="color-picker black"></span></a></li>-->
-<!--                                            <li><a href="#" data-tippy="Blue" data-tippy-inertia="true"-->
-<!--                                                   data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                                   data-tippy-arrow="true" data-tippy-theme="roundborder"><span-->
-<!--                                                    class="color-picker blue"></span></a></li>-->
-<!--                                            <li><a href="#" data-tippy="Brown" data-tippy-inertia="true"-->
-<!--                                                   data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                                   data-tippy-arrow="true" data-tippy-theme="roundborder"><span-->
-<!--                                                    class="color-picker brown"></span></a></li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
-<!--                                    <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"-->
-<!--                                       data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                       data-tippy-arrow="true" data-tippy-theme="sharpborder"-->
-<!--                                       data-tippy-placement="left">-->
-<!--                                        <i class="fa fa-heart-o"></i>-->
-<!--                                        <i class="fa fa-heart"></i>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            &lt;!&ndash;=======  End of single short view product  =======&ndash;&gt;-->
-<!--                        </div>-->
-
-<!--                        <div class="col">-->
-<!--                            &lt;!&ndash;=======  single short view product  =======&ndash;&gt;-->
-
-<!--                            <div class="single-grid-product">-->
-<!--                                <div class="single-grid-product__image">-->
-
-<!--                                    <a href="product-details-basic.html" class="image-wrap">-->
-<!--                                        <img src="/app/assets/img/products/product-10-1-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                    </a>-->
-<!--                                    <div class="product-hover-icon-wrapper">-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;quick-view"><a class="cd-trigger"-->
-<!--                                                                                             href="#qv-1"-->
-<!--                                                                                             data-tippy="Quick View"-->
-<!--                                                                                             data-tippy-inertia="true"-->
-<!--                                                                                             data-tippy-animation="shift-away"-->
-<!--                                                                                             data-tippy-delay="50"-->
-<!--                                                                                             data-tippy-arrow="true"-->
-<!--                                                                                             data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-search"></i></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;add-to-cart"><a href="#"-->
-<!--                                                                                              data-tippy="Add to cart"-->
-<!--                                                                                              data-tippy-inertia="true"-->
-<!--                                                                                              data-tippy-animation="shift-away"-->
-<!--                                                                                              data-tippy-delay="50"-->
-<!--                                                                                              data-tippy-arrow="true"-->
-<!--                                                                                              data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-shopping-basket"></i> <span>ADD TO CART</span></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;compare"><a href="#" data-tippy="Compare"-->
-<!--                                                                                          data-tippy-inertia="true"-->
-<!--                                                                                          data-tippy-animation="shift-away"-->
-<!--                                                                                          data-tippy-delay="50"-->
-<!--                                                                                          data-tippy-arrow="true"-->
-<!--                                                                                          data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-exchange"></i></a></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="single-grid-product__content">-->
-<!--                                    <h3 class="title"><a href="product-details-basic.html">Jane Lauren Design Chair</a>-->
-<!--                                    </h3>-->
-<!--                                    <div class="price"><span class="main-price">$98</span></div>-->
-<!--                                    <div class="rating">-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star"></i>-->
-<!--                                    </div>-->
-
-<!--                                    <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"-->
-<!--                                       data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                       data-tippy-arrow="true" data-tippy-theme="sharpborder"-->
-<!--                                       data-tippy-placement="left">-->
-<!--                                        <i class="fa fa-heart-o"></i>-->
-<!--                                        <i class="fa fa-heart"></i>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            &lt;!&ndash;=======  End of single short view product  =======&ndash;&gt;-->
-<!--                        </div>-->
-
-<!--                        <div class="col">-->
-<!--                            &lt;!&ndash;=======  single short view product  =======&ndash;&gt;-->
-
-<!--                            <div class="single-grid-product">-->
-<!--                                <div class="single-grid-product__image">-->
-<!--                                    <div class="product-badge-wrapper">-->
-<!--                                        <span class="hot">Hot</span>-->
-<!--                                    </div>-->
-<!--                                    <a href="product-details-basic.html" class="image-wrap">-->
-<!--                                        <img src="/app/assets/img/products/product-11-1-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                        <img src="/app/assets/img/products/product-11-2-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                    </a>-->
-<!--                                    <div class="product-hover-icon-wrapper">-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;quick-view"><a class="cd-trigger"-->
-<!--                                                                                             href="#qv-1"-->
-<!--                                                                                             data-tippy="Quick View"-->
-<!--                                                                                             data-tippy-inertia="true"-->
-<!--                                                                                             data-tippy-animation="shift-away"-->
-<!--                                                                                             data-tippy-delay="50"-->
-<!--                                                                                             data-tippy-arrow="true"-->
-<!--                                                                                             data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-search"></i></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;add-to-cart"><a href="#"-->
-<!--                                                                                              data-tippy="Add to cart"-->
-<!--                                                                                              data-tippy-inertia="true"-->
-<!--                                                                                              data-tippy-animation="shift-away"-->
-<!--                                                                                              data-tippy-delay="50"-->
-<!--                                                                                              data-tippy-arrow="true"-->
-<!--                                                                                              data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-shopping-basket"></i> <span>ADD TO CART</span></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;compare"><a href="#" data-tippy="Compare"-->
-<!--                                                                                          data-tippy-inertia="true"-->
-<!--                                                                                          data-tippy-animation="shift-away"-->
-<!--                                                                                          data-tippy-delay="50"-->
-<!--                                                                                          data-tippy-arrow="true"-->
-<!--                                                                                          data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-exchange"></i></a></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="single-grid-product__content">-->
-<!--                                    <h3 class="title"><a href="product-details-basic.html">Jane Lauren Gregory Chair</a>-->
-<!--                                    </h3>-->
-<!--                                    <div class="price"><span class="main-price discounted">$125</span> <span-->
-<!--                                            class="discounted-price">$90</span></div>-->
-<!--                                    <div class="rating">-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star"></i>-->
-<!--                                    </div>-->
-
-<!--                                    <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"-->
-<!--                                       data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                       data-tippy-arrow="true" data-tippy-theme="sharpborder"-->
-<!--                                       data-tippy-placement="left">-->
-<!--                                        <i class="fa fa-heart-o"></i>-->
-<!--                                        <i class="fa fa-heart"></i>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            &lt;!&ndash;=======  End of single short view product  =======&ndash;&gt;-->
-<!--                        </div>-->
-
-<!--                        <div class="col">-->
-<!--                            &lt;!&ndash;=======  single short view product  =======&ndash;&gt;-->
-
-<!--                            <div class="single-grid-product">-->
-<!--                                <div class="single-grid-product__image">-->
-<!--                                    <div class="product-badge-wrapper">-->
-<!--                                        <span class="onsale">-10%</span>-->
-<!--                                    </div>-->
-<!--                                    <a href="product-details-basic.html" class="image-wrap">-->
-<!--                                        <img src="/app/assets/img/products/product-12-1-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                        <img src="/app/assets/img/products/product-12-2-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                    </a>-->
-<!--                                    <div class="product-hover-icon-wrapper">-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;quick-view"><a class="cd-trigger"-->
-<!--                                                                                             href="#qv-1"-->
-<!--                                                                                             data-tippy="Quick View"-->
-<!--                                                                                             data-tippy-inertia="true"-->
-<!--                                                                                             data-tippy-animation="shift-away"-->
-<!--                                                                                             data-tippy-delay="50"-->
-<!--                                                                                             data-tippy-arrow="true"-->
-<!--                                                                                             data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-search"></i></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;add-to-cart"><a href="#"-->
-<!--                                                                                              data-tippy="Add to cart"-->
-<!--                                                                                              data-tippy-inertia="true"-->
-<!--                                                                                              data-tippy-animation="shift-away"-->
-<!--                                                                                              data-tippy-delay="50"-->
-<!--                                                                                              data-tippy-arrow="true"-->
-<!--                                                                                              data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-shopping-basket"></i> <span>ADD TO CART</span></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;compare"><a href="#" data-tippy="Compare"-->
-<!--                                                                                          data-tippy-inertia="true"-->
-<!--                                                                                          data-tippy-animation="shift-away"-->
-<!--                                                                                          data-tippy-delay="50"-->
-<!--                                                                                          data-tippy-arrow="true"-->
-<!--                                                                                          data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-exchange"></i></a></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="single-grid-product__content">-->
-<!--                                    <h3 class="title"><a href="product-details-basic.html">Candice Desk Lamp</a></h3>-->
-<!--                                    <div class="price"><span class="main-price">$100</span></div>-->
-<!--                                    <div class="rating">-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star"></i>-->
-<!--                                    </div>-->
-
-<!--                                    <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"-->
-<!--                                       data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                       data-tippy-arrow="true" data-tippy-theme="sharpborder"-->
-<!--                                       data-tippy-placement="left">-->
-<!--                                        <i class="fa fa-heart-o"></i>-->
-<!--                                        <i class="fa fa-heart"></i>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            &lt;!&ndash;=======  End of single short view product  =======&ndash;&gt;-->
-<!--                        </div>-->
-
-<!--                        <div class="col">-->
-<!--                            &lt;!&ndash;=======  single short view product  =======&ndash;&gt;-->
-
-<!--                            <div class="single-grid-product">-->
-<!--                                <div class="single-grid-product__image">-->
-
-<!--                                    <a href="product-details-basic.html" class="image-wrap">-->
-<!--                                        <img src="/app/assets/img/products/product-13-1-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                        <img src="/app/assets/img/products/product-13-2-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                    </a>-->
-<!--                                    <div class="product-hover-icon-wrapper">-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;quick-view"><a class="cd-trigger"-->
-<!--                                                                                             href="#qv-1"-->
-<!--                                                                                             data-tippy="Quick View"-->
-<!--                                                                                             data-tippy-inertia="true"-->
-<!--                                                                                             data-tippy-animation="shift-away"-->
-<!--                                                                                             data-tippy-delay="50"-->
-<!--                                                                                             data-tippy-arrow="true"-->
-<!--                                                                                             data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-search"></i></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;add-to-cart"><a href="#"-->
-<!--                                                                                              data-tippy="Add to cart"-->
-<!--                                                                                              data-tippy-inertia="true"-->
-<!--                                                                                              data-tippy-animation="shift-away"-->
-<!--                                                                                              data-tippy-delay="50"-->
-<!--                                                                                              data-tippy-arrow="true"-->
-<!--                                                                                              data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-shopping-basket"></i> <span>ADD TO CART</span></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;compare"><a href="#" data-tippy="Compare"-->
-<!--                                                                                          data-tippy-inertia="true"-->
-<!--                                                                                          data-tippy-animation="shift-away"-->
-<!--                                                                                          data-tippy-delay="50"-->
-<!--                                                                                          data-tippy-arrow="true"-->
-<!--                                                                                          data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-exchange"></i></a></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="single-grid-product__content">-->
-<!--                                    <h3 class="title"><a href="product-details-basic.html">Ovora Step stool</a></h3>-->
-<!--                                    <div class="price"><span class="main-price discounted">$185</span> <span-->
-<!--                                            class="discounted-price">$140</span></div>-->
-<!--                                    <div class="rating">-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star"></i>-->
-<!--                                    </div>-->
-<!--                                    <div class="color">-->
-<!--                                        <ul>-->
-<!--                                            <li><a class="active" href="#" data-tippy="Black" data-tippy-inertia="true"-->
-<!--                                                   data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                                   data-tippy-arrow="true" data-tippy-theme="roundborder"><span-->
-<!--                                                    class="color-picker black"></span></a></li>-->
-<!--                                            <li><a href="#" data-tippy="Blue" data-tippy-inertia="true"-->
-<!--                                                   data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                                   data-tippy-arrow="true" data-tippy-theme="roundborder"><span-->
-<!--                                                    class="color-picker blue"></span></a></li>-->
-<!--                                            <li><a href="#" data-tippy="Brown" data-tippy-inertia="true"-->
-<!--                                                   data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                                   data-tippy-arrow="true" data-tippy-theme="roundborder"><span-->
-<!--                                                    class="color-picker brown"></span></a></li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
-<!--                                    <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"-->
-<!--                                       data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                       data-tippy-arrow="true" data-tippy-theme="sharpborder"-->
-<!--                                       data-tippy-placement="left">-->
-<!--                                        <i class="fa fa-heart-o"></i>-->
-<!--                                        <i class="fa fa-heart"></i>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            &lt;!&ndash;=======  End of single short view product  =======&ndash;&gt;-->
-<!--                        </div>-->
-
-<!--                        <div class="col">-->
-<!--                            &lt;!&ndash;=======  single short view product  =======&ndash;&gt;-->
-
-<!--                            <div class="single-grid-product">-->
-<!--                                <div class="single-grid-product__image">-->
-<!--                                    <div class="product-badge-wrapper">-->
-<!--                                        <span class="onsale">-17%</span>-->
-<!--                                        <span class="hot">Hot</span>-->
-<!--                                    </div>-->
-<!--                                    <a href="/app/product-details-basic.html" class="image-wrap">-->
-<!--                                        <img src="/app/assets/img/products/product-14-1-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                        <img src="/app/assets/img/products/product-14-2-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                    </a>-->
-<!--                                    <div class="product-hover-icon-wrapper">-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;quick-view"><a class="cd-trigger"-->
-<!--                                                                                             href="#qv-1"-->
-<!--                                                                                             data-tippy="Quick View"-->
-<!--                                                                                             data-tippy-inertia="true"-->
-<!--                                                                                             data-tippy-animation="shift-away"-->
-<!--                                                                                             data-tippy-delay="50"-->
-<!--                                                                                             data-tippy-arrow="true"-->
-<!--                                                                                             data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-search"></i></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;add-to-cart"><a href="#"-->
-<!--                                                                                              data-tippy="Add to cart"-->
-<!--                                                                                              data-tippy-inertia="true"-->
-<!--                                                                                              data-tippy-animation="shift-away"-->
-<!--                                                                                              data-tippy-delay="50"-->
-<!--                                                                                              data-tippy-arrow="true"-->
-<!--                                                                                              data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-shopping-basket"></i> <span>ADD TO CART</span></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;compare"><a href="#" data-tippy="Compare"-->
-<!--                                                                                          data-tippy-inertia="true"-->
-<!--                                                                                          data-tippy-animation="shift-away"-->
-<!--                                                                                          data-tippy-delay="50"-->
-<!--                                                                                          data-tippy-arrow="true"-->
-<!--                                                                                          data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-exchange"></i></a></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="single-grid-product__content">-->
-<!--                                    <h3 class="title"><a href="product-details-basic.html">Jane Lauren Carson Chair</a>-->
-<!--                                    </h3>-->
-<!--                                    <div class="price"><span class="main-price">$145</span></div>-->
-<!--                                    <div class="rating">-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star"></i>-->
-<!--                                    </div>-->
-
-<!--                                    <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"-->
-<!--                                       data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                       data-tippy-arrow="true" data-tippy-theme="sharpborder"-->
-<!--                                       data-tippy-placement="left">-->
-<!--                                        <i class="fa fa-heart-o"></i>-->
-<!--                                        <i class="fa fa-heart"></i>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            &lt;!&ndash;=======  End of single short view product  =======&ndash;&gt;-->
-<!--                        </div>-->
-
-<!--                        <div class="col">-->
-<!--                            &lt;!&ndash;=======  single short view product  =======&ndash;&gt;-->
-
-<!--                            <div class="single-grid-product">-->
-<!--                                <div class="single-grid-product__image">-->
-<!--                                    <div class="product-badge-wrapper">-->
-<!--                                        <span class="onsale">-17%</span>-->
-<!--                                        <span class="hot">Hot</span>-->
-<!--                                    </div>-->
-<!--                                    <a href="product-details-basic.html" class="image-wrap">-->
-<!--                                        <img src="/app/assets/img/products/product-15-1-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                        <img src="/app/assets/img/products/product-15-2-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                    </a>-->
-<!--                                    <div class="product-hover-icon-wrapper">-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;quick-view"><a class="cd-trigger"-->
-<!--                                                                                             href="#qv-1"-->
-<!--                                                                                             data-tippy="Quick View"-->
-<!--                                                                                             data-tippy-inertia="true"-->
-<!--                                                                                             data-tippy-animation="shift-away"-->
-<!--                                                                                             data-tippy-delay="50"-->
-<!--                                                                                             data-tippy-arrow="true"-->
-<!--                                                                                             data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-search"></i></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;add-to-cart"><a href="#"-->
-<!--                                                                                              data-tippy="Add to cart"-->
-<!--                                                                                              data-tippy-inertia="true"-->
-<!--                                                                                              data-tippy-animation="shift-away"-->
-<!--                                                                                              data-tippy-delay="50"-->
-<!--                                                                                              data-tippy-arrow="true"-->
-<!--                                                                                              data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-shopping-basket"></i> <span>ADD TO CART</span></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;compare"><a href="#" data-tippy="Compare"-->
-<!--                                                                                          data-tippy-inertia="true"-->
-<!--                                                                                          data-tippy-animation="shift-away"-->
-<!--                                                                                          data-tippy-delay="50"-->
-<!--                                                                                          data-tippy-arrow="true"-->
-<!--                                                                                          data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-exchange"></i></a></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="single-grid-product__content">-->
-<!--                                    <h3 class="title"><a href="product-details-basic.html">Alexa Classic Towels</a></h3>-->
-<!--                                    <div class="price"><span class="main-price discounted">$14</span> <span-->
-<!--                                            class="discounted-price">$11</span></div>-->
-<!--                                    <div class="rating">-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star"></i>-->
-<!--                                    </div>-->
-<!--                                    <div class="color">-->
-<!--                                        <ul>-->
-<!--                                            <li><a class="active" href="#" data-tippy="Black" data-tippy-inertia="true"-->
-<!--                                                   data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                                   data-tippy-arrow="true" data-tippy-theme="roundborder"><span-->
-<!--                                                    class="color-picker black"></span></a></li>-->
-<!--                                            <li><a href="#" data-tippy="Blue" data-tippy-inertia="true"-->
-<!--                                                   data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                                   data-tippy-arrow="true" data-tippy-theme="roundborder"><span-->
-<!--                                                    class="color-picker blue"></span></a></li>-->
-<!--                                            <li><a href="#" data-tippy="Brown" data-tippy-inertia="true"-->
-<!--                                                   data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                                   data-tippy-arrow="true" data-tippy-theme="roundborder"><span-->
-<!--                                                    class="color-picker brown"></span></a></li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
-<!--                                    <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"-->
-<!--                                       data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                       data-tippy-arrow="true" data-tippy-theme="sharpborder"-->
-<!--                                       data-tippy-placement="left">-->
-<!--                                        <i class="fa fa-heart-o"></i>-->
-<!--                                        <i class="fa fa-heart"></i>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            &lt;!&ndash;=======  End of single short view product  =======&ndash;&gt;-->
-<!--                        </div>-->
-
-<!--                        <div class="col">-->
-<!--                            &lt;!&ndash;=======  single short view product  =======&ndash;&gt;-->
-
-<!--                            <div class="single-grid-product">-->
-<!--                                <div class="single-grid-product__image">-->
-
-<!--                                    <a href="product-details-basic.html" class="image-wrap">-->
-<!--                                        <img src="/app/assets/img/products/product-16-1-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                        <img src="/app/assets/img/products/product-16-2-600x800.jpg" class="img-fluid"-->
-<!--                                             alt="">-->
-<!--                                    </a>-->
-<!--                                    <div class="product-hover-icon-wrapper">-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;quick-view"><a class="cd-trigger"-->
-<!--                                                                                             href="#qv-1"-->
-<!--                                                                                             data-tippy="Quick View"-->
-<!--                                                                                             data-tippy-inertia="true"-->
-<!--                                                                                             data-tippy-animation="shift-away"-->
-<!--                                                                                             data-tippy-delay="50"-->
-<!--                                                                                             data-tippy-arrow="true"-->
-<!--                                                                                             data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-search"></i></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;add-to-cart"><a href="#"-->
-<!--                                                                                              data-tippy="Add to cart"-->
-<!--                                                                                              data-tippy-inertia="true"-->
-<!--                                                                                              data-tippy-animation="shift-away"-->
-<!--                                                                                              data-tippy-delay="50"-->
-<!--                                                                                              data-tippy-arrow="true"-->
-<!--                                                                                              data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-shopping-basket"></i> <span>ADD TO CART</span></a></span>-->
-<!--                                        <span class="single-icon single-icon&#45;&#45;compare"><a href="#" data-tippy="Compare"-->
-<!--                                                                                          data-tippy-inertia="true"-->
-<!--                                                                                          data-tippy-animation="shift-away"-->
-<!--                                                                                          data-tippy-delay="50"-->
-<!--                                                                                          data-tippy-arrow="true"-->
-<!--                                                                                          data-tippy-theme="sharpborder"><i-->
-<!--                                                class="fa fa-exchange"></i></a></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="single-grid-product__content">-->
-<!--                                    <h3 class="title"><a href="product-details-basic.html">Olivia Shayn Cover Chair</a>-->
-<!--                                    </h3>-->
-<!--                                    <div class="price"><span class="main-price">$98</span></div>-->
-<!--                                    <div class="rating">-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star active"></i>-->
-<!--                                        <i class="fa fa-star"></i>-->
-<!--                                    </div>-->
-
-<!--                                    <a href="#" class="favorite-icon" data-tippy="Add to Wishlist"-->
-<!--                                       data-tippy-inertia="true" data-tippy-animation="shift-away" data-tippy-delay="50"-->
-<!--                                       data-tippy-arrow="true" data-tippy-theme="sharpborder"-->
-<!--                                       data-tippy-placement="left">-->
-<!--                                        <i class="fa fa-heart-o"></i>-->
-<!--                                        <i class="fa fa-heart"></i>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-
-<!--                            &lt;!&ndash;=======  End of single short view product  =======&ndash;&gt;-->
-<!--                        </div>-->
-<!--                    </app-slick-slider>-->
-
-
-<!--                    &lt;!&ndash;=======  End of product slider wrapper  =======&ndash;&gt;-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
-    <!--====================  End of related product slider area  ====================-->
 
 </div>
 

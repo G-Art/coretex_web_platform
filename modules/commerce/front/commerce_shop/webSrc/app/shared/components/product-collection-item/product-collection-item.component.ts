@@ -46,6 +46,7 @@ export class ProductCollectionItemComponent implements OnInit {
 
     @ViewChild('imageWrapper', {static: false})
     imageWrapper: ElementRef;
+    imageLoader: boolean = true;
 
     constructor(private productService: ProductService, private cartService: CartService) {
     }
@@ -55,8 +56,11 @@ export class ProductCollectionItemComponent implements OnInit {
     }
 
     setDisplayStyleVariant(variant: ProductVariantData) {
-        this.displayStyleVariant = variant;
-        this.displaySizeVariant = this.displayStyleVariant.variants.find(o => true);
+        if(this.displayStyleVariant !== variant){
+            this.imageLoader = true;
+            this.displayStyleVariant = variant;
+            this.displaySizeVariant = this.displayStyleVariant.variants.find(o => true);
+        }
     }
 
     setColumns(value: string) {

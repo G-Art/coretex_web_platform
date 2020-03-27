@@ -23,6 +23,8 @@ export class ProductDetailPageComponent implements OnInit {
 
     private atcClicked: boolean = false;
 
+    showSkeleton: boolean = true;
+
     qty = 1;
 
     productDetail: ProductDetailData;
@@ -40,11 +42,13 @@ export class ProductDetailPageComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.showSkeleton = true;
         this.activatedRoute.params.subscribe(routeParams => {
             this.productService.getProductDetail(routeParams.code)
                 .subscribe(data => {
                     this.productDetail = data;
                     let variants = this.productDetail.variants;
+
                     if (routeParams.vcode) {
                         this.defineVariants(variants, routeParams.vcode);
                         this.createInitImageViewContainer(this.productStyleVariant);
@@ -59,7 +63,7 @@ export class ProductDetailPageComponent implements OnInit {
                         this.location.replaceState(`/product/${this.productDetail.code}/v/${this.productDetailVariant.code}`);
                         this.createInitImageViewContainer(this.productStyleVariant);
                     }
-
+                    this.showSkeleton=false;
                 });
         });
     }

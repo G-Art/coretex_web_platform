@@ -26,7 +26,8 @@ public interface ShortVariantProductDataMapper extends GenericDataMapper<Variant
 	@Mappings({
 			@Mapping(target = "images", expression = "java(this.mapImageUrl(productItem))"),
 			@Mapping(target = "price", expression = "java(this.getPrice(productItem))"),
-			@Mapping(target = "colorCssCode", expression = "java(this.getColorCode(productItem))")
+			@Mapping(target = "colorCssCode", expression = "java(this.getColorCode(productItem))"),
+			@Mapping(target = "size", expression = "java(this.getSize(productItem))"),
 	})
 	ShortVariantProductData fromItem(VariantProductItem productItem);
 
@@ -60,6 +61,14 @@ public interface ShortVariantProductDataMapper extends GenericDataMapper<Variant
 		}
 
 		return images.toArray(new ImageData[0]);
+	}
+
+	default String getSize(ProductItem productItem) {
+		if (productItem instanceof SizeVariantProductItem) {
+			return ((SizeVariantProductItem) productItem).getSize();
+		}
+
+		return null;
 	}
 
 	default String getPrice(ProductItem productItem){

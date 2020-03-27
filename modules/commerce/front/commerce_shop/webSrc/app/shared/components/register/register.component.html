@@ -50,7 +50,7 @@
                            [ngClass]="{'invalid': submitted && f.confirmPassword.errors }">
                     <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback d-block">
                         <div *ngIf="f.confirmPassword.errors.required">{{'form.register.errors.confirmPassword.required' | translate}}</div>
-                        <div *ngIf="f.confirmPassword.errors?.notEqual">{{'form.register.errors.confirmPassword.notEqual' | translate}}</div>
+                        <div *ngIf="f.confirmPassword.errors.notEqual">{{'form.register.errors.confirmPassword.notEqual' | translate}}</div>
                     </div>
                 </div>
                 <div class="col-12 mb-2">

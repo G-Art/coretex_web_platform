@@ -1,6 +1,8 @@
 package com.coretex.commerce.data.forms;
 
 import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.SizeVariantProductItem;
+import com.coretex.items.cx_core.StyleVariantProductItem;
 import com.coretex.items.cx_core.VariantProductItem;
 import com.google.common.collect.Maps;
 
@@ -23,6 +25,9 @@ public class ProductForm {
 	private UUID store;
 	private UUID category;
 
+	private Map<String, String> size;
+	private String colorCode;
+	private Map<String, String> colorName;
 
 	private String variantType;
 
@@ -44,6 +49,19 @@ public class ProductForm {
 
 		if(product instanceof VariantProductItem){
 			this.variantType = product.getMetaType().getTypeCode();
+		}
+
+		if(product.getMetaType().getTypeCode().equals(SizeVariantProductItem.ITEM_TYPE)){
+			this.size = convertLocale(((SizeVariantProductItem) product).allSize());
+		}
+
+		if (product.getMetaType().getTypeCode().equals(StyleVariantProductItem.ITEM_TYPE)){
+			var style = ((StyleVariantProductItem) product).getStyle();
+			if(Objects.nonNull(style)){
+				this.colorCode = style.getCssColorCode();
+				this.colorName = convertLocale(style.allStyleName());
+			}
+
 		}
 
 	}
@@ -151,5 +169,29 @@ public class ProductForm {
 
 	public void setVariantType(String variantType) {
 		this.variantType = variantType;
+	}
+
+	public String getColorCode() {
+		return colorCode;
+	}
+
+	public void setColorCode(String colorCode) {
+		this.colorCode = colorCode;
+	}
+
+	public Map<String, String> getSize() {
+		return size;
+	}
+
+	public void setSize(Map<String, String> size) {
+		this.size = size;
+	}
+
+	public Map<String, String> getColorName() {
+		return colorName;
+	}
+
+	public void setColorName(Map<String, String> colorName) {
+		this.colorName = colorName;
 	}
 }

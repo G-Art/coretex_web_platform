@@ -8,9 +8,14 @@
             <span *ngIf="displaySizeVariant.hotBadge" class="hot">Hot</span>
         </div>
         <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
-            <img *ngFor="let img of displayStyleVariant.images" [src]="'/v1'+img.path"
+            <img *ngFor="let img of displayStyleVariant.images"
+                 [hidden]="imageLoader"
+                 [src]="'/v1'+img.path"
+                 (load)="imageLoader = false;"
                  class="img-fluid"
                  [alt]="img.alt">
+            <img [hidden]="!imageLoader" src="/app/assets/img/loader.gif"
+                 style="padding: 41% 25%;"/>
         </a>
         <div class="product-hover-icon-wrapper">
             <span class="single-icon single-icon--quick-view">
@@ -99,9 +104,14 @@
             <span *ngIf="displaySizeVariant.hotBadge" class="hot">Hot</span>
         </div>
         <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
-            <img *ngFor="let img of displayStyleVariant.images" [src]="'/v1'+img.path"
+            <img *ngFor="let img of displayStyleVariant.images"
+                 [hidden]="imageLoader"
+                 (load)="imageLoader = false;"
+                 [src]="'/v1'+img.path"
                  class="img-fluid"
                  [alt]="img.alt">
+            <img [hidden]="!imageLoader" src="/app/assets/img/loader.gif"
+                 style="padding: 41% 25%;"/>
         </a>
 
 

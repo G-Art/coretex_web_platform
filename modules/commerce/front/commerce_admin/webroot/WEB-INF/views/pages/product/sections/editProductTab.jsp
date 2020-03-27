@@ -1,5 +1,6 @@
 <%--@elvariable id="product" type="com.coretex.commerce.data.forms.ProductForm"--%>
 <%--@elvariable id="stores" type="java.util.List<com.coretex.commerce.data.StoreData>"--%>
+<%--@elvariable id="baseProduct" type="com.coretex.items.cx_core.ProductItem"--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form-tags" tagdir="/WEB-INF/tags/common/form" %>
 <div class="row">
@@ -101,4 +102,9 @@
         </div>
     </div>
 </div>
+<hr/>
+<c:if test="${not empty baseProduct}">
+    <jsp:include page="../variant/${product.variantType}.jsp"/>
+</c:if>
+
 

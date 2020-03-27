@@ -53,7 +53,9 @@
                                 <tags-account:tab tabId="edit" tabName="Product Edit" active="true"/>
                                 <tags-account:tab tabId="seo" tabName="SEO Metadata"/>
                                 <c:if test="${product.uuid != null}">
-                                    <tags-account:tab tabId="images" tabName="Pictures"/>
+                                    <c:if test="${product.variantType eq 'StyleVariantProduct'}">
+                                        <tags-account:tab tabId="images" tabName="Pictures"/>
+                                    </c:if>
                                     <tags-account:tab tabId="variants" tabName="Variants"/>
                                 </c:if>
                             </jsp:attribute>
@@ -65,9 +67,11 @@
                                     <jsp:include page="seoProductTab.jsp"/>
                                 </tags-account:tabContent>
                                 <c:if test="${product.uuid != null}">
-                                    <tags-account:tabContent tabId="images">
-                                        <jsp:include page="imagesProductTab.jsp"/>
-                                    </tags-account:tabContent>
+                                    <c:if test="${product.variantType eq 'StyleVariantProduct'}">
+                                        <tags-account:tabContent tabId="images">
+                                            <jsp:include page="imagesProductTab.jsp"/>
+                                        </tags-account:tabContent>
+                                    </c:if>
                                     <tags-account:tabContent tabId="variants">
                                         <jsp:include page="variantsProductTab.jsp"/>
                                     </tags-account:tabContent>
