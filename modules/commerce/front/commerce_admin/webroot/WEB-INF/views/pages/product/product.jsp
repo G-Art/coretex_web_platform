@@ -76,9 +76,9 @@
         <script type="text/javascript"
                 src="<c:url value="/resources/assets/js/modalEffects.js"/>"></script>
         <script type="text/javascript"
-                src="<c:url value="/resources/assets/js/modalEffects.js"/>"></script>
-        <script type="text/javascript"
                 src="<c:url value="/resources/bower_components/sweetalert/js/sweetalert.min.js"/>"></script>
+        <script type="text/javascript"
+                src="<c:url value="/resources/assets/js/classie.js"/>"></script>
         <script type="text/javascript" src="<c:url value="/resources/assets/js/script.js"/>"></script>
 <%--        <script src="https://cdn.ckeditor.com/ckeditor5/17.0.0/inline/ckeditor.js"></script>--%>
 <%--        <script src="<c:url value="/resources/assets/pages/ckeditor/ckeditor.js"/>"></script>--%>
@@ -111,7 +111,7 @@
                     <div class="page-header-title">
                         <div class="d-inline">
                             <h4>Product <c:if test="${not empty baseProduct}"> ${product.variantType} </c:if> </h4>
-                            <span>${product.uuid == null ? 'Create' : 'Edit - '.concat(product.uuid)}</span>
+                            <span>${product.uuid == null ? 'Create' : 'Edit - '.concat(product.code)}</span>
                         </div>
                     </div>
                 </div>

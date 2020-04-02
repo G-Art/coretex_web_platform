@@ -1,8 +1,13 @@
 package com.coretex.commerce.admin.controllers.content;
 
+import com.coretex.commerce.core.dto.FileContentType;
+import com.coretex.commerce.core.dto.ImageContentFile;
+import com.coretex.commerce.core.services.ProductImageService;
 import com.coretex.commerce.core.services.ProductService;
+import com.coretex.commerce.core.utils.ProductUtils;
 import com.coretex.commerce.data.DataTableResults;
 import com.coretex.commerce.data.forms.ProductForm;
+import com.coretex.commerce.data.forms.ProductImageForm;
 import com.coretex.commerce.data.minimal.MinimalCategoryData;
 import com.coretex.commerce.data.minimal.MinimalManufacturerData;
 import com.coretex.commerce.data.minimal.MinimalProductData;
@@ -11,8 +16,11 @@ import com.coretex.commerce.facades.PageableDataTableFacade;
 import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.items.core.MetaTypeItem;
+import com.coretex.items.cx_core.ProductImageItem;
 import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.cx_core.VariantProductItem;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.LocaleUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +32,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -42,6 +52,9 @@ public class ProductController extends AbstractContentController<MinimalProductD
 
 	@Resource
 	private CortexContext cortexContext;
+
+	@Resource
+	private ProductImageService productImageService;
 
 	@RequestMapping(path = "", method = RequestMethod.GET)
 	public String getProducts(Model model) {
@@ -94,7 +107,7 @@ public class ProductController extends AbstractContentController<MinimalProductD
 	public String removeProduct(@PathVariable(value = "uuid") UUID uuid,
 								RedirectAttributes redirectAttributes) {
 		productService.delete(productService.getByUUID(uuid));
-		redirectAttributes.addFlashAttribute("message", "Product removed");
+		addInfoFlashMessage(redirectAttributes, "Product removed");
 
 		return redirect("/product");
 	}
@@ -105,11 +118,46 @@ public class ProductController extends AbstractContentController<MinimalProductD
 							  RedirectAttributes redirectAttributes) {
 
 		var product = getProductFacade().save(form, uuid);
-
-		redirectAttributes.addFlashAttribute("message", "Product saved");
+		addInfoFlashMessage(redirectAttributes, "Product saved");
 
 		if (Objects.nonNull(uuid)) {
 			return redirect("/product/" + uuid + "/variant/" + product.getUuid().toString());
+		} else {
+			return redirect("/product/" + product.getUuid().toString());
+		}
+
+	}
+
+	@RequestMapping(path = {"/{uuid}/image/new"}, method = RequestMethod.POST)
+	public String createImage(@ModelAttribute("productImageForm") ProductImageForm form,
+							  @PathVariable(value = "uuid", required = false) UUID uuid,
+							  RedirectAttributes redirectAttributes) throws IOException {
+
+		var product = productService.getByUUID(uuid);
+		var image = form.getImage();
+		final byte[] is = IOUtils.toByteArray(image.getInputStream());
+		final ByteArrayInputStream inputStream = new ByteArrayInputStream(is);
+		final ImageContentFile cmsContentImage = new ImageContentFile();
+		cmsContentImage.setFileName(image.getOriginalFilename());
+		cmsContentImage.setFile(inputStream);
+		cmsContentImage.setFileContentType(FileContentType.PRODUCT);
+
+		ProductImageItem productImage = new ProductImageItem();
+		productImage.setProductImage(image.getOriginalFilename());
+		productImage.setProduct(product);
+
+		form.getAlt().forEach((k,v) -> productImage.setAltTag(v, LocaleUtils.toLocale(k)));
+
+		productImage.setProductImageUrl(ProductUtils.buildProductSmallImageUtils(product.getStore(), product.getCode(), image.getOriginalFilename()));
+		product.getImages().add(productImage);
+
+		productImageService.addProductImage(product, productImage, cmsContentImage);
+		productService.save(product);
+
+		addInfoFlashMessage(redirectAttributes, String.format("Image added to product [%s]", product.getCode()));
+
+		if (product instanceof VariantProductItem) {
+			return redirect("/product/" + ((VariantProductItem) product).getBaseProduct().getUuid() + "/variant/" + product.getUuid().toString());
 		} else {
 			return redirect("/product/" + product.getUuid().toString());
 		}

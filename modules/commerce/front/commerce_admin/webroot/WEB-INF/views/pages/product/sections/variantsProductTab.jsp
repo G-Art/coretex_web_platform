@@ -19,7 +19,7 @@
                             data-modal="modal-variant">
                         <i class="icofont icofont-plus m-r-5"></i> Add Product
                     </button>
-                </jsp:attribute>
+        </jsp:attribute>
         <jsp:attribute name="theader">
                     <tr>
                         <th>Image</th>

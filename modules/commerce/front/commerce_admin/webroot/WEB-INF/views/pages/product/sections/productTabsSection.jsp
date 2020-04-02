@@ -5,6 +5,7 @@
 <%@ taglib prefix="tags-account" tagdir="/WEB-INF/tags/account" %>
 <%@ taglib prefix="tags-common" tagdir="/WEB-INF/tags/common" %>
 <%@ taglib prefix="components" tagdir="/WEB-INF/tags/common/components" %>
+<%@ taglib prefix="form-tags" tagdir="/WEB-INF/tags/common/form" %>
 
 <div class="row">
     <div class="col-lg-12">
@@ -24,7 +25,7 @@
             </c:if>
             <input type="hidden" name="uuid" value="${product.uuid}">
             <components:cardBlock title="Product"
-                                  description="${product.uuid == null ? 'Create' : 'Edit - '.concat(product.uuid)}">
+                                  description="${product.uuid == null ? 'Create' : 'Edit - '.concat(product.code)}">
                 <jsp:attribute name="cardHeader">
                     <c:if test="${baseProduct != null}">
                         <c:choose>
@@ -41,7 +42,7 @@
                             <i class="icofont icofont-arrow-left m-r-5"></i> Back
                         </a>
                     </c:if>
-                    <button type="button" data-request-url = "<c:url value="/product/remove/${product.uuid}"/>"
+                    <button type="button" data-request-url="<c:url value="/product/remove/${product.uuid}"/>"
                             class="btn btn-danger f-right d-inline-block removeItem">
                         <i class="icofont icofont-close m-r-5"></i> Remove
                     </button>
@@ -114,6 +115,40 @@
                                 </c:forEach>
                             </select>
                         </div>
+                        <div class="text-center">
+                            <button type="submit"
+                                    class="btn btn-primary waves-effect m-r-20 f-w-600 d-inline-block save_btn">
+                                Create
+                            </button>
+                            <button type="button"
+                                    class="btn btn-primary waves-effect m-r-20 f-w-600 md-close d-inline-block close_btn">
+                                Close
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="md-modal md-effect-13 addcontact" id="modal-image">
+            <div class="md-content">
+                <h3 class="f-26">Add Image to product ${product.code}</h3>
+                <div>
+                    <form action="<c:url value="/product/${product.uuid}/image/new"/>" method="post" enctype="multipart/form-data">
+
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="icofont icofont-image"></i>
+                                </span>
+                            </div>
+                            <input type="file" name="image" class="form-control pname" placeholder="Image">
+                        </div>
+                        <form-tags:multiLanguageInput
+                                placeholder="Alt"
+                                name="alt"
+                                icon="icofont icofont-copy-alt">
+                        </form-tags:multiLanguageInput>
                         <div class="text-center">
                             <button type="submit"
                                     class="btn btn-primary waves-effect m-r-20 f-w-600 d-inline-block save_btn">

@@ -8,14 +8,22 @@ import com.coretex.commerce.data.LocaleData;
 import com.coretex.commerce.data.StoreData;
 import com.coretex.commerce.data.UserData;
 import com.coretex.commerce.facades.StoreFacade;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AbstractController {
 
+	public static final String ERROR_MESSAGE_LEVEL = "ERROR_MESSAGES";
+	public static final String WARNING_MESSAGE_LEVEL = "WARNING_MESSAGES";
+	public static final String INFO_MESSAGE_LEVEL = "INFO_MESSAGES";
 	public static final String REDIRECT_PREFIX = "redirect:";
 	public static final String FORWARD_PREFIX = "forward:";
 	public static final String ROOT = "/";
@@ -31,6 +39,26 @@ public class AbstractController {
 
 	@Resource
 	private StoreFacade storeFacade;
+
+	protected void addFlashMessage(RedirectAttributes redirectAttributes, String message, String level){
+		Map<String, Object> flashAttributes = (Map<String, Object>) redirectAttributes.getFlashAttributes();
+		var messageLevel = (List)flashAttributes.computeIfAbsent(level, l -> Lists.newArrayList());
+		if(StringUtils.isNotBlank(message)){
+			messageLevel.add(message);
+		}
+	}
+
+	protected void addErrorFlashMessage(RedirectAttributes redirectAttributes, String message){
+		addFlashMessage(redirectAttributes, message, ERROR_MESSAGE_LEVEL);
+	}
+
+	protected void addWarningFlashMessage(RedirectAttributes redirectAttributes, String message){
+		addFlashMessage(redirectAttributes, message, WARNING_MESSAGE_LEVEL);
+	}
+
+	protected void addInfoFlashMessage(RedirectAttributes redirectAttributes, String message){
+		addFlashMessage(redirectAttributes, message, INFO_MESSAGE_LEVEL);
+	}
 
 	protected String redirect(String path){
 		return String.format("%s%s", REDIRECT_PREFIX, path);

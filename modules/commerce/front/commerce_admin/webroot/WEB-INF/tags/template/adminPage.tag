@@ -12,6 +12,7 @@
 
 <%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
+<%@ taglib prefix="common-components" tagdir="/WEB-INF/tags/common/components" %>
 
 
 <template:page pageTitle="${pageTitle}">
@@ -64,8 +65,10 @@
                 <div class="pcoded-main-container">
                     <div class="pcoded-wrapper">
                         <common:leftNavBar/>
-
                         <div class="pcoded-content">
+
+                            <common-components:alertBlocks/>
+
                             <div class="pcoded-inner-content">
                                 <!-- Main-body start -->
                                 <div class="main-body">

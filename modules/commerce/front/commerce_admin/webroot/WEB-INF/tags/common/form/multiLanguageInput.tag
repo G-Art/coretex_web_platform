@@ -7,13 +7,13 @@
 <%@ attribute name="icon" type="java.lang.String" %>
 <%@ attribute name="name" required="true" type="java.lang.String" %>
 <%@ attribute name="placeholder" required="true" type="java.lang.String" %>
-<%@ attribute name="dataMap" required="true" type="java.util.Map<java.lang.String, java.lang.String>" %>
+<%@ attribute name="dataMap" required="false" type="java.util.Map<java.lang.String, java.lang.String>" %>
 
 <div class="accordion-block">
     <div id="accordion" role="tablist" aria-multiselectable="true">
         <div class="accordion-panel">
             <div class="accordion-heading" role="tab" id="heading${name}One">
-                <h3 class="card-title accordion-title">
+                <h3 class="card-title accordion-title" style="background: white;">
                     <a class="accordion-msg scale_active collapsed" data-toggle="collapse" data-parent="#accordion"
                        href="#collapse${name}One" aria-expanded="false" aria-controls="collapse${name}One">
 
@@ -42,9 +42,19 @@
                                                 ${loc.isocode}
                                         </span>
                                     </div>
-                                    <input type="text" name="${name}['${loc.isocode}']"
-                                           class="form-control" value="${dataMap[loc.isocode]}"
-                                           placeholder="${placeholder}">
+                                    <c:choose>
+                                        <c:when test="${not empty dataMap}">
+                                            <input type="text" name="${name}['${loc.isocode}']"
+                                                   class="form-control" value="${dataMap[loc.isocode]}"
+                                                   placeholder="${placeholder}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <input type="text" name="${name}['${loc.isocode}']"
+                                                   class="form-control"
+                                                   placeholder="${placeholder}">
+                                        </c:otherwise>
+                                    </c:choose>
+
 
                                 </div>
                             </div>
