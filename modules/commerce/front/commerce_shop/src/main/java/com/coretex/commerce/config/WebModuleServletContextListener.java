@@ -1,7 +1,8 @@
 package com.coretex.commerce.config;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.server.reactive.TomcatHttpHandlerAdapter;
-import org.springframework.web.context.ContextLoader;
 import org.springframework.web.server.adapter.WebHttpHandlerBuilder;
 
 import javax.servlet.ServletContextEvent;
@@ -15,9 +16,10 @@ public class WebModuleServletContextListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-
+		var currentWebApplicationContext = getCurrentWebApplicationContext();
+		refreshApplicationContext(currentWebApplicationContext);
 		var handler = WebHttpHandlerBuilder
-				.applicationContext(getCurrentWebApplicationContext())
+				.applicationContext(currentWebApplicationContext)
 				.build();
 
 		var handlerAdapter = new TomcatHttpHandlerAdapter(handler);
@@ -30,4 +32,12 @@ public class WebModuleServletContextListener implements ServletContextListener {
 		servlet.addMapping("/");
 	}
 
+	protected void refreshApplicationContext(ApplicationContext context) {
+		if (context instanceof ConfigurableApplicationContext) {
+			ConfigurableApplicationContext cac = (ConfigurableApplicationContext) context;
+			if (!cac.isActive()) {
+				cac.refresh();
+			}
+		}
+	}
 }

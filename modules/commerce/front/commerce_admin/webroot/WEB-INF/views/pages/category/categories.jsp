@@ -106,7 +106,7 @@
                     [
                         {"data": "code"},
                         {"data": "name"},
-                        {"data": "merchantStore"},
+                        {"data": "store"},
                         {"data": "parent.name"},
                         {"data": "visible"},
                         {"data": "productCount"},

@@ -28,31 +28,31 @@ public abstract class AbstractGenericItemService<E extends GenericItem> implemen
 	}
 
 
-	public E getByUUID(UUID id) {
-		return repository.findSingle(Map.of(GenericItem.UUID, id), true);
+	public E getByUUID(UUID uuid) {
+		return repository.findSingle(Map.of(GenericItem.UUID, uuid), true);
 	}
 
 
-	public void save(E entity) {
-		repository.save(entity);
+	public void save(E item) {
+		repository.save(item);
 	}
 
-	public void refresh(E entity) {
-		entity.getItemContext().refresh();
+	public void refresh(E item) {
+		item.getItemContext().refresh();
 	}
 
-	public void create(E entity) {
-		save(entity);
+	public void create(E item) {
+		save(item);
 	}
 
 	@Deprecated
-	public void update(E entity) {
-		save(entity);
+	public void update(E item) {
+		save(item);
 	}
 
 
-	public void delete(E entity) {
-		repository.delete(entity);
+	public void delete(E item) {
+		repository.delete(item);
 	}
 
 

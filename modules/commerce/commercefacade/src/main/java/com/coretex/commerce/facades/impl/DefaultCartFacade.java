@@ -3,6 +3,7 @@ package com.coretex.commerce.facades.impl;
 import com.coretex.commerce.core.services.CartService;
 import com.coretex.commerce.core.services.PageableService;
 import com.coretex.commerce.core.services.ProductService;
+import com.coretex.commerce.core.services.StoreService;
 import com.coretex.commerce.data.CartData;
 import com.coretex.commerce.facades.CartFacade;
 import com.coretex.commerce.mapper.CartDataMapper;
@@ -36,14 +37,22 @@ public class DefaultCartFacade implements CartFacade {
 	@Resource
 	private UpdateCartEntryStrategy updateCartEntryStrategy;
 
+	@Resource
+	private StoreService storeService;
+
 	@Override
 	public CartData getByUUID(UUID uuid) {
 		return cartDataMapper.fromItem(cartService.getByUUID(uuid));
 	}
 
 	@Override
-	public CartData createCart() {
+	public CartData createCart(String storeDomain) {
 		var cartItem = new CartItem();
+		var store = storeService.getByDomain(storeDomain);
+		if(Objects.isNull(store)){
+			store = storeService.getByCode("DEFAULT");
+		}
+		cartItem.setStore(store);
 		cartService.save(cartItem);
 		return cartDataMapper.fromItem(cartItem);
 	}

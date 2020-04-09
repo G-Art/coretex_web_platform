@@ -1,0 +1,83 @@
+elements {
+    relations {
+        StoreDeliveryServiceRelation(source: Store, target: DeliveryService){
+            source(deliveryServices){
+                description = "Delivery services"
+                containerType = Set
+            }
+            target(stores){
+                containerType = Set
+                description = "Store"
+            }
+        }
+
+        CountryDeliveryServiceRelation(source: Country, target: DeliveryService){
+            source(deliveryServices){
+                description = "Delivery services"
+                containerType = Set
+            }
+            target(countries){
+                description = "Countries"
+                containerType = Set
+            }
+        }
+
+        OrderDeliveryTypeRelation(source: AbstractOrder, target: DeliveryType) {
+            source(deliveryType) {
+                description = "Delivery Type"
+            }
+            target(order) {
+                description = "Orders"
+                containerType = Set
+            }
+        }
+
+        DeliveryServiceDeliveryTypeRelation(source: DeliveryService, target: DeliveryType) {
+            source(deliveryTypes) {
+                description = "Delivery Type"
+                containerType = Set
+            }
+            target(deliveryService) {
+                description = "Delivery Service"
+            }
+        }
+    }
+
+    items {
+
+        DeliveryService(abstract: true) {
+            attributes {
+                code(String) {
+                    optional=false
+                    unique=true
+                }
+                name(String) {
+                    localized = true
+                }
+                image(String)
+                active(Boolean) {
+                    defaultValue = true
+                }
+            }
+        }
+
+        DeliveryType(abstract: true) {
+            attributes {
+                code(String) {
+                    optional=false
+                    unique=true
+                }
+                name(String) {
+                    localized = true
+                }
+                active(Boolean) {
+                    defaultValue = true
+                }
+            }
+        }
+    }
+
+    enums {
+
+    }
+}

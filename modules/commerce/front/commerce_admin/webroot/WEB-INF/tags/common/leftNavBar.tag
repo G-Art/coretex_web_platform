@@ -41,6 +41,11 @@
             </common-nav:subMenuItem>
         </common-nav:navigationGroup>
 
+        <common-nav:navigationGroup name="Marketing">
+            <common-nav:subMenuItem name="Delivery" link="/delivery" iconClass="icofont icofont-vehicle-delivery-van "/>
+            <common-nav:subMenuItem name="Payment" link="/payment" iconClass="icofont icofont-money-bag"/>
+        </common-nav:navigationGroup>
+
         <common-nav:navigationGroup name="Users">
             <common-nav:subMenuItem name="Employees" iconClass="icofont icofont-support"
                                     link="/user"/>

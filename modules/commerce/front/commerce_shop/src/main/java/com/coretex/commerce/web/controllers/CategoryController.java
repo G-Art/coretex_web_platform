@@ -4,6 +4,7 @@ import com.coretex.commerce.data.SearchPageResult;
 import com.coretex.commerce.data.minimal.MinimalCategoryHierarchyData;
 import com.coretex.commerce.facades.CategoryFacade;
 import com.coretex.commerce.facades.ProductFacade;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

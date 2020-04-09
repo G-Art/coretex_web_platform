@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {CategoryService} from "../../../core/service/category.service";
 import {CategoryData} from "../../../core/data/category.data";
 import {fadeInAnimation} from "../../../core/animation/fadeInAnimation.animation";
+import {Observable} from "rxjs";
 
 declare var $: any;
 
@@ -14,7 +15,7 @@ declare var $: any;
 })
 export class NavigationMenuComponent implements OnInit {
 
-    categories:CategoryData[];
+    categories:Observable<CategoryData[]>;
 
     @Input()
     mobileMenuOpen:boolean = false;
@@ -30,10 +31,7 @@ export class NavigationMenuComponent implements OnInit {
     }
 
     ngOnInit() {
-
-      this.categoryService.getCategoriesMenu().subscribe(next => {
-        this.categories = next;
-      });
+        this.categories = this.categoryService.getCategoriesMenu();
     }
 
 }

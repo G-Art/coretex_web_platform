@@ -1,0 +1,18 @@
+<div class="single-faq">
+    <h4 class="checkout-title">Delivery service</h4>
+    <accordion [isAnimated]="true" [closeOthers]="true">
+        <accordion-group *ngFor="let ds of deliveryServices | async" >
+            <button class="btn btn-link btn-block collapsed" accordion-heading type="button" (click)="selection(ds)">
+                <div class="check-box">
+                    <input type="checkbox" [checked]="isOpen(ds)">
+                    <label >{{ds.name[translate.currentLang]}}</label>
+                </div>
+            </button>
+            <div *ngIf="isOpen(ds)">
+                <app-delivery-type-selector [deliveryService]="ds"></app-delivery-type-selector>
+            </div>
+        </accordion-group>
+
+
+    </accordion>
+</div>

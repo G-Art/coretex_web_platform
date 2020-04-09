@@ -16,8 +16,15 @@
     },
     {
       "name": "max",
-      "email": "maksduka89@gmail.com ",
+      "email": "maksduka89@gmail.com",
       "firstName": "Макс",
+      "active": true,
+      "groups": ["ADMIN"]
+    },
+    {
+      "name": "svitlana",
+      "email": "gerasymenko.svitlana@gmail.com",
+      "firstName": "Світлана",
       "active": true,
       "groups": ["ADMIN"]
     }

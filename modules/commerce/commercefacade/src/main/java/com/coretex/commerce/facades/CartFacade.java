@@ -9,7 +9,7 @@ public interface CartFacade extends PageableDataTableFacade<CartItem, CartData> 
 
 	CartData getByUUID(UUID uuid);
 
-	CartData createCart();
+	CartData createCart(String storeDomain);
 
 	CartData updateCart(CartData cartData, UUID entry, Integer quantity);
 

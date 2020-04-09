@@ -8,15 +8,15 @@ import java.util.stream.Stream;
 
 public interface GenericItemService<E extends GenericItem> extends PageableService<E> {
 
-	E getByUUID(UUID id);
+	E getByUUID(UUID uuid);
 
-	void save(E entity);
+	void save(E item);
 
-	void refresh(E entity);
+	void refresh(E item);
 
-	void create(E entity);
+	void create(E item);
 
-	void delete(E entity);
+	void delete(E item);
 
 	List<E> list();
 	Stream<E> listReactive();

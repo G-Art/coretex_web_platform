@@ -15,6 +15,8 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
 
+import static org.apache.http.client.utils.URIUtils.extractHost;
+
 @RestController
 @RequestMapping("/v1/cart")
 public class CartController {
@@ -27,11 +29,14 @@ public class CartController {
 
 	@GetMapping(path = "/current")
 	private Mono<CartData> getCurrent(ServerWebExchange exchange) {
+		var request = exchange.getRequest();
+
+		var domain = extractHost(request.getURI()).getHostName();
 		return sessionManager.getCurrentCartUUID(exchange)
 				.map(cartUUID -> cartUUID
 						.map(uuid -> cartFacade.getByUUID(uuid))
 						.orElseGet(() -> {
-							var cartData = cartFacade.createCart();
+							var cartData = cartFacade.createCart(domain);
 							sessionManager.setCurrentCartUUID(exchange, cartData);
 							return cartData;
 						}));

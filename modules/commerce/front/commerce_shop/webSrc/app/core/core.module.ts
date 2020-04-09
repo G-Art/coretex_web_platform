@@ -13,6 +13,8 @@ import {SearchService} from "./service/search.service";
 import {ProductService} from "./service/product.service";
 import {CartService} from "./service/cart.service";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {DeliveryServiceService} from "./service/delivery-service.service";
+import {DeliveryTypeService} from "./service/delivery-type.service";
 
 
 @NgModule({
@@ -36,11 +38,13 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         StoreService,
         ProductService,
         CartService,
-        SearchService]
+        SearchService,
+        DeliveryServiceService,
+        DeliveryTypeService]
 })
 export class CoreModule {
     // Prevent reimport of the CoreModule
-    constructor( @Optional() @SkipSelf() parentModule: CoreModule) {
+    constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
         if (parentModule) {
             throw new Error('CoreModule is already loaded. Import it in the AppModule only');
         }

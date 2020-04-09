@@ -148,37 +148,6 @@ elements {
             }
         }
 
-        DeliveryService(abstract: true) {
-            attributes {
-                code(String) {
-                    optional=false
-                    unique=true
-                }
-                name(String) {
-                    localized = true
-                }
-                image(String)
-                active(Boolean) {
-                    defaultValue = true
-                }
-            }
-        }
-
-        DeliveryType(abstract: true) {
-            attributes {
-                code(String) {
-                    optional=false
-                    unique=true
-                }
-                name(String) {
-                    localized = true
-                }
-                active(Boolean) {
-                    defaultValue = true
-                }
-            }
-        }
-
         Zone {
             attributes {
                 code(String){

@@ -12,7 +12,7 @@ public class MinimalCategoryData extends GenericItemData {
 
 	private Integer productCount;
 
-	private String merchantStore;
+	private String store;
 
 	private Integer subCategoriesCount;
 
@@ -50,12 +50,12 @@ public class MinimalCategoryData extends GenericItemData {
 		this.productCount = productCount;
 	}
 
-	public String getMerchantStore() {
-		return merchantStore;
+	public String getStore() {
+		return store;
 	}
 
-	public void setMerchantStore(String merchantStore) {
-		this.merchantStore = merchantStore;
+	public void setStore(String store) {
+		this.store = store;
 	}
 
 	public MinimalCategoryData getParent() {

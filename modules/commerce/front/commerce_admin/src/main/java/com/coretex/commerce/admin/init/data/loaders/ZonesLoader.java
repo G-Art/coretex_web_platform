@@ -1,9 +1,9 @@
 package com.coretex.commerce.admin.init.data.loaders;
 
+import com.coretex.commerce.core.init.loader.DataLoader;
 import com.coretex.commerce.core.services.CountryService;
-import com.coretex.commerce.core.services.LocaleService;
+import com.coretex.commerce.core.services.ZoneService;
 import com.coretex.items.core.CountryItem;
-import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.ZoneItem;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -17,20 +17,17 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class ZonesLoader {
+public class ZonesLoader implements DataLoader {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ZonesLoader.class);
 
 	@Resource
-	private LocaleService localeService;
+	private ZoneService zoneService;
 
 	@Resource
 	private CountryService countryService;
 
-	public Map<String, ZoneItem> loadZones(String jsonFilePath) throws Exception {
-
-
-		List<LocaleItem> languages = localeService.list();
+	public Map<String, ZoneItem> loadZones(String jsonFilePath) {
 
 		List<CountryItem> countries = countryService.list();
 		Map<String, CountryItem> countriesMap = new HashMap<String, CountryItem>();
@@ -96,4 +93,29 @@ public class ZonesLoader {
 
 	}
 
+	@Override
+	public boolean load(String name) {
+		LOGGER.info(String.format("%s : Populating Zones", name));
+		try {
+
+			Map<String, ZoneItem> zonesMap = loadZones("reference/zoneconfig.json");
+
+			for (Map.Entry<String, ZoneItem> entry : zonesMap.entrySet()) {
+				ZoneItem value = entry.getValue();
+
+				zoneService.create(value);
+
+			}
+
+		} catch (Exception e) {
+
+			throw new RuntimeException(e);
+		}
+		return true;
+	}
+
+	@Override
+	public int priority() {
+		return PRIORITY_70;
+	}
 }

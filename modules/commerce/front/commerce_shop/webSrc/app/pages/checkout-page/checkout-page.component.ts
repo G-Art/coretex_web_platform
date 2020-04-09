@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {fadeInAnimation} from "../../core/animation/fadeInAnimation.animation";
+import {CartData} from "../../core/data/cart.data";
+import {CartService} from "../../core/service/cart.service";
+import {Router} from "@angular/router";
 
 @Component({
   animations : [fadeInAnimation],
@@ -9,10 +12,38 @@ import {fadeInAnimation} from "../../core/animation/fadeInAnimation.animation";
   styleUrls: ['./checkout-page.component.scss']
 })
 export class CheckoutPageComponent implements OnInit {
+  private cartUpdate = false;
+  cart: CartData;
 
-  constructor() { }
+  constructor(private cartService: CartService,
+              private router: Router) {
+  }
 
   ngOnInit(): void {
+    this.cartService
+        .getCurrentCart()
+        .subscribe(cart => {
+          this.cart = cart;
+          if (!cart.entries || cart.entries.length == 0) {
+            this.router.navigate([`/`])
+          }
+        });
+
+    this.cartService.updateCart.subscribe(cart => {
+      if (cart && cart.entries && cart.entries.length > 0) {
+        this.cart = cart;
+
+        let productCount: number = 0;
+
+        for (const entry of this.cart.entries) {
+          productCount += entry.quantity;
+        }
+
+        this.cart.productCount = productCount
+      } else {
+        this.router.navigate([`/`])
+      }
+    })
   }
 
 }

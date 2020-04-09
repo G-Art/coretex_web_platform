@@ -24,9 +24,10 @@
               "webSrc/assets"
             ],
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "webSrc/assets/css/vendors.css",
               "webSrc/assets/scss/style.scss",
-
               "webSrc/assets/revolution/css/settings.css",
               "webSrc/assets/revolution/css/navigation.css",
               "webSrc/assets/revolution/custom-setting.css"
@@ -34,10 +35,8 @@
             "scripts": [
               "webSrc/assets/js/vendors.js",
               "webSrc/assets/js/active.js",
-
               "webSrc/assets/revolution/js/jquery.themepunch.revolution.min.js",
               "webSrc/assets/revolution/js/jquery.themepunch.tools.min.js",
-
               "webSrc/assets/revolution/js/extensions/revolution.extension.kenburn.min.js",
               "webSrc/assets/revolution/js/extensions/revolution.extension.slideanims.min.js",
               "webSrc/assets/revolution/js/extensions/revolution.extension.actions.min.js",
@@ -107,9 +106,10 @@
               "webSrc/assets"
             ],
             "styles": [
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "webSrc/assets/css/vendors.css",
               "webSrc/assets/scss/style.scss",
-
               "webSrc/assets/revolution/css/settings.css",
               "webSrc/assets/revolution/css/navigation.css",
               "webSrc/assets/revolution/custom-setting.css"
@@ -117,10 +117,8 @@
             "scripts": [
               "webSrc/assets/js/vendors.js",
               "webSrc/assets/js/active.js",
-
               "webSrc/assets/revolution/js/jquery.themepunch.revolution.min.js",
               "webSrc/assets/revolution/js/jquery.themepunch.tools.min.js",
-
               "webSrc/assets/revolution/js/extensions/revolution.extension.kenburn.min.js",
               "webSrc/assets/revolution/js/extensions/revolution.extension.slideanims.min.js",
               "webSrc/assets/revolution/js/extensions/revolution.extension.actions.min.js",
@@ -156,6 +154,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "goodmood"
 }

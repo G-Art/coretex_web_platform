@@ -1,6 +1,6 @@
 <nav *ngIf="!renderMobile" >
     <ul>
-        <li *ngFor="let cat of categories"
+        <li *ngFor="let cat of categories | async"
                 [ngClass]="{'has-children' : cat.children !== 'undefined' && cat.children.length > 0}" >
             <a routerLink="/category/{{cat.code}}">{{cat.name}}</a>
             <app-submenu *ngIf="cat.children !== 'undefined' && cat.children.length > 0"
@@ -33,7 +33,7 @@
             </div>
             <nav class="offcanvas-naviagtion">
                 <ul>
-                    <li *ngFor="let cat of categories"
+                    <li *ngFor="let cat of categories | async"
                             [ngClass]="{'menu-item-has-children' : cat.children !== 'undefined' && cat.children.length > 0}" >
                         <a routerLink="/category/{{cat.code}}">{{cat.name}}</a>
                         <app-submenu *ngIf="cat.children !== 'undefined' && cat.children.length > 0"

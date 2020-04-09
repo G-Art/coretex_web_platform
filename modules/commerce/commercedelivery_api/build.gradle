@@ -1,0 +1,7 @@
+
+dependencies {
+  implementation project(":core")
+
+  implementation project(":cx_core")
+
+}

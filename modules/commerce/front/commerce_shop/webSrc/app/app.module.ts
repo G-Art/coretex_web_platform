@@ -13,6 +13,8 @@ import {LoginLayoutComponent} from './layouts/login-layout/login-layout.componen
 import {ComponentsModule} from "./shared/components/components.module";
 import {DirectivesModule} from "./shared/directives/directives.module";
 import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {AccordionModule} from "ngx-bootstrap/accordion";
 
 @NgModule({
     declarations: [
@@ -35,7 +37,9 @@ import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
             }
         }),
         ComponentsModule,
-        DirectivesModule
+        DirectivesModule,
+        BrowserAnimationsModule,
+        AccordionModule.forRoot(),
     ],
     providers: [],
     exports: [],

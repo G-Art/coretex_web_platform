@@ -1,4 +1,4 @@
-package com.coretex.commerce.admin.init.data;
+package com.coretex.commerce.core.init;
 
 import org.apache.commons.lang3.LocaleUtils;
 
