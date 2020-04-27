@@ -3,7 +3,7 @@ package com.coretex.commerce.data;
 public class OrderData extends AbstractOrderData {
 
 	private Boolean customerAgreement;
-	private Boolean confirmedAddress;
+	private Boolean confirmedEmail;
 	private String status;
 	private String date;
 
@@ -23,12 +23,12 @@ public class OrderData extends AbstractOrderData {
 		this.customerAgreement = customerAgreement;
 	}
 
-	public Boolean getConfirmedAddress() {
-		return confirmedAddress;
+	public Boolean getConfirmedEmail() {
+		return confirmedEmail;
 	}
 
-	public void setConfirmedAddress(Boolean confirmedAddress) {
-		this.confirmedAddress = confirmedAddress;
+	public void setConfirmedEmail(Boolean confirmedEmail) {
+		this.confirmedEmail = confirmedEmail;
 	}
 
 	public String getDate() {

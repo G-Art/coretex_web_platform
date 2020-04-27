@@ -1,18 +1,16 @@
 <div class="single-faq">
     <h4 class="checkout-title">Delivery service</h4>
     <accordion [isAnimated]="true" [closeOthers]="true">
-        <accordion-group *ngFor="let ds of deliveryServices | async" >
-            <button class="btn btn-link btn-block collapsed" accordion-heading type="button" (click)="selection(ds)">
+        <accordion-group *ngFor="let ds of deliveryServices" [(isOpen)]="selectionMap[ds.code]">
+            <button class="btn btn-link btn-block" accordion-heading type="button" (click)="selection(ds)">
                 <div class="check-box">
-                    <input type="checkbox" [checked]="isOpen(ds)">
-                    <label >{{ds.name[translate.currentLang]}}</label>
+                    <input type="checkbox" [checked]="selected(ds)">
+                    <label>{{ds.name[translate.currentLang]}}</label>
                 </div>
             </button>
-            <div *ngIf="isOpen(ds)">
-                <app-delivery-type-selector [deliveryService]="ds"></app-delivery-type-selector>
+            <div *ngIf="selected(ds)" class="row">
+                <app-delivery-type-selector class="col-12" [deliveryService]="ds" [cart]="cart"></app-delivery-type-selector>
             </div>
         </accordion-group>
-
-
     </accordion>
 </div>

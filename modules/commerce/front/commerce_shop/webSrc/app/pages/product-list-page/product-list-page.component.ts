@@ -1,15 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-import {SearchService} from "../../core/service/search.service";
-import {SearchResult} from "../../core/data/search.result.data";
-import {ActivatedRoute} from "@angular/router";
-import {Subject} from "rxjs";
-import {fadeInAnimation} from "../../core/animation/fadeInAnimation.animation";
+import {SearchService} from '../../core/service/search.service';
+import {SearchResult} from '../../core/data/search.result.data';
+import {ActivatedRoute} from '@angular/router';
+import {combineLatest, Subject} from 'rxjs';
+import {fadeInAnimation} from '../../core/animation/fadeInAnimation.animation';
+import {map} from 'rxjs/operators';
 
 declare var $: any;
 
 @Component({
-    animations : [fadeInAnimation],
-    host: { '[@fadeInAnimation]': '' },
+    animations: [fadeInAnimation],
+    host: {'[@fadeInAnimation]': ''},
     selector: 'app-product-list-page',
     templateUrl: './product-list-page.component.html',
     styleUrls: ['./product-list-page.component.scss']
@@ -17,13 +18,13 @@ declare var $: any;
 export class ProductListPageComponent implements OnInit {
 
     private categoryCode: string;
-    private page:number = 0;
+    private page: number = 0;
 
     private onParamChange = new Subject<void>();
 
     type: string = 'category';
 
-    showSkeleton:boolean = false;
+    showSkeleton: boolean = false;
 
     searchResult: SearchResult;
 
@@ -47,11 +48,20 @@ export class ProductListPageComponent implements OnInit {
         this.activatedRoute.data.subscribe(data => {
             this.type = data.type;
             if (this.type === 'category') {
-                this.activatedRoute.params.subscribe(routeParams => {
-                    this.categoryCode = routeParams.code;
-                    this.onParamChange.next();
-                });
+                combineLatest([this.activatedRoute.params, this.activatedRoute.queryParams])
+                    .pipe(map(results => ({params: results[0].code, query: results[1]})))
+                    .subscribe(results => {
+                        this.categoryCode = results.params;
 
+                        let page = results.query['page'];
+                        if (page != null || page != undefined) {
+                            this.page = page;
+                        } else {
+                            this.page = 0;
+                        }
+
+                        this.onParamChange.next();
+                    });
             } else {
                 // this.activatedRoute
                 //     .queryParams
@@ -60,20 +70,6 @@ export class ProductListPageComponent implements OnInit {
                 //     });
             }
         });
-
-        this.activatedRoute.queryParams.subscribe(params => {
-            let page = params['page'];
-            if(page != null || page != undefined){
-                this.page = page;
-
-            }else {
-                this.page = 0;
-            }
-            this.onParamChange.next();
-        })
-
-
-
 
     }
 

@@ -9,8 +9,10 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import {StoreData} from "../../../core/data/store.data";
-import {AuthService} from "../../../core/service/auth.service";
+import {StoreData} from '../../../core/data/store.data';
+import {AuthService} from '../../../core/service/auth.service';
+import {UserData} from '../../../core/data/user.data';
+import {UserService} from '../../../core/service/user.service';
 
 declare var $: any;
 
@@ -24,21 +26,29 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
     @ViewChild('headerSticky', {static: false}) headerSticky: ElementRef;
 
-    authorized = false;
     @Output()
     toggleMobileMenuEvent = new EventEmitter<any>();
+    currentUser: UserData;
 
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService, private userService: UserService) {
     }
 
     ngOnInit() {
+        this.userService
+            .currentUser
+            .subscribe(u => {
+                this.currentUser = u;
+            })
+        if (this.authService.isAuthenticated() && !this.currentUser) {
+            this.userService.updateCurrentUser();
+        }
     }
 
     isLoggedIn() {
-        return this.authService.isAuthenticated();
+        return this.authService.isAuthenticated() && this.currentUser;
     }
 
-    logout(){
+    logout() {
         this.authService.logout();
     }
 
@@ -56,7 +66,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         }
     }
 
-    toggleMobileMenu(){
+    toggleMobileMenu() {
         this.toggleMobileMenuEvent.emit()
     }
 

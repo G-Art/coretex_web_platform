@@ -23,29 +23,22 @@ export class CartPageComponent implements OnInit {
 
     ngOnInit() {
         this.cartService
-            .getCurrentCart()
+            .currentCart
             .subscribe(cart => {
-                this.cart = cart;
-                if (!cart.entries || cart.entries.length == 0) {
+                if (cart && cart.entries && cart.entries.length > 0) {
+                    this.cart = cart;
+
+                    let productCount: number = 0;
+
+                    for (const entry of this.cart.entries) {
+                        productCount += entry.quantity;
+                    }
+
+                    this.cart.productCount = productCount
+                } else {
                     this.router.navigate([`/`])
                 }
             });
-
-        this.cartService.updateCart.subscribe(cart => {
-            if (cart && cart.entries && cart.entries.length > 0) {
-                this.cart = cart;
-
-                let productCount: number = 0;
-
-                for (const entry of this.cart.entries) {
-                    productCount += entry.quantity;
-                }
-
-                this.cart.productCount = productCount
-            } else {
-                this.router.navigate([`/`])
-            }
-        })
     }
 
     decQuantity(entry: CartEntryData) {

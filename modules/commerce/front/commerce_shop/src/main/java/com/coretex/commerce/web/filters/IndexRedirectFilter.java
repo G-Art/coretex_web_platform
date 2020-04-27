@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 @Component
 public class IndexRedirectFilter implements WebFilter {
 
+
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 		var request = exchange.getRequest();

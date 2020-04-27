@@ -11,6 +11,8 @@ public class AbstractOrderData extends GenericItemData {
 	private CustomerData customer;
 	private LocaleData locale;
 	private BigDecimal total;
+	private DeliveryTypeData deliveryType;
+	private AddressData address;
 
 	public LinkedHashSet<OrderEntryData> getEntries() {
 		return entries;
@@ -58,5 +60,21 @@ public class AbstractOrderData extends GenericItemData {
 
 	public void setTotal(BigDecimal total) {
 		this.total = total;
+	}
+
+	public DeliveryTypeData getDeliveryType() {
+		return deliveryType;
+	}
+
+	public void setDeliveryType(DeliveryTypeData deliveryType) {
+		this.deliveryType = deliveryType;
+	}
+
+	public AddressData getAddress() {
+		return address;
+	}
+
+	public void setAddress(AddressData address) {
+		this.address = address;
 	}
 }

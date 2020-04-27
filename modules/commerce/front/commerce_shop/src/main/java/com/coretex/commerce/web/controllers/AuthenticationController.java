@@ -5,8 +5,10 @@ import com.coretex.commerce.config.security.AuthResponse;
 import com.coretex.commerce.config.security.JWTUtil;
 import com.coretex.commerce.config.security.PBKDF2Encoder;
 import com.coretex.commerce.config.security.service.JWTUserService;
+import com.coretex.commerce.data.CustomerData;
 import com.coretex.commerce.data.requests.RegisterRequest;
 import com.coretex.commerce.facades.CustomerFacade;
+import com.coretex.commerce.mapper.CustomerDataMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
@@ -39,8 +43,19 @@ public class AuthenticationController {
 	@Resource
 	private CustomerFacade customerFacade;
 
+	@Resource
+	private CustomerDataMapper customerDataMapper;
+
 	@Value("${jwt.jjwt.expiration}")
 	private String expirationTime;
+
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public Mono<ResponseEntity<?>> logout(ServerWebExchange exchange) {
+		return exchange.getSession()
+				.flatMap(WebSession::invalidate)
+				.map(aVoid -> ResponseEntity.status(HttpStatus.OK).build());
+	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public Mono<ResponseEntity<?>> login(@RequestBody AuthRequest ar, ServerHttpRequest request) {
@@ -67,6 +82,12 @@ public class AuthenticationController {
 			return login(authRequest, request);
 		}
 		return Mono.fromSupplier(() -> ResponseEntity.ok().body(register));
+	}
+
+	@RequestMapping(value = "/user/current", method = RequestMethod.GET)
+	public Mono<CustomerData> currentUser(ServerWebExchange exchange) {
+		return userRepository.getCurrentUser(exchange)
+				.map(customerDataMapper::fromItem);
 	}
 
 	public HttpHeaders generateCookieHeader(String jwt, ServerHttpRequest request) {

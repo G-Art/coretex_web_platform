@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {environment} from "../../../environments/environment";
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable, of} from "rxjs";
-import {map, share} from "rxjs/operators";
-import {LanguageData} from "../data/language.data";
+import {environment} from '../../../environments/environment';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable, of} from 'rxjs';
+import {map, share} from 'rxjs/operators';
+import {LanguageData} from '../data/language.data';
 
 @Injectable()
 export class LanguageService {

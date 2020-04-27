@@ -12,12 +12,12 @@ import java.util.stream.Stream;
 
 public abstract class AbstractGenericItemService<E extends GenericItem> implements GenericItemService<E> {
 
-	private Class<E> objectClass;
+	private final Class<E> objectClass;
 
-	private Dao<E> repository;
+	private final Dao<E> repository;
 
 	@SuppressWarnings("unchecked")
-	public AbstractGenericItemService(Dao<E> repository) {
+	public AbstractGenericItemService(final Dao<E> repository) {
 		ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
 		this.objectClass = (Class<E>) genericSuperclass.getActualTypeArguments()[0];
 		this.repository = repository;

@@ -1,12 +1,12 @@
 import {ElementRef, EventEmitter, Injectable} from '@angular/core';
-import {ProductData} from "../data/product.data";
-import {QuickViewData} from "../data/quick-view.data";
-import {ProductDetailData} from "../data/product-detail.data";
-import {Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
-import {map, share} from "rxjs/operators";
-import {environment} from "../../../environments/environment";
-import {CartService} from "./cart.service";
+import {ProductData} from '../data/product.data';
+import {QuickViewData} from '../data/quick-view.data';
+import {ProductDetailData} from '../data/product-detail.data';
+import {Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {map, share} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
+import {CartService} from './cart.service';
 
 @Injectable()
 export class ProductService {
@@ -27,8 +27,8 @@ export class ProductService {
         this.productQuickView.emit(qw)
     }
 
-    getProductDetail(productCode: string): Observable<ProductDetailData>{
-        return this.http.get<ProductDetailData>(`${this.apiUrl + '/product/'+productCode}`, {
+    getProductDetail(productCode: string): Observable<ProductDetailData> {
+        return this.http.get<ProductDetailData>(`${this.apiUrl + '/product/' + productCode}`, {
             observe: 'response'
         }).pipe(
             map(response => {

@@ -2,18 +2,69 @@ package com.coretex.commerce.core.services.impl;
 
 import com.coretex.commerce.core.dao.CartDao;
 import com.coretex.commerce.core.services.AbstractGenericItemService;
+import com.coretex.commerce.core.services.CartCalculationService;
 import com.coretex.commerce.core.services.CartService;
 import com.coretex.items.cx_core.CartItem;
+import com.coretex.items.cx_core.CustomerItem;
+import com.coretex.items.cx_core.OrderEntryItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class DefaultCartService extends AbstractGenericItemService<CartItem> implements CartService {
 
-	private CartDao repository;
+	private final static Logger LOG = LoggerFactory.getLogger(DefaultCartService.class);
+
+	@Resource
+	private CartCalculationService cartCalculationService;
 
 	public DefaultCartService(CartDao repository) {
 		super(repository);
-		this.repository = repository;
 	}
 
+	@Override
+	public Stream<CartItem> getCartsForCustomer(CustomerItem customerItem) {
+		return getRepository().getCartsForCustomer(customerItem);
+	}
+
+	@Override
+	public void merge(CartItem mainCart, CartItem slaveCart) {
+		slaveCart.getEntries()
+				.forEach(orderEntryItem -> {
+					mergeEntry(mainCart, orderEntryItem);
+				});
+		cartCalculationService.calculate(mainCart);
+	}
+
+	private void mergeEntry(CartItem mainCart, OrderEntryItem orderEntryItem) {
+		var correspondsEntry = mainCart.getEntries()
+				.stream()
+				.filter(entry -> entry.getProduct()
+						.getCode()
+						.equals(orderEntryItem.getProduct()
+								.getCode()
+						)
+				).collect(Collectors.toList());
+		if(correspondsEntry.isEmpty()){
+			mainCart.getEntries().add(orderEntryItem);
+			orderEntryItem.setOrder(mainCart);
+		}else {
+			if(correspondsEntry.size() != 1){
+				LOG.warn(String.format("Cart [%s] duplication entry for product [%s]", mainCart.getUuid(), orderEntryItem.getProduct().getCode()));
+			}else {
+				var orderEntry = correspondsEntry.get(0);
+				orderEntry.setQuantity(orderEntry.getQuantity() + orderEntryItem.getQuantity());
+			}
+		}
+	}
+
+	@Override
+	public CartDao getRepository() {
+		return (CartDao) super.getRepository();
+	}
 }

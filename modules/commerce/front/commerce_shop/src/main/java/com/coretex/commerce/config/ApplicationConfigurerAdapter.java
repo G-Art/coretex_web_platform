@@ -31,7 +31,6 @@ public class ApplicationConfigurerAdapter implements WebFluxConfigurer {
     @Resource
     private SecurityContextRepository securityContextRepository;
 
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
@@ -117,7 +116,4 @@ public class ApplicationConfigurerAdapter implements WebFluxConfigurer {
                 .anyExchange().permitAll()
                 .and().build();
     }
-
-
-
 }

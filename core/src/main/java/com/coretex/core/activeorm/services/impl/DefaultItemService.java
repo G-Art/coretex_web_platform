@@ -1,7 +1,6 @@
 package com.coretex.core.activeorm.services.impl;
 
 import com.coretex.core.activeorm.factories.OperationFactory;
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
@@ -78,6 +77,7 @@ public class DefaultItemService implements ItemService {
 
 	@Override
 	public <T extends GenericItem> void delete(T item){
+		item.getItemContext().refresh();
 		operationFactory.createDeleteOperation(item).execute();
 	}
 

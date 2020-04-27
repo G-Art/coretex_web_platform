@@ -93,6 +93,13 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 		return findSingle(Map.of("uuid", uuid), false, strict);
 	}
 
+	public <R> SearchResult<R> findByQuery(String query, Map<String, Object> params){
+		 return this.getSearchService().search(query, params);
+	}
+	public <R> SearchResult<R> findByQuery(String query){
+		return this.getSearchService().search(query);
+	}
+
 	@Override
 	public I findSingle(Map<String, ?> params, boolean throwAmbiguousException) {
 		return findSingle(params, throwAmbiguousException, false);
@@ -104,6 +111,33 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 			throw new AmbiguousResultException(String.format("Result contain more than one result (result count: %s)", result.size()));
 		}
 		return CollectionUtils.isNotEmpty(result) ? result.iterator().next() : null;
+	}
+
+	public  <R> R findSingleByQuery(String query, Map<String, Object> params){
+		var searchResult = findByQuery(query, params);
+		var result = searchResult.getResult();
+
+		if (CollectionUtils.isNotEmpty(result) && result.size() > 1 ) {
+			throw new AmbiguousResultException(String.format("Result contain more than one result (result count: %s)", result.size()));
+		}
+		if(result.isEmpty()){
+			return null;
+		}else{
+			return (R) result.get(0);
+		}
+	}
+	public <R> R findSingleByQuery(String query){
+		var searchResult = findByQuery(query);
+		var result = searchResult.getResult();
+
+		if (CollectionUtils.isNotEmpty(result) && result.size() > 1 ) {
+			throw new AmbiguousResultException(String.format("Result contain more than one result (result count: %s)", result.size()));
+		}
+		if(result.isEmpty()){
+			return null;
+		}else{
+			return (R) result.get(0);
+		}
 	}
 
 	@Override

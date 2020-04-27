@@ -35,6 +35,15 @@ elements {
             }
         }
 
+        CustomerAddressesRelation(source: Customer, target: Address){
+            source(addresses) {
+                description = "Address book "
+                containerType = Set
+            }
+            target(customer) {
+                description = "User"
+            }
+        }
 
         StoreLocaleRelation(source: Store, target: 'Locale') {
             source(languages) {
@@ -318,6 +327,7 @@ elements {
                 store(Store)
                 customer(Customer)
                 locale('Locale')
+                address(Address)
             }
         }
 

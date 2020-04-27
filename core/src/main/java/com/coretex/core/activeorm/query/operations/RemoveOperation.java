@@ -39,19 +39,26 @@ public class RemoveOperation extends ModificationOperation<Delete, RemoveOperati
 					.filter(attributeTypeItem -> !isRegularTypeAttribute(attributeTypeItem) || attributeTypeItem.getLocalized())
 					.forEach(attributeTypeItem -> {
 						if (attributeTypeItem.getLocalized()) {
-							getOperationFactory().createDeleteOperation(getOperationSpec().getItem(), attributeTypeItem, this).execute();
+							getOperationFactory().createDeleteOperation(getOperationSpec().getItem(), attributeTypeItem, this)
+									.execute();
 						}
-						if (attributeTypeItem.getAttributeTypeCode().equals(MetaTypeItem.ITEM_TYPE) && !isSystemType(attributeTypeItem.getAttributeType()) && attributeTypeItem.getAssociated())
-						{
-							getOperationSpec().getOperationFactory().createDeleteOperation((GenericItem) (this.getOperationSpec().getItem().getAttributeValue(attributeTypeItem.getAttributeName())), attributeTypeItem, this).execute();
+						if (attributeTypeItem.getAttributeTypeCode().equals(MetaTypeItem.ITEM_TYPE) && !isSystemType(attributeTypeItem.getAttributeType()) && attributeTypeItem.getAssociated()) {
+							var attributeValue = this.getOperationSpec().getItem().getAttributeValue(attributeTypeItem.getAttributeName());
+							if (Objects.nonNull(attributeValue)) {
+								getOperationSpec().getOperationFactory()
+										.createDeleteOperation((GenericItem) (attributeValue), attributeTypeItem, this)
+										.execute();
+							}
 						}
 						if (AttributeTypeUtils.isRelationAttribute(attributeTypeItem)) {
 							Object value = this.getOperationSpec().getItem().getAttributeValue(attributeTypeItem.getAttributeName());
-							if(Objects.nonNull(value)){
+							if (Objects.nonNull(value)) {
 								if (value instanceof Collection) {
-									getOperationFactory().createRelationDeleteOperations((Collection<GenericItem>) value, attributeTypeItem, this).forEach(ModificationOperation::execute);
+									getOperationFactory().createRelationDeleteOperations((Collection<GenericItem>) value, attributeTypeItem, this)
+											.forEach(ModificationOperation::execute);
 								} else {
-									getOperationFactory().createRelationDeleteOperations((GenericItem) value, attributeTypeItem, this).forEach(ModificationOperation::execute);
+									getOperationFactory().createRelationDeleteOperations((GenericItem) value, attributeTypeItem, this)
+											.forEach(ModificationOperation::execute);
 								}
 							}
 						}
@@ -65,7 +72,7 @@ public class RemoveOperation extends ModificationOperation<Delete, RemoveOperati
 	@Override
 	public void executeOperation() {
 		var query = getQuery();
-		if(LOG.isDebugEnabled()){
+		if (LOG.isDebugEnabled()) {
 			LOG.debug(String.format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), getOperationSpec() instanceof CascadeRemoveOperationSpec));
 		}
 		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query,

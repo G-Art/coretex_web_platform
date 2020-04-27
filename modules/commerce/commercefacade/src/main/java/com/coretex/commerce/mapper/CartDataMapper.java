@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring",
 		uses = {ReferenceMapper.class,
 				AddressDataMapper.class,
+				DeliveryTypeDataMapper.class,
 				OrderEntryDataMapper.class,
 				LocaleDataMapper.class,
 				CustomerDataMapper.class,

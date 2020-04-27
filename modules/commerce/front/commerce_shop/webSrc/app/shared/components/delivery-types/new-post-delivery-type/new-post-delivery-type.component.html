@@ -1,0 +1,102 @@
+<div class="row">
+    <div class="col-12 billing-form"
+         *ngIf="deliveryType && (deliveryType.additionalInfo == null || !deliveryType.additionalInfo['sendToWarehouse'])">
+        <h4 class="checkout-title">Address</h4>
+        <form [formGroup]="deliveryTypeAddressInfoForm"
+              #deliveryTypeInfoForm>
+            <div class="row">
+                <input type="hidden" formControlName="deliveryType">
+                <div class="col-md-6 col-12">
+                    <label>First Name</label>
+                    <input id="firstName" type="text" formControlName="firstName" placeholder="First Name">
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <label>Last Name</label>
+                    <input id="lastName" type="text" formControlName="lastName" placeholder="Last Name">
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <label>Email Address</label>
+                    <input id="email" type="email" formControlName="email" placeholder="Email Address">
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <label>Phone no</label>
+                    <input id="phone" type="text" formControlName="phone" placeholder="Phone number">
+                </div>
+
+                <div class="col-12">
+                    <label>Address</label>
+                    <input id="addressLine1" type="text" formControlName="addressLine1" placeholder="Address line 1">
+                    <input id="addressLine2" type="text" formControlName="addressLine2" placeholder="Address line 2">
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <label>Town/City</label>
+                    <input id="city" type="text" formControlName="city" placeholder="Town/City">
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <label>Zip Code</label>
+                    <input id="zipCode" type="text" formControlName="zipCode" placeholder="Zip Code">
+                </div>
+
+                <div class="col-12">
+                    <div class="check-box">
+                        <input type="checkbox" id="create_account" formControlName="createAccount">
+                        <label for="create_account">Create an Account?</label>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+
+    </div>
+    <div class="col-12"
+         *ngIf="deliveryType && deliveryType.additionalInfo && deliveryType.additionalInfo['sendToWarehouse']">
+        <h4 class="checkout-title">New Post Warehouse</h4>
+        <form [formGroup]="deliveryTypeWarehouseInfoForm" #deliveryTypeInfoForm>
+            <div class="row">
+                <input type="hidden" formControlName="deliveryType">
+                <div class="col-md-6 col-12">
+                    <label>First Name</label>
+                    <input id="firstName" type="text" formControlName="firstName" placeholder="First Name">
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <label>Last Name</label>
+                    <input id="lastName" type="text" formControlName="lastName" placeholder="Last Name">
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <label>Email Address</label>
+                    <input id="email" type="email" formControlName="email" placeholder="Email Address">
+                </div>
+
+                <div class="col-md-6 col-12">
+                    <label>Phone no</label>
+                    <input id="phone" type="text" formControlName="phone" placeholder="Phone number">
+                </div>
+                <div class="col-md-6 col-12">
+                    <label>Town/City</label>
+                    <input id="city" type="text" formControlName="city" placeholder="Town/City">
+                </div>
+                <div class="col-md-6 col-12">
+                    <label>Branch</label>
+                    <input id="branch" type="text" formControlName="branch" placeholder="Branch">
+                </div>
+                <div class="col-12">
+                    <div class="check-box">
+                        <input type="checkbox" id="create_account" formControlName="createAccount">
+                        <label for="create_account">Create an Account?</label>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+

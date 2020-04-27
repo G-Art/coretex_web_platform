@@ -1,7 +1,7 @@
 import {AbstractData} from "./abstract.data";
-import {ImgData} from "./img.data";
-import {ProductVariantData} from "./product-variant.data";
 import {CartEntryData} from "./cart-entry.data";
+import {DeliveryTypeData} from "./delivery-type.data";
+import {UserData} from './user.data';
 export class CartData extends AbstractData {
 
     entries?:CartEntryData[];
@@ -10,5 +10,8 @@ export class CartData extends AbstractData {
 
     total:string;
 
+    deliveryType?:DeliveryTypeData;
+    address?:AbstractData;
+    user?:UserData;
 
 }

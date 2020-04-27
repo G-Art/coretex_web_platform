@@ -14,6 +14,7 @@ public class AddressData extends GenericItemData{
 	private String firstName;
 	private String longitude;
 	private String latitude;
+	private Boolean defaultAddress = false;
 
 	public String getAddressLine1() {
 		return addressLine1;
@@ -109,5 +110,13 @@ public class AddressData extends GenericItemData{
 
 	public void setLatitude(String latitude) {
 		this.latitude = latitude;
+	}
+
+	public Boolean getDefaultAddress() {
+		return defaultAddress;
+	}
+
+	public void setDefaultAddress(Boolean defaultAddress) {
+		this.defaultAddress = defaultAddress;
 	}
 }

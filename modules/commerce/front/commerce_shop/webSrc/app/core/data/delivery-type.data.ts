@@ -5,4 +5,6 @@ export class DeliveryTypeData extends AbstractData {
     name:Map<string, string>;
     active:boolean;
     type:string;
+    deliveryService?:string
+    additionalInfo?:Map<string, any>
 }

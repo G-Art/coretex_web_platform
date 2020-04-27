@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../../core/service/auth.service";
-import {first} from "rxjs/operators";
 import {CookieService} from "ngx-cookie-service";
+import {UserService} from '../../../core/service/user.service';
 
 @Component({
     selector: 'app-login',
@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
     error = '';
 
     constructor(private formBuilder: FormBuilder,
+                private userService: UserService,
                 private authService: AuthService,
                 private cookieService: CookieService,
                 private route: ActivatedRoute,
@@ -50,10 +51,10 @@ export class LoginComponent implements OnInit {
             .subscribe(
                 data => {
                     this.authService.getRedirectUrl()
-                        .subscribe(data => {
-                            console.log(data);
-                            this.router.navigate(data);
+                        .subscribe(val => {
+                            this.router.navigate(val);
                         });
+                    this.userService.updateCurrentUser()
 
                 },
                 error => {

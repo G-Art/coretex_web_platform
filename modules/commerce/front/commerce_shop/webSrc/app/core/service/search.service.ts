@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {SearchResult} from "../data/search.result.data";
-import {ActivatedRoute} from "@angular/router";
-import {Observable, Subject} from "rxjs";
-import {map, share} from "rxjs/operators";
-import {HttpClient} from "@angular/common/http";
-import {environment} from "../../../environments/environment";
+import {SearchResult} from '../data/search.result.data';
+import {ActivatedRoute} from '@angular/router';
+import {Observable, Subject} from 'rxjs';
+import {map, share} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class SearchService {

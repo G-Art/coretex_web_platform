@@ -1,6 +1,7 @@
 package com.coretex.commerce.mapper;
 
 import com.coretex.commerce.data.DeliveryTypeData;
+import com.coretex.commerce.delivery.api.actions.DeliveryTypeActionHandler;
 import com.coretex.items.cx_commercedelivery_api.DeliveryTypeItem;
 import com.google.common.collect.Maps;
 import org.mapstruct.AfterMapping;
@@ -10,6 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 
+import javax.annotation.Resource;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,19 +21,23 @@ import java.util.stream.Collectors;
 				StoreDataMapper.class,
 				CountryDataMapper.class,
 				LocaleDataMapper.class})
-public interface DeliveryTypeDataMapper extends GenericDataMapper<DeliveryTypeItem, DeliveryTypeData> {
+public abstract class DeliveryTypeDataMapper implements GenericDataMapper<DeliveryTypeItem, DeliveryTypeData> {
+
+	@Resource
+	private DeliveryTypeActionHandler deliveryTypeActionHandler;
 
 	@Override
 	@Mappings({
-			@Mapping(target = "name", expression = "java(toLocalizedMap(source.allName()))")
+			@Mapping(target = "name", expression = "java(toLocalizedMap(source.allName()))"),
+			@Mapping(target = "deliveryService", source = "deliveryService.uuid")
 	})
-	DeliveryTypeData fromItem(DeliveryTypeItem source);
+	public abstract DeliveryTypeData fromItem(DeliveryTypeItem source);
 
 	@Override
 	@InheritConfiguration(name = "fromItem")
-	void updateFromItem(DeliveryTypeItem source, @MappingTarget DeliveryTypeData target);
+	public abstract void updateFromItem(DeliveryTypeItem source, @MappingTarget DeliveryTypeData target);
 
-	default Map<String, String> toLocalizedMap(Map<Locale, String> localized) {
+	public Map<String, String> toLocalizedMap(Map<Locale, String> localized) {
 		if(localized == null){
 			return Maps.newHashMap();
 		}
@@ -41,7 +47,8 @@ public interface DeliveryTypeDataMapper extends GenericDataMapper<DeliveryTypeIt
 	}
 
 	@AfterMapping
-	default void defineTypeSpecificFields(DeliveryTypeItem source, @MappingTarget DeliveryTypeData target) {
+	public void defineTypeSpecificFields(DeliveryTypeItem source, @MappingTarget DeliveryTypeData target) {
 		target.setType(source.getMetaType().getTypeCode());
+		target.setAdditionalInfo(deliveryTypeActionHandler.getAdditionalInfo(source));
 	}
 }

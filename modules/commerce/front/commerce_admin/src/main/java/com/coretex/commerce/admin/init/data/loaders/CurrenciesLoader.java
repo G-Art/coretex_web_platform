@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 @Component
 public class CurrenciesLoader implements DataLoader {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CountriesLoader.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(CurrenciesLoader.class);
 
 	@Resource
 	private CurrencyService currencyService;

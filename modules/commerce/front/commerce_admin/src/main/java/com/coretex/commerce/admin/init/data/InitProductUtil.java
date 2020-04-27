@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Locale;
 import java.util.Map;
 
@@ -194,10 +195,12 @@ public class InitProductUtil {
 		ProductPriceItem dprice = new ProductPriceItem();
 		dprice.setCode("basePrice_" + product.getCode() + "_" + index);
 		dprice.setDefaultPrice(true);
-		dprice.setProductPriceAmount(new BigDecimal(39.99 + 10 * index));
+		dprice.setProductPriceAmount(new BigDecimal(39.99 + 10 * index).setScale(2, RoundingMode.HALF_UP));
 
 		if (RandomUtils.nextBoolean()) {
-			dprice.setProductPriceSpecialAmount(dprice.getProductPriceAmount().subtract(new BigDecimal("10.00")));
+			dprice.setProductPriceSpecialAmount(dprice.getProductPriceAmount()
+					.subtract(new BigDecimal("10.00"))
+					.setScale(2, RoundingMode.HALF_UP));
 		}
 
 		dprice.setProductAvailability(availability);

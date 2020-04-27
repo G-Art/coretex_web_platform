@@ -13,6 +13,7 @@ import org.mapstruct.Mappings;
 		uses = {ReferenceMapper.class,
 				AddressDataMapper.class,
 				OrderEntryDataMapper.class,
+				DeliveryTypeDataMapper.class,
 				LocaleDataMapper.class,
 				CustomerDataMapper.class,
 				StoreDataMapper.class,

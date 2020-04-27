@@ -27,6 +27,7 @@ import {DeliveryServiceSelectorComponent} from './delivery-service-selector/deli
 import {AccordionModule} from "ngx-bootstrap/accordion";
 import {TranslateModule} from "@ngx-translate/core";
 import { DeliveryTypeSelectorComponent } from './delivery-type-selector/delivery-type-selector.component';
+import { NewPostDeliveryTypeComponent } from './delivery-types/new-post-delivery-type/new-post-delivery-type.component';
 
 @NgModule({
     declarations: [
@@ -49,7 +50,8 @@ import { DeliveryTypeSelectorComponent } from './delivery-type-selector/delivery
         SkeletonProductCollectionItemComponent,
         PaginationComponent,
         DeliveryServiceSelectorComponent,
-        DeliveryTypeSelectorComponent
+        DeliveryTypeSelectorComponent,
+        NewPostDeliveryTypeComponent
     ],
     imports: [
         DirectivesModule,

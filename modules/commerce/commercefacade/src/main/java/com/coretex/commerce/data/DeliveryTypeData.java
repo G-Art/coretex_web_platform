@@ -1,6 +1,7 @@
 package com.coretex.commerce.data;
 
 import java.util.Map;
+import java.util.UUID;
 
 public class DeliveryTypeData extends GenericItemData {
 
@@ -8,6 +9,8 @@ public class DeliveryTypeData extends GenericItemData {
 	private Map<String, String> name;
 	private String active;
 	private String type;
+	private UUID deliveryService;
+	private Map<String, Object> additionalInfo;
 
 	public String getCode() {
 		return code;
@@ -39,5 +42,21 @@ public class DeliveryTypeData extends GenericItemData {
 
 	public void setName(Map<String, String> name) {
 		this.name = name;
+	}
+
+	public UUID getDeliveryService() {
+		return deliveryService;
+	}
+
+	public void setDeliveryService(UUID deliveryService) {
+		this.deliveryService = deliveryService;
+	}
+
+	public Map<String, Object> getAdditionalInfo() {
+		return additionalInfo;
+	}
+
+	public void setAdditionalInfo(Map<String, Object> additionalInfo) {
+		this.additionalInfo = additionalInfo;
 	}
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,7 +21,12 @@ public class SessionManager {
 	}
 
 	public void setCurrentCartUUID(ServerWebExchange exchange, CartData cartData) {
-		exchange.getSession()
-				.subscribe(webSession -> webSession.getAttributes().put(SESSION_CART_UUID, cartData.getUuid()));
+		if (Objects.isNull(cartData)) {
+			exchange.getSession()
+					.subscribe(webSession -> webSession.getAttributes().remove(SESSION_CART_UUID));
+		} else {
+			exchange.getSession()
+					.subscribe(webSession -> webSession.getAttributes().put(SESSION_CART_UUID, cartData.getUuid()));
+		}
 	}
 }

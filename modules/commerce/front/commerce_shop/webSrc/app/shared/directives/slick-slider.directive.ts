@@ -14,7 +14,6 @@ export class SlickSliderDirective implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-      console.log("SlickSliderDirective");
         /*=============================================
        =            slick slider active            =
        =============================================*/
