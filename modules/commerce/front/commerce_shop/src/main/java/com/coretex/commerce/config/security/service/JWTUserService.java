@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class JWTUserService {
@@ -42,6 +43,12 @@ public class JWTUserService {
 				.map(SecurityContext::getAuthentication)
 				.map(Authentication::getPrincipal)
 				.cast(String.class)
-				.map(customerService::getByEmail);
+				.flatMap(email -> {
+					var customer = customerService.getByEmail(email);
+					if (Objects.nonNull(customer)) {
+						return Mono.just(customer);
+					}
+					return Mono.empty();
+				});
 	}
 }

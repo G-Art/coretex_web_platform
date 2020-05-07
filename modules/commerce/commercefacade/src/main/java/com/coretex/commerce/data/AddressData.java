@@ -1,10 +1,13 @@
 package com.coretex.commerce.data;
 
+import java.util.Map;
+
 public class AddressData extends GenericItemData{
 
 	private String addressLine1;
 	private String addressLine2;
 	private String city;
+	private String email;
 	private String postalCode;
 	private CountryData country;
 	private ZoneData zone;
@@ -15,6 +18,7 @@ public class AddressData extends GenericItemData{
 	private String longitude;
 	private String latitude;
 	private Boolean defaultAddress = false;
+	private Map<String, Object> additionalInfo;
 
 	public String getAddressLine1() {
 		return addressLine1;
@@ -118,5 +122,21 @@ public class AddressData extends GenericItemData{
 
 	public void setDefaultAddress(Boolean defaultAddress) {
 		this.defaultAddress = defaultAddress;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Map<String, Object> getAdditionalInfo() {
+		return additionalInfo;
+	}
+
+	public void setAdditionalInfo(Map<String, Object> additionalInfo) {
+		this.additionalInfo = additionalInfo;
 	}
 }

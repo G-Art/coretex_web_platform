@@ -19,13 +19,19 @@ public class DefaultDeliveryServiceDao extends DefaultGenericDao<DeliveryService
 
 	@Override
 	public <T extends DeliveryServiceItem> T getByUUIDAndType(UUID uuid, Class<T> type) {
-		var query = "SELECT * FROM #" + TypeUtil.getMetaTypeCode(type) + " AS ds WHERE ds.uuid = :uuid";
-		return findSingleByQuery(query, Map.of("uuid", uuid));
+		var query = "SELECT * FROM #" + TypeUtil.getMetaTypeCode(type) + " AS ds WHERE ds." + DeliveryServiceItem.UUID + " = :" + DeliveryServiceItem.UUID + "";
+		return findSingleByQuery(query, Map.of(DeliveryServiceItem.UUID, uuid));
 	}
 
 	@Override
 	public <T extends DeliveryTypeItem> T getDeliveryTypeByUUID(UUID uuid) {
-		var query = "SELECT * FROM " + DeliveryTypeItem.ITEM_TYPE + " AS dt WHERE dt.uuid = :uuid";
-		return findSingleByQuery(query, Map.of("uuid", uuid));
+		var query = "SELECT * FROM " + DeliveryTypeItem.ITEM_TYPE + " AS dt WHERE dt." + DeliveryTypeItem.UUID + " = :" + DeliveryTypeItem.UUID + "";
+		return findSingleByQuery(query, Map.of(DeliveryTypeItem.UUID, uuid));
+	}
+
+	@Override
+	public <T extends DeliveryServiceItem> T getByCode(String code) {
+		var query = "SELECT * FROM " + DeliveryServiceItem.ITEM_TYPE + " AS dt WHERE dt." + DeliveryServiceItem.CODE + " = :" + DeliveryServiceItem.CODE + "";
+		return findSingleByQuery(query, Map.of(DeliveryServiceItem.CODE, code));
 	}
 }

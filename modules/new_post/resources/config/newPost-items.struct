@@ -34,6 +34,14 @@ elements {
                 sendToWarehouse(Boolean)
             }
         }
+
+        Address(enhance: 'cx_core'){
+            attributes {
+                newPostCityRef(String)
+                newPostWarehouse(String)
+                newPostWarehouseRef(String)
+            }
+        }
     }
 
     enums {

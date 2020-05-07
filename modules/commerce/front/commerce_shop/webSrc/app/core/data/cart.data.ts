@@ -2,6 +2,7 @@ import {AbstractData} from "./abstract.data";
 import {CartEntryData} from "./cart-entry.data";
 import {DeliveryTypeData} from "./delivery-type.data";
 import {UserData} from './user.data';
+import {AddressData} from './address.data';
 export class CartData extends AbstractData {
 
     entries?:CartEntryData[];
@@ -11,7 +12,7 @@ export class CartData extends AbstractData {
     total:string;
 
     deliveryType?:DeliveryTypeData;
-    address?:AbstractData;
+    address?:AddressData;
     user?:UserData;
 
 }

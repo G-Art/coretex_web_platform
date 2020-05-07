@@ -2,6 +2,7 @@ package com.coretex.commerce.delivery.api;
 
 import com.coretex.commerce.delivery.api.actions.AddDeliveryInfoAction;
 import com.coretex.commerce.delivery.api.actions.AdditionalInfoAction;
+import com.coretex.commerce.delivery.api.actions.AddressAdditionalInfoAction;
 import com.coretex.commerce.delivery.api.actions.DeliveryTypeActionHandler;
 import com.coretex.commerce.delivery.api.actions.impl.DefaultDeliveryTypeActionHandler;
 import org.apache.commons.collections4.CollectionUtils;
@@ -24,6 +25,8 @@ public class ApiConfig {
 	private List<AdditionalInfoAction> additionalInfoActions;
 	@Autowired(required = false)
 	private List<AddDeliveryInfoAction> addDeliveryInfoActions;
+	@Autowired(required = false)
+	private List<AddressAdditionalInfoAction> addressAdditionalInfoActions;
 
 	@Bean
 	public DeliveryTypeActionHandler createDeliveryTypeActionHandler(){
@@ -39,6 +42,12 @@ public class ApiConfig {
 			LOG.info("Loading [additionalInfoActions]");
 			deliveryTypeActionHandler.setAddDeliveryInfoActionMap(addDeliveryInfoActions.stream()
 					.collect(Collectors.toMap(AddDeliveryInfoAction::deliveryType, Function.identity())));
+		}
+
+		if(CollectionUtils.isNotEmpty(addressAdditionalInfoActions)){
+			LOG.info("Loading [addressAdditionalInfoActions]");
+			deliveryTypeActionHandler.setAddressAdditionalInfoActionMap(addressAdditionalInfoActions.stream()
+					.collect(Collectors.toMap(AddressAdditionalInfoAction::deliveryType, Function.identity())));
 		}
 
 		return deliveryTypeActionHandler;

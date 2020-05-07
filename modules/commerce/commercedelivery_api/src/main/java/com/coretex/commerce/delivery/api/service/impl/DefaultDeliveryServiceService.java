@@ -40,4 +40,9 @@ public class DefaultDeliveryServiceService extends AbstractGenericItemService<De
 	public void saveDeliveryInfo(CartItem cartItem, Map<String, Object> info) {
 		deliveryTypeActionHandler.addDeliveryInfo(cartItem, info);
 	}
+
+	@Override
+	public <T extends DeliveryServiceItem> T getByCode(String code) {
+		return repository.getByCode(code);
+	}
 }

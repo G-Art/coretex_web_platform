@@ -10,4 +10,6 @@ public interface DeliveryServiceDao extends Dao<DeliveryServiceItem> {
 	<T extends DeliveryServiceItem> T getByUUIDAndType(UUID uuid, Class<T> type);
 
 	<T extends DeliveryTypeItem> T getDeliveryTypeByUUID(UUID uuid);
+
+	<T extends DeliveryServiceItem> T getByCode(String code);
 }

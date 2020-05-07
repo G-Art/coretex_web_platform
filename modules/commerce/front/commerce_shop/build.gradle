@@ -42,6 +42,7 @@ clean.delete << file('webroot/resources/static/app')
 dependencies {
   implementation project(":core")
   implementation project(":cxcommercefacade")
+  implementation project(":newPost")
 
   implementation group: 'org.springframework', name: 'spring-webflux', version: '5.1.8.RELEASE'
   implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.1.5.RELEASE'

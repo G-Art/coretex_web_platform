@@ -9,6 +9,13 @@
     "logout": "Logout"
   },
   "form": {
+    "common": {
+      "errors": {
+        "required": "Field is required",
+        "500": "Something went wrong, try again later",
+        "403": "Something went wrong, try again later"
+      }
+    },
     "login": {
       "title": "Login",
       "errors": {

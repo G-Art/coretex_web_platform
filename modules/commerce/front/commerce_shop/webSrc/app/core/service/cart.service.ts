@@ -116,17 +116,19 @@ export class CartService implements OnInit {
         this.submitOrder.emit();
     }
 
-    addDeliveryInfo(value: any) {
+    addDeliveryInfo(value: any, errorCode?: (code: number) => void) {
         this.http.post<CartData>(`${this.apiUrl + '/cart/delivery/info'}`,
             value,
             {
                 observe: 'response'
             }).pipe(
             map(response => {
-                if (response.status === 400) {
-                    return null;
-                } else if (response.status === 200) {
+                if (response.status === 200) {
+
                     return response.body;
+                }else{
+                    errorCode(response.status)
+                    return null;
                 }
             }),
             share()

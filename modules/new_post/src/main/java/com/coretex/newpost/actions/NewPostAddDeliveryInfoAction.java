@@ -40,16 +40,17 @@ public class NewPostAddDeliveryInfoAction implements AddDeliveryInfoAction {
 		addressItem.setFirstName(FieldExtractor.FIRST_NAME.extract(info));
 		addressItem.setLastName(FieldExtractor.LAST_NAME.extract(info));
 		addressItem.setCity(FieldExtractor.CITY.extract(info));
+		addressItem.setNewPostCityRef(FieldExtractor.CITY_REF.extract(info));
 		addressItem.setAddressLine1(FieldExtractor.ADDRESS_LINE1.extract(info));
 		addressItem.setAddressLine2(FieldExtractor.ADDRESS_LINE2.extract(info));
 		addressItem.setPhone(FieldExtractor.PHONE.extract(info));
 		addressItem.setPostalCode(FieldExtractor.ZIP_CODE.extract(info));
+		addressItem.setNewPostWarehouse(FieldExtractor.BRANCH.extract(info));
+		addressItem.setNewPostWarehouseRef(FieldExtractor.BRANCH_REF.extract(info));
+		addressItem.setEmail(FieldExtractor.EMAIL.extract(info));
 
 		cartItem.setAddress(addressItem);
 
-		if (Objects.nonNull(FieldExtractor.BRANCH.extract(info))) {
-
-		}
 		var createAccount = FieldExtractor.CREATE_ACCOUNT.extract(info);
 		if (Objects.nonNull(createAccount) && BooleanUtils.isTrue((Boolean) createAccount) && Objects.isNull(cartItem.getCustomer())) {
 			CustomerItem customerItem = itemService.create(CustomerItem.class);
@@ -71,7 +72,7 @@ public class NewPostAddDeliveryInfoAction implements AddDeliveryInfoAction {
 		return NewPostDeliveryTypeItem.ITEM_TYPE;
 	}
 
-	private enum FieldExtractor {
+	public enum FieldExtractor {
 		DELIVERY_TYPE("deliveryType"),
 		FIRST_NAME("firstName"),
 		LAST_NAME("lastName"),
@@ -81,8 +82,10 @@ public class NewPostAddDeliveryInfoAction implements AddDeliveryInfoAction {
 		ADDRESS_LINE2("addressLine2"),
 		COUNTRY("country"),
 		CITY("city"),
+		CITY_REF("cityRef"),
 		ZIP_CODE("zipCode"),
 		BRANCH("branch"),
+		BRANCH_REF("branchRef"),
 		CREATE_ACCOUNT("createAccount");
 
 		FieldExtractor(String infoField) {

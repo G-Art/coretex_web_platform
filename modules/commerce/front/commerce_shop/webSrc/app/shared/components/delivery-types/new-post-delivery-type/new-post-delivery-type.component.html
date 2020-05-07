@@ -9,37 +9,71 @@
                 <div class="col-md-6 col-12">
                     <label>First Name</label>
                     <input id="firstName" type="text" formControlName="firstName" placeholder="First Name">
+                    <div *ngIf="deliveryTypeAddressInfoForm.controls.firstName.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeAddressInfoForm.controls.firstName.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-12">
                     <label>Last Name</label>
                     <input id="lastName" type="text" formControlName="lastName" placeholder="Last Name">
+                    <div *ngIf="deliveryTypeAddressInfoForm.controls.lastName.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeAddressInfoForm.controls.lastName.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-12">
                     <label>Email Address</label>
                     <input id="email" type="email" formControlName="email" placeholder="Email Address">
+                    <div *ngIf="deliveryTypeAddressInfoForm.controls.email.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeAddressInfoForm.controls.email.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-12">
                     <label>Phone no</label>
                     <input id="phone" type="text" formControlName="phone" placeholder="Phone number">
+                    <div *ngIf="deliveryTypeAddressInfoForm.controls.phone.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeAddressInfoForm.controls.phone.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
 
                 <div class="col-12">
                     <label>Address</label>
                     <input id="addressLine1" type="text" formControlName="addressLine1" placeholder="Address line 1">
+                    <div *ngIf="deliveryTypeAddressInfoForm.controls.addressLine1.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeAddressInfoForm.controls.addressLine1.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                     <input id="addressLine2" type="text" formControlName="addressLine2" placeholder="Address line 2">
                 </div>
 
                 <div class="col-md-6 col-12">
                     <label>Town/City</label>
-                    <input id="city" type="text" formControlName="city" placeholder="Town/City">
+                    <input type="hidden" formControlName="cityRef" id="cityRef">
+                    <input id="city" type="text" formControlName="city" placeholder="Town/City" autocomplete="off"
+                           [typeaheadMinLength]="0"
+                           [typeahead]="citySuggestions$"
+                           typeaheadWaitMs="500"
+                           typeaheadOptionField="Description"
+                           typeaheadGroupField="AreaDescription"
+                           (typeaheadOnSelect)="selectCity($event)"
+                           (typeaheadOnBlur)="selectCity($event)"
+                           [typeaheadScrollable]="true"
+                           [typeaheadOptionsInScrollableView]="15"
+                           [isAnimated]="true"
+                           [adaptivePosition]="true"
+                           [typeaheadAsync]="true">
+                    <div *ngIf="deliveryTypeAddressInfoForm.controls.city.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeAddressInfoForm.controls.city.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-12">
                     <label>Zip Code</label>
                     <input id="zipCode" type="text" formControlName="zipCode" placeholder="Zip Code">
+                    <div *ngIf="deliveryTypeAddressInfoForm.controls.zipCode.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeAddressInfoForm.controls.zipCode.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
 
                 <div class="col-12">
@@ -63,29 +97,72 @@
                 <div class="col-md-6 col-12">
                     <label>First Name</label>
                     <input id="firstName" type="text" formControlName="firstName" placeholder="First Name">
+                    <div *ngIf="deliveryTypeWarehouseInfoForm.controls.firstName.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeWarehouseInfoForm.controls.firstName.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-12">
                     <label>Last Name</label>
                     <input id="lastName" type="text" formControlName="lastName" placeholder="Last Name">
+                    <div *ngIf="deliveryTypeWarehouseInfoForm.controls.lastName.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeWarehouseInfoForm.controls.lastName.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-12">
                     <label>Email Address</label>
                     <input id="email" type="email" formControlName="email" placeholder="Email Address">
+                    <div *ngIf="deliveryTypeWarehouseInfoForm.controls.email.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeWarehouseInfoForm.controls.email.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
 
                 <div class="col-md-6 col-12">
                     <label>Phone no</label>
                     <input id="phone" type="text" formControlName="phone" placeholder="Phone number">
+                    <div *ngIf="deliveryTypeWarehouseInfoForm.controls.phone.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeWarehouseInfoForm.controls.phone.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
                 <div class="col-md-6 col-12">
                     <label>Town/City</label>
-                    <input id="city" type="text" formControlName="city" placeholder="Town/City">
+                    <input type="hidden" formControlName="cityRef" id="cityRef">
+                    <input id="city" type="text" formControlName="city" placeholder="Town/City" autocomplete="off"
+                           [typeaheadMinLength]="0"
+                           [typeahead]="citySuggestions$"
+                           (typeaheadOnSelect)="selectCity($event)"
+                           (typeaheadOnBlur)="selectCity($event)"
+                           typeaheadWaitMs="500"
+                           typeaheadOptionField="Description"
+                           typeaheadGroupField="AreaDescription"
+                           [typeaheadScrollable]="true"
+                           [typeaheadOptionsInScrollableView]="15"
+                           [isAnimated]="true"
+                           [adaptivePosition]="true"
+                           [typeaheadAsync]="true">
+                    <div *ngIf="deliveryTypeWarehouseInfoForm.controls.city.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeWarehouseInfoForm.controls.city.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
                 <div class="col-md-6 col-12">
                     <label>Branch</label>
-                    <input id="branch" type="text" formControlName="branch" placeholder="Branch">
+                    <input type="hidden" formControlName="branchRef" id="branchRef">
+                    <input id="branch" type="text" formControlName="branch" placeholder="Branch" autocomplete="off"
+                           [typeaheadMinLength]="0"
+                           [typeahead]="brunchSuggestions$"
+                           (typeaheadOnSelect)="selectBranch($event)"
+                           (typeaheadOnBlur)="selectBranch($event)"
+                           typeaheadWaitMs="500"
+                           typeaheadOptionField="Description"
+                           [typeaheadScrollable]="true"
+                           [typeaheadOptionsInScrollableView]="15"
+                           [isAnimated]="true"
+                           [adaptivePosition]="true"
+                           [typeaheadAsync]="true">
+                    <div *ngIf="deliveryTypeWarehouseInfoForm.controls.branch.errors" class="invalid-feedback d-block">
+                        <div *ngIf="deliveryTypeWarehouseInfoForm.controls.branch.errors.required">{{'form.common.errors.required' | translate}}</div>
+                    </div>
                 </div>
                 <div class="col-12">
                     <div class="check-box">

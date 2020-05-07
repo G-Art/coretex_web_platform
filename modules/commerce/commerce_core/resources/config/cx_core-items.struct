@@ -185,6 +185,7 @@ elements {
             attributes {
                 addressLine1(String)
                 addressLine2(String)
+                email(String)
                 city(String)
                 postalCode(String)
                 country(Country)

@@ -14,7 +14,8 @@ public class IndexRedirectFilter implements WebFilter {
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 		var request = exchange.getRequest();
 		if (!request.getPath().pathWithinApplication().value().startsWith("/v1") &&
-			!request.getPath().pathWithinApplication().value().startsWith("/app")) {
+				!request.getPath().pathWithinApplication().value().startsWith("/newpost") &&
+				!request.getPath().pathWithinApplication().value().startsWith("/app")) {
 			return chain.filter(
 					exchange.mutate()
 							.request(
@@ -23,7 +24,7 @@ public class IndexRedirectFilter implements WebFilter {
 											.build()
 							).build()
 			);
-		}else{
+		} else {
 			return chain.filter(exchange);
 		}
 	}

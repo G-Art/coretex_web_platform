@@ -3,6 +3,7 @@ import {AbstractData} from "./abstract.data";
 export class AddressData extends AbstractData {
     addressLine1?:string;
     addressLine2?:string;
+    email?:string;
     city?:string;
     postalCode?:string;
     state?:string;
@@ -11,4 +12,5 @@ export class AddressData extends AbstractData {
     firstName?:string;
     longitude?:string;
     latitude?:string;
+    additionalInfo?:Map<string, any>
 }
