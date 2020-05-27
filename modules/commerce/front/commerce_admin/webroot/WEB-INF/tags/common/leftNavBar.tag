@@ -7,12 +7,18 @@
             <common-nav:subMenuItem name="Main" menuClass="pcoded-hasmenu" iconClass="feather icon-home"
                                     trigger="${
                                     cp.concat('/home') eq requestPath ||
-                                    cp.concat('/store') eq requestPath ||
-                                    cp.concat('/order') eq requestPath
+                                    cp.concat('/store') eq requestPath
                                     }">
                 <common-nav:subMenuItem name="Home" link="/home"/>
                 <common-nav:subMenuItem name="Stores" link="/store"/>
+            </common-nav:subMenuItem>
+            <common-nav:subMenuItem name="Commerce" menuClass="pcoded-hasmenu" iconClass="icofont icofont-cart-alt"
+                                    trigger="${
+                                    cp.concat('/order') eq requestPath ||
+                                    cp.concat('/cart') eq requestPath
+                                    }">
                 <common-nav:subMenuItem name="Orders" link="/order"/>
+                <common-nav:subMenuItem name="Carts" link="/cart"/>
             </common-nav:subMenuItem>
             <common-nav:subMenuItem name="Content" menuClass="pcoded-hasmenu"
                                     iconClass="zmdi zmdi-receipt"

@@ -2,11 +2,14 @@ package com.coretex.commerce.web.controllers;
 
 import com.coretex.commerce.config.security.service.SessionManager;
 import com.coretex.commerce.data.CartData;
+import com.coretex.commerce.data.OrderPlaceResult;
 import com.coretex.commerce.facades.CartFacade;
 import com.coretex.commerce.helpers.CartHelper;
 import com.coretex.commerce.web.data.AddToCartRequest;
-import com.coretex.commerce.web.data.SetDeliveryTypeRequest;
+import com.coretex.commerce.web.data.SetEntryRequest;
 import com.coretex.commerce.web.data.UpdateCartEntryRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +35,7 @@ public class CartController {
 	private SessionManager sessionManager;
 
 	@GetMapping(path = "/current")
-	private Mono<CartData> getCurrent(ServerWebExchange exchange) {
+	public Mono<CartData> getCurrent(ServerWebExchange exchange) {
 		return sessionManager.getCurrentCartUUID(exchange)
 				.flatMap(cartUUID -> cartUUID
 						.map(uuid -> cartHelper.cartForCustomer(exchange, uuid))
@@ -40,26 +43,39 @@ public class CartController {
 	}
 
 	@PostMapping(path = "/add")
-	private Mono<CartData> addToCart(ServerWebExchange exchange, @RequestBody AddToCartRequest request) {
+	public Mono<CartData> addToCart(ServerWebExchange exchange, @RequestBody AddToCartRequest request) {
 		return getCurrent(exchange)
 				.map(cartData -> cartFacade.addToCart(cartData, request.getProduct(), request.getQuantity()));
 	}
 
 	@PostMapping(path = "/update")
-	private Mono<CartData> addToCart(ServerWebExchange exchange, @RequestBody UpdateCartEntryRequest request) {
+	public Mono<CartData> addToCart(ServerWebExchange exchange, @RequestBody UpdateCartEntryRequest request) {
 		return getCurrent(exchange)
 				.map(cartData -> cartFacade.updateCart(cartData, request.getEntry(), request.getQuantity()));
 	}
 
 	@PostMapping(path = "/delivery/type")
-	private Mono<CartData> setDeliveryType(ServerWebExchange exchange, @RequestBody SetDeliveryTypeRequest request) {
+	public Mono<CartData> setDeliveryType(ServerWebExchange exchange, @RequestBody SetEntryRequest request) {
 		return getCurrent(exchange)
 				.map(cartData -> cartFacade.setDeliveryType(cartData, request.getUuid()));
 	}
 
+	@PostMapping(path = "/payment/type")
+	public Mono<CartData> setPaymentType(ServerWebExchange exchange, @RequestBody SetEntryRequest request) {
+		return getCurrent(exchange)
+				.map(cartData -> cartFacade.setPaymentType(cartData, request.getUuid()));
+	}
+
 	@PostMapping(path = "/delivery/info")
-	private Mono<CartData> saveDeliveryInfo(ServerWebExchange exchange, @RequestBody Map<String, Object> info) {
+	public Mono<CartData> saveDeliveryInfo(ServerWebExchange exchange, @RequestBody Map<String, Object> info) {
 		return getCurrent(exchange)
 				.map(cartData -> cartFacade.saveDeliveryInfo(cartData, info));
+	}
+
+	@PostMapping(path = "/placeOrder")
+	public Mono<ResponseEntity<OrderPlaceResult>> placeOrder(ServerWebExchange exchange) {
+		return getCurrent(exchange)
+				.map(cartData -> cartFacade.palaceOrder(cartData))
+				.map(o -> ResponseEntity.status(HttpStatus.OK).body(o));
 	}
 }

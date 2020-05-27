@@ -5,6 +5,7 @@ import {map, share} from "rxjs/operators";
 import {environment} from "../../../environments/environment";
 import {DeliveryServiceData} from "../data/delivery-service.data";
 import {DeliveryTypeData} from "../data/delivery-type.data";
+import {PaymentType} from '../data/payment-type.data';
 
 @Injectable()
 export class DeliveryTypeService {
@@ -30,4 +31,20 @@ export class DeliveryTypeService {
         );
 
     }
+
+    getPaymentTypesForDeliveryType(deliveryType: DeliveryTypeData): Observable<PaymentType[]> {
+        return this.http.get<DeliveryTypeData[]>(`${this.apiUrl + `/delivery/type/${deliveryType.code}/payments` }`, {
+            observe: 'response'
+        }).pipe(
+            map(response => {
+                if (response.status === 400) {
+                    return null;
+                } else if (response.status === 200) {
+                    return response.body;
+                }
+            }),
+            share()
+        );
+    }
+
 }

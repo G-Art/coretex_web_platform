@@ -29,7 +29,8 @@ public abstract class DeliveryTypeDataMapper implements GenericDataMapper<Delive
 	@Override
 	@Mappings({
 			@Mapping(target = "name", expression = "java(toLocalizedMap(source.allName()))"),
-			@Mapping(target = "deliveryService", source = "deliveryService.uuid")
+			@Mapping(target = "deliveryService", source = "deliveryService.uuid"),
+			@Mapping(target = "deliveryServiceCode", source = "deliveryService.code")
 	})
 	public abstract DeliveryTypeData fromItem(DeliveryTypeItem source);
 

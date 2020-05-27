@@ -29,16 +29,19 @@
         "name": [
           {
             "lang": "en",
-            "value": "Ship to home (Pay on delivery)"
+            "value": "Ship to home"
           },
           {
             "lang": "ua",
-            "value": "Доставка до дому (Наложений платіж)"
+            "value": "Доставка до дому"
           },
           {
             "lang": "ru",
-            "value": "Доставка к дому (Наложений платеж)"
+            "value": "Доставка к дому"
           }
+        ],
+        "payments": [
+          "COD"
         ],
         "payOnDelivery": true,
         "sendToWarehouse": false
@@ -48,16 +51,19 @@
         "name": [
           {
             "lang": "en",
-            "value": "Ship to post office (Pay on delivery)"
+            "value": "Ship to post office"
           },
           {
             "lang": "ua",
-            "value": "Доставка в відділення (Наложений платіж)"
+            "value": "Доставка в відділення"
           },
           {
             "lang": "ru",
-            "value": "Доставка в отделение (Наложений платеж)"
+            "value": "Доставка в отделение"
           }
+        ],
+        "payments": [
+          "COD"
         ],
         "payOnDelivery": true,
         "sendToWarehouse": true

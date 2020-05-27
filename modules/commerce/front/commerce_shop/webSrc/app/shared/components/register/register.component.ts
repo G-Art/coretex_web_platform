@@ -22,7 +22,8 @@ export class RegisterComponent implements OnInit {
     constructor(private formBuilder: FormBuilder,
                 private userService: UserService,
                 private route: ActivatedRoute,
-                private router: Router,) {
+                private authService: AuthService,
+                private router: Router) {
     }
 
     ngOnInit() {
@@ -51,10 +52,15 @@ export class RegisterComponent implements OnInit {
         this.userService
             .register(this.registerForm.value)
             .subscribe(data => {
-                    console.log(data);
+                    this.userService.updateCurrentUser()
+                    this.authService.getRedirectUrl()
+                        .subscribe(val => {
+                            this.router.navigate(val);
+                        });
                 },
                 error => {
-                    console.log(error);
+                    this.error = `form.login.errors.${error.status}`;
+                    this.loading = false;
                 });
         this.loading = false;
     }

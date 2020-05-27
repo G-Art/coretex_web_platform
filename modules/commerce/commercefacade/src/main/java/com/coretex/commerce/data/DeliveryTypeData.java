@@ -9,6 +9,7 @@ public class DeliveryTypeData extends GenericItemData {
 	private Map<String, String> name;
 	private String active;
 	private String type;
+	private String deliveryServiceCode;
 	private UUID deliveryService;
 	private Map<String, Object> additionalInfo;
 
@@ -58,5 +59,13 @@ public class DeliveryTypeData extends GenericItemData {
 
 	public void setAdditionalInfo(Map<String, Object> additionalInfo) {
 		this.additionalInfo = additionalInfo;
+	}
+
+	public String getDeliveryServiceCode() {
+		return deliveryServiceCode;
+	}
+
+	public void setDeliveryServiceCode(String deliveryServiceCode) {
+		this.deliveryServiceCode = deliveryServiceCode;
 	}
 }

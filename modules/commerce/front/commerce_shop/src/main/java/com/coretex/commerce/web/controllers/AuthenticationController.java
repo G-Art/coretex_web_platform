@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +26,7 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Resource;
 import java.util.Date;
 
+import static org.apache.http.client.utils.URIUtils.extractHost;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 @RestController()
@@ -54,7 +56,10 @@ public class AuthenticationController {
 	public Mono<ResponseEntity<?>> logout(ServerWebExchange exchange) {
 		return exchange.getSession()
 				.flatMap(WebSession::invalidate)
-				.map(aVoid -> ResponseEntity.status(HttpStatus.OK).build());
+				.flatMap( aVoid ->  Mono.subscriberContext()
+						.map(context -> ReactiveSecurityContextHolder.clearContext()
+								.apply(context)))
+				.map(c -> ResponseEntity.status(HttpStatus.OK).build());
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -74,14 +79,16 @@ public class AuthenticationController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public Mono<ResponseEntity<?>> register(@RequestBody RegisterRequest rr, ServerHttpRequest request) {
 		rr.setEncoder(passwordEncoder::encode);
-		var register = customerFacade.register(rr);
+		var domain = extractHost(request.getURI()).getHostName();
+		var register = customerFacade.register(rr, domain);
 		if (!register.isHasErrors()) {
 			var authRequest = new AuthRequest();
 			authRequest.setName(rr.getEmail());
 			authRequest.setPassword(rr.getPassword());
 			return login(authRequest, request);
 		}
-		return Mono.fromSupplier(() -> ResponseEntity.ok().body(register));
+		return Mono.fromSupplier(() -> ResponseEntity.status(HttpStatus.valueOf(register.getErrors().keySet().iterator().next())).body(register));
+
 	}
 
 	@RequestMapping(value = "/user/current", method = RequestMethod.GET)

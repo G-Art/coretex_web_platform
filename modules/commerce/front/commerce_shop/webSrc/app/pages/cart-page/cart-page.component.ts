@@ -4,6 +4,9 @@ import {CartData} from "../../core/data/cart.data";
 import {Route, Router} from "@angular/router";
 import {CartEntryData} from "../../core/data/cart-entry.data";
 import {fadeInAnimation} from "../../core/animation/fadeInAnimation.animation";
+import {AuthService} from '../../core/service/auth.service';
+import {UserService} from '../../core/service/user.service';
+import {UserData} from '../../core/data/user.data';
 
 @Component({
     animations : [fadeInAnimation],
@@ -16,12 +19,20 @@ export class CartPageComponent implements OnInit {
 
     private cartUpdate = false;
     cart: CartData;
+    currentUser: UserData;
 
     constructor(private cartService: CartService,
-                private router: Router) {
+                private authService: AuthService,
+                private router: Router,
+                private userService: UserService) {
     }
 
     ngOnInit() {
+        this.userService
+            .currentUser
+            .subscribe(u => {
+                this.currentUser = u;
+            })
         this.cartService
             .currentCart
             .subscribe(cart => {
@@ -36,7 +47,9 @@ export class CartPageComponent implements OnInit {
 
                     this.cart.productCount = productCount
                 } else {
-                    this.router.navigate([`/`])
+                    if (cart && cart.entries && cart.entries.length == 0) {
+                        this.router.navigate([`/`])
+                    }
                 }
             });
     }

@@ -4,6 +4,7 @@ dependencies {
   implementation project(":cx_core")
 
   implementation project(":cx_commercedelivery_api")
+  implementation project(":cxpaymentapi")
   implementation project(":newPost")
 
   implementation 'com.google.code.gson:gson:2.8.6'

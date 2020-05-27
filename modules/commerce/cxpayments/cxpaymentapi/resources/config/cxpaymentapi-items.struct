@@ -1,0 +1,138 @@
+elements {
+    relations {
+        PaymentModeDeliveryTypeRelation(source: PaymentMode, target: DeliveryType) {
+            source(deliveryTypes) {
+                description = "Delivery types"
+                containerType = Set
+            }
+            target(paymentModes) {
+                description = "Payment modes"
+                containerType = Set
+            }
+        }
+
+        OrderPaymentModeRelation(source: AbstractOrder, target: PaymentMode) {
+            source(paymentMode) {
+                description = "Payment mode"
+            }
+            target(orders) {
+                description = "Orders"
+                containerType = Set
+            }
+        }
+
+        OrderPaymentTransactionRelation(source: AbstractOrder, target: PaymentTransaction) {
+            source(paymentTransactions) {
+                description = "Payment transaction"
+                containerType = Set
+            }
+            target(order) {
+                description = "Order"
+            }
+        }
+
+        PaymentTransactionPaymentTransactionEntryRelation(source: PaymentTransaction, target: PaymentTransactionEntry) {
+            source(paymentTransactionEntries) {
+                description = "Payment transaction entries"
+                containerType = Set
+            }
+            target('owner') {
+                description = "Payment transaction"
+            }
+        }
+
+        OrderPaymentInfoRelation(source: AbstractOrder, target: PaymentInfo) {
+            source(paymentInfo) {
+                description = "Payment info"
+            }
+            target(order) {
+                description = "Order"
+            }
+        }
+    }
+
+    items {
+
+        PaymentTransaction {
+            attributes {
+                code(String) {
+                    optional = false
+                    unique = true
+                }
+                requestId(String)
+                requestToken(String)
+                time(Date)
+                plannedAmount(String)
+                currency('Currency')
+                versionID(String)
+            }
+        }
+
+        PaymentTransactionEntry {
+            attributes {
+                code(String) {
+                    optional = false
+                    unique = true
+                }
+                type(PaymentTransactionType)
+                requestId(String)
+                requestToken(String)
+                time(Date)
+                transactionStatus(String)
+                transactionStatusDetails(String)
+                plannedAmount(String)
+                currency('Currency')
+                versionID(String)
+            }
+        }
+
+        PaymentInfo(abstract: true) {
+            attributes {
+                subscriptionID(String)
+            }
+        }
+
+        PaymentMode(abstract: true) {
+            attributes {
+                code(String) {
+                    optional = false
+                    unique = true
+                }
+                name(String) {
+                    localized = true
+                }
+                active(Boolean) {
+                    defaultValue = true
+                }
+            }
+        }
+
+        CODPaymentMode(extend: PaymentMode, table: false) {
+            description = "Cash on Delivery payment type"
+            attributes {
+
+            }
+        }
+        CODPaymentInfo(extend: PaymentInfo) {
+            attributes {
+
+            }
+        }
+    }
+
+    enums {
+
+        PaymentTransactionType {
+            authorization
+            capture
+            partial_capture
+            refund_follow_on
+            refund_standalone
+            cancel
+            create_subscription
+            update_subscription
+            get_subscription_data
+            delete_subscription
+        }
+    }
+}

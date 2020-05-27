@@ -516,6 +516,7 @@ elements {
         }
 
         OrderStatus {
+            created
             ordered
             processed
             delivered

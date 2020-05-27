@@ -20,7 +20,7 @@ rootDir.eachFileRecurse { module ->
                         if(!moduleName.empty){
                             include moduleName
                             project(":${moduleName}").projectDir = module.parentFile
-                            println("Include :${moduleName} project to build [dir: ${project(":${moduleName}").projectDir}]")
+                            println("Module included to build [name :${moduleName}, dir: ${project(":${moduleName}").projectDir}]")
                         }else{
                             println("No defined module name for ${relativePath} project")
                         }

@@ -5,7 +5,6 @@ public class OrderData extends AbstractOrderData {
 	private Boolean customerAgreement;
 	private Boolean confirmedEmail;
 	private String status;
-	private String date;
 
 	public String getStatus() {
 		return status;
@@ -29,14 +28,6 @@ public class OrderData extends AbstractOrderData {
 
 	public void setConfirmedEmail(Boolean confirmedEmail) {
 		this.confirmedEmail = confirmedEmail;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
 	}
 
 }

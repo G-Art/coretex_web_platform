@@ -17,7 +17,8 @@ import org.mapstruct.Mappings;
 				LocaleDataMapper.class,
 				CustomerDataMapper.class,
 				StoreDataMapper.class,
-				CurrencyDataMapper.class})
+				CurrencyDataMapper.class,
+				PaymentTypeDataMapper.class})
 public interface OrderDataMapper extends GenericDataMapper<OrderItem, OrderData> {
 	@Override
 	@Mappings({

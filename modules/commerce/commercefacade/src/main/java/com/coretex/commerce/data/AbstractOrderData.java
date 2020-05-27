@@ -13,6 +13,8 @@ public class AbstractOrderData extends GenericItemData {
 	private BigDecimal total;
 	private DeliveryTypeData deliveryType;
 	private AddressData address;
+	private String date;
+	private PaymentTypeData paymentMode;
 
 	public LinkedHashSet<OrderEntryData> getEntries() {
 		return entries;
@@ -76,5 +78,21 @@ public class AbstractOrderData extends GenericItemData {
 
 	public void setAddress(AddressData address) {
 		this.address = address;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public PaymentTypeData getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(PaymentTypeData paymentMode) {
+		this.paymentMode = paymentMode;
 	}
 }

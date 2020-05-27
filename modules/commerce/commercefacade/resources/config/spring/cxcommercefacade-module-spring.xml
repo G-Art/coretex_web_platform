@@ -8,7 +8,7 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
-    <context:component-scan base-package="com.coretex.commerce.core" />
+    <context:component-scan base-package="com.coretex.commerce" />
 
     <util:map id="variantMappers" value-type="com.coretex.commerce.mapper.forms.VariantProductMapper">
         <entry key="#{T(com.coretex.items.cx_core.SizeVariantProductItem).ITEM_TYPE}" value-ref="sizeVariantProductMapperImpl"/>

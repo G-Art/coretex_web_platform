@@ -96,7 +96,7 @@ export class NewPostDeliveryTypeComponent extends AbstractDeliveryType implement
             createAccount: [false]
         });
 
-        this.onSubmitSubscription = this.cartService.submitOrder.subscribe(e => {
+        this.onSubmitSubscription = this.cartService.beforeOrderPlace.subscribe(e => {
             this.submit(this.deliveryTypeInfoForm.form)
         });
     }

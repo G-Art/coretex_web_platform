@@ -1,0 +1,15 @@
+<h4 class="checkout-title">Payment Method</h4>
+
+<div class="checkout-payment-method" *ngIf="showPayments()">
+    <div class="single-method" *ngFor="let payment of payments">
+        <input type="radio" id="payment_cash" name="payment-method"
+               [checked]="cart.paymentMode && cart.paymentMode.code === payment.code"
+               [value]="payment.code"
+                (change)="selectPayment($event)">
+        <label for="payment_cash">{{payment.name[translate.currentLang]}}</label>
+    </div>
+
+</div>
+<div class="checkout-payment-method" *ngIf="!showPayments()">
+    <p >Please select delivery type</p>
+</div>

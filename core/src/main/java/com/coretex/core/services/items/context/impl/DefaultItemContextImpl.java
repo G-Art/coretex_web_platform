@@ -129,7 +129,7 @@ public class DefaultItemContextImpl extends ItemContext {
 	@Override
 	public Collection<String> loadedAttributes() {
 		return Sets.union(attributeHolders.keySet(),
-				          attributeHolders.keySet());
+				localizedAttributeHolders.keySet());
 	}
 
 	@Override
@@ -139,7 +139,12 @@ public class DefaultItemContextImpl extends ItemContext {
 
 	@Override
 	public boolean isExist() {
-		return getProvider().getValue(AbstractGenericItem.UUID, this).equals(getUuid());
+		var loadedUUID = getProvider().getValue(AbstractGenericItem.UUID, this);
+		if (Objects.isNull(loadedUUID)) { // prevents implicit removing
+			uuid = null;
+			return false;
+		}
+		return loadedUUID.equals(getUuid());
 	}
 
 	@Override

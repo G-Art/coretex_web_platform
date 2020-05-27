@@ -9,4 +9,6 @@ public interface CartService extends GenericItemService<CartItem> {
 	Stream<CartItem> getCartsForCustomer(CustomerItem customerItem);
 
 	void merge(CartItem mainCart, CartItem slaveCart);
+
+	void placeOrder(CartItem cartItem);
 }

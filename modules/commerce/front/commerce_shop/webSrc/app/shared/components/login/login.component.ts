@@ -50,12 +50,11 @@ export class LoginComponent implements OnInit {
             .login({login: this.f.email.value, password: this.f.password.value})
             .subscribe(
                 data => {
+                    // this.userService.updateCurrentUser()
                     this.authService.getRedirectUrl()
                         .subscribe(val => {
                             this.router.navigate(val);
                         });
-                    this.userService.updateCurrentUser()
-
                 },
                 error => {
                     this.error = `form.login.errors.${error.status}`;

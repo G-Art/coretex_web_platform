@@ -1,4 +1,4 @@
-<%--@elvariable id="order" type="com.coretex.commerce.data.OrderData"--%>
+<%--@elvariable id="order" type="com.coretex.commerce.data.AbstractOrderData"--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tags-account" tagdir="/WEB-INF/tags/account" %>
 <%@ taglib prefix="tags-common" tagdir="/WEB-INF/tags/common" %>
@@ -19,10 +19,6 @@
                                                 <tr>
                                                     <th scope="row">UUID</th>
                                                     <td>${order.uuid}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Status</th>
-                                                    <td>${order.status}</td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Store</th>
@@ -48,13 +44,40 @@
                                                 <tr>
                                                     <th scope="row">Email</th>
                                                     <td>
-                                                        <a href="mailto:${order.customer.email}">${order.customer.email}</a>
+                                                        <c:choose>
+                                                            <c:when test="${not empty order.address}">
+                                                                <c:set var="email" value="${order.address.email}"/>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <c:if test="${not empty order.customer}">
+                                                                    <c:set var="email" value="${order.customer.email}"/>
+                                                                </c:if>
+                                                            </c:otherwise>
+                                                        </c:choose>
+
+                                                        <c:if test="${not empty email}">
+                                                            <a href="mailto:${email}">${email}</a>
+                                                        </c:if>
+
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Phone</th>
                                                     <td>
-                                                        <a href="tel:${order.customer.delivery.phone}">${order.customer.delivery.phone}</a>
+                                                        <c:choose>
+                                                            <c:when test="${not empty order.address}">
+                                                                <c:set var="phone" value="${order.address.phone}"/>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <c:if test="${not empty order.customer}">
+                                                                    <c:set var="phone" value="${order.customer.delivery.phone}"/>
+                                                                </c:if>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <c:if test="${not empty phone}">
+                                                            <a href="tel:${phone}">${phone}</a>
+                                                        </c:if>
+
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -86,7 +109,7 @@
                                     <jsp:include page="orderCustomerTabSection.jsp"/>
                                 </tags-account:tabContent>
                                 <tags-account:tabContent tabId="delivery">
-                                    <tags-common:comingSoonCart/>
+                                    <jsp:include page="orderDeliveryTabSection.jsp"/>
                                 </tags-account:tabContent>
                                 <tags-account:tabContent tabId="payment">
                                     <tags-common:comingSoonCart/>

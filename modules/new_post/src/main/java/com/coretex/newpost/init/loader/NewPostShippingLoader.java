@@ -4,6 +4,7 @@ import com.coretex.commerce.core.constants.Constants;
 import com.coretex.commerce.core.init.loader.DataLoader;
 import com.coretex.commerce.core.services.CountryService;
 import com.coretex.commerce.core.services.StoreService;
+import com.coretex.commerce.payment.service.PaymentModeService;
 import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.enums.newpost.DataFormatEnum;
 import com.coretex.items.cx_commercedelivery_api.DeliveryServiceItem;
@@ -23,6 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 @Component
 public class NewPostShippingLoader implements DataLoader {
@@ -35,6 +37,9 @@ public class NewPostShippingLoader implements DataLoader {
 
 	@Resource
 	private StoreService storeService;
+
+	@Resource
+	private PaymentModeService paymentModeService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(NewPostShippingLoader.class);
 
@@ -100,6 +105,11 @@ public class NewPostShippingLoader implements DataLoader {
 			for (Map dt : deliveryTypes) {
 				NewPostDeliveryTypeItem postDeliveryTypeItem = new NewPostDeliveryTypeItem();
 				postDeliveryTypeItem.setCode((String) dt.get("code"));
+				var payments = (List<String>) dt.get("payments");
+				postDeliveryTypeItem.setPaymentModes(payments
+						.stream()
+						.map(paymentModeService::getByCode)
+						.collect(Collectors.toSet()));
 				postDeliveryTypeItem.setPayOnDelivery((Boolean) dt.get("payOnDelivery"));
 				postDeliveryTypeItem.setSendToWarehouse((Boolean) dt.get("sendToWarehouse"));
 				postDeliveryTypeItem.setActive((Boolean) dt.get("active"));

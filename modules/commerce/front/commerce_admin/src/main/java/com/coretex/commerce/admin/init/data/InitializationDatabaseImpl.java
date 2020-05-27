@@ -13,7 +13,7 @@ import java.util.List;
 @Service("initializationDatabase")
 public class InitializationDatabaseImpl implements InitializationDatabase {
 
-	private List<DataLoader> dataLoaders;
+	private final List<DataLoader> dataLoaders;
 
 	@Resource
 	private LocaleService localeService;

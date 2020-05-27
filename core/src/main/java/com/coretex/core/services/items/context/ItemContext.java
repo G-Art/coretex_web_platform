@@ -20,7 +20,7 @@ public abstract class ItemContext {
 
 	private String typeCode;
 
-	private UUID uuid;
+	protected UUID uuid;
 
 	private AttributeProvider provider;
 

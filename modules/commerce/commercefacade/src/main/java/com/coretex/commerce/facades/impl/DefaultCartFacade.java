@@ -1,15 +1,18 @@
 package com.coretex.commerce.facades.impl;
 
 import com.coretex.commerce.core.services.CartService;
+import com.coretex.commerce.core.services.CartValidationService;
 import com.coretex.commerce.core.services.CustomerService;
 import com.coretex.commerce.core.services.PageableService;
 import com.coretex.commerce.core.services.ProductService;
 import com.coretex.commerce.core.services.StoreService;
 import com.coretex.commerce.data.CartData;
+import com.coretex.commerce.data.OrderPlaceResult;
 import com.coretex.commerce.delivery.api.service.DeliveryServiceService;
 import com.coretex.commerce.facades.CartFacade;
 import com.coretex.commerce.mapper.CartDataMapper;
 import com.coretex.commerce.mapper.GenericDataMapper;
+import com.coretex.commerce.payment.service.PaymentModeService;
 import com.coretex.commerce.strategies.cart.AddToCartStrategy;
 import com.coretex.commerce.strategies.cart.UpdateCartEntryStrategy;
 import com.coretex.commerce.strategies.cart.impl.CartParameter;
@@ -24,6 +27,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 @Component
@@ -34,6 +39,9 @@ public class DefaultCartFacade implements CartFacade {
 
 	@Resource
 	private DeliveryServiceService deliveryServiceService;
+
+	@Resource
+	private PaymentModeService paymentModeService;
 
 	@Resource
 	private ProductService productService;
@@ -55,6 +63,9 @@ public class DefaultCartFacade implements CartFacade {
 
 	@Resource
 	private ItemService itemService;
+
+	@Resource
+	private CartValidationService cartValidationService;
 
 	@Override
 	public CartData getByUUID(UUID uuid) {
@@ -100,80 +111,75 @@ public class DefaultCartFacade implements CartFacade {
 
 	@Override
 	public CartData updateCart(CartData cartData, UUID entry, Integer quantity) {
-		var cartItem = cartService.getByUUID(cartData.getUuid());
+		return executeForCart(cartData.getUuid(), cartItem -> {
+			if (Objects.nonNull(quantity)) {
 
-		if (Objects.nonNull(quantity)) {
+				if (Objects.isNull(cartItem)) {
+					cartItem = new CartItem();
+				}
 
+				CartParameter cartParameter = new CartParameter();
+				cartParameter.setCart(cartItem);
+				cartParameter.setEntryItem(cartItem.getEntries()
+						.stream()
+						.filter(entryItem -> entryItem.getUuid().equals(entry)).findAny()
+						.orElse(null));
+				cartParameter.setQuantity(quantity);
+
+				updateCartEntryStrategy.updateCart(cartParameter);
+
+				cartService.save(cartItem);
+			}
+			return cartItem;
+		});
+	}
+
+	@Override
+	public CartData addToCart(CartData cartData, UUID product, Integer quantity) {
+
+		return executeForCart(cartData.getUuid(), cartItem -> {
 			if (Objects.isNull(cartItem)) {
 				cartItem = new CartItem();
 			}
 
 			CartParameter cartParameter = new CartParameter();
 			cartParameter.setCart(cartItem);
-			cartParameter.setEntryItem(cartItem.getEntries()
-					.stream()
-					.filter(entryItem -> entryItem.getUuid().equals(entry)).findAny()
-					.orElse(null));
+			cartParameter.setProduct((VariantProductItem) productService.getByUUID(product));
 			cartParameter.setQuantity(quantity);
 
-			updateCartEntryStrategy.updateCart(cartParameter);
+			addToCartStrategy.addToCart(cartParameter);
 
 			cartService.save(cartItem);
-		}
-
-		return cartDataMapper.fromItem(cartItem);
-	}
-
-	@Override
-	public CartData addToCart(CartData cartData, UUID product, Integer quantity) {
-
-		var cartItem = cartService.getByUUID(cartData.getUuid());
-
-		if (Objects.isNull(cartItem)) {
-			cartItem = new CartItem();
-		}
-
-		CartParameter cartParameter = new CartParameter();
-		cartParameter.setCart(cartItem);
-		cartParameter.setProduct((VariantProductItem) productService.getByUUID(product));
-		cartParameter.setQuantity(quantity);
-
-		addToCartStrategy.addToCart(cartParameter);
-
-		cartService.save(cartItem);
-
-		return cartDataMapper.fromItem(cartItem);
+			return cartItem;
+		});
 	}
 
 	@Override
 	public CartData setDeliveryType(CartData cartData, UUID deliveryType) {
 
-		var cartItem = cartService.getByUUID(cartData.getUuid());
+		return executeForCart(cartData.getUuid(), cartItem -> {
+			if (Objects.isNull(cartItem)) {
+				cartItem = new CartItem();
+			}
 
-		if (Objects.isNull(cartItem)) {
-			cartItem = new CartItem();
-		}
+			if (Objects.nonNull(deliveryType)) {
+				var deliveryTypeItem = deliveryServiceService.getDeliveryTypeByUUID(deliveryType);
 
-		if (Objects.nonNull(deliveryType)) {
-			var deliveryTypeItem = deliveryServiceService.getDeliveryTypeByUUID(deliveryType);
+				cartItem.setDeliveryType(deliveryTypeItem);
+			} else {
+				cartItem.setDeliveryType(null);
+			}
 
-			cartItem.setDeliveryType(deliveryTypeItem);
-		} else {
-			cartItem.setDeliveryType(null);
-		}
-
-		cartService.save(cartItem);
-
-		return cartDataMapper.fromItem(cartItem);
+			cartService.save(cartItem);
+			return cartItem;
+		});
 	}
 
 	@Override
 	public CartData saveDeliveryInfo(CartData cartData, Map<String, Object> info) {
-		var cartItem = cartService.getByUUID(cartData.getUuid());
-
-		deliveryServiceService.saveDeliveryInfo(cartItem, info);
-
-		return cartDataMapper.fromItem(cartItem);
+		return executeForCart(cartData.getUuid(), cartItem -> {
+			deliveryServiceService.saveDeliveryInfo(cartItem, info);
+		});
 	}
 
 	@Override
@@ -185,7 +191,57 @@ public class DefaultCartFacade implements CartFacade {
 			itemService.save(mainCart);
 			itemService.delete(cart);
 		}
-		return cartDataMapper.fromItem(mainCart);
+		cartDataMapper.updateFromItem(mainCart, sessionCart);
+		return sessionCart;
+	}
+
+	@Override
+	public CartData setPaymentType(CartData cartData, UUID paymentMode) {
+		return executeForCart(cartData.getUuid(), cartItem -> {
+			if (Objects.isNull(cartItem)) {
+				cartItem = new CartItem();
+			}
+
+			if (Objects.nonNull(paymentMode)) {
+				var deliveryTypeItem = paymentModeService.getByUUID(paymentMode);
+
+				cartItem.setPaymentMode(deliveryTypeItem);
+			} else {
+				cartItem.setPaymentMode(null);
+			}
+
+			cartService.save(cartItem);
+			return cartItem;
+		});
+	}
+
+	@Override
+	public OrderPlaceResult palaceOrder(CartData cartData) {
+		var cartItem = cartService.getByUUID(cartData.getUuid());
+
+		var validationResult = cartValidationService.validate(cartItem);
+
+		OrderPlaceResult orderPlaceResult = new OrderPlaceResult();
+
+		orderPlaceResult.setAddressValid(true);
+		orderPlaceResult.setPaymentValid(true);
+		orderPlaceResult.setDeliveryTypeValid(true);
+		orderPlaceResult.setOrderCreated(true);
+
+		cartService.placeOrder(cartItem);
+
+		return orderPlaceResult;
+	}
+
+	private CartData executeForCart(UUID cart, Function<CartItem, CartItem> cartItemFunction) {
+		var cartItem = cartService.getByUUID(cart);
+		return cartDataMapper.fromItem(cartItemFunction.apply(cartItem));
+	}
+
+	private CartData executeForCart(UUID cart, Consumer<CartItem> cartItemConsumer) {
+		var cartItem = cartService.getByUUID(cart);
+		cartItemConsumer.accept(cartItem);
+		return cartDataMapper.fromItem(cartItem);
 	}
 
 	@Override

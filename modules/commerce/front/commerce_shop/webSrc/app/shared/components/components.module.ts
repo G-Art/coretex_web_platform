@@ -29,6 +29,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {DeliveryTypeSelectorComponent} from './delivery-type-selector/delivery-type-selector.component';
 import {NewPostDeliveryTypeComponent} from './delivery-types/new-post-delivery-type/new-post-delivery-type.component';
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
+import {PaymentSelectorComponent} from './payment-selector/payment-selector.component';
 
 @NgModule({
     declarations: [
@@ -52,7 +53,8 @@ import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
         PaginationComponent,
         DeliveryServiceSelectorComponent,
         DeliveryTypeSelectorComponent,
-        NewPostDeliveryTypeComponent
+        NewPostDeliveryTypeComponent,
+        PaymentSelectorComponent
     ],
     imports: [
         DirectivesModule,
@@ -79,7 +81,8 @@ import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
         SlickSliderComponent,
         ProductImageSliderComponent,
         SkeletonSidebarComponent,
-        DeliveryServiceSelectorComponent
+        DeliveryServiceSelectorComponent,
+        PaymentSelectorComponent
     ],
     entryComponents: [
         ProductImageSliderComponent

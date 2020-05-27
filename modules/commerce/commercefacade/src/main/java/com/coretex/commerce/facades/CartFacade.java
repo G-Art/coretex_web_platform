@@ -1,6 +1,7 @@
 package com.coretex.commerce.facades;
 
 import com.coretex.commerce.data.CartData;
+import com.coretex.commerce.data.OrderPlaceResult;
 import com.coretex.items.cx_core.CartItem;
 import com.coretex.items.cx_core.CustomerItem;
 
@@ -27,4 +28,8 @@ public interface CartFacade extends PageableDataTableFacade<CartItem, CartData> 
 	CartData saveDeliveryInfo(CartData cartData, Map<String, Object> info);
 
 	CartData merge(CartData sessionCart, CartData userCart);
+
+	CartData setPaymentType(CartData cartData, UUID paymentMode);
+
+	OrderPlaceResult palaceOrder(CartData cartData);
 }

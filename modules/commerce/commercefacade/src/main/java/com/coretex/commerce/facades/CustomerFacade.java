@@ -9,6 +9,6 @@ public interface CustomerFacade extends PageableDataTableFacade<CustomerItem, Mi
 
 	boolean isEmailExist(String email);
 
-	RegisterResponse register(RegisterRequest registerRequest);
+	RegisterResponse register(RegisterRequest registerRequest, String domain);
 
 }
