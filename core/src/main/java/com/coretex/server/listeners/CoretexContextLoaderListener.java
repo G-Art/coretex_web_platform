@@ -73,7 +73,7 @@ public class CoretexContextLoaderListener extends ContextLoaderListener {
                                       .map(s -> format("classpath:%s", s))
                                       .forEach(configLocation::add);
 
-        setContextInitializers(new CortexEnvironmentInitializer());
+        setContextInitializers(new CortexEnvironmentInitializer(webProject));
         wac.setConfigLocations(configLocation.toArray(new String[configLocation.size()]));
 
 //        var servletContext = wac.getServletContext();

@@ -14,6 +14,8 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.9'
     implementation 'org.apache.commons:commons-collections4:4.4'
 
+    implementation group: 'commons-io', name: 'commons-io', version: '2.7'
+
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     implementation group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.26'
     implementation group: 'org.apache.metamodel', name: 'MetaModel-jdbc', version: '5.3.1'

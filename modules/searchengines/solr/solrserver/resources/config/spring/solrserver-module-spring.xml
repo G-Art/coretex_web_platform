@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="com.coretex.searchengine.solr" />
+    <mvc:annotation-driven />
+
+    <import resource="server-commands-spring.xml"/>
+
+    <alias name="defaultSolrServerConfigurationProvider" alias="solrServerConfigurationProvider" />
+    <bean id="defaultSolrServerConfigurationProvider"
+          class="com.coretex.searchengine.solr.server.impl.DefaultSolrServerConfigurationProvider" />
+    <alias name="defaultSolrInstanceFactory" alias="solrInstanceFactory" />
+    <bean id="defaultSolrInstanceFactory" class="com.coretex.searchengine.solr.server.impl.DefaultSolrInstanceFactory"/>
+
+    <alias name="defaultSolrServerCommandExecutor" alias="solrServerCommandExecutor" />
+    <bean id="defaultSolrServerCommandExecutor"
+          class="com.coretex.searchengine.solr.server.impl.DefaultSolrServerCommandExecutor" >
+        <property name="commands">
+            <map>
+                <entry key="startSolrServer" value-ref="startSolrServerCommand"/>
+                <entry key="stopSolrServer" value-ref="stopSolrServerCommand"/>
+                <entry key="createSolrInstance" value-ref="createSolrInstanceCommand"/>
+            </map>
+        </property>
+    </bean>
+
+    <alias name="defaultSolrServerController" alias="solrServerController" />
+    <bean id="defaultSolrServerController"
+          class="com.coretex.searchengine.solr.server.impl.DefaultSolrServerController"
+          init-method="startServers"
+          destroy-method="stopServers">
+        <property name="solrServerConfigurationProvider" ref="solrServerConfigurationProvider" />
+        <property name="solrServerCommandExecutor" ref="solrServerCommandExecutor" />
+    </bean>
+
+
+</beans>

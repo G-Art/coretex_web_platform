@@ -58,4 +58,5 @@
         <property name="attributeProvider" ref="defaultAttributeProvider"/>
     </bean>
 
+    <bean id="commandExecutor" class="com.coretex.core.shell.impl.DefaultCommandExecutor"/>
 </beans>

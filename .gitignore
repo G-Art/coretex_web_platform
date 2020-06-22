@@ -14,8 +14,10 @@ obj/
 velocity.log
 *lib/
 /tmp/*
+/data/*
 /modules/commerce/front/commerce_admin/adminty-master/
 **/package-lock.json
 /modules/commerce/front/commerce_shop/jsbuild/
 **/node_modules/
 **/webroot/resources/static/
+!/config/solr/

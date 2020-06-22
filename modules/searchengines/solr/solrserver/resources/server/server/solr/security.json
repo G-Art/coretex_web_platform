@@ -1,0 +1,138 @@
+{
+	"authentication": {
+		"class": "solr.BasicAuthPlugin",
+		"blockUnknown": true,
+		"credentials": {
+			"solrclient": "R8fPLWO3EanmBDpT3+vVoPymy37kIJyc6dqWvQVGd4M= 4bakPpCKyMYahY1elVdurC0D9PkqF/ComT/IfrROq5U=",
+			"solradmin": "GxD5wYKHDcu/fLpwIBuNr76hYfBuAZ+OWFDo7FG+Gj0= AaizrtuuUa+qff+GiNsMSOzOmFeOjrMl7FaWKxVBLcg="
+		}
+	},
+	"authorization": {
+		"class": "solr.RuleBasedAuthorizationPlugin",
+		"permissions": [
+			{
+				"path": "read",
+				"role": "index-read"
+			},
+			{
+				"name": "read",
+				"role": "index-read"
+			},
+			{
+				"name": "update",
+				"role": "index-write"
+			},
+			{
+				"name": "core-admin-read",
+				"role": "index-write"
+			},
+			{
+				"name": "core-admin-edit",
+				"role": "index-write"
+			},
+			{
+				"name": "collection-admin-read",
+				"role": "index-write"
+			},
+			{
+				"name": "collection-admin-edit",
+				"role": "index-write"
+			},
+			{
+				"name": "schema-read",
+				"role": "index-write"
+			},
+			{
+				"name": "schema-edit",
+				"role": "index-write"
+			},
+			{
+				"collection": "*",
+				"path": "/schema/managed/*",
+				"role": "index-write"
+			},
+			{
+				"collection": "*",
+				"path": "/schema/analysis/*",
+				"role": "index-write"
+			},
+			{
+				"collection": "*",
+				"path": "/admin/luke",
+				"role": "index-write"
+			},
+			{
+				"collection": null,
+				"path": "/admin/cores",
+				"params": {
+					"action": [
+						"STATUS"
+					]
+				},
+				"role": "index-write"
+			},
+			{
+				"collection": null,
+				"path": "/admin/collections",
+				"params": {
+					"action": [
+						"LIST"
+					]
+				},
+				"role": "index-write"
+			},
+			{
+				"name": "config-read",
+				"role": "admin"
+			},
+			{
+				"name": "config-edit",
+				"role": "admin"
+			},
+			{
+				"name": "security-read",
+				"role": "admin"
+			},
+			{
+				"name": "security-edit",
+				"role": "admin"
+			},
+			{
+				"path": "/",
+				"role": null
+			},
+			{
+				"path": "/libs/*",
+				"role": null
+			},
+			{
+				"path": "/js/*",
+				"role": null
+			},
+			{
+				"path": "/img/*",
+				"role": null
+			},
+			{
+				"path": "/css/*",
+				"role": null
+			},
+			{
+				"name": "all",
+				"role": "admin"
+			}
+		],
+		"user-role": {
+			"solrclient": [
+				"index-read",
+				"index-write"
+			],
+
+			"solradmin": [
+				"index-read",
+				"index-write",
+				"admin"
+			]
+		}
+	}
+}

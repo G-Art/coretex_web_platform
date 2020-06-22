@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd ">
+
+    <context:component-scan base-package="com.coretex.searchengine.solr" />
+
+    <import resource="solr-request-factories-config.xml"/>
+
+    <alias name="configCredentialProvider" alias="credentialProvider"/>
+    <bean id="configCredentialProvider" class="com.coretex.searchengine.solr.client.impl.ConfigCredentialProvider">
+        <property name="user" value="${solrserver.instances.default.user:solrclient}"/>
+        <property name="password" value="${solrserver.instances.default.password:solr123}"/>
+    </bean>
+
+    <alias name="defaultSolrClientService" alias="solrClientService"/>
+    <bean id="defaultSolrClientService" class="com.coretex.searchengine.solr.client.impl.DefaultSolrClientService">
+    </bean>
+</beans>

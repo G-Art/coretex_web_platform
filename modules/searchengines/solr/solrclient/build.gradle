@@ -1,0 +1,5 @@
+
+dependencies {
+  implementation project(":core")
+  implementation group: 'org.apache.solr', name: 'solr-solrj', version: '8.5.2'
+}

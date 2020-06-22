@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd ">
+
+
+    <bean id="abstractSolrRequestFactory"
+          class="com.coretex.searchengine.solr.client.factories.impl.AbstractSolrRequestFactory"
+          abstract="true">
+        <property name="credentialProvider" ref="credentialProvider"/>
+    </bean>
+    <bean id="abstractV2SolrRequestFactory"
+          parent="abstractSolrRequestFactory" abstract="true">
+        <property name="useApiV2" value="true"/>
+        <property name="useBinaryV2" value="true"/>
+    </bean>
+
+    <bean id="defaultSolrUpdateRequestFactory"
+          class="com.coretex.searchengine.solr.client.factories.impl.DefaultSolrUpdateRequestFactory"
+          parent="abstractSolrRequestFactory"/>
+
+    <alias name="defaultV2SolrUpdateRequestFactory" alias="solrUpdateRequestFactory"/>
+    <bean id="defaultV2SolrUpdateRequestFactory"
+          class="com.coretex.searchengine.solr.client.factories.impl.DefaultSolrUpdateRequestFactory"
+          parent="abstractV2SolrRequestFactory"/>
+
+    <alias name="defaultV2SolrJsonQueryRequestFactory" alias="solrJsonQueryRequestFactory"/>
+    <bean id="defaultV2SolrJsonQueryRequestFactory"
+          class="com.coretex.searchengine.solr.client.factories.impl.DefaultSolrJsonQueryRequestFactory"
+          parent="abstractV2SolrRequestFactory"/>
+
+    <bean id="abstractSolrInputDocumentBuilder"
+          class="com.coretex.searchengine.solr.client.builders.impl.AbstractSolrInputDocumentBuilder"
+          abstract="true"/>
+
+    <bean id="abstractGenericItemConfiguredSolrInputFieldProvider"
+          class="com.coretex.searchengine.solr.client.builders.impl.GenericItemConfiguredSolrInputFieldProvider"
+          abstract="true"/>
+
+    <bean id="genericItemUuidSolrInputFieldProvider" class="com.coretex.searchengine.solr.client.builders.impl.GenericItemUuidSolrInputFieldProvider"/>
+
+
+</beans>

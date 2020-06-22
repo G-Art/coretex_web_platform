@@ -1,7 +1,9 @@
 package com.coretex.server.spring;
 
 import com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor;
+import com.coretex.core.utils.PlatformUtils;
 import com.coretex.server.ApplicationContextProvider;
+import com.coretex.server.data.WebProject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +19,24 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Properties;
 
 public class CortexEnvironmentInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext>{
 
-    private Logger LOG = LoggerFactory.getLogger(SelectQueryTransformationProcessor.class);
+    private final static Logger LOG = LoggerFactory.getLogger(SelectQueryTransformationProcessor.class);
+
+    private final WebProject webProject;
+
+    public CortexEnvironmentInitializer() {
+        webProject = null; // for integration test purposes
+    }
+
+    public CortexEnvironmentInitializer(WebProject webProject) {
+        LOG.info("Initialization web module [{}] ", webProject.getName());
+        PlatformUtils.init(webProject);
+        this.webProject = webProject;
+    }
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
@@ -34,11 +49,16 @@ public class CortexEnvironmentInitializer implements ApplicationContextInitializ
         try {
             Properties cortexProperties = new Properties();
             cortexProperties.load(new FileInputStream(homeDir + "/config/coretex.properties"));
-            environment.getPropertySources().addFirst(new PropertiesPropertySource("cortexProperties", cortexProperties));
+            cortexProperties.put("coretex.config.path", new File(homeDir + "/config").getAbsolutePath());
+            var propertySources = environment.getPropertySources();
+            if(Objects.nonNull(webProject)){
+                propertySources.addFirst(new PropertiesPropertySource("moduleProperties", webProject.getProperties()));
+            }
+            propertySources.addFirst(new PropertiesPropertySource("cortexProperties", cortexProperties));
             for (String profile : environment.getActiveProfiles()) {
                 Properties profileProperties = new Properties();
                 cortexProperties.load(new FileInputStream(homeDir + String.format("/config/coretex-%s.properties", profile)));
-                environment.getPropertySources().addFirst(new PropertiesPropertySource("cortexProperties-"+profile, profileProperties));
+                propertySources.addFirst(new PropertiesPropertySource("cortexProperties-"+profile, profileProperties));
             }
 
         } catch (IOException ex) {

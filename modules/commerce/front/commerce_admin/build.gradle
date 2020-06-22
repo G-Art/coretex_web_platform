@@ -5,18 +5,18 @@ plugins {
 dependencies {
     implementation project(":core")
     implementation project(":cxcommercefacade")
-
+    implementation project(":solrserver")
 
 
     implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.1.5.RELEASE'
     implementation group: 'org.springframework.security', name: 'spring-security-web', version: '5.1.5.RELEASE'
 
-    web group: 'javax.servlet', name: 'jstl', version: '1.2'
-    web group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.1.5.RELEASE'
-    web group: 'org.springframework', name: 'spring-webmvc', version: '5.1.8.RELEASE'
-    implementation group: 'org.springframework.mobile', name: 'spring-mobile-device', version: '1.1.5.RELEASE'
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.9'
-    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    web group: 'javax.servlet',                         name: 'jstl',                       version: '1.2'
+    web group: 'org.springframework.security',          name: 'spring-security-taglibs',    version: '5.1.5.RELEASE'
+    web group: 'org.springframework',                   name: 'spring-webmvc',              version: '5.1.8.RELEASE'
+    implementation group: 'org.springframework.mobile', name: 'spring-mobile-device',       version: '1.1.5.RELEASE'
+    implementation group: 'org.apache.httpcomponents',  name: 'httpclient',                 version: '4.5.9'
+    implementation group: 'javax.validation',           name: 'validation-api',             version: '2.0.1.Final'
 
     implementation 'commons-fileupload:commons-fileupload:1.4'
 }

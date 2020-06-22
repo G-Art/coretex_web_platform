@@ -45,7 +45,7 @@ export class CheckoutPageComponent implements OnInit {
         this.loading = true
         this.cartService.placeOrder(() => {
             this.loading = false
-
+            this.router.navigate([`/`])
         })
     }
 
