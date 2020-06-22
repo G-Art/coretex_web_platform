@@ -36,6 +36,9 @@
        affect both how text is indexed and queried.
   -->
   <luceneMatchVersion>8.5.1</luceneMatchVersion>
+  <lib dir="${solr.install.dir:../../../..}/contrib/analysis-extras/lib" regex=".*\.jar" />
+  <lib dir="${solr.install.dir:../../../..}/contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
+  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-analysis-extras-\d.*\.jar" />
 
   <!-- <lib/> directives can be used to instruct Solr to load any Jars
        identified and use them to resolve any "plugins" specified in
@@ -368,11 +371,11 @@
   <query>
 
     <!-- Maximum number of clauses allowed when parsing a boolean query string.
-         
+
          This limit only impacts boolean queries specified by a user as part of a query string,
          and provides per-collection controls on how complex user specified boolean queries can
          be.  Query strings that specify more clauses then this will result in an error.
-         
+
          If this per-collection limit is greater then the global `maxBooleanClauses` limit
          specified in `solr.xml`, it will have no effect, as that setting also limits the size
          of user specified boolean queries.
@@ -382,7 +385,7 @@
     <!-- Solr Internal Query Caches
 
          There are four implementations of cache available for Solr:
-         LRUCache, based on a synchronized LinkedHashMap, 
+         LRUCache, based on a synchronized LinkedHashMap,
          LFUCache and FastLRUCache, based on a ConcurrentHashMap, and CaffeineCache -
          a modern and robust cache implementation. Note that in Solr 9.0
          only CaffeineCache will be available, other implementations are now
@@ -702,10 +705,10 @@
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
       <!-- Default search field
-         <str name="df">text</str> 
+         <str name="df">text</str>
         -->
       <!-- Change from JSON to XML format (the default prior to Solr 7.0)
-         <str name="wt">xml</str> 
+         <str name="wt">xml</str>
         -->
     </lst>
     <!-- In addition to defaults, "appends" params can be specified
@@ -1080,30 +1083,47 @@
   <updateProcessor class="solr.AddSchemaFieldsUpdateProcessorFactory" name="add-schema-fields">
     <lst name="typeMapping">
       <str name="valueClass">java.lang.String</str>
-      <str name="fieldType">text_general</str>
+      <str name="fieldType">string</str>
       <lst name="copyField">
-        <str name="dest">*_str</str>
+        <str name="dest">*_string</str>
         <int name="maxChars">256</int>
       </lst>
-      <!-- Use as default mapping instead of defaultFieldType -->
       <bool name="default">true</bool>
     </lst>
     <lst name="typeMapping">
       <str name="valueClass">java.lang.Boolean</str>
-      <str name="fieldType">booleans</str>
+      <str name="fieldType">boolean</str>
+      <lst name="copyField">
+        <str name="dest">*_boolean</str>
+      </lst>
     </lst>
     <lst name="typeMapping">
       <str name="valueClass">java.util.Date</str>
-      <str name="fieldType">pdates</str>
+      <str name="fieldType">date</str>
+      <lst name="copyField">
+        <str name="dest">*_date</str>
+      </lst>
+    </lst>
+    <lst name="typeMapping">
+      <str name="valueClass">java.lang.Integer</str>
+      <str name="fieldType">int</str>
+      <lst name="copyField">
+        <str name="dest">*_int</str>
+      </lst>
     </lst>
     <lst name="typeMapping">
       <str name="valueClass">java.lang.Long</str>
-      <str name="valueClass">java.lang.Integer</str>
-      <str name="fieldType">plongs</str>
+      <str name="fieldType">long</str>
+      <lst name="copyField">
+        <str name="dest">*_long</str>
+      </lst>
     </lst>
     <lst name="typeMapping">
       <str name="valueClass">java.lang.Number</str>
-      <str name="fieldType">pdoubles</str>
+      <str name="fieldType">double</str>
+      <lst name="copyField">
+        <str name="dest">*_double</str>
+      </lst>
     </lst>
   </updateProcessor>
 
