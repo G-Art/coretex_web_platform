@@ -2,6 +2,7 @@ package com.coretex.commerce.config;
 
 import com.coretex.commerce.config.security.AuthenticationManager;
 import com.coretex.commerce.config.security.SecurityContextRepository;
+import com.coretex.commerce.web.resolvers.ParamMapHandlerMethodArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
@@ -14,6 +15,7 @@ import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.ResourceHandlerRegistry;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.web.reactive.result.method.annotation.ArgumentResolverConfigurer;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
@@ -115,5 +117,11 @@ public class ApplicationConfigurerAdapter implements WebFluxConfigurer {
                 .authorizeExchange()
                 .anyExchange().permitAll()
                 .and().build();
+    }
+
+
+    @Override
+    public void configureArgumentResolvers(ArgumentResolverConfigurer configurer) {
+        configurer.addCustomResolver(new ParamMapHandlerMethodArgumentResolver());
     }
 }

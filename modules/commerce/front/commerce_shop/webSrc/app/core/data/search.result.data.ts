@@ -1,5 +1,6 @@
 import {ProductData} from "./product.data";
 import {BreadcrumbData} from "./breadcrumb.data";
+import {FacetData} from './facet-data.data';
 
 export class SearchResult {
 
@@ -11,5 +12,7 @@ export class SearchResult {
     breadcrumb:BreadcrumbData[];
 
     products:ProductData[]
+
+    facets?:FacetData[]
 
 }

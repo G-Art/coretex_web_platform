@@ -1,5 +1,7 @@
 package com.coretex.commerce.data;
 
+import com.coretex.searchengine.solr.client.search.FacetData;
+
 import java.util.List;
 
 public class SearchPageResult {
@@ -12,6 +14,7 @@ public class SearchPageResult {
 	private BreadcrumbData[] breadcrumb;
 
 	private List<ShortProductData> products;
+	private List<FacetData> facets;
 
 	public int getPage() {
 		return page;
@@ -59,5 +62,13 @@ public class SearchPageResult {
 
 	public void setProducts(List<ShortProductData> products) {
 		this.products = products;
+	}
+
+	public void setFacets(List<FacetData> facets) {
+		this.facets = facets;
+	}
+
+	public List<FacetData> getFacets() {
+		return facets;
 	}
 }

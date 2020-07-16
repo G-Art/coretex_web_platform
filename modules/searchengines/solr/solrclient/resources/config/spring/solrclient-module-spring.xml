@@ -20,4 +20,7 @@
     <alias name="defaultSolrClientService" alias="solrClientService"/>
     <bean id="defaultSolrClientService" class="com.coretex.searchengine.solr.client.impl.DefaultSolrClientService">
     </bean>
+
+    <alias name="defaultSolrResponseFacetDataConverter" alias="solrResponseFacetDataConverter"/>
+    <bean id="defaultSolrResponseFacetDataConverter" class="com.coretex.searchengine.solr.client.impl.DefaultSolrResponseFacetDataConverter"/>
 </beans>

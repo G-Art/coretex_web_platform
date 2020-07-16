@@ -7,5 +7,10 @@
     "checkout": "Заказ",
     "order_tracking": "Заказы",
     "logout": "Выход"
+  },
+  "facet.group": {
+    "subCategoryName": "Категории",
+    "colorName": "Цвет",
+    "size": "Размер"
   }
 }

@@ -2,8 +2,10 @@ package com.coretex.searchengine.solr.client;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.SolrInputDocument;
 
 import java.util.Collection;
@@ -17,6 +19,11 @@ public interface SolrClientService{
 	<R> R execute(Function<SolrClient, R> solrClientFunction);
 
 	QueryResponse query(SolrQuery query);
+
+	SchemaResponse schema();
+
+	SchemaResponse schema(SchemaRequest schemaRequest);
+
 	UpdateResponse update(SolrInputDocument doc);
 
 	UpdateResponse update(Collection<SolrInputDocument> docs);

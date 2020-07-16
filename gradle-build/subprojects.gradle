@@ -13,7 +13,7 @@ subprojects {
 
     repositories {
         mavenLocal()
-        maven { url "https://central.maven.org/maven2/" }
+        mavenCentral()
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://repo.spring.io/libs-release-remote" }
         maven { url 'http://www.datanucleus.org/downloads/maven2/'}

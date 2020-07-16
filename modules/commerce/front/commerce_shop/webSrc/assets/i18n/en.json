@@ -54,5 +54,10 @@
   },
   "list": {
     "showing": "Showing {{start}}–{{count}} of {{totalCount}} results"
+  },
+  "facet.group": {
+    "subCategoryName": "Caregory",
+    "colorName": "Color",
+    "size": "Size"
   }
 }

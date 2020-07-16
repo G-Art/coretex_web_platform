@@ -9,8 +9,10 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.QueryRequest;
 import org.apache.solr.client.solrj.request.UpdateRequest;
+import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +88,23 @@ public class DefaultSolrClientService implements SolrClientService {
 				return queryRequest.process(client, coreName);
 			} catch (IOException | SolrServerException e) {
 				LOG.error(String.format("Solr query error [%s]", query.toString()), e);
+				return null;
+			}
+		});
+	}
+
+	@Override
+	public SchemaResponse schema() {
+		return schema(new SchemaRequest());
+	}
+
+	@Override
+	public SchemaResponse schema(SchemaRequest schemaRequest) {
+		return execute(client -> {
+			try {
+				return schemaRequest.process(client, coreName);
+			} catch (IOException | SolrServerException e) {
+				LOG.error("Solr schema request error", e);
 				return null;
 			}
 		});

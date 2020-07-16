@@ -1,7 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {SearchResult} from "../../../core/data/search.result.data";
-import {ActivatedRoute} from "@angular/router";
-import {SearchService} from "../../../core/service/search.service";
 import {fadeInAnimation} from "../../../core/animation/fadeInAnimation.animation";
 
 declare var $: any;
@@ -17,6 +15,14 @@ export class SidebarComponent implements OnInit {
 
     @Input()
     searchResult: SearchResult;
+
+    @Input()
+    facets: Map<string, string[]> = new Map<string, string[]>();
+
+    @Output()
+    addFacetEvent: EventEmitter<any> = new EventEmitter<any>();
+    @Output()
+    removeFacetEvent : EventEmitter<any> = new EventEmitter<any>();
 
     constructor() {
     }

@@ -37,10 +37,6 @@
           class="com.coretex.searchengine.solr.client.builders.impl.AbstractSolrInputDocumentBuilder"
           abstract="true"/>
 
-    <bean id="abstractGenericItemConfiguredSolrInputFieldProvider"
-          class="com.coretex.searchengine.solr.client.builders.impl.GenericItemConfiguredSolrInputFieldProvider"
-          abstract="true"/>
-
     <bean id="genericItemUuidSolrInputFieldProvider" class="com.coretex.searchengine.solr.client.builders.impl.GenericItemUuidSolrInputFieldProvider"/>
 
 

@@ -7,5 +7,11 @@
     "checkout": "Замовлення",
     "order_tracking": "Відстеження замовлення",
     "logout": "Вихід"
+  },
+
+  "facet.group": {
+    "subCategoryName": "Катогорії",
+    "colorName": "Колір",
+    "size": "Розмір"
   }
 }

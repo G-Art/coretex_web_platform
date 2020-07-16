@@ -11,6 +11,12 @@ public abstract class AbstractSolrInputDocumentBuilder<S> implements SolrInputDo
 
 	private List<SolrInputFieldProvider<S>> solrInputFieldProviders;
 
+	private final Class<S> sourceType;
+
+	public AbstractSolrInputDocumentBuilder(Class<S> sourceType) {
+		this.sourceType = sourceType;
+	}
+
 	@Override
 	public SolrInputDocument build(S source) {
 		SolrInputDocument solrInput = createDocument();
@@ -28,5 +34,10 @@ public abstract class AbstractSolrInputDocumentBuilder<S> implements SolrInputDo
 
 	public void setSolrInputFieldProviders(List<SolrInputFieldProvider<S>> solrInputFieldProviders) {
 		this.solrInputFieldProviders = solrInputFieldProviders;
+	}
+
+	@Override
+	public Class<S> getSourceType() {
+		return sourceType;
 	}
 }

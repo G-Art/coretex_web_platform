@@ -7,20 +7,21 @@ import com.coretex.commerce.data.BreadcrumbData;
 import com.coretex.commerce.data.DataTableResults;
 import com.coretex.commerce.data.ProductData;
 import com.coretex.commerce.data.SearchPageResult;
+import com.coretex.commerce.data.ShortProductData;
 import com.coretex.commerce.data.forms.ProductForm;
 import com.coretex.commerce.data.minimal.MinimalProductData;
 import com.coretex.commerce.facades.ProductFacade;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.ProductDataMapper;
-import com.coretex.commerce.mapper.ShortProductDataMapper;
 import com.coretex.commerce.mapper.VariantProductDataMapper;
 import com.coretex.commerce.mapper.forms.ProductFormMapper;
 import com.coretex.commerce.mapper.forms.VariantProductMapper;
 import com.coretex.commerce.mapper.minimal.MinimalProductDataMapper;
-import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.cx_core.VariantProductItem;
+import com.coretex.searchengine.solr.client.search.SolrSearchRequest;
+import com.coretex.searchengine.solr.client.search.SolrSearchService;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +48,6 @@ public class DefaultProductFacade implements ProductFacade {
 	private MinimalProductDataMapper minimalProductDataMapper;
 
 	@Resource
-	private ShortProductDataMapper shortProductDataMapper;
-
-	@Resource
 	private ProductDataMapper productDataMapper;
 
 	@Resource
@@ -59,39 +57,50 @@ public class DefaultProductFacade implements ProductFacade {
 	private ProductFormMapper productFormMapper;
 
 	@Resource
+	private SolrSearchService solrSearchService;
+
+	@Resource
 	private Map<String, VariantProductMapper<?>> variantMappers;
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultProductFacade.class);
 
 	@Override
-	public SearchPageResult getCategoryPage(String code, int page, int size) {
-		PageableSearchResult<ProductItem> searchResult = productService.categoryPage(code, size, page);
+	public SearchPageResult getCategoryPage(String code, int page, int size, Map<String, List<String>> filter) {
+		var solrSearchRequest = new SolrSearchRequest<>(VariantProductItem.class);
+		solrSearchRequest.putFilter("category", code);
+
+		if(Objects.nonNull(filter)){
+			filter.forEach(solrSearchRequest::putAllFilters);
+		}
+
+		solrSearchRequest.setPage(page);
+		solrSearchRequest.setCount(size);
+		var search = solrSearchService.<ShortProductData>search(solrSearchRequest);
 		SearchPageResult searchPageResult = new SearchPageResult();
 		searchPageResult.setPage(page);
 		searchPageResult.setCount(size);
-		searchPageResult.setTotalCount(searchResult.getTotalCount().intValue());
-		searchPageResult.setTotalPages(searchResult.getTotalPages());
+		searchPageResult.setTotalCount(search.getTotalCount().intValue());
+		searchPageResult.setTotalPages(search.getTotalPages());
 
 		var category = categoryService.findByCode(code);
 
 		var categories = buildBreadcrumbData(category);
-		categories.get(categories.size()-1).setActive(true);
+		categories.get(categories.size() - 1).setActive(true);
 
 		searchPageResult.setBreadcrumb(categories.toArray(new BreadcrumbData[0]));
-		searchPageResult.setProducts(searchResult.getResultStream()
-				.map(shortProductDataMapper::fromItem)
-				.collect(Collectors.toList()));
+		searchPageResult.setProducts(search.getResult());
+		searchPageResult.setFacets(search.getFacets());
 		return searchPageResult;
 	}
 
-	List<BreadcrumbData> buildBreadcrumbData(CategoryItem categoryItem){
+	List<BreadcrumbData> buildBreadcrumbData(CategoryItem categoryItem) {
 		var categories = Lists.<BreadcrumbData>newLinkedList();
-		if(Objects.nonNull(categoryItem.getParent())){
+		if (Objects.nonNull(categoryItem.getParent())) {
 			categories.addAll(buildBreadcrumbData(categoryItem.getParent()));
-		}else{
+		} else {
 			categories.add(new BreadcrumbData("/", "Home"));
 		}
-		categories.add(new BreadcrumbData("/category/"+categoryItem.getCode(), categoryItem.getName()));
+		categories.add(new BreadcrumbData("/category/" + categoryItem.getCode(), categoryItem.getName()));
 
 		return categories;
 	}
@@ -99,7 +108,7 @@ public class DefaultProductFacade implements ProductFacade {
 	@Override
 	public ProductData getByCode(String code) {
 		var productItem = productService.getByCode(code);
-		if(productItem instanceof VariantProductItem){
+		if (productItem instanceof VariantProductItem) {
 			return variantProductDataMapper.fromItem((VariantProductItem) productItem);
 		}
 		return productDataMapper.fromItem(productService.getByCode(code));
@@ -108,7 +117,7 @@ public class DefaultProductFacade implements ProductFacade {
 	@Override
 	public ProductData getByUUID(UUID uuid) {
 		var productItem = productService.getByUUID(uuid);
-		if(productItem instanceof VariantProductItem){
+		if (productItem instanceof VariantProductItem) {
 			return variantProductDataMapper.fromItem((VariantProductItem) productItem);
 		}
 		return productDataMapper.fromItem(productService.getByUUID(uuid));
@@ -142,12 +151,12 @@ public class DefaultProductFacade implements ProductFacade {
 	@Override
 	public ProductItem save(ProductForm productForm, UUID uuid) {
 		ProductItem productItem;
-		if(Objects.nonNull(productForm.getVariantType())){
+		if (Objects.nonNull(productForm.getVariantType())) {
 			productItem = variantMappers.get(productForm.getVariantType()).toItem(productForm);
 			var baseProduct = productService.getByUUID(uuid);
-			((VariantProductItem)productItem).setBaseProduct(baseProduct);
+			((VariantProductItem) productItem).setBaseProduct(baseProduct);
 
-		}else{
+		} else {
 			productItem = productFormMapper.toItem(productForm);
 		}
 

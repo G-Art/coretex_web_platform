@@ -4,7 +4,8 @@ import com.coretex.commerce.data.SearchPageResult;
 import com.coretex.commerce.data.minimal.MinimalCategoryHierarchyData;
 import com.coretex.commerce.facades.CategoryFacade;
 import com.coretex.commerce.facades.ProductFacade;
-import org.springframework.http.MediaType;
+import com.coretex.commerce.web.resolvers.GroupedParametersMap;
+import com.coretex.commerce.web.resolvers.Group;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +37,9 @@ public class CategoryController extends SearchController {
 	@GetMapping(path = {"/{code}/page", "/{code}/page/{page}"})
 	private Mono<SearchPageResult> getCategoryPage(@PathVariable(value = "code") String code,
 												   @PathVariable(value = "page", required = false) Integer page,
-												   @RequestParam(value = "size", required = false, defaultValue = "12") int size)
+												   @RequestParam(value = "size", required = false, defaultValue = "12") int size,
+												   @GroupedParametersMap("f") Group f)
 	{
-		return Mono.just(productFacade.getCategoryPage(code, Objects.isNull(page) ? 0 : page, size));
+		return Mono.just(productFacade.getCategoryPage(code, Objects.isNull(page) ? 0 : page, size, f.getGroupedParams()));
 	}
 }

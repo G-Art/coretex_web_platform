@@ -3,19 +3,24 @@ package com.coretex.commerce.admin.init.data;
 import com.coretex.commerce.admin.init.permission.Permissions;
 import com.coretex.commerce.admin.init.permission.ShopPermission;
 import com.coretex.commerce.core.constants.Constants;
+import com.coretex.commerce.core.dao.ProductDao;
 import com.coretex.commerce.core.services.GroupService;
 import com.coretex.commerce.core.services.PermissionService;
 import com.coretex.commerce.core.services.StoreService;
-import com.coretex.commerce.core.utils.CoreConfiguration;
 import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.enums.cx_core.GroupTypeEnum;
 import com.coretex.items.cx_core.GroupItem;
 import com.coretex.items.cx_core.PermissionItem;
 import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.UserItem;
+import com.coretex.items.cx_core.VariantProductItem;
+import com.coretex.searchengine.solr.client.SolrClientService;
+import com.coretex.searchengine.solr.client.TypeSolrDocumentBuildersRegistry;
+import com.coretex.searchengine.solr.client.search.SolrSearchService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,10 +45,15 @@ public class InitializationLoader {
 
 	private static final String DEFAULT_INITIAL_PASSWORD = "nimda";
 	private static final String DEFAULT_ADMIN_INITIAL_PASSWORD = "goodmood";
-	public final static String POPULATE_TEST_DATA = "POPULATE_TEST_DATA";
 
 	@Resource
 	private InitializationDatabase initializationDatabase;
+
+	@Resource
+	private SolrClientService solrClientService;
+
+	@Resource
+	private SolrSearchService solrSearchService;
 
 	@Resource
 	private ItemService itemService;
@@ -62,9 +72,6 @@ public class InitializationLoader {
 	protected GroupService groupService;
 
 	@Resource
-	private CoreConfiguration configuration;
-
-	@Resource
 	private StoreService storeService;
 
 	@Resource
@@ -73,8 +80,12 @@ public class InitializationLoader {
 	@Resource
 	private ResourceLoader resourceLoader;
 
-//	@Resource
-//	private List<DataLoader> dataLoaders;
+	@Resource
+	private ProductDao productDao;
+
+	@Resource
+	private TypeSolrDocumentBuildersRegistry typeSolrDocumentBuildersRegistry;
+
 
 	@PostConstruct
 	public void init() {
@@ -86,12 +97,7 @@ public class InitializationLoader {
 
 				InputStream xmlSource = permissionXML.getInputStream();
 
-				//File permissionXML=resourceLoader.getResource("classpath:/permission/permission.json").getFile();
-				//StreamSource xmlSource = new StreamSource(permissionXML);
-
 				Permissions permissions = jacksonObjectMapper.readValue(xmlSource, Permissions.class);
-
-				//All default data to be created
 
 				LOGGER.info(String.format("%s : CoreTex database is empty, populate it....", "goodmood-shop"));
 
@@ -142,19 +148,36 @@ public class InitializationLoader {
 
 				loadData();
 
-//				dataLoaders.forEach(DataLoader::load);
 			}
+			solrClientService.execute(client -> {
+				try {
+					var solrInputDocumentStream = productDao.findReactive()
+							.flatMap(productItem -> productItem.getVariants().stream())
+							.flatMap(variantProductItem -> variantProductItem.getVariants().stream())
+							.filter(Objects::nonNull)
+							.filter(variantProductItem -> CollectionUtils.isEmpty(variantProductItem.getVariants()))
+							.map(this::buildSolrInput);
+
+					solrClientService.update(solrInputDocumentStream);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
 
 		} catch (Exception e) {
 			LOGGER.error("Error in the init method", e);
 		}
 
+	}
 
+	private SolrInputDocument buildSolrInput(VariantProductItem productItem) {
+
+		LOGGER.info(String.format("Indexing product [code::%s]", productItem.getCode()));
+		return typeSolrDocumentBuildersRegistry.findBuilderForClass(VariantProductItem.class).build(productItem);
 	}
 
 
 	public void createDefaultAdmin() {
-
 
 		var s = storeService.getByCode(Constants.DEFAULT_STORE);
 
@@ -166,8 +189,8 @@ public class InitializationLoader {
 		user.setLogin("admin");
 		user.setPassword(password);
 		user.setEmail("admin@coretex.com");
-		user.setFirstName("Artem");
-		user.setLastName("Herasymenko");
+		user.setFirstName("Admin");
+		user.setLastName("Admin");
 		user.setActive(true);
 
 		for (GroupItem group : groups) {

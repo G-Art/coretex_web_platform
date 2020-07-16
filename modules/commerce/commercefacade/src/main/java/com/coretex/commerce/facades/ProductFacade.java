@@ -7,12 +7,14 @@ import com.coretex.commerce.data.forms.ProductForm;
 import com.coretex.commerce.data.minimal.MinimalProductData;
 import com.coretex.items.cx_core.ProductItem;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 public interface ProductFacade extends PageableDataTableFacade<ProductItem, MinimalProductData> {
 
-	SearchPageResult getCategoryPage(String code, int page, int size);
+	SearchPageResult getCategoryPage(String code, int page, int size, Map<String, List<String>> filter);
 
 	ProductData getByCode(String code);
 	ProductData getByUUID(UUID uuid);
