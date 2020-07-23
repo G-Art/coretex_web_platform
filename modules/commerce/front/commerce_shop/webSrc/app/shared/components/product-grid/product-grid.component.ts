@@ -1,4 +1,15 @@
-import {Component, ContentChildren, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    QueryList,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import {ProductCollectionItemComponent} from "../product-collection-item/product-collection-item.component";
 import {SearchResult} from "../../../core/data/search.result.data";
 import {fadeInAnimation} from "../../../core/animation/fadeInAnimation.animation";
@@ -19,6 +30,13 @@ export class ProductGridComponent implements OnInit {
 
     @Input()
     searchResult:SearchResult;
+    @Input()
+    sort: string
+    @Input()
+    sorts: string[]
+
+    @Output()
+    sortingChanged: EventEmitter<any> = new EventEmitter<any>();
 
     viewMode: string = 'grid';
 
@@ -83,5 +101,9 @@ export class ProductGridComponent implements OnInit {
             classList.add('active')
         }
 
+    }
+
+    changeSortingVariant(value: string) {
+        this.sortingChanged.emit(value)
     }
 }

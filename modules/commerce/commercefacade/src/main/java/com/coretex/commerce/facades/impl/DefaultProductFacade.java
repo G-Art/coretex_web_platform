@@ -23,6 +23,7 @@ import com.coretex.items.cx_core.VariantProductItem;
 import com.coretex.searchengine.solr.client.search.SolrSearchRequest;
 import com.coretex.searchengine.solr.client.search.SolrSearchService;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class DefaultProductFacade implements ProductFacade {
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultProductFacade.class);
 
 	@Override
-	public SearchPageResult getCategoryPage(String code, int page, int size, Map<String, List<String>> filter) {
+	public SearchPageResult getCategoryPage(String code, int page, int size, Map<String, List<String>> filter, Map<String, List<String>> sort) {
 		var solrSearchRequest = new SolrSearchRequest<>(VariantProductItem.class);
 		solrSearchRequest.putFilter("category", code);
 
@@ -74,6 +75,11 @@ public class DefaultProductFacade implements ProductFacade {
 		}
 
 		solrSearchRequest.setPage(page);
+		if (!sort.isEmpty()) {
+			var first = IteratorUtils.first(sort.entrySet().iterator());
+			var order = IteratorUtils.first(first.getValue().iterator());
+			solrSearchRequest.setSort(first.getKey(), order);
+		}
 		solrSearchRequest.setCount(size);
 		var search = solrSearchService.<ShortProductData>search(solrSearchRequest);
 		SearchPageResult searchPageResult = new SearchPageResult();

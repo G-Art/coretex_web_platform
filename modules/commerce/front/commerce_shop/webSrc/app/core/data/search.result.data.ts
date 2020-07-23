@@ -4,6 +4,8 @@ import {FacetData} from './facet-data.data';
 
 export class SearchResult {
 
+    q:string;
+
     page:number;
     totalPages:number;
     count:number;

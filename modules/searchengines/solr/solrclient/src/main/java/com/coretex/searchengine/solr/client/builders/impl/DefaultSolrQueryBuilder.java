@@ -57,57 +57,84 @@ public class DefaultSolrQueryBuilder implements SolrQueryBuilder {
 
 		buildQuery(solrQuery);
 		buildFl(solrQuery);
-		buildFq(solrQuery);
 		buildGroup(solrQuery);
-		buildPaging(solrQuery);
-		buildFacet(solrQuery);
-
+		if (Objects.nonNull(solrSearchRequest)) {
+			buildFq(solrQuery);
+			buildPaging(solrQuery);
+			buildFacet(solrQuery);
+			buildSort(solrQuery);
+		}
 		return solrQuery;
 	}
 
-	private void buildFacet(SolrQuery solrQuery) {
-		if (Objects.nonNull(solrSearchRequest)) {
+	private void buildSort(SolrQuery solrQuery) {
+		if (Objects.nonNull(solrSearchRequest.getSortCode())) {
 			var solrQueryConfigurationProvider = configurationProviderMap.get(solrSearchRequest.getResultType());
-			if (solrQueryConfigurationProvider.facet()) {
-				solrQuery.setFacet(true);
-				if (solrQueryConfigurationProvider.groupFacet()) {
-					solrQuery.set("group.facet", "true");
+			if (Objects.nonNull(solrQueryConfigurationProvider.solrSortConfigs()) &&
+					solrQueryConfigurationProvider.solrSortConfigs().containsKey(solrSearchRequest.getSortCode())) {
+				var solrSortConfig = solrQueryConfigurationProvider.solrSortConfigs().get(solrSearchRequest.getSortCode());
+
+				solrSortConfig.getSortingFields()
+						.forEach(pair -> {
+							var solrDocFieldConfig = pair.getLeft();
+							var order = StringUtils.isNotBlank(pair.getRight()) ? pair.getRight() : solrSearchRequest.getSortOrder();
+							if (solrDocFieldConfig.isLocalized()) {
+								solrQuery.addSort(solrDocFieldConfig.createFullFieldName(solrSearchRequest.getLocale()),
+										SolrQuery.ORDER.valueOf(order.toLowerCase()));
+							} else {
+								solrQuery.addSort(solrDocFieldConfig.createFullFieldName(),
+										SolrQuery.ORDER.valueOf(order.toLowerCase()));
+							}
+						});
+				if (solrSortConfig.isIncludeScore()) {
+					var scoreOrder = StringUtils.isNotBlank(solrSortConfig.getScoreOrder()) ? solrSortConfig.getScoreOrder() : "desc";
+					solrQuery.addSort("score",
+							SolrQuery.ORDER.valueOf(scoreOrder));
 				}
 			}
-			solrQueryConfigurationProvider.solrDocFieldConfigs().stream()
-					.filter(SolrDocFieldConfig::isFacet).forEach(solrDocFieldConfig -> {
-				if (solrDocFieldConfig.isLocalized()) {
-					if (facetTagsMap.containsKey(solrDocFieldConfig.getName())) {
-						solrQuery.addFacetField(format("{!ex=%s}%s", facetTagsMap.get(solrDocFieldConfig.getName()), solrDocFieldConfig.createFullFieldName(solrSearchRequest.getLocale())));
-					} else {
-						solrQuery.addFacetField(solrDocFieldConfig.createFullFieldName(solrSearchRequest.getLocale()));
-					}
-				} else {
-
-					if (facetTagsMap.containsKey(solrDocFieldConfig.getName())) {
-						solrQuery.addFacetField(format("{!ex=%s}%s", facetTagsMap.get(solrDocFieldConfig.getName()), solrQuery.addFacetField(solrDocFieldConfig.createFullFieldName())));
-					} else {
-						solrQuery.addFacetField(solrDocFieldConfig.createFullFieldName());
-					}
-				}
-			});
 		}
 	}
 
-	private void buildFq(SolrQuery solrQuery) {
-		if (Objects.nonNull(solrSearchRequest)) {
-			var solrQueryConfigurationProvider = configurationProviderMap.get(solrSearchRequest.getResultType());
+	private void buildFacet(SolrQuery solrQuery) {
+		var solrQueryConfigurationProvider = configurationProviderMap.get(solrSearchRequest.getResultType());
+		if (solrQueryConfigurationProvider.facet()) {
+			solrQuery.setFacet(true);
+			if (solrQueryConfigurationProvider.groupFacet()) {
+				solrQuery.set("group.facet", "true");
 
-			solrSearchRequest.getFilters()
-					.asMap()
-					.forEach((key, value) -> {
-						var fieldConfig = solrQueryConfigurationProvider.solrDocFieldConfigsByName(key);
-						if (Objects.nonNull(fieldConfig)) {
-							addFilter(solrQuery, key, value, fieldConfig);
-						}
-					});
-
+			}
+			solrQuery.setFacetMinCount(solrQueryConfigurationProvider.facetMinCount());
 		}
+		solrQueryConfigurationProvider.solrDocFieldConfigs().stream()
+				.filter(SolrDocFieldConfig::isFacet).forEach(solrDocFieldConfig -> {
+			if (solrDocFieldConfig.isLocalized()) {
+				if (facetTagsMap.containsKey(solrDocFieldConfig.getName())) {
+					solrQuery.addFacetField(format("{!ex=%s}%s", facetTagsMap.get(solrDocFieldConfig.getName()), solrDocFieldConfig.createFullFieldName(solrSearchRequest.getLocale())));
+				} else {
+					solrQuery.addFacetField(solrDocFieldConfig.createFullFieldName(solrSearchRequest.getLocale()));
+				}
+			} else {
+
+				if (facetTagsMap.containsKey(solrDocFieldConfig.getName())) {
+					solrQuery.addFacetField(format("{!ex=%s}%s", facetTagsMap.get(solrDocFieldConfig.getName()), solrQuery.addFacetField(solrDocFieldConfig.createFullFieldName())));
+				} else {
+					solrQuery.addFacetField(solrDocFieldConfig.createFullFieldName());
+				}
+			}
+		});
+	}
+
+	private void buildFq(SolrQuery solrQuery) {
+		var solrQueryConfigurationProvider = configurationProviderMap.get(solrSearchRequest.getResultType());
+
+		solrSearchRequest.getFilters()
+				.asMap()
+				.forEach((key, value) -> {
+					var fieldConfig = solrQueryConfigurationProvider.solrDocFieldConfigsByName(key);
+					if (Objects.nonNull(fieldConfig)) {
+						addFilter(solrQuery, key, value, fieldConfig);
+					}
+				});
 	}
 
 	private void addFilter(SolrQuery solrQuery, String key, Collection<String> value, SolrDocFieldConfig fieldConfig) {
@@ -176,10 +203,8 @@ public class DefaultSolrQueryBuilder implements SolrQueryBuilder {
 	}
 
 	private void buildPaging(SolrQuery solrQuery) {
-		if (Objects.nonNull(solrSearchRequest)) {
-			solrQuery.setStart(solrSearchRequest.getCount() * solrSearchRequest.getPage());
-			solrQuery.setRows(solrSearchRequest.getCount());
-		}
+		solrQuery.setStart(solrSearchRequest.getCount() * solrSearchRequest.getPage());
+		solrQuery.setRows(solrSearchRequest.getCount());
 	}
 
 	private void buildGroup(SolrQuery solrQuery) {

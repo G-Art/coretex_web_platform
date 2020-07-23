@@ -83,6 +83,9 @@ public class DefaultSolrClientService implements SolrClientService {
 	public QueryResponse query(SolrQuery query) {
 		return execute(client -> {
 
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(client.toString());
+			}
 			var queryRequest = solrJsonQueryRequestFactory.create(query);
 			try {
 				return queryRequest.process(client, coreName);

@@ -28,8 +28,7 @@ public class CategoryController extends SearchController {
 	private ProductFacade productFacade;
 
 	@GetMapping(path = "/menu")
-	private Flux<MinimalCategoryHierarchyData> getMenuCategories()
-	{
+	private Flux<MinimalCategoryHierarchyData> getMenuCategories() {
 		return Flux.fromStream(categoryFacade::rootCategories);
 	}
 
@@ -38,8 +37,8 @@ public class CategoryController extends SearchController {
 	private Mono<SearchPageResult> getCategoryPage(@PathVariable(value = "code") String code,
 												   @PathVariable(value = "page", required = false) Integer page,
 												   @RequestParam(value = "size", required = false, defaultValue = "12") int size,
-												   @GroupedParametersMap("f") Group f)
-	{
-		return Mono.just(productFacade.getCategoryPage(code, Objects.isNull(page) ? 0 : page, size, f.getGroupedParams()));
+												   @GroupedParametersMap("f") Group f,
+												   @GroupedParametersMap("s") Group s) {
+		return Mono.just(productFacade.getCategoryPage(code, Objects.isNull(page) ? 0 : page, size, f.getGroupedParams(), s.getGroupedParams()));
 	}
 }

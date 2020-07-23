@@ -48,5 +48,5 @@ distributions {
 }
 
 //distTar.enabled = false
-//distZip.enabled = false
+distZip.enabled = false
 

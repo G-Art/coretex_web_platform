@@ -57,7 +57,12 @@
   },
   "facet.group": {
     "subCategoryName": "Caregory",
-    "colorName": "Color",
+    "colorNames": "Color",
     "size": "Size"
+  },
+  "sort.variant": {
+    "new.desc": "Newness",
+    "price.desc": "Price: High to Low",
+    "price.asc": "Price: Low to High"
   }
 }

@@ -22,6 +22,12 @@ export class ProductListPageComponent implements OnInit {
     private onParamChange = new Subject<void>();
 
     facets: Map<string, string[]> = new Map<string, string[]>()
+    sort: string = 'new:desc'
+    sorts: string[] = [
+        'new:desc',
+        'price:asc',
+        'price:desc',
+    ]
 
     type: string = 'category';
 
@@ -36,10 +42,11 @@ export class ProductListPageComponent implements OnInit {
 
     ngOnInit() {
         this.showSkeleton = true;
-        this.onParamChange.subscribe(value => {
-            this.showSkeleton = true;
-            this.search.searchCategory(this.categoryCode, this.page, this.facets);
-        });
+        this.onParamChange
+            .subscribe(value => {
+                this.showSkeleton = true;
+                this.search.searchCategory(this.categoryCode, this.page, this.facets, this.sort);
+            });
         this.search
             .searchResult
             .subscribe(next => {
@@ -47,41 +54,60 @@ export class ProductListPageComponent implements OnInit {
                 this.showSkeleton = false;
             });
 
-        this.activatedRoute.data.subscribe(data => {
-            this.type = data.type;
-            if (this.type === 'category') {
-                combineLatest([this.activatedRoute.params, this.activatedRoute.queryParams])
-                    .pipe(map(results => ({params: results[0].code, query: results[1]})))
-                    .subscribe(results => {
-                        this.categoryCode = results.params;
+        this.activatedRoute
+            .data
+            .subscribe(data => {
+                this.type = data.type;
+                if (this.type === 'category') {
+                    combineLatest([this.activatedRoute.params, this.activatedRoute.queryParams])
+                        .pipe(map(results => ({params: results[0].code, query: results[1]})))
+                        .subscribe(results => {
+                            this.categoryCode = results.params;
 
-                        let page = results.query['page'];
-                        this.facets.clear()
-                        Object.keys(results.query)
-                            .filter(f => f.startsWith('f('))
-                            .forEach(f => {
+                            let page = results.query['page'];
+                            this.initFacets(results)
+                            this.initSort(results)
 
-                                let facetName = f.substring(f.indexOf('(') + 1, f.lastIndexOf(')'));
-                                let values = results.query[f].split(',')
-                                this.facets.set(facetName, values)
-                            })
-                        if (page != null || page != undefined) {
-                            this.page = page;
-                        } else {
-                            this.page = 0;
-                        }
+                            if (page != null || page != undefined) {
+                                this.page = page;
+                            } else {
+                                this.page = 0;
+                            }
 
-                        this.onParamChange.next();
-                    });
-            } else {
-                // this.activatedRoute
-                //     .queryParams
-                //     .subscribe(params => {
-                //         this.search.searchQuery(params['q']).subscribe(data => this.searchResult = data);
-                //     });
-            }
-        });
+                            this.onParamChange.next();
+                        });
+                } else {
+                    // this.activatedRoute
+                    //     .queryParams
+                    //     .subscribe(params => {
+                    //         this.search.searchQuery(params['q']).subscribe(data => this.searchResult = data);
+                    //     });
+                }
+            });
 
+    }
+
+    private initSort(results: any) {
+        Object.keys(results.query)
+            .filter(f => f.startsWith('s('))
+            .forEach(f => {
+
+                let sortName = f.substring(f.indexOf('(') + 1, f.lastIndexOf(')'));
+                let direction = results.query[f]
+                this.sort = `${sortName}:${direction}`
+            })
+    }
+
+    private initFacets(results: any) {
+        this.facets.clear()
+        Object.keys(results.query)
+            .filter(f => f.startsWith('f('))
+            .forEach(f => {
+
+                let facetName = f.substring(f.indexOf('(') + 1, f.lastIndexOf(')'));
+                let values = results.query[f].split(',')
+                this.facets.set(facetName, values)
+            })
     }
 
 
@@ -136,15 +162,23 @@ export class ProductListPageComponent implements OnInit {
         }
 
         this.facets.forEach((values, key) => {
-            if(values != null && values.length > 0){
+            if (values != null && values.length > 0) {
                 params[`f(${key})`] = values.join(',');
             }
         })
+        let split = this.sort.split(':');
+        params[`s(${split[0]})`] = split[1];
 
         this.router.navigate(['.'], {
             relativeTo: this.activatedRoute,
             queryParams: params,
-            replaceUrl:true
+            replaceUrl: true
         });
+    }
+
+    updateSorting(s: any) {
+        this.sort = s;
+        this.updateUrl()
+        this.onParamChange.next()
     }
 }

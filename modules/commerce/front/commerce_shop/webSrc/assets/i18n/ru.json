@@ -10,7 +10,12 @@
   },
   "facet.group": {
     "subCategoryName": "Категории",
-    "colorName": "Цвет",
+    "colorNames": "Цвет",
     "size": "Размер"
+  },
+  "sort.variant": {
+    "new.desc": "Новые",
+    "price.desc": "Цена: макс.-> мин.",
+    "price.asc": "Цена: мин.-> макс."
   }
 }

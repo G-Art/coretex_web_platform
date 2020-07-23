@@ -20,8 +20,10 @@
     <!--=======  single sidebar widget  =======-->
 
     <div class="single-sidebar-widget" *ngFor="let facet of searchResult.facets">
-        <h2 class="single-sidebar-widget__title">{{'facet.group.' + facet.title | translate}}</h2>
-        <ul class="single-sidebar-widget__dropdown" id="single-sidebar-widget__dropdown">
+        <h2 class="single-sidebar-widget__title"
+            >{{'facet.group.' + facet.title | translate}}</h2>
+        <ul class="single-sidebar-widget__dropdown" id="single-sidebar-widget__dropdown"
+            >
             <li *ngFor="let fValue of facet.values">
                 <a *ngIf="fValue.count>0"
                    [style.color]="facets.has(facet.title) && facets.get(facet.title).includes(fValue.name) ? '#fab200' : null"

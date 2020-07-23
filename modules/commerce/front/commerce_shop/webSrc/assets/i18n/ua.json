@@ -11,7 +11,12 @@
 
   "facet.group": {
     "subCategoryName": "Катогорії",
-    "colorName": "Колір",
+    "colorNames": "Колір",
     "size": "Розмір"
+  },
+  "sort.variant": {
+    "new.desc": "Нові",
+    "price.desc": "Ціна: макс.-> мін.",
+    "price.asc": "Ціна: мін.-> макс."
   }
 }

@@ -7,6 +7,11 @@
     <bean id="codeSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="code"/>
     </bean>
+    <bean id="creationDateSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
+        <constructor-arg value="creationDate"/>
+        <property name="type"
+                  value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_DATE}"/>
+    </bean>
     <bean id="imagesSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="images"/>
         <property name="multiValue" value="true"/>
@@ -29,18 +34,21 @@
         <property name="type"
                   value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_TEXT}"/>
     </bean>
-    <bean id="parentProductSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
+    <bean id="parentProductSolrDocFieldConfig"
+          class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="parentProduct"/>
         <property name="type"
                   value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_UUID}"/>
     </bean>
-    <bean id="parentProductNameSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
+    <bean id="parentProductNameSolrDocFieldConfig"
+          class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="parentProductName"/>
         <property name="localized" value="true"/>
         <property name="type"
                   value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_TEXT}"/>
     </bean>
-    <bean id="parentProductCodeSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
+    <bean id="parentProductCodeSolrDocFieldConfig"
+          class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="parentProductCode"/>
     </bean>
     <bean id="baseProductSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
@@ -48,13 +56,15 @@
         <property name="type"
                   value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_UUID}"/>
     </bean>
-    <bean id="baseProductNameSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
+    <bean id="baseProductNameSolrDocFieldConfig"
+          class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="baseProductName"/>
         <property name="localized" value="true"/>
         <property name="type"
                   value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_TEXT}"/>
     </bean>
-    <bean id="baseProductCodeSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
+    <bean id="baseProductCodeSolrDocFieldConfig"
+          class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="baseProductCode"/>
         <property name="groupedBy" value="true"/>
     </bean>
@@ -77,7 +87,8 @@
         <property name="localeBeforeType" value="true"/>
     </bean>
 
-    <bean id="subCategoryNameSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
+    <bean id="subCategoryNameSolrDocFieldConfig"
+          class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="subCategoryName"/>
         <property name="multiValue" value="true"/>
         <property name="facet" value="true"/>
@@ -87,7 +98,13 @@
     </bean>
     <bean id="colorNameSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="colorName"/>
+        <property name="localized" value="true"/>
+        <property name="localeBeforeType" value="true"/>
+    </bean>
+    <bean id="colorNamesSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
+        <constructor-arg value="colorNames"/>
         <property name="facet" value="true"/>
+        <property name="multiValue" value="true"/>
         <property name="multiValueSelect" value="true"/>
         <property name="localized" value="true"/>
         <property name="localeBeforeType" value="true"/>
@@ -127,6 +144,10 @@
                     <constructor-arg index="1" value="baseProduct.code"/>
                 </bean>
                 <bean class="com.coretex.searchengine.solr.client.builders.impl.AdvancedGenericItemConfiguredSolrInputFieldProvider">
+                    <constructor-arg index="0" ref="creationDateSolrDocFieldConfig"/>
+                    <constructor-arg index="1" value="createDate"/>
+                </bean>
+                <bean class="com.coretex.searchengine.solr.client.builders.impl.AdvancedGenericItemConfiguredSolrInputFieldProvider">
                     <constructor-arg index="0" ref="baseProductSolrDocFieldConfig"/>
                     <constructor-arg index="1" value="baseProduct.baseProduct.uuid"/>
                 </bean>
@@ -158,6 +179,9 @@
                 <bean class="com.coretex.commerce.search.providers.ProductItemSubCategoryNamesSolrInputFieldProvider">
                     <constructor-arg ref="subCategoryNameSolrDocFieldConfig"/>
                 </bean>
+                <bean class="com.coretex.commerce.search.providers.ProductItemColorNamesSolrInputFieldProvider">
+                    <constructor-arg ref="colorNamesSolrDocFieldConfig"/>
+                </bean>
                 <bean class="com.coretex.searchengine.solr.client.builders.impl.AdvancedGenericItemConfiguredSolrInputFieldProvider">
                     <constructor-arg index="0" ref="colorNameSolrDocFieldConfig"/>
                     <constructor-arg index="1" value="baseProduct.style.styleName"/>
@@ -183,7 +207,34 @@
         </property>
     </bean>
 
-    <bean id="productSolrQueryConfigurationProvider" class="com.coretex.searchengine.solr.client.providers.impl.DefaultSolrQueryConfigurationProvider">
+    <bean id="newestSortConfig" class="com.coretex.searchengine.solr.client.providers.SolrSortConfig">
+        <property name="sortingFields">
+            <list>
+                <bean class="org.apache.commons.lang3.tuple.Pair" factory-method="of">
+                    <constructor-arg index="0" ref="creationDateSolrDocFieldConfig"/>
+                    <constructor-arg index="1" value="desc"/>
+                </bean>
+            </list>
+        </property>
+        <property name="includeScore" value="true"/>
+        <property name="scoreOrder" value="desc"/>
+    </bean>
+
+    <bean id="priceSortConfig" class="com.coretex.searchengine.solr.client.providers.SolrSortConfig">
+        <property name="sortingFields">
+            <list>
+                <bean class="org.apache.commons.lang3.tuple.Pair" factory-method="of">
+                    <constructor-arg index="0" ref="priceSolrDocFieldConfig"/>
+                    <constructor-arg index="1" value=""/>
+                </bean>
+            </list>
+        </property>
+        <property name="includeScore" value="true"/>
+        <property name="scoreOrder" value="desc"/>
+    </bean>
+
+    <bean id="productSolrQueryConfigurationProvider"
+          class="com.coretex.searchengine.solr.client.providers.impl.DefaultSolrQueryConfigurationProvider">
         <constructor-arg index="0">
             <set>
                 <ref bean="codeSolrDocFieldConfig"/>
@@ -199,39 +250,53 @@
                 <ref bean="categoryNameSolrDocFieldConfig"/>
                 <ref bean="categorySolrDocFieldConfig"/>
                 <ref bean="colorNameSolrDocFieldConfig"/>
+                <ref bean="colorNamesSolrDocFieldConfig"/>
                 <ref bean="colorCodeSolrDocFieldConfig"/>
                 <ref bean="sizeSolrDocFieldConfig"/>
                 <ref bean="baseProductNameSolrDocFieldConfig"/>
                 <ref bean="imagesSolrDocFieldConfig"/>
                 <ref bean="priceSolrDocFieldConfig"/>
                 <ref bean="subCategoryNameSolrDocFieldConfig"/>
+                <ref bean="creationDateSolrDocFieldConfig"/>
             </set>
         </constructor-arg>
         <property name="nGrouped" value="true"/>
         <property name="groupFacet" value="true"/>
         <property name="solrResponseFacetDataConverter" ref="solrResponseFacetDataConverter"/>
         <property name="solrResponseDataConverter" ref="solrResponseProductDataConverter"/>
-
+        <property name="solrSortConfigs">
+            <map>
+                <entry key="new" value-ref="newestSortConfig"/>
+                <entry key="price" value-ref="priceSortConfig"/>
+            </map>
+        </property>
     </bean>
 
-    <bean id="defaultSolrQueryBuilder" class="com.coretex.searchengine.solr.client.builders.impl.DefaultSolrQueryBuilder"
+    <bean id="defaultSolrQueryBuilder"
+          class="com.coretex.searchengine.solr.client.builders.impl.DefaultSolrQueryBuilder"
           scope="prototype">
         <constructor-arg index="0">
-            <map key-type="java.lang.Class" value-type="com.coretex.searchengine.solr.client.providers.SolrQueryConfigurationProvider">
-                <entry key="com.coretex.items.cx_core.VariantProductItem" value-ref="productSolrQueryConfigurationProvider"/>
+            <map key-type="java.lang.Class"
+                 value-type="com.coretex.searchengine.solr.client.providers.SolrQueryConfigurationProvider">
+                <entry key="com.coretex.items.cx_core.VariantProductItem"
+                       value-ref="productSolrQueryConfigurationProvider"/>
             </map>
         </constructor-arg>
         <property name="includeScore" value="true"/>
     </bean>
 
-    <bean id="defaultSolrResponseConverter" class="com.coretex.searchengine.solr.client.impl.DefaultSolrResponseConverter">
+    <bean id="defaultSolrResponseConverter"
+          class="com.coretex.searchengine.solr.client.impl.DefaultSolrResponseConverter">
         <constructor-arg index="0">
-            <map key-type="java.lang.Class" value-type="com.coretex.searchengine.solr.client.providers.SolrQueryConfigurationProvider">
-                <entry key="com.coretex.items.cx_core.VariantProductItem" value-ref="productSolrQueryConfigurationProvider"/>
+            <map key-type="java.lang.Class"
+                 value-type="com.coretex.searchengine.solr.client.providers.SolrQueryConfigurationProvider">
+                <entry key="com.coretex.items.cx_core.VariantProductItem"
+                       value-ref="productSolrQueryConfigurationProvider"/>
             </map>
         </constructor-arg>
     </bean>
 
     <alias name="defaultSolrResponseProductDataConverter" alias="solrResponseProductDataConverter"/>
-    <bean id="defaultSolrResponseProductDataConverter" class="com.coretex.commerce.search.converters.DefaultSolrResponseProductDataConverter"/>
+    <bean id="defaultSolrResponseProductDataConverter"
+          class="com.coretex.commerce.search.converters.DefaultSolrResponseProductDataConverter"/>
 </beans>

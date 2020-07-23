@@ -3,9 +3,11 @@ package com.coretex.searchengine.solr.client.providers.impl;
 import com.coretex.searchengine.solr.client.SolrResponseDataConverter;
 import com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig;
 import com.coretex.searchengine.solr.client.providers.SolrQueryConfigurationProvider;
+import com.coretex.searchengine.solr.client.providers.SolrSortConfig;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.annotation.PostConstruct;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,6 +16,7 @@ public class DefaultSolrQueryConfigurationProvider implements SolrQueryConfigura
 	private Set<SolrDocFieldConfig> solrDocFieldConfigs;
 
 	private SolrDocFieldConfig groupBySolrDocFieldConfig;
+	private Map<String, SolrSortConfig> solrSortConfigs;
 
 	private SolrResponseDataConverter solrResponseFacetDataConverter;
 	private SolrResponseDataConverter solrResponseDataConverter;
@@ -22,6 +25,7 @@ public class DefaultSolrQueryConfigurationProvider implements SolrQueryConfigura
 	private boolean facet = false;
 	private boolean groupFacet = false;
 	private int groupLimit = -1;
+	private int facetMinCount = 1;
 
 	public DefaultSolrQueryConfigurationProvider() {
 	}
@@ -90,12 +94,21 @@ public class DefaultSolrQueryConfigurationProvider implements SolrQueryConfigura
 	}
 
 	@Override
+	public int facetMinCount() {
+		return facetMinCount;
+	}
+
+	@Override
 	public boolean facet() {
 		return facet;
 	}
 
 	public void setGroupFacet(boolean groupFacet) {
 		this.groupFacet = groupFacet;
+	}
+
+	public void setFacetMinCount(int facetMinCount) {
+		this.facetMinCount = facetMinCount;
 	}
 
 	@Override
@@ -114,5 +127,14 @@ public class DefaultSolrQueryConfigurationProvider implements SolrQueryConfigura
 
 	public void setSolrResponseDataConverter(SolrResponseDataConverter solrResponseDataConverter) {
 		this.solrResponseDataConverter = solrResponseDataConverter;
+	}
+
+	@Override
+	public Map<String, SolrSortConfig> solrSortConfigs() {
+		return solrSortConfigs;
+	}
+
+	public void setSolrSortConfigs(Map<String, SolrSortConfig> solrSortConfigs) {
+		this.solrSortConfigs = solrSortConfigs;
 	}
 }

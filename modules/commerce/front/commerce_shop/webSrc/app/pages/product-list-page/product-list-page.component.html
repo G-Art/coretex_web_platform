@@ -48,7 +48,10 @@
                 <div class="col-lg-9 order-1 order-lg-2">
                     <!--=======  shop content wrapper  =======-->
                     <app-product-grid [searchResult]="searchResult"
-                                      [showSkeleton]="showSkeleton"></app-product-grid>
+                                      [showSkeleton]="showSkeleton"
+                                      [sort]="sort"
+                                      [sorts]="sorts"
+                                      (sortingChanged)="updateSorting($event)"></app-product-grid>
                     <!--=======  End of shop content wrapper  =======-->
                 </div>
             </div>

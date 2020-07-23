@@ -18,6 +18,8 @@ public class SolrSearchRequest<C> implements Serializable {
 	private final MultiValuedMap<String, String> filters = new ArrayListValuedHashMap<>();
 	private int page = 0;
 	private int count = 12;
+	private String sortCode;
+	private String sortOrder;
 
 	public SolrSearchRequest(Class<C> resultType) {
 		this.resultType = resultType;
@@ -77,5 +79,18 @@ public class SolrSearchRequest<C> implements Serializable {
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
+	}
+
+	public void setSort(String code, String order) {
+		this.sortCode = code;
+		this.sortOrder = order;
+	}
+
+	public String getSortCode() {
+		return sortCode;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
 	}
 }

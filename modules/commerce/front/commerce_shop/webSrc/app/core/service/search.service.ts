@@ -19,7 +19,7 @@ export class SearchService {
 
     }
 
-    searchCategory(code: string, page?: number, facets?: Map<string, string[]>): void {
+    searchCategory(code: string, page?: number, facets?: Map<string, string[]>, sort?: string): void {
 
         let params = new HttpParams();
         if (facets) {
@@ -28,6 +28,10 @@ export class SearchService {
                     params = params.append(`f(${key})`, value);
                 })
             })
+        }
+        if (sort) {
+            let strings = sort.split(':');
+            params = params.append(`s(${strings[0]})`, strings[1]);
         }
 
         this.http.get<any>(`${this.apiUrl}/categories/${code}/page${page ? '/' + page : ''}`, {

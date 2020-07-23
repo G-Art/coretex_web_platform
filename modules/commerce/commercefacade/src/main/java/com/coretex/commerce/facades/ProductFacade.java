@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public interface ProductFacade extends PageableDataTableFacade<ProductItem, MinimalProductData> {
 
-	SearchPageResult getCategoryPage(String code, int page, int size, Map<String, List<String>> filter);
+	SearchPageResult getCategoryPage(String code, int page, int size, Map<String, List<String>> filter, Map<String, List<String>> sort);
 
 	ProductData getByCode(String code);
 	ProductData getByUUID(UUID uuid);
