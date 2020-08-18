@@ -12,9 +12,18 @@ public class ShortProductData extends GenericItemData {
 	private String priceDiscount;
 	private Boolean hotBadge;
 	private String discountBadgeInfo;
+	private String defaultVariantCode;
 
 	private Set<ShortVariantProductData> variants;
 
+
+	public String getDefaultVariantCode() {
+		return defaultVariantCode;
+	}
+
+	public void setDefaultVariantCode(String defaultVariantCode) {
+		this.defaultVariantCode = defaultVariantCode;
+	}
 
 	public String getCode() {
 		return code;

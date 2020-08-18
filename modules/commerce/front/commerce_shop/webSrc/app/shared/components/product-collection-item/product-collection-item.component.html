@@ -8,7 +8,7 @@
             <span *ngIf="displaySizeVariant.hotBadge" class="hot">Hot</span>
         </div>
         <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
-            <img *ngFor="let img of displayStyleVariant.images"
+            <img *ngFor="let img of displayStyleVariant.images | slice:0:2; let i=index"
                  [hidden]="imageLoader"
                  [src]="'/v1'+img.path"
                  (load)="imageLoader = false;"

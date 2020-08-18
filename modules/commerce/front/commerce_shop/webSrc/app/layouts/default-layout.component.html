@@ -1,4 +1,3 @@
-
 <!--====================  header area ====================-->
 <app-header [store]="currentStore" (toggleMobileMenuEvent)="toggleMobileMenuEvent($event)"></app-header>
 <!--====================  End of header area  ====================-->
@@ -27,8 +26,8 @@
 
     <div class="search-overlay-content">
         <div class="input-box">
-            <form action="index.html">
-                <input type="search" placeholder="Search Products...">
+            <form ngNoForm action="/search">
+                <input type="search" name="q" placeholder="Search Products...">
             </form>
         </div>
         <div class="search-hint">

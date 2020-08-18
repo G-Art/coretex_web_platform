@@ -30,6 +30,7 @@ export class ProductListPageComponent implements OnInit {
     ]
 
     type: string = 'category';
+    query: string;
 
     showSkeleton: boolean = false;
 
@@ -45,7 +46,12 @@ export class ProductListPageComponent implements OnInit {
         this.onParamChange
             .subscribe(value => {
                 this.showSkeleton = true;
-                this.search.searchCategory(this.categoryCode, this.page, this.facets, this.sort);
+                if (this.type === 'category'){
+                    this.search.searchCategory(this.categoryCode, this.page, this.facets, this.sort);
+                }
+                if (this.type === 'search'){
+                    this.search.searchText(this.query, this.page, this.facets, this.sort);
+                }
             });
         this.search
             .searchResult
@@ -63,25 +69,15 @@ export class ProductListPageComponent implements OnInit {
                         .pipe(map(results => ({params: results[0].code, query: results[1]})))
                         .subscribe(results => {
                             this.categoryCode = results.params;
-
-                            let page = results.query['page'];
-                            this.initFacets(results)
-                            this.initSort(results)
-
-                            if (page != null || page != undefined) {
-                                this.page = page;
-                            } else {
-                                this.page = 0;
-                            }
-
-                            this.onParamChange.next();
+                            this.init(results)
                         });
-                } else {
-                    // this.activatedRoute
-                    //     .queryParams
-                    //     .subscribe(params => {
-                    //         this.search.searchQuery(params['q']).subscribe(data => this.searchResult = data);
-                    //     });
+                } else if (this.type === 'search') {
+                    combineLatest([this.activatedRoute.params, this.activatedRoute.queryParams])
+                        .pipe(map(results => ({query: results[1]})))
+                        .subscribe(results => {
+                            this.query = results.query['q'];
+                            this.init(results)
+                        });
                 }
             });
 
@@ -108,6 +104,20 @@ export class ProductListPageComponent implements OnInit {
                 let values = results.query[f].split(',')
                 this.facets.set(facetName, values)
             })
+    }
+
+    private init(results: any) {
+        this.initFacets(results)
+        this.initSort(results)
+
+        let page = results.query['page'];
+        if (page != null || page != undefined) {
+            this.page = page;
+        } else {
+            this.page = 0;
+        }
+
+        this.onParamChange.next();
     }
 
 
@@ -139,7 +149,7 @@ export class ProductListPageComponent implements OnInit {
             let strings = this.facets.get(name);
             const index = strings.indexOf(value);
             if (index > -1) {
-                strings.splice(index);
+                strings.splice(index, 1);
             }
 
             this.updateUrl()
@@ -159,6 +169,9 @@ export class ProductListPageComponent implements OnInit {
             })
         if (this.page > 0) {
             params['page'] = this.page;
+        }
+        if (this.query){
+            params['q'] = this.query;
         }
 
         this.facets.forEach((values, key) => {

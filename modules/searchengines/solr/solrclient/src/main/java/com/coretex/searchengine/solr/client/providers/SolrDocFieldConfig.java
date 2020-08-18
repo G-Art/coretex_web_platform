@@ -6,6 +6,10 @@ import java.util.Locale;
 
 public class SolrDocFieldConfig {
 
+	public enum WildcardQueryType {
+		PREFIX,POSTFIX,PREFIX_AND_POSTFIX
+	}
+
 	public static final String SOLR_FIELD_TYPE_BOOLEAN = "boolean";
 	public static final String SOLR_FIELD_TYPE_INT = "int";
 	public static final String SOLR_FIELD_TYPE_LONG = "long";
@@ -23,8 +27,19 @@ public class SolrDocFieldConfig {
 	private boolean multiValueSelect = false;
 	private boolean localeBeforeType = false;
 	private boolean facet = false;
-	private int boost = 0;
 	private boolean groupedBy = false;
+
+	private boolean query=false;
+	private double queryBoost = 1.0d;
+	private boolean phraseQuery=false;
+	private double phraseQueryBoost = 1.0d;
+	private double phraseQuerySlop = 20.0d;
+	private boolean fuzzyQuery=false;
+	private double fuzzyQueryBoost = 1.0d;
+	private int fuzzyQueryFuzziness = 1;
+	private boolean wildcardQuery=false;
+	private double wildcardQueryBoost = 1.0d;
+	private WildcardQueryType wildcardQueryType = WildcardQueryType.POSTFIX;
 
 	public SolrDocFieldConfig(String name) {
 		this.name = name;
@@ -60,14 +75,6 @@ public class SolrDocFieldConfig {
 
 	public void setMultiValue(boolean multiValue) {
 		this.multiValue = multiValue;
-	}
-
-	public int getBoost() {
-		return boost;
-	}
-
-	public void setBoost(int boost) {
-		this.boost = boost;
 	}
 
 	public boolean isGroupedBy() {
@@ -111,5 +118,97 @@ public class SolrDocFieldConfig {
 
 	public void setMultiValueSelect(boolean multiValueSelect) {
 		this.multiValueSelect = multiValueSelect;
+	}
+
+	public boolean isInSearch(){
+		return query || phraseQuery || fuzzyQuery || wildcardQuery;
+	}
+
+	public boolean isQuery() {
+		return query;
+	}
+
+	public void setQuery(boolean query) {
+		this.query = query;
+	}
+
+	public boolean isPhraseQuery() {
+		return phraseQuery;
+	}
+
+	public void setPhraseQuery(boolean phraseQuery) {
+		this.phraseQuery = phraseQuery;
+	}
+
+	public boolean isFuzzyQuery() {
+		return fuzzyQuery;
+	}
+
+	public void setFuzzyQuery(boolean fuzzyQuery) {
+		this.fuzzyQuery = fuzzyQuery;
+	}
+
+	public boolean isWildcardQuery() {
+		return wildcardQuery;
+	}
+
+	public void setWildcardQuery(boolean wildcardQuery) {
+		this.wildcardQuery = wildcardQuery;
+	}
+
+	public double getQueryBoost() {
+		return queryBoost;
+	}
+
+	public void setQueryBoost(double queryBoost) {
+		this.queryBoost = queryBoost;
+	}
+
+	public double getPhraseQueryBoost() {
+		return phraseQueryBoost;
+	}
+
+	public void setPhraseQueryBoost(double phraseQueryBoost) {
+		this.phraseQueryBoost = phraseQueryBoost;
+	}
+
+	public double getPhraseQuerySlop() {
+		return phraseQuerySlop;
+	}
+
+	public void setPhraseQuerySlop(double phraseQuerySlop) {
+		this.phraseQuerySlop = phraseQuerySlop;
+	}
+
+	public double getFuzzyQueryBoost() {
+		return fuzzyQueryBoost;
+	}
+
+	public void setFuzzyQueryBoost(double fuzzyQueryBoost) {
+		this.fuzzyQueryBoost = fuzzyQueryBoost;
+	}
+
+	public int getFuzzyQueryFuzziness() {
+		return fuzzyQueryFuzziness;
+	}
+
+	public void setFuzzyQueryFuzziness(int fuzzyQueryFuzziness) {
+		this.fuzzyQueryFuzziness = fuzzyQueryFuzziness;
+	}
+
+	public double getWildcardQueryBoost() {
+		return wildcardQueryBoost;
+	}
+
+	public void setWildcardQueryBoost(double wildcardQueryBoost) {
+		this.wildcardQueryBoost = wildcardQueryBoost;
+	}
+
+	public WildcardQueryType getWildcardQueryType() {
+		return wildcardQueryType;
+	}
+
+	public void setWildcardQueryType(WildcardQueryType wildcardQueryType) {
+		this.wildcardQueryType = wildcardQueryType;
 	}
 }

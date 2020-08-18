@@ -6,6 +6,9 @@
 
     <bean id="codeSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="code"/>
+
+        <property name="query" value="true"/>
+        <property name="queryBoost" value="100"/>
     </bean>
     <bean id="creationDateSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="creationDate"/>
@@ -24,12 +27,29 @@
     </bean>
     <bean id="nameSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="name"/>
+
+        <property name="query" value="true"/>
+        <property name="queryBoost" value="75"/>
+
+        <property name="phraseQuery" value="true"/>
+        <property name="phraseQueryBoost" value="200"/>
+
+        <property name="fuzzyQuery" value="true"/>
+        <property name="fuzzyQueryBoost" value="70"/>
+
+        <property name="wildcardQuery" value="true"/>
+        <property name="wildcardQueryBoost" value="100"/>
+
         <property name="localized" value="true"/>
         <property name="type"
                   value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_TEXT}"/>
     </bean>
     <bean id="descriptionSolrDocFieldConfig" class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="description"/>
+
+        <property name="phraseQuery" value="true"/>
+        <property name="phraseQueryBoost" value="15"/>
+
         <property name="localized" value="true"/>
         <property name="type"
                   value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_TEXT}"/>
@@ -40,13 +60,6 @@
         <property name="type"
                   value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_UUID}"/>
     </bean>
-    <bean id="parentProductNameSolrDocFieldConfig"
-          class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
-        <constructor-arg value="parentProductName"/>
-        <property name="localized" value="true"/>
-        <property name="type"
-                  value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_TEXT}"/>
-    </bean>
     <bean id="parentProductCodeSolrDocFieldConfig"
           class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
         <constructor-arg value="parentProductCode"/>
@@ -55,13 +68,6 @@
         <constructor-arg value="baseProduct"/>
         <property name="type"
                   value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_UUID}"/>
-    </bean>
-    <bean id="baseProductNameSolrDocFieldConfig"
-          class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
-        <constructor-arg value="baseProductName"/>
-        <property name="localized" value="true"/>
-        <property name="type"
-                  value="#{T(com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig).SOLR_FIELD_TYPE_TEXT}"/>
     </bean>
     <bean id="baseProductCodeSolrDocFieldConfig"
           class="com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig">
@@ -129,11 +135,13 @@
                 <bean class="com.coretex.searchengine.solr.client.builders.impl.GenericItemConfiguredSolrInputFieldProvider">
                     <constructor-arg ref="codeSolrDocFieldConfig"/>
                 </bean>
-                <bean class="com.coretex.searchengine.solr.client.builders.impl.GenericItemConfiguredSolrInputFieldProvider">
+                <bean class="com.coretex.searchengine.solr.client.builders.impl.AdvancedGenericItemConfiguredSolrInputFieldProvider">
                     <constructor-arg ref="nameSolrDocFieldConfig"/>
+                    <constructor-arg index="1" value="baseProduct.baseProduct.name"/>
                 </bean>
-                <bean class="com.coretex.searchengine.solr.client.builders.impl.GenericItemConfiguredSolrInputFieldProvider">
+                <bean class="com.coretex.searchengine.solr.client.builders.impl.AdvancedGenericItemConfiguredSolrInputFieldProvider">
                     <constructor-arg ref="descriptionSolrDocFieldConfig"/>
+                    <constructor-arg index="1" value="baseProduct.baseProduct.description"/>
                 </bean>
                 <bean class="com.coretex.searchengine.solr.client.builders.impl.AdvancedGenericItemConfiguredSolrInputFieldProvider">
                     <constructor-arg index="0" ref="parentProductSolrDocFieldConfig"/>
@@ -145,7 +153,7 @@
                 </bean>
                 <bean class="com.coretex.searchengine.solr.client.builders.impl.AdvancedGenericItemConfiguredSolrInputFieldProvider">
                     <constructor-arg index="0" ref="creationDateSolrDocFieldConfig"/>
-                    <constructor-arg index="1" value="createDate"/>
+                    <constructor-arg index="1" value="baseProduct.baseProduct.createDate"/>
                 </bean>
                 <bean class="com.coretex.searchengine.solr.client.builders.impl.AdvancedGenericItemConfiguredSolrInputFieldProvider">
                     <constructor-arg index="0" ref="baseProductSolrDocFieldConfig"/>
@@ -194,15 +202,6 @@
                     <constructor-arg index="0" ref="sizeSolrDocFieldConfig"/>
                     <constructor-arg index="1" value="size"/>
                 </bean>
-
-                <bean class="com.coretex.searchengine.solr.client.builders.impl.AdvancedGenericItemConfiguredSolrInputFieldProvider">
-                    <constructor-arg index="0" ref="parentProductNameSolrDocFieldConfig"/>
-                    <constructor-arg index="1" value="baseProduct.name"/>
-                </bean>
-                <bean class="com.coretex.searchengine.solr.client.builders.impl.AdvancedGenericItemConfiguredSolrInputFieldProvider">
-                    <constructor-arg index="0" ref="baseProductNameSolrDocFieldConfig"/>
-                    <constructor-arg index="1" value="baseProduct.baseProduct.name"/>
-                </bean>
             </list>
         </property>
     </bean>
@@ -243,7 +242,6 @@
                 <ref bean="baseProductCodeSolrDocFieldConfig"/>
                 <ref bean="descriptionSolrDocFieldConfig"/>
                 <ref bean="parentProductSolrDocFieldConfig"/>
-                <ref bean="parentProductNameSolrDocFieldConfig"/>
                 <ref bean="parentProductCodeSolrDocFieldConfig"/>
                 <ref bean="storeSolrDocFieldConfig"/>
                 <ref bean="storeCodeSolrDocFieldConfig"/>
@@ -253,7 +251,6 @@
                 <ref bean="colorNamesSolrDocFieldConfig"/>
                 <ref bean="colorCodeSolrDocFieldConfig"/>
                 <ref bean="sizeSolrDocFieldConfig"/>
-                <ref bean="baseProductNameSolrDocFieldConfig"/>
                 <ref bean="imagesSolrDocFieldConfig"/>
                 <ref bean="priceSolrDocFieldConfig"/>
                 <ref bean="subCategoryNameSolrDocFieldConfig"/>

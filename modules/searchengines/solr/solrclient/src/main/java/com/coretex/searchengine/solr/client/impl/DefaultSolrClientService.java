@@ -84,7 +84,7 @@ public class DefaultSolrClientService implements SolrClientService {
 		return execute(client -> {
 
 			if (LOG.isDebugEnabled()) {
-				LOG.debug(client.toString());
+				LOG.debug(String.format("Solr query: [ %s ]", query.toString()));
 			}
 			var queryRequest = solrJsonQueryRequestFactory.create(query);
 			try {
@@ -146,4 +146,34 @@ public class DefaultSolrClientService implements SolrClientService {
 		});
 	}
 
+	@Override
+	public UpdateResponse deleteAll() {
+		return execute(client -> {
+			var updateRequest = solrUpdateRequestFactory.create(null);
+			updateRequest.deleteByQuery("*:*");
+			try {
+				LOG.info(":: [Delete all] solr command performing :: ");
+				return updateRequest.commit(client, coreName);
+			} catch (IOException | SolrServerException e) {
+				LOG.error("Solr document update error", e);
+				return null;
+			}
+		});
+	}
+
+	@Override
+	public void index(Stream<SolrInputDocument> docs){
+		LOG.info(":: Start solr indexing :: ");
+		deleteAll();
+		update(docs);
+		LOG.info(":: Finished solr indexing :: ");
+	}
+
+	@Override
+	public void index(Collection<SolrInputDocument> docs){
+		LOG.info(":: Start solr indexing :: ");
+		deleteAll();
+		update(docs);
+		LOG.info(":: Finished solr indexing :: ");
+	}
 }

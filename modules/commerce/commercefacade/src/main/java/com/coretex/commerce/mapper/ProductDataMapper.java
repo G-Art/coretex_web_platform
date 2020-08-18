@@ -41,8 +41,6 @@ public interface ProductDataMapper extends GenericDataMapper<ProductItem, Produc
 			}
 		}else {
 			productItem.getImages()
-					.stream()
-					.limit(2)
 					.forEach(image -> images.add(new ImageData(buildProductSmallImageUtils(image.getProduct().getStore(), image.getProduct().getCode(), image.getProductImage()))));
 		}
 

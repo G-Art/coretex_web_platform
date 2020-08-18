@@ -1,0 +1,75 @@
+{
+  "categories": [
+    {
+      "code": "сlothing",
+      "name": {
+        "en": "Сlothing",
+        "ru": "Одежда",
+        "ua": "Одяг"
+      },
+      "store": "DEFAULT",
+      "active": true
+    },
+    {
+      "code": "men",
+      "name": {
+        "en": "Men",
+        "ru": "Мужчины",
+        "ua": "Чоловіки"
+      },
+      "store": "DEFAULT",
+      "active": true
+    },
+    {
+      "code": "women",
+      "name": {
+        "en": "Women",
+        "ru": "Женщины",
+        "ua": "Жінки"
+      },
+      "store": "DEFAULT",
+      "active": true
+    },
+    {
+      "code": "t_shirts-tops_men",
+      "name": {
+        "en": "t-shirts & tops",
+        "ru": "Футболки и майки",
+        "ua": "Футболки та майки"
+      },
+      "store": "DEFAULT",
+      "active": true
+    },
+    {
+      "code": "t_shirts-tops_women",
+      "name": {
+        "en": "t-shirts & tops",
+        "ru": "Футболки и майки",
+        "ua": "Футболки та майки"
+      },
+      "store": "DEFAULT",
+      "active": true
+    }
+  ],
+  "hierarchy": [
+    {
+      "category": "сlothing",
+      "subCategories": [
+        "men",
+        "women"
+      ]
+    },
+    {
+      "category": "men",
+      "subCategories": [
+        "t_shirts-tops_men"
+      ]
+    },
+    {
+      "category": "women",
+      "subCategories": [
+        "t_shirts-tops_women"
+      ]
+    }
+  ]
+}

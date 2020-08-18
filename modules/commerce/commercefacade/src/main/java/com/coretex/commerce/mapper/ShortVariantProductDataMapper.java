@@ -55,8 +55,6 @@ public interface ShortVariantProductDataMapper extends GenericDataMapper<Variant
 			}
 		}else {
 			productItem.getImages()
-					.stream()
-					.limit(2)
 					.forEach(image -> images.add(new ImageData(buildProductSmallImageUtils(image.getProduct().getStore(), image.getProduct().getCode(), image.getProductImage()))));
 		}
 

@@ -50,4 +50,35 @@ export class SearchService {
         // return of(this.searchResult);
     }
 
+    searchText(query: string, page?: number, facets?: Map<string, string[]>, sort?: string): void {
+
+        let params = new HttpParams();
+        params = params.append('q', query)
+        if (facets) {
+            facets.forEach((values, key) => {
+                values.forEach(value => {
+                    params = params.append(`f(${key})`, value);
+                })
+            })
+        }
+        if (sort) {
+            let strings = sort.split(':');
+            params = params.append(`s(${strings[0]})`, strings[1]);
+        }
+
+        this.http.get<any>(`${this.apiUrl}/search/page${page ? '/' + page : ''}`, {
+            params: params,
+            observe: 'response'
+        }).pipe(
+            map(response => {
+                if (response.status === 400) {
+                    return 'Request failed.';
+                } else if (response.status === 200) {
+                    return response.body;
+                }
+            }),
+            share()
+        ).subscribe(next => this.searchResult.next(next));
+    }
+
 }

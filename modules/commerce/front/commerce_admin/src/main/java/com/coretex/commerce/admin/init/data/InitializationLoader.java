@@ -16,7 +16,6 @@ import com.coretex.items.cx_core.UserItem;
 import com.coretex.items.cx_core.VariantProductItem;
 import com.coretex.searchengine.solr.client.SolrClientService;
 import com.coretex.searchengine.solr.client.TypeSolrDocumentBuildersRegistry;
-import com.coretex.searchengine.solr.client.search.SolrSearchService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
@@ -51,9 +50,6 @@ public class InitializationLoader {
 
 	@Resource
 	private SolrClientService solrClientService;
-
-	@Resource
-	private SolrSearchService solrSearchService;
 
 	@Resource
 	private ItemService itemService;
@@ -158,7 +154,7 @@ public class InitializationLoader {
 							.filter(variantProductItem -> CollectionUtils.isEmpty(variantProductItem.getVariants()))
 							.map(this::buildSolrInput);
 
-					solrClientService.update(solrInputDocumentStream);
+					solrClientService.index(solrInputDocumentStream);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -240,8 +236,7 @@ public class InitializationLoader {
 	}
 
 	private void loadData() {
-
-			initData.initInitialData();
+		initData.initInitialData();
 	}
 
 

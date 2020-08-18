@@ -64,6 +64,8 @@
 
                     <div class="product-details-description-wrapper">
                         <h2 class="item-title">{{productDetail.name}}</h2>
+                        <h4>{{productStyleVariant.name}}</h4>
+                        <h5>{{productDetailVariant.name}}</h5>
                         <p class="price" *ngIf="productDetailVariant">
                             <span class="main-price"
                                   [ngClass]="{'discounted' : productDetailVariant.priceDiscount}">{{productDetailVariant.price}}</span>
@@ -71,7 +73,7 @@
                                   class="discounted-price">{{productDetailVariant.priceDiscount}}</span>
                         </p>
 
-                        <p class="description">{{productDetail.description}}</p>
+                        <p class="description" [innerHTML]="productDetail.description" ></p>
 
                         <div class="product-color" *ngIf="productDetailVariant">
                             <span class="product-details-title">COLOR: </span>
@@ -252,7 +254,7 @@
                                 <!--=======  description content  =======-->
 
                                 <div class="description-content">
-                                    <p class="long-desc">{{productDetail.description}}</p>
+                                    <p class="long-desc" [innerHTML]="productDetail.description" ></p>
 
                                     <p><b>Light source: Integrated LED (non-replaceable) with 30,000 hour life span.</b>
                                     </p>

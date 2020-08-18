@@ -15,6 +15,7 @@ import {DirectivesModule} from "./shared/directives/directives.module";
 import {NgxSkeletonLoaderModule} from "ngx-skeleton-loader";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AccordionModule} from "ngx-bootstrap/accordion";
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -40,6 +41,7 @@ import {AccordionModule} from "ngx-bootstrap/accordion";
         DirectivesModule,
         BrowserAnimationsModule,
         AccordionModule.forRoot(),
+        ReactiveFormsModule,
     ],
     providers: [],
     exports: [],

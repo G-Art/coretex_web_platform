@@ -9,6 +9,7 @@ import com.coretex.searchengine.solr.client.search.SolrSearchRequest;
 import com.coretex.searchengine.solr.client.search.SolrSearchResponse;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.solr.client.solrj.response.Group;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -47,6 +48,8 @@ public class DefaultSolrResponseProductDataConverter implements SolrResponseData
 		var shortProductData = new ShortProductData();
 		var groupValue = group.getGroupValue();
 		shortProductData.setCode(groupValue);
+		var first = IteratorUtils.first(group.getResult().iterator());
+		shortProductData.setDefaultVariantCode(getFieldValue(first, "code", solrQueryConfigurationProvider, response.getRequest()));
 		group.getResult()
 				.stream()
 				.collect(Collectors.groupingBy(doc -> this.<String>getFieldValue(doc, "parentProduct", solrQueryConfigurationProvider, response.getRequest()),
@@ -59,7 +62,7 @@ public class DefaultSolrResponseProductDataConverter implements SolrResponseData
 							solrQueryConfigurationProvider,
 							doc -> {
 								shortProductData.setUuid(UUID.fromString(getFieldValue(doc, "baseProduct", solrQueryConfigurationProvider, response.getRequest())));
-								shortProductData.setName(getFieldValue(doc, "baseProductName", solrQueryConfigurationProvider, response.getRequest()));
+								shortProductData.setName(getFieldValue(doc, "name", solrQueryConfigurationProvider, response.getRequest()));
 							});
 
 					if (CollectionUtils.isEmpty(shortProductData.getVariants())) {
@@ -81,7 +84,7 @@ public class DefaultSolrResponseProductDataConverter implements SolrResponseData
 
 		solrDocuments.forEach(solDoc -> {
 			shortVariantProductData.setCode(getFieldValue(solDoc, "parentProductCode", solrQueryConfigurationProvider, response.getRequest()));
-			shortVariantProductData.setName(getFieldValue(solDoc, "parentProductName", solrQueryConfigurationProvider, response.getRequest()));
+			shortVariantProductData.setName(getFieldValue(solDoc, "name", solrQueryConfigurationProvider, response.getRequest()));
 			shortVariantProductData.setColorCssCode(getFieldValue(solDoc, "colorCode", solrQueryConfigurationProvider, response.getRequest()));
 
 			shortVariantProductData.setImages(this.<String>getFieldValues(solDoc, "images", solrQueryConfigurationProvider, response.getRequest()).stream()

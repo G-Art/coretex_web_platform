@@ -35,9 +35,20 @@ export class ProductCollectionItemComponent implements OnInit {
     @Input()
     set product(value: ProductData) {
         this._product = value;
-        this.displayStyleVariant = this._product.variants.find(o => true);
-        if(this.displayStyleVariant){
-            this.displaySizeVariant = this.displayStyleVariant.variants.find(o => true);
+        for (let style of this._product.variants) {
+            for (let size of style.variants) {
+                if(size.code === this._product.defaultVariantCode){
+                    this.displayStyleVariant = style;
+                    this.displaySizeVariant = size;
+                    break;
+                }
+            }
+        }
+        if(!this.displayStyleVariant){
+            this.displayStyleVariant = this._product.variants.find(style => this);
+            if(this.displayStyleVariant){
+                this.displaySizeVariant = this.displayStyleVariant.variants.find(o => true);
+            }
         }
     }
 

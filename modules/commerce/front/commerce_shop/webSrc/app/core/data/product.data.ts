@@ -18,4 +18,5 @@ export class ProductData extends AbstractData {
     discountBadgeInfo:string;
 
     description:string;
+    defaultVariantCode:string;
 }

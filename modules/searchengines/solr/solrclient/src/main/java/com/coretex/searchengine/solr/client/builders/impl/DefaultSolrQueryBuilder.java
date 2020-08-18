@@ -55,7 +55,6 @@ public class DefaultSolrQueryBuilder implements SolrQueryBuilder {
 
 		solrQuery.setIncludeScore(includeScore);
 
-		buildQuery(solrQuery);
 		buildFl(solrQuery);
 		buildGroup(solrQuery);
 		if (Objects.nonNull(solrSearchRequest)) {
@@ -63,6 +62,7 @@ public class DefaultSolrQueryBuilder implements SolrQueryBuilder {
 			buildPaging(solrQuery);
 			buildFacet(solrQuery);
 			buildSort(solrQuery);
+			buildQuery(solrQuery);
 		}
 		return solrQuery;
 	}
@@ -196,10 +196,8 @@ public class DefaultSolrQueryBuilder implements SolrQueryBuilder {
 							facetTagsMap.get(facets.getName()), facets.createFullFieldName(), escapeQueryChars(value));
 		}
 		return facets.isLocalized() ?
-				format("{!tag=%s}%s:%s",
-						facetTagsMap.get(facets.getName()), facets.createFullFieldName(solrSearchRequest.getLocale()), escapeQueryChars(value)) :
-				format("{!tag=%s}%s:%s",
-						facetTagsMap.get(facets.getName()), facets.createFullFieldName(), escapeQueryChars(value));
+				format("%s:%s", facets.createFullFieldName(solrSearchRequest.getLocale()), escapeQueryChars(value)) :
+				format("%s:%s", facets.createFullFieldName(), escapeQueryChars(value));
 	}
 
 	private void buildPaging(SolrQuery solrQuery) {
@@ -230,11 +228,89 @@ public class DefaultSolrQueryBuilder implements SolrQueryBuilder {
 	}
 
 	private void buildQuery(SolrQuery solrQuery) {
-		if (queryType == QueryType.WITHOUT_BOOST) {
+		if (StringUtils.isNotBlank(solrSearchRequest.getSearchText())) {
+			solrQuery.setQuery(createQuery(queryType == QueryType.WITH_BOOST));
+		} else {
 			solrQuery.setQuery("*:*");
 		}
-		if (queryType == QueryType.WITH_BOOST) {
-			solrQuery.setQuery("*:*");
+	}
+
+	private String createQuery(boolean boost) {
+		var solrQueryConfigurationProvider = configurationProviderMap.get(solrSearchRequest.getResultType());
+		StringBuilder stringBuilder = new StringBuilder();
+
+		solrQueryConfigurationProvider.solrDocFieldConfigs()
+				.stream()
+				.filter(SolrDocFieldConfig::isInSearch)
+				.forEach(solrDocFieldConfig -> {
+
+					String fieldName;
+					if (solrDocFieldConfig.isLocalized()) {
+						fieldName = solrDocFieldConfig.createFullFieldName(solrSearchRequest.getLocale());
+					} else {
+						fieldName = solrDocFieldConfig.createFullFieldName();
+					}
+
+					if (solrDocFieldConfig.isQuery()) {
+						if (stringBuilder.length() > 0) {
+							stringBuilder.append(" OR ");
+						}
+						addQuery(stringBuilder, fieldName, solrDocFieldConfig, solrSearchRequest);
+					}
+					if (solrDocFieldConfig.isPhraseQuery()) {
+						if (stringBuilder.length() > 0) {
+							stringBuilder.append(" OR ");
+						}
+						addPhraseQuery(stringBuilder, fieldName, solrDocFieldConfig, solrSearchRequest);
+					}
+					if (solrDocFieldConfig.isWildcardQuery()) {
+						if (stringBuilder.length() > 0) {
+							stringBuilder.append(" OR ");
+						}
+						addWildcardQuery(stringBuilder, fieldName, solrDocFieldConfig, solrSearchRequest);
+					}
+					if (solrDocFieldConfig.isFuzzyQuery()) {
+						if (stringBuilder.length() > 0) {
+							stringBuilder.append(" OR ");
+						}
+						addFuzzyQuery(stringBuilder, fieldName, solrDocFieldConfig, solrSearchRequest);
+					}
+				});
+		return stringBuilder.toString();
+	}
+
+	private void addFuzzyQuery(StringBuilder stringBuilder, String fieldName, SolrDocFieldConfig solrDocFieldConfig, SolrSearchRequest<?> solrSearchRequest) {
+		if (solrDocFieldConfig.getFuzzyQueryBoost() > 1) {
+			stringBuilder.append(String.format("(%s:%s~%s^%.1f)", fieldName, solrSearchRequest.getSearchText(), solrDocFieldConfig.getFuzzyQueryFuzziness(), solrDocFieldConfig.getFuzzyQueryBoost()));
+		} else {
+			stringBuilder.append(String.format("(%s:%s~%s)", fieldName, solrSearchRequest.getSearchText(), solrDocFieldConfig.getFuzzyQueryFuzziness()));
+		}
+	}
+
+	private void addWildcardQuery(StringBuilder stringBuilder, String fieldName, SolrDocFieldConfig solrDocFieldConfig, SolrSearchRequest<?> solrSearchRequest) {
+		var wildcardQueryType = solrDocFieldConfig.getWildcardQueryType();
+		if (solrDocFieldConfig.getWildcardQueryBoost() > 1) {
+			var query = wildcardQueryType.equals(SolrDocFieldConfig.WildcardQueryType.PREFIX) ? "(%s:*%s^%.1f)" : wildcardQueryType.equals(SolrDocFieldConfig.WildcardQueryType.POSTFIX) ? "(%s:%s*^%.1f)" : "(%s:*%s*^%.1f)";
+			stringBuilder.append(String.format(query, fieldName, solrSearchRequest.getSearchText(), solrDocFieldConfig.getWildcardQueryBoost()));
+		} else {
+			var query = wildcardQueryType.equals(SolrDocFieldConfig.WildcardQueryType.PREFIX) ? "(%s:*%s)" : wildcardQueryType.equals(SolrDocFieldConfig.WildcardQueryType.POSTFIX) ? "(%s:%s*)" : "(%s:*%s*)";
+			stringBuilder.append(String.format(query, fieldName, solrSearchRequest.getSearchText()));
+		}
+	}
+
+	private void addPhraseQuery(StringBuilder stringBuilder, String fieldName, SolrDocFieldConfig solrDocFieldConfig, SolrSearchRequest<?> solrSearchRequest) {
+		if (solrDocFieldConfig.getPhraseQueryBoost() > 1) {
+			stringBuilder.append(String.format("(%s:\"%s\"~%.1f^%.1f)", fieldName, solrSearchRequest.getSearchText(), solrDocFieldConfig.getPhraseQuerySlop(), solrDocFieldConfig.getPhraseQueryBoost()));
+		} else {
+			stringBuilder.append(String.format("(%s:\"%s\"~%.1f)", fieldName, solrSearchRequest.getSearchText(), solrDocFieldConfig.getPhraseQuerySlop()));
+		}
+	}
+
+	private void addQuery(StringBuilder stringBuilder, String fieldName, SolrDocFieldConfig solrDocFieldConfig, SolrSearchRequest<?> solrSearchRequest) {
+		if (solrDocFieldConfig.getQueryBoost() > 1) {
+			stringBuilder.append(String.format("(%s:%s^%.1f)", fieldName, solrSearchRequest.getSearchText(), solrDocFieldConfig.getQueryBoost()));
+		} else {
+			stringBuilder.append(String.format("(%s:%s)", fieldName, solrSearchRequest.getSearchText()));
 		}
 	}
 

@@ -2,12 +2,14 @@ package com.coretex.commerce.mapper;
 
 import com.coretex.commerce.data.ImageData;
 import com.coretex.commerce.data.VariantProductData;
+import com.coretex.items.cx_core.ProductAvailabilityItem;
 import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.cx_core.SizeVariantProductItem;
 import com.coretex.items.cx_core.StoreItem;
 import com.coretex.items.cx_core.StyleVariantProductItem;
 import com.coretex.items.cx_core.VariantProductItem;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
 import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
@@ -16,6 +18,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 
 import java.math.RoundingMode;
+import java.util.Collection;
 import java.util.Objects;
 
 import static com.coretex.commerce.core.utils.ProductUtils.buildProductSmallImageUtils;
@@ -84,8 +87,6 @@ public interface VariantProductDataMapper extends GenericDataMapper<VariantProdu
 			}
 		} else {
 			productItem.getImages()
-					.stream()
-					.limit(2)
 					.forEach(image -> images.add(new ImageData(buildProductSmallImageUtils(image.getProduct().getStore(), image.getProduct().getCode(), image.getProductImage()))));
 		}
 
@@ -93,10 +94,13 @@ public interface VariantProductDataMapper extends GenericDataMapper<VariantProdu
 	}
 
 	default String getPrice(ProductItem productItem) {
-		return productItem.getAvailabilities().stream()
+		var availabilities = getAvailabilities(productItem);
+		return availabilities
+				.stream()
 				.findFirst()
 				.map(productAvailabilityItem ->
-						productAvailabilityItem.getPrices().stream()
+						productAvailabilityItem.getPrices()
+								.stream()
 								.findFirst()
 								.map(productPriceItem -> productPriceItem.getProductPriceAmount()
 										.setScale(2, RoundingMode.HALF_UP)
@@ -104,6 +108,19 @@ public interface VariantProductDataMapper extends GenericDataMapper<VariantProdu
 								.orElse("0.00"))
 				.orElse("0.00");
 	}
+
+	private Collection<ProductAvailabilityItem> getAvailabilities(ProductItem source) {
+		if (CollectionUtils.isEmpty(source.getAvailabilities())) {
+			if (source instanceof VariantProductItem) {
+				return getAvailabilities(((VariantProductItem) source).getBaseProduct());
+			} else {
+				return Sets.newHashSet();
+			}
+		} else {
+			return source.getAvailabilities();
+		}
+	}
+
 
 	default String mapStore(StoreItem value) {
 		return value.getName();

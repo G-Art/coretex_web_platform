@@ -2,8 +2,10 @@ package com.coretex.commerce.admin.init.data;
 
 
 import com.coretex.commerce.admin.Constants;
+import com.coretex.commerce.admin.init.apparel.ApparelCategories;
+import com.coretex.commerce.core.dto.FileContentType;
+import com.coretex.commerce.core.dto.ImageContentFile;
 import com.coretex.commerce.core.services.CategoryService;
-import com.coretex.commerce.core.services.CountryService;
 import com.coretex.commerce.core.services.CurrencyService;
 import com.coretex.commerce.core.services.CustomerService;
 import com.coretex.commerce.core.services.GroupService;
@@ -13,10 +15,9 @@ import com.coretex.commerce.core.services.OrderService;
 import com.coretex.commerce.core.services.ProductImageService;
 import com.coretex.commerce.core.services.ProductService;
 import com.coretex.commerce.core.services.StoreService;
-import com.coretex.commerce.core.services.ZoneService;
+import com.coretex.commerce.core.utils.ProductUtils;
 import com.coretex.enums.cx_core.GroupTypeEnum;
 import com.coretex.enums.cx_core.OrderStatusEnum;
-import com.coretex.items.core.CountryItem;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.items.cx_core.CurrencyItem;
@@ -25,21 +26,48 @@ import com.coretex.items.cx_core.GroupItem;
 import com.coretex.items.cx_core.ManufacturerItem;
 import com.coretex.items.cx_core.OrderEntryItem;
 import com.coretex.items.cx_core.OrderItem;
+import com.coretex.items.cx_core.ProductAvailabilityItem;
+import com.coretex.items.cx_core.ProductImageItem;
 import com.coretex.items.cx_core.ProductItem;
+import com.coretex.items.cx_core.ProductPriceItem;
+import com.coretex.items.cx_core.SizeVariantProductItem;
 import com.coretex.items.cx_core.StoreItem;
-import com.coretex.items.cx_core.ZoneItem;
+import com.coretex.items.cx_core.StyleDescriptionItem;
+import com.coretex.items.cx_core.StyleVariantProductItem;
+import com.coretex.items.cx_core.VariantProductItem;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.LocaleUtils;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.Reader;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.UUID;
 
 import static com.coretex.commerce.core.constants.Constants.DEFAULT_STORE;
 
@@ -47,6 +75,9 @@ import static com.coretex.commerce.core.constants.Constants.DEFAULT_STORE;
 public class InitStoreData implements InitData {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(InitStoreData.class);
+	public static final String STORES = "stores";
+	public static final String BASE_PRODUCT = "baseProduct";
+	public static final String BASE_CODE = "baseCode";
 
 	@Resource
 	private InitProductUtil initProductUtil;
@@ -55,19 +86,10 @@ public class InitStoreData implements InitData {
 	private ProductService productService;
 
 	@Resource
-	private ProductImageService productImageService;
-
-	@Resource
 	private CategoryService categoryService;
 
 	@Resource
 	private LocaleService localeService;
-
-	@Resource
-	private CountryService countryService;
-
-	@Resource
-	private ZoneService zoneService;
 
 	@Resource
 	private CustomerService customerService;
@@ -90,17 +112,240 @@ public class InitStoreData implements InitData {
 	@Resource
 	private StoreService storeService;
 
-	public void initInitialData() {
+	@Resource
+	private ResourceLoader resourceLoader;
 
+	@Resource
+	protected ProductImageService productImageService;
+
+	@Resource
+	private ObjectMapper jacksonObjectMapper;
+
+	public void initInitialData() {
+		initSampleData();
+		initApparelData();
+
+	}
+
+	private void initApparelData() {
+		LOGGER.info("Init apparel data");
+		loadApparelCategories();
+		loadApparelProducts();
+		LOGGER.info("Apparel data loaded");
+	}
+
+	private void loadApparelProducts() {
+		org.springframework.core.io.Resource apparelProducts = resourceLoader.getResource("classpath:/apparel/apparelProducts.csv");
+		try (Reader reader = Files.newBufferedReader(apparelProducts.getFile().toPath())) {
+			CSVParser csvParser =
+					new CSVParser(
+							reader,
+							CSVFormat.DEFAULT
+									.withFirstRecordAsHeader()
+									.withIgnoreHeaderCase()
+									.withTrim());
+			var dataset = csvParser.getRecords();
+
+			ProductItem product = null;
+			for (CSVRecord record : dataset) {
+				var stores = record.get(STORES);
+				var splitedStores = stores.split(";");// tip for a future
+				var baseProduct = BooleanUtils.toBoolean(record.get(BASE_PRODUCT));
+				var baseCode = record.get(BASE_CODE);
+				var store = storeService.getByCode(splitedStores[0]);
+
+				if (baseProduct && StringUtils.isNotBlank(baseCode)) {
+					product = getBaseProduct(baseCode, record);
+					product.setStore(store);
+				}
+				if (Objects.nonNull(product)) {
+					product.getVariants().add(creteVariant(product, record));
+					productService.save(product);
+				}
+			}
+
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+	}
+
+	private VariantProductItem creteVariant(ProductItem productBase, CSVRecord record) {
+		var colorVariantCode = record.get("colorVariantCode");
+		var variant = productService.getByCode(colorVariantCode);
+		if (Objects.nonNull(variant) && variant instanceof StyleVariantProductItem) {
+			return (VariantProductItem) variant;
+		}
+		variant = new StyleVariantProductItem();
+		variant.setCode(colorVariantCode);
+		variant.setStore(productBase.getStore());
+		((StyleVariantProductItem) variant).setBaseProduct(productBase);
+
+
+		var colorCode = record.get("colorCode");
+		var colorName = record.get("colorName");
+		var styleDescription = new StyleDescriptionItem();
+		styleDescription.setStyleName(colorName);
+		styleDescription.setCssColorCode(colorCode);
+
+		var stock = record.get("stock");
+
+		if (StringUtils.isNotBlank(stock)) {
+			ProductAvailabilityItem availabilityItem;
+			if (CollectionUtils.isEmpty(variant.getAvailabilities())) {
+				availabilityItem = new ProductAvailabilityItem();
+			} else {
+				availabilityItem = IterableUtils.first(variant.getAvailabilities());
+			}
+
+			availabilityItem.setProduct(variant);
+			availabilityItem.setProductQuantity(NumberUtils.toInt(stock, 0));
+
+			var price = record.get("price");
+			if (StringUtils.isNotBlank(price)) {
+				ProductPriceItem productPriceItem;
+				if (CollectionUtils.isEmpty(availabilityItem.getPrices())) {
+					productPriceItem = new ProductPriceItem();
+					productPriceItem.setCode("price_" + colorVariantCode);
+					productPriceItem.setProductPriceAmount(BigDecimal.valueOf(NumberUtils.toDouble(price, 0.0d)));
+
+					productPriceItem.setProductAvailability(availabilityItem);
+					availabilityItem.getPrices().add(productPriceItem);
+				}
+			}
+
+			variant.getAvailabilities().add(availabilityItem);
+		}
+
+		((StyleVariantProductItem) variant).setStyle(styleDescription);
+		var images = record.get("images");
+
+		if (StringUtils.isNotBlank(images)) {
+			addImages(images.split("\\|"), (StyleVariantProductItem) variant);
+		}
+
+		variant.getVariants().add(creteSizeVariant(variant, record));
+
+		return (VariantProductItem) variant;
+	}
+
+	private void addImages(String[] images, StyleVariantProductItem variant) {
+		if (Objects.nonNull(variant.getStyle())) {
+			Arrays.stream(images)
+					.forEach(image -> {
+						var i = ArrayUtils.indexOf(images, image);
+						var name = String.format("genImage_%s_%s_%s.jpg",
+								variant.getCode(),
+								variant.getStyle().getCssColorCode().replaceAll("#", ""),
+								i >= 0 ? i : UUID.randomUUID().toString());
+						try {
+							ClassPathResource classPathResource = new ClassPathResource(image);
+							InputStream inStream = classPathResource.getInputStream();
+							saveFile(inStream, name, variant);
+
+						} catch (Exception e) {
+							LOGGER.error(String.format("Error while reading file [%s]", image), e);
+						}
+					});
+		}
+	}
+
+	public void saveFile(InputStream fis, String name, ProductItem product) throws Exception {
+
+		if (fis == null) {
+			return;
+		}
+
+		final byte[] is = IOUtils.toByteArray(fis);
+		final ByteArrayInputStream inputStream = new ByteArrayInputStream(is);
+		final ImageContentFile cmsContentImage = new ImageContentFile();
+		cmsContentImage.setFileName(name);
+		cmsContentImage.setFile(inputStream);
+		cmsContentImage.setFileContentType(FileContentType.PRODUCT);
+
+		ProductImageItem productImage = new ProductImageItem();
+		productImage.setProductImage(name);
+		productImage.setProduct(product);
+		productImage.setProductImageUrl(ProductUtils.buildProductSmallImageUtils(product.getStore(), product.getCode(), name));
+		product.getImages().add(productImage);
+
+		productImageService.addProductImage(product, productImage, cmsContentImage);
+	}
+
+	private VariantProductItem creteSizeVariant(ProductItem variant, CSVRecord record) {
+		var code = record.get("code");
+		VariantProductItem size = (VariantProductItem) productService.getByCode(code);
+		if (Objects.isNull(size)) {
+			size = new SizeVariantProductItem();
+			size.setCode(code);
+		}
+		size.setStore(variant.getStore());
+		size.setBaseProduct(variant);
+
+		((SizeVariantProductItem) size).setSize(record.get("size"));
+
+		return size;
+	}
+
+	private ProductItem getBaseProduct(String baseCode, CSVRecord record) {
+		var baseProduct = productService.getByCode(baseCode);
+		if (Objects.isNull(baseProduct)) {
+			baseProduct = new ProductItem();
+			baseProduct.setCategory(categoryService.findByCode(record.get("category")));
+			baseProduct.setCode(baseCode);
+			baseProduct.setAvailable(true);
+			baseProduct.setName(record.get("name"));
+			baseProduct.setDescription(record.get("description"));
+			baseProduct.setPreOrder(false);
+			baseProduct.setProductShippable(true);
+
+		}
+		return baseProduct;
+	}
+
+	private void loadApparelCategories() {
+		LOGGER.info("Loading apparel categories...");
+		org.springframework.core.io.Resource apparelCategories = resourceLoader.getResource("classpath:/apparel/apparelCategory.json");
+
+		try {
+			InputStream xmlSource = apparelCategories.getInputStream();
+			ApparelCategories ac = jacksonObjectMapper.readValue(xmlSource, ApparelCategories.class);
+			ac.getCategories().forEach(apCategory -> {
+				var store = storeService.getByCode(apCategory.getStore());
+				CategoryItem cat = new CategoryItem();
+				cat.setStore(store);
+				cat.setCode(apCategory.getCode());
+				cat.setVisible(apCategory.getActive());
+
+				apCategory.getName()
+						.getAdditionalProperties()
+						.forEach((s, o) -> cat.setName(o.toString(), LocaleUtils.toLocale(s)));
+				categoryService.save(cat);
+
+			});
+			ac.getHierarchy()
+					.forEach(apHierarchy -> {
+						var cat = categoryService.findByCode(apHierarchy.getCategory());
+
+						apHierarchy.getSubCategories()
+								.forEach(subCatCode -> cat.getCategories().add(categoryService.findByCode(subCatCode)));
+						categoryService.save(cat);
+
+					});
+
+			LOGGER.info("Loading apparel categories \"SUCCESS\"");
+		} catch (Exception e) {
+			LOGGER.error("Loading apparel categories \"FAILURE\"", e);
+		}
+
+	}
+
+	private void initSampleData() {
 
 		LOGGER.info("Starting the initialization of test data");
 		Date date = new Date(System.currentTimeMillis());
 
 		//2 languages by default
 		LocaleItem en = localeService.getByIso("ru");
-
-		CountryItem canada = countryService.getByCode("UA");
-		ZoneItem zone = zoneService.getByCode("Kyiv_R");
 
 		//create a merchant
 		var s = storeService.getByCode(DEFAULT_STORE);
@@ -174,19 +419,6 @@ public class InitStoreData implements InitData {
 		categoryService.create(fiction);
 		allCategories.add(fiction);
 
-		CategoryItem business = new CategoryItem();
-		business.setStore(s);
-		business.setCode("business");
-		business.setVisible(true);
-
-		business.setName("Business");
-
-		business.setName("Affaires", Locale.FRENCH);
-
-		categoryService.create(business);
-		allCategories.add(business);
-
-
 		CategoryItem cloud = new CategoryItem();
 		cloud.setStore(s);
 		cloud.setCode("cloud");
@@ -247,8 +479,7 @@ public class InitStoreData implements InitData {
 		var productItem = generateTestProducts(300, manufacturerItemList, allCategories, s, date);
 
 
-
-		//Create a customer (user name[nick] : shopizer password : password)
+		//Create a customer (user name[nick] :: password)
 
 		CustomerItem customer = new CustomerItem();
 		customer.setStore(s);
@@ -309,7 +540,7 @@ public class InitStoreData implements InitData {
 
 	private ProductItem generateTestProducts(int count, List<ManufacturerItem> manufacturerItemList, List<CategoryItem> allCategories, StoreItem store, Date date) {
 
-		int r  = RandomUtils.nextInt(0, count);
+		int r = RandomUtils.nextInt(0, count);
 		ProductItem randomProduct = null;
 		for (int i = 0; i < count; i++) {
 			// Gen test product
@@ -321,7 +552,7 @@ public class InitStoreData implements InitData {
 
 			productService.create(product);
 
-			if(r == i){
+			if (r == i) {
 				randomProduct = product;
 			}
 		}

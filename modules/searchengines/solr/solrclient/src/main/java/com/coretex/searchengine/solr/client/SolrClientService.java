@@ -29,4 +29,10 @@ public interface SolrClientService{
 	UpdateResponse update(Collection<SolrInputDocument> docs);
 
 	UpdateResponse update(Stream<SolrInputDocument> docs);
+
+	UpdateResponse deleteAll();
+
+	void index(Stream<SolrInputDocument> docs);
+
+	void index(Collection<SolrInputDocument> docs);
 }

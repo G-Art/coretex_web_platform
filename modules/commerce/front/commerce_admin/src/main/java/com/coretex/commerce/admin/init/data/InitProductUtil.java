@@ -107,31 +107,13 @@ public class InitProductUtil {
 
 	public VariantProductItem creteStyleVariant(int index, StoreItem store, String codePrefix) {
 		var product = new StyleVariantProductItem();
+		var entries = Lists.newArrayList(colorVariants.entrySet());
+		var stringMapEntry = entries.get(index);
 		product.setCode(codePrefix + "-c00" + index);
-
-		product.setName("Test style variant product name en #" + index, Locale.ENGLISH);
-		product.setName("Тестовый (цвет) вариант продукт ru #" + index, LocaleUtils.toLocale("ru"));
-		product.setName("Тестовий (колір) варіант продукт ua #" + index, LocaleUtils.toLocale("ua"));
-
-		product.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
-				"sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
-				"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " +
-				"Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
-				"Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. #" + index, Locale.ENGLISH);
-		product.setDescription("Текст-«рыба» — это заготовленный, скопированный или собственноручно написанный текст для экономии времени, " +
-				"который вставляется в макет страницы для демонстрации его условного внешнего наполнения в процессе разработки или для тестирования шрифта. " +
-				"Текст-рыба также используется для проверки передачи текста по линиям связи, тестирования программ и печатных устройств. #" + index, LocaleUtils.toLocale("ru"));
-		product.setDescription("Lorem ipsum – назва класичного тексту-«риби». " +
-				"«Риба» – слово з жаргону дизайнерів, що позначає умовний, часто безглуздий текст, що вставляється в макет сторінки. " +
-				"Lorem ipsum являє собою спотворений уривок з філософського трактату Цицерона «Про межі добра і зла», " +
-				"написаного в 45 році до нашої ери латинською мовою." +
-				" Вперше цей текст був застосований для набору шрифтових зразків невідомим друкарем у XVI столітті. #" + index, LocaleUtils.toLocale("ua"));
 		product.setStore(store);
 		product.setAvailable(true);
 
 		var styleDescription = new StyleDescriptionItem();
-		var entries = Lists.newArrayList(colorVariants.entrySet());
-		var stringMapEntry = entries.get(index);
 		styleDescription.setCssColorCode(stringMapEntry.getKey());
 		stringMapEntry.getValue().forEach((locale, name) -> {
 			styleDescription.setStyleName(name, locale);
@@ -141,7 +123,7 @@ public class InitProductUtil {
 
 		var variants = RandomUtils.nextInt(1, 6);
 		for (int i = 0; i < variants; i++) {
-			product.getVariants().add(creteSizeVariant(i, store, product.getCode()));
+			product.getVariants().add(creteSizeVariant(i, store, product.getCode(), stringMapEntry));
 		}
 
 		try {
@@ -160,30 +142,12 @@ public class InitProductUtil {
 		return product;
 	}
 
-	public VariantProductItem creteSizeVariant(int index, StoreItem store, String codePrefix) {
+	public VariantProductItem creteSizeVariant(int index, StoreItem store, String codePrefix, Map.Entry<String, Map<Locale, String>> stringMapEntry) {
 		var product = new SizeVariantProductItem();
 		product.setCode(codePrefix + "-s00" + index);
-
-		product.setName("Test size variant product name en #" + index, Locale.ENGLISH);
-		product.setName("Тестовый (размер) вариант продукт ru #" + index, LocaleUtils.toLocale("ru"));
-		product.setName("Тестовий (розмір) варіант продукт ua #" + index, LocaleUtils.toLocale("ua"));
-
-		product.setDescription("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
-				"sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
-				"Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. " +
-				"Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
-				"Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. #" + index, Locale.ENGLISH);
-		product.setDescription("Текст-«рыба» — это заготовленный, скопированный или собственноручно написанный текст для экономии времени, " +
-				"который вставляется в макет страницы для демонстрации его условного внешнего наполнения в процессе разработки или для тестирования шрифта. " +
-				"Текст-рыба также используется для проверки передачи текста по линиям связи, тестирования программ и печатных устройств. #" + index, LocaleUtils.toLocale("ru"));
-		product.setDescription("Lorem ipsum – назва класичного тексту-«риби». " +
-				"«Риба» – слово з жаргону дизайнерів, що позначає умовний, часто безглуздий текст, що вставляється в макет сторінки. " +
-				"Lorem ipsum являє собою спотворений уривок з філософського трактату Цицерона «Про межі добра і зла», " +
-				"написаного в 45 році до нашої ери латинською мовою." +
-				" Вперше цей текст був застосований для набору шрифтових зразків невідомим друкарем у XVI столітті. #" + index, LocaleUtils.toLocale("ua"));
 		product.setStore(store);
 		product.setAvailable(true);
-		product.setSize("Size #"+index+10);
+		product.setSize("Size #" + index + 10);
 
 		// Availability
 		ProductAvailabilityItem availability = new ProductAvailabilityItem();
