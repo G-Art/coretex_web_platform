@@ -3,19 +3,17 @@ version '1.0-Alpha'
 
 buildscript {
     repositories {
-        maven {
-            url 'https://mymavenrepo.com/repo/JtNoX84ugvVTz5NACWuq/'
-            maven { url "https://repo.spring.io/milestone" }
-            maven { url 'https://jitpack.io' }
-            maven { url "https://repo.spring.io/libs-release-remote" }
-            maven { url 'http://www.datanucleus.org/downloads/maven2/'}
-            maven { url "https://jetbrains.bintray.com/trove4j/" }
-            maven { url 'https://mymavenrepo.com/repo/Er2QKn4UMp1axP0ll14Z/'}
-        }
+        mavenCentral()
+        mavenLocal()
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url 'https://jitpack.io' }
+        maven { url "https://repo.spring.io/libs-release-remote" }
+        maven { url "https://jetbrains.bintray.com/trove4j/" }
+        maven { url "https://repo.repsy.io/mvn/gerasimenko_art/coretex/"}
     }
     dependencies {
         classpath(group: 'com.coretex.build.plugin', name: 'build.plugin', version: '1.1-Beta')
-        classpath 'com.bmuschko:gradle-docker-plugin:6.6.1'
+        classpath(group: 'com.bmuschko', name: 'gradle-docker-plugin', version: '6.6.1')
     }
 }
 wrapper {
@@ -26,7 +24,7 @@ apply plugin: 'distribution'
 apply from: "gradle-build/config.gradle"
 apply plugin: 'build.plugin'
 apply from: "gradle-build/subprojects.gradle"
-apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: 'com.bmuschko.docker-remote-api'
 
 distributions {
     main {
@@ -48,6 +46,23 @@ distributions {
     }
 }
 
-distTar.enabled = false
+//distTar.enabled = false
 distZip.enabled = false
+
+import com.bmuschko.gradle.docker.tasks.image.*
+
+task createDockerfile(type: Dockerfile, dependsOn: distTar) {
+    destFile.set(project.layout.buildDirectory.file('distributions/Dockerfile'))
+    from('openjdk:11')
+    addFile("gm-commerce-1.0-Alpha.tar", "/opt/coretex/")
+    workingDir("/opt/coretex/gm-commerce-1.0-Alpha")
+    runCommand("./gradlew generate -x test --no-daemon --full-stacktrace")
+    exposePort(8080)
+}
+//
+task buildImage(type: DockerBuildImage) {
+    dependsOn createDockerfile
+    inputDir = file(createDockerfile.destFile).parentFile
+    images.add('gerasimenkoart/coretex_commerce:latest')
+}
 

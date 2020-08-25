@@ -42,6 +42,7 @@ public class SolrCommonParamsCommandBuilder implements CommandBuilder {
 			commandParams.add(this.solrInstance.getHostName());
 		}
 
+		commandParams.add("-force");
 		commandParams.add("-p");
 		commandParams.add(Integer.toString(this.solrInstance.getPort()));
 		if (StringUtils.isNotBlank(this.solrInstance.getMemory())) {

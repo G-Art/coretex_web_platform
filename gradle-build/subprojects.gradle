@@ -16,9 +16,8 @@ subprojects {
         mavenCentral()
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://repo.spring.io/libs-release-remote" }
-        maven { url 'http://www.datanucleus.org/downloads/maven2/'}
         maven { url "https://jetbrains.bintray.com/trove4j/" }
-        maven { url 'https://mymavenrepo.com/repo/Er2QKn4UMp1axP0ll14Z/'}
+        maven { url 'https://repo.repsy.io/mvn/gerasimenko_art/coretex/'}
     }
 
     dependencies {
