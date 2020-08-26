@@ -1,22 +1,17 @@
 package com.coretex.core.services.items.context.impl;
 
-import java.lang.reflect.Field;
-import java.util.UUID;
-
-import com.coretex.core.utils.TypeUtil;
-import org.springframework.util.ReflectionUtils;
-
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.provider.AttributeProvider;
 import com.coretex.core.services.items.exceptions.ItemCreationException;
 import com.coretex.meta.AbstractGenericItem;
+
+import java.util.UUID;
 
 import static com.coretex.core.utils.TypeUtil.getMetaTypeCode;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static org.apache.commons.lang3.reflect.ConstructorUtils.invokeConstructor;
-import static org.springframework.util.ReflectionUtils.findField;
 
 public class ItemContextBuilder {
 

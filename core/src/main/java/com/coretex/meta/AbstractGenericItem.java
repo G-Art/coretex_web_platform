@@ -4,6 +4,7 @@ import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
 import com.coretex.server.ApplicationContextProvider;
 
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
@@ -15,7 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Gerasimenko (g-art) Artem "gerasimenko.art@gmail.com"
  *         create by 12-02-2016
  */
-public abstract class AbstractGenericItem {
+public abstract class AbstractGenericItem implements Serializable {
 
     public static final String UUID = "uuid";
 
@@ -24,7 +25,7 @@ public abstract class AbstractGenericItem {
 
     private ItemContext ctx;
 
-    private ItemContextFactory itemContextFactory;
+    private transient ItemContextFactory itemContextFactory;
 
     public AbstractGenericItem() {
         itemContextFactory = ApplicationContextProvider.getApplicationContext().getBean(ITEM_CONTEXT_FACTORY_QUALIFIER, ItemContextFactory.class);

@@ -1,17 +1,13 @@
 package com.coretex.commerce.search.providers;
 
-import com.coretex.items.cx_core.ProductAvailabilityItem;
+import com.coretex.commerce.core.utils.ProductUtils;
 import com.coretex.items.cx_core.ProductItem;
-import com.coretex.items.cx_core.VariantProductItem;
 import com.coretex.searchengine.solr.client.builders.impl.AbstractSolrInputFieldProvider;
 import com.coretex.searchengine.solr.client.providers.SolrDocFieldConfig;
-import com.google.common.collect.Sets;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.solr.common.SolrInputDocument;
 import org.springframework.util.Assert;
 
 import java.math.RoundingMode;
-import java.util.Collection;
 
 public class ProductItemPriceSolrInputFieldProvider extends AbstractSolrInputFieldProvider<ProductItem> {
 
@@ -28,7 +24,7 @@ public class ProductItemPriceSolrInputFieldProvider extends AbstractSolrInputFie
 	}
 
 	private Double getProductPrice(ProductItem source) {
-		var availabilities = getAvailabilities(source);
+		var availabilities = ProductUtils.getAvailabilities(source);
 		return availabilities
 				.stream()
 				.findFirst()
@@ -41,18 +37,6 @@ public class ProductItemPriceSolrInputFieldProvider extends AbstractSolrInputFie
 										.doubleValue())
 								.orElse(0.00d))
 				.orElse(0.00d);
-	}
-
-	private Collection<ProductAvailabilityItem> getAvailabilities(ProductItem source) {
-		if (CollectionUtils.isEmpty(source.getAvailabilities())) {
-			if (source instanceof VariantProductItem) {
-				return getAvailabilities(((VariantProductItem) source).getBaseProduct());
-			} else {
-				return Sets.newHashSet();
-			}
-		} else {
-			return source.getAvailabilities();
-		}
 	}
 
 }

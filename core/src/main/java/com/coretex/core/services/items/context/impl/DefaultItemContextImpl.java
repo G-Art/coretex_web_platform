@@ -7,6 +7,7 @@ import com.coretex.items.core.GenericItem;
 import com.coretex.meta.AbstractGenericItem;
 import com.google.common.collect.Sets;
 
+import java.io.ObjectStreamException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
@@ -27,8 +28,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public class DefaultItemContextImpl extends ItemContext {
 
-	private Map<String, AttributeValueHolder> attributeHolders;
-	private Map<String, LocalizedAttributeValueHolder> localizedAttributeHolders;
+	private transient Map<String, AttributeValueHolder> attributeHolders;
+	private transient Map<String, LocalizedAttributeValueHolder> localizedAttributeHolders;
 
 	public DefaultItemContextImpl(ItemContextBuilder builder) {
 		super(builder);
@@ -37,6 +38,14 @@ public class DefaultItemContextImpl extends ItemContext {
 		if (isNew()) {
 			attributeHolders.put(GenericItem.META_TYPE, AttributeValueHolder.createLazyValueHolder(GenericItem.META_TYPE, this));
 		}
+	}
+
+	@Override
+	protected Object readResolve() throws ObjectStreamException {
+		var o = super.readResolve();
+		attributeHolders = new HashMap<>();
+		localizedAttributeHolders = new HashMap<>();
+		return o;
 	}
 
 	@Override

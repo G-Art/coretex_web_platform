@@ -1,8 +1,14 @@
 package com.coretex.commerce.core.utils;
 
+import com.coretex.items.cx_core.ProductAvailabilityItem;
 import com.coretex.items.cx_core.ProductItem;
 import com.coretex.items.cx_core.ProductPriceItem;
 import com.coretex.items.cx_core.StoreItem;
+import com.coretex.items.cx_core.VariantProductItem;
+import com.google.common.collect.Sets;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Collection;
 
 public class ProductUtils {
 
@@ -25,7 +31,7 @@ public class ProductUtils {
 	}
 
 	public static ProductPriceItem getDefaultPrice(ProductItem productItem){
-		return productItem.getAvailabilities()
+		return getAvailabilities(productItem)
 				.stream()
 				.filter(productAvailabilityItem -> productAvailabilityItem.getPrices()
 						.stream()
@@ -36,5 +42,17 @@ public class ProductUtils {
 						.filter(ProductPriceItem::getDefaultPrice)
 						.findFirst())
 				.orElse(null);
+	}
+
+	public static Collection<ProductAvailabilityItem> getAvailabilities(ProductItem source) {
+		if (CollectionUtils.isEmpty(source.getAvailabilities())) {
+			if (source instanceof VariantProductItem) {
+				return getAvailabilities(((VariantProductItem) source).getBaseProduct());
+			} else {
+				return Sets.newHashSet();
+			}
+		} else {
+			return source.getAvailabilities();
+		}
 	}
 }
