@@ -207,7 +207,7 @@ public class InitStoreData implements InitData {
 					productPriceItem = new ProductPriceItem();
 					productPriceItem.setCode("price_" + colorVariantCode);
 					productPriceItem.setProductPriceAmount(BigDecimal.valueOf(NumberUtils.toDouble(price, 0.0d)));
-
+					productPriceItem.setDefaultPrice(true);
 					productPriceItem.setProductAvailability(availabilityItem);
 					availabilityItem.getPrices().add(productPriceItem);
 				}
