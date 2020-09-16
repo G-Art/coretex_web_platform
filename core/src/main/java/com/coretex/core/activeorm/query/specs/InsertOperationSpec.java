@@ -50,7 +50,9 @@ public class InsertOperationSpec extends ModificationOperationSpec<Insert, Inser
 		Map<String, InsertValueDataHolder> saveColumnValues = getAllAttributes().entrySet().stream()
 				.filter(entry -> !(entry.getValue().getAttributeType() instanceof MetaRelationTypeItem))
 				.filter(entry -> StringUtils.isNoneBlank(entry.getValue().getColumnName()))
-				.filter(entry -> getItem().getItemContext().isDirty(entry.getKey()) || Objects.nonNull(entry.getValue().getDefaultValue()))
+				.filter(entry -> getItem().getItemContext().isDirty(entry.getKey()) ||
+						Objects.nonNull(entry.getValue().getDefaultValue()) ||
+						!entry.getValue().getOptional())
 				.collect(Collectors.toMap(entry -> entry.getValue().getColumnName(), entry -> InsertOperation.createInsertValueDataHolder(this, entry.getValue())));
 
 		saveColumnValues.put(AbstractGenericItem.UUID, InsertOperation.createInsertValueDataHolder(this, getMetaTypeProvider().findAttribute(getTypeCode(getItem()), AbstractGenericItem.UUID)));

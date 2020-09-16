@@ -13,13 +13,11 @@ import com.coretex.core.activeorm.query.specs.RemoveOperationSpec;
 import com.coretex.core.activeorm.query.specs.UpdateOperationSpec;
 import com.coretex.core.activeorm.services.AbstractJdbcService;
 import com.coretex.core.activeorm.services.ItemService;
-import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.core.general.utils.OperationUtils;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaRelationTypeItem;
 import com.coretex.meta.AbstractGenericItem;
-import com.google.common.collect.Lists;
 import net.sf.jsqlparser.statement.Statement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,13 +30,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-import static com.coretex.core.general.utils.OperationUtils.isLoopSave;
+import static com.coretex.core.general.utils.OperationUtils.isLoopSafe;
 
 public class OperationFactoryImpl extends AbstractJdbcService implements OperationFactory {
 
 	@Autowired
 	@Qualifier("idleQueryTransformationProcessor")
 	private QueryTransformationProcessor queryTransformationProcessor;
+
 
 	@Autowired
 	private ItemService itemService;
@@ -74,7 +73,7 @@ public class OperationFactoryImpl extends AbstractJdbcService implements Operati
 		GenericItem ownerItem = initiator.getOperationSpec().getItem();
 		items.stream()
 				.filter(Objects::nonNull)
-				.filter(item -> OperationUtils.isLoopSave(initiator.getOperationSpec(), item))
+				.filter(item -> OperationUtils.isLoopSafe(initiator.getOperationSpec(), item))
 				.forEach(item -> {
 					if (item.getItemContext().isDirty()) {
 						ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> modificationOperation = createSaveOperation(item, attributeTypeItem, initiator);
@@ -115,7 +114,7 @@ public class OperationFactoryImpl extends AbstractJdbcService implements Operati
 		LinkedList<ModificationOperation<? extends Statement, ? extends ModificationOperationSpec>> opperations = new LinkedList<>();
 		GenericItem ownerItem = initiator.getOperationSpec().getItem();
 		items.stream().filter(Objects::nonNull).forEach(item -> {
-			boolean loopSave = isLoopSave(initiator.getOperationSpec(), item);
+			boolean loopSave = isLoopSafe(initiator.getOperationSpec(), item);
 			if (attributeTypeItem.getAssociated() && loopSave) {
 				opperations.add(createDeleteOperation(item, attributeTypeItem, initiator));
 			}

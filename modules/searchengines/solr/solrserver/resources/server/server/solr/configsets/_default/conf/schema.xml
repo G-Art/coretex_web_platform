@@ -780,7 +780,7 @@
 				<filter class="solr.LowerCaseFilterFactory" />
 				<!-- <filter class="solr.KeywordRepeatFilterFactory" /> -->
 				<filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt" />
-				<filter class="solr.SnowballPorterFilterFactory" language="Ukrainian" />
+				<filter class="solr.MorfologikFilterFactory"/>
 				<!-- <filter class="solr.RussianLightStemFilterFactory" /> -->
 				<filter class="solr.RemoveDuplicatesTokenFilterFactory" />
 			</analyzer>
@@ -792,7 +792,7 @@
 				<filter class="solr.LowerCaseFilterFactory" />
 				<!-- <filter class="solr.KeywordRepeatFilterFactory" /> -->
 				<filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt" />
-				<filter class="solr.SnowballPorterFilterFactory" language="Ukrainian" />
+				<filter class="solr.MorfologikFilterFactory"/>
 				<!-- <filter class="solr.RussianLightStemFilterFactory" /> -->
 				<filter class="solr.RemoveDuplicatesTokenFilterFactory" />
 			</analyzer>

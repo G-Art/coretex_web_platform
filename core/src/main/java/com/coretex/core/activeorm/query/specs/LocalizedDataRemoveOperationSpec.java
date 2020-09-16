@@ -17,12 +17,10 @@ public class LocalizedDataRemoveOperationSpec extends ModificationOperationSpec<
 	private MetaAttributeTypeItem attributeTypeItem;
 	private Map<String, Object> params = new HashMap<>();
 
-	private ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator;
 
 	public LocalizedDataRemoveOperationSpec(ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator, MetaAttributeTypeItem attributeTypeItem) {
 		super(initiator.getOperationSpec().getItem());
 		setNativeQuery(false);
-		this.initiator = initiator;
 		this.attributeTypeItem = attributeTypeItem;
 		this.setQuerySupplier(this::buildQuery);
 	}
@@ -43,7 +41,7 @@ public class LocalizedDataRemoveOperationSpec extends ModificationOperationSpec<
 
 	@Override
 	public void flush() {
-
+		//ignored
 	}
 
 	public MetaAttributeTypeItem getAttributeTypeItem() {
@@ -55,5 +53,8 @@ public class LocalizedDataRemoveOperationSpec extends ModificationOperationSpec<
 		return new LocalizedDataRemoveOperation(this);
 	}
 
-
+	@Override
+	public boolean constraintsApplicable() {
+		return false;
+	}
 }

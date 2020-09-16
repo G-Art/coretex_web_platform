@@ -61,4 +61,8 @@ public class RemoveOperationSpec extends ModificationOperationSpec<Delete, Remov
 		return new RemoveOperation(this);
 	}
 
+	@Override
+	public boolean constraintsApplicable() {
+		return false;
+	}
 }

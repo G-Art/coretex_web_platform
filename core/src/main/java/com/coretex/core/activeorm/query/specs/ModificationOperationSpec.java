@@ -1,5 +1,6 @@
 package com.coretex.core.activeorm.query.specs;
 
+import com.coretex.core.activeorm.constraints.ItemConstraintsValidator;
 import com.coretex.core.activeorm.query.operations.ModificationOperation;
 import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
@@ -17,6 +18,8 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 
 	private MetaTypeProvider metaTypeProvider;
 
+	private ItemConstraintsValidator itemConstraintsValidator;
+
 	private GenericItem item;
 
 	private boolean cascadeEnabled = true;
@@ -27,7 +30,10 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 
 	public ModificationOperationSpec(GenericItem item) {
 		metaTypeProvider = ApplicationContextProvider.getApplicationContext().getBean(MetaTypeProvider.class);
+		itemConstraintsValidator = ApplicationContextProvider.getApplicationContext().getBean(ItemConstraintsValidator.class);
+
 		this.item = item;
+		itemConstraintsValidator.validate(this.item);
 		setNativeQuery(true);
 	}
 
@@ -93,6 +99,9 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 
 	public void flush(){
 		item.getItemContext().flush();
+	}
+	public boolean constraintsApplicable(){
+		return true;
 	}
 
 }

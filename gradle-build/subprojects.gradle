@@ -12,12 +12,13 @@ subprojects {
     apply plugin: 'idea'
 
     repositories {
-        mavenLocal()
         mavenCentral()
+        mavenLocal()
+        jcenter()
+        maven { url 'https://repo.repsy.io/mvn/gerasimenko_art/coretex/'}
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://repo.spring.io/libs-release-remote" }
         maven { url "https://jetbrains.bintray.com/trove4j/" }
-        maven { url 'https://repo.repsy.io/mvn/gerasimenko_art/coretex/'}
     }
 
     dependencies {

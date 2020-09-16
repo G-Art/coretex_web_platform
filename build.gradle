@@ -5,11 +5,12 @@ buildscript {
     repositories {
         mavenCentral()
         mavenLocal()
+        jcenter()
+        maven { url "https://repo.repsy.io/mvn/gerasimenko_art/coretex"}
         maven { url "https://repo.spring.io/milestone" }
         maven { url 'https://jitpack.io' }
         maven { url "https://repo.spring.io/libs-release-remote" }
         maven { url "https://jetbrains.bintray.com/trove4j/" }
-        maven { url "https://repo.repsy.io/mvn/gerasimenko_art/coretex/"}
     }
     dependencies {
         classpath(group: 'com.coretex.build.plugin', name: 'build.plugin', version: '1.1-Beta')
@@ -56,7 +57,7 @@ task createDockerfile(type: Dockerfile, dependsOn: distTar) {
     from('openjdk:11')
     addFile("gm-commerce-1.0-Alpha.tar", "/opt/coretex/")
     workingDir("/opt/coretex/gm-commerce-1.0-Alpha")
-    runCommand("./gradlew generate -x test --no-daemon --full-stacktrace")
+    environmentVariable('JAVA_OPTS', '-Djava.awt.headless=true -server -Xms48m -Xmx1024M -XX:MaxPermSize=512m')
     exposePort(8080)
 }
 //

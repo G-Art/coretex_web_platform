@@ -23,7 +23,7 @@ public final class OperationUtils {
 		}
 	}
 
-	public static  <T extends ModificationOperationSpec>  boolean isLoopSave(T operationSpec, GenericItem item) {
+	public static  <T extends ModificationOperationSpec>  boolean isLoopSafe(T operationSpec, GenericItem item) {
 		if(operationSpec instanceof CascadeModificationOperationSpec){
 			return !((CascadeModificationOperationSpec) operationSpec).existInCascade(item);
 		}else {

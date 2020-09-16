@@ -44,7 +44,9 @@ public class UpdateOperationSpec extends ModificationOperationSpec<Update, Updat
 		Map<String, UpdateValueDataHolder> saveColumnValues = getAllAttributes().entrySet().stream()
 				.filter(entry -> !(entry.getValue().getAttributeType() instanceof MetaRelationTypeItem))
 				.filter(entry -> StringUtils.isNoneBlank(entry.getValue().getColumnName()))
-				.filter(entry -> getItem().getItemContext().isDirty(entry.getKey()) || Objects.nonNull(entry.getValue().getDefaultValue()))
+				.filter(entry -> getItem().getItemContext().isDirty(entry.getKey()) ||
+						Objects.nonNull(entry.getValue().getDefaultValue()) ||
+						!entry.getValue().getOptional())
 				.collect(Collectors.toMap(entry -> entry.getValue().getColumnName(), entry -> new UpdateValueDataHolder( entry.getValue(), this)));
 
 		updateValueDatas = saveColumnValues.entrySet()

@@ -18,7 +18,6 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 
 	private MetaAttributeTypeItem attributeTypeItem;
 
-	private ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator;
 	private LocalizedAttributeSaveFetcher fetcher;
 
 	private String insertQuery;
@@ -27,10 +26,10 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 	public LocalizedDataSaveOperationSpec(ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator, MetaAttributeTypeItem attributeTypeItem) {
 		super(initiator.getOperationSpec().getItem());
 		setNativeQuery(false);
-		this.initiator = initiator;
 		this.attributeTypeItem = attributeTypeItem;
 		this.setQuerySupplier(this::buildQuery);
 	}
+
 
 	private String buildQuery() {
 		if(AttributeTypeUtils.isRelationAttribute(attributeTypeItem)){
@@ -50,7 +49,12 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 
 	@Override
 	public void flush() {
+		//ignored
+	}
 
+	@Override
+	public boolean constraintsApplicable() {
+		return false;
 	}
 
 	public String getInsertQuery() {

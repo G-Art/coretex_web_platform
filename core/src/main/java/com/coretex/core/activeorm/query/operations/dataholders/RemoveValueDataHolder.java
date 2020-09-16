@@ -26,10 +26,10 @@ public class RemoveValueDataHolder extends AbstractValueDataHolder<RemoveOperati
 				return null;
 			}
 			if(isMandatory() && getRelatedItem().getItemContext().isNew() && !getOperationSpec().isCascadeEnabled()){
-				throw new QueryException(String.format("Related mandatory object [%s] for attribute [%s:%s] cant be stored due to cascade save is off", getTypeCode(getRelatedItem()), getTypeCode(getItem()), getAttributeTypeItem().getAttributeName()));
+				throw new QueryException(String.format("Related mandatory object [%s] for attribute [%s:%s] cant be removed due to cascade is off", getTypeCode(getRelatedItem()), getTypeCode(getItem()), getAttributeTypeItem().getAttributeName()));
 			}
 			if(!isMandatory() && getRelatedItem().getItemContext().isNew() && !getOperationSpec().isCascadeEnabled()){
-				LOG.warn("Related object [%s] for attribute [%s:%s] will not be stored due to cascade save is off");
+				LOG.warn("Related object [%s] for attribute [%s:%s] will not be removed due to cascade is off");
 				return null;
 			}
 			return getRelatedItem().getUuid();

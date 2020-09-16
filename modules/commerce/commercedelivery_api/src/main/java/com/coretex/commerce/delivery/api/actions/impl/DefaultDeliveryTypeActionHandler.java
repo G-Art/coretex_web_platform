@@ -17,9 +17,9 @@ import java.util.Objects;
 public class DefaultDeliveryTypeActionHandler implements DeliveryTypeActionHandler {
 	private final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-	private Map<String, AdditionalInfoAction<DeliveryTypeItem>> additionalInfoActionMap = new HashMap<>();
+	private Map<String, AdditionalInfoAction> additionalInfoActionMap = new HashMap<>();
 	private Map<String, AddDeliveryInfoAction> addDeliveryInfoActionMap = new HashMap<>();
-	private Map<String, AddressAdditionalInfoAction<AddressItem>> addressAdditionalInfoActionMap = new HashMap<>();
+	private Map<String, AddressAdditionalInfoAction> addressAdditionalInfoActionMap = new HashMap<>();
 
 
 	@Override
@@ -57,7 +57,7 @@ public class DefaultDeliveryTypeActionHandler implements DeliveryTypeActionHandl
 		return Map.of();
 	}
 
-	public void setAdditionalInfoActionMap(Map<String, AdditionalInfoAction<DeliveryTypeItem>> additionalInfoActionMap) {
+	public void setAdditionalInfoActionMap(Map<String, AdditionalInfoAction> additionalInfoActionMap) {
 		this.additionalInfoActionMap = additionalInfoActionMap;
 		LOG.info(String.format("Additional info actions for %s are loaded", additionalInfoActionMap.keySet()));
 	}
@@ -67,7 +67,7 @@ public class DefaultDeliveryTypeActionHandler implements DeliveryTypeActionHandl
 		LOG.info(String.format("AddDeliveryInfo actions for %s are loaded", addDeliveryInfoActionMap.keySet()));
 	}
 
-	public void setAddressAdditionalInfoActionMap(Map<String, AddressAdditionalInfoAction<AddressItem>> addressAdditionalInfoActionMap) {
+	public void setAddressAdditionalInfoActionMap(Map<String, AddressAdditionalInfoAction> addressAdditionalInfoActionMap) {
 		this.addressAdditionalInfoActionMap = addressAdditionalInfoActionMap;
 		LOG.info(String.format("Address additional info actions for %s are loaded", addressAdditionalInfoActionMap.keySet()));
 	}
