@@ -1,1 +1,1 @@
-# CoreTex :: web platform#
+# CoreTex :: web platform
