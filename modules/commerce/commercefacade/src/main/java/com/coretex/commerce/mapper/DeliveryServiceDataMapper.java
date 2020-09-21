@@ -32,7 +32,7 @@ public interface DeliveryServiceDataMapper extends GenericDataMapper<DeliverySer
 	void updateFromItem(DeliveryServiceItem source, @MappingTarget DeliveryServiceData target);
 
 	default Map<String, String> toLocalizedMap(Map<Locale, String> localized) {
-		if(localized == null){
+		if (localized == null) {
 			return Maps.newHashMap();
 		}
 		return localized.entrySet()
@@ -43,5 +43,15 @@ public interface DeliveryServiceDataMapper extends GenericDataMapper<DeliverySer
 	@AfterMapping
 	default void defineTypeSpecificFields(DeliveryServiceItem source, @MappingTarget DeliveryServiceData target) {
 		target.setType(source.getMetaType().getTypeCode());
+
+		source.getMetaType()
+				.getItemAttributes()
+				.forEach(metaAttributeTypeItem -> {
+					var value = metaAttributeTypeItem.getLocalized() ?
+							source.getItemContext().getOriginLocalizedValues(metaAttributeTypeItem.getAttributeName()) :
+							source.getAttributeValue(metaAttributeTypeItem.getAttributeName());
+					target.getAdditionalData().put(metaAttributeTypeItem.getAttributeName(), value);
+				});
+
 	}
 }

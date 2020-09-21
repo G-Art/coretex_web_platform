@@ -151,6 +151,12 @@
                                         </div>
                                     </jsp:attribute>
                                 </components:cardBlock>
+                                <components:cardBlock title="Additianal info">
+                                    <jsp:attribute name="cardBlock">
+                                        <c:set var="deliveryServiceCode" value="${ds.code}"/>
+                                        <jsp:include page="/fragment/delivery/${deliveryServiceCode}/deliveryServiceInfo.jsp"/>
+                                    </jsp:attribute>
+                                </components:cardBlock>
                             </jsp:attribute>
 
                         </components:cardBlock>

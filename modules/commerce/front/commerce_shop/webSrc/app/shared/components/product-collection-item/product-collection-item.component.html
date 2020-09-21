@@ -7,7 +7,7 @@
                   class="onsale">{{displaySizeVariant.discountBadgeInfo}}</span>
             <span *ngIf="displaySizeVariant.hotBadge" class="hot">Hot</span>
         </div>
-        <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
+        <a routerLink="/product/{{product.code}}/v/{{displaySizeVariant.code}}" class="image-wrap" #imageWrapper>
             <img *ngFor="let img of displayStyleVariant.images | slice:0:2; let i=index"
                  [hidden]="imageLoader"
                  [src]="'/v1'+img.path"
@@ -46,7 +46,7 @@
     </div>
     <div class="single-grid-product__content">
         <h3 class="title">
-            <a routerLink="/product/{{product.code}}">{{displayStyleVariant.name}}</a>
+            <a routerLink="/product/{{product.code}}/v/{{displaySizeVariant.code}}">{{displayStyleVariant.name}}</a>
         </h3>
         <div class="price">
             <span class="main-price discounted"
@@ -103,7 +103,7 @@
                   class="onsale">{{displaySizeVariant.discountBadgeInfo}}</span>
             <span *ngIf="displaySizeVariant.hotBadge" class="hot">Hot</span>
         </div>
-        <a routerLink="/product/{{product.code}}" class="image-wrap" #imageWrapper>
+        <a routerLink="/product/{{product.code}}/v/{{displaySizeVariant.code}}" class="image-wrap" #imageWrapper>
             <img *ngFor="let img of displayStyleVariant.images"
                  [hidden]="imageLoader"
                  (load)="imageLoader = false;"
@@ -119,7 +119,7 @@
 
     <div class="single-list-product__content">
         <h3 class="title">
-            <a routerLink="/product/{{product.code}}">{{displayStyleVariant.name}}</a>
+            <a routerLink="/product/{{product.code}}/v/{{displaySizeVariant.code}}">{{displayStyleVariant.name}}</a>
         </h3>
         <div class="price">
             <span class="main-price discounted"

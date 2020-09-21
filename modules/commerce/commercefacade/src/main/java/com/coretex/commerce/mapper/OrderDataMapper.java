@@ -1,9 +1,7 @@
 package com.coretex.commerce.mapper;
 
-import com.coretex.commerce.data.CartData;
 import com.coretex.commerce.data.OrderData;
 import com.coretex.commerce.delivery.api.actions.DeliveryTypeActionHandler;
-import com.coretex.items.cx_core.CartItem;
 import com.coretex.items.cx_core.OrderItem;
 import com.coretex.items.cx_core.StoreItem;
 import org.mapstruct.AfterMapping;
@@ -46,7 +44,7 @@ public abstract class OrderDataMapper implements GenericDataMapper<OrderItem, Or
 	}
 
 	@AfterMapping
-	public void defineTypeSpecificFields(CartItem source, @MappingTarget CartData target) {
+	public void defineTypeSpecificFields(OrderItem source, @MappingTarget OrderData target) {
 		if(Objects.nonNull(source.getDeliveryType())){
 			var deliveryType = source.getDeliveryType();
 			if(Objects.nonNull(source.getAddress())){

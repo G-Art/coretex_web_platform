@@ -1,9 +1,10 @@
-<div class="row row-5">
+<div class="row row-5" *ngIf="productStyleVariant != null">
     <div class="col-md-9 order-1 order-md-2">
-        <div class="big-image-wrapper">
+        <div class="big-image-wrapper" >
 
             <div class="enlarge-icon">
                 <a class="btn-zoom-popup" href="javascript:void(0)"
+                   (click)="zoomPopup()"
                    data-tippy="Click to enlarge" data-tippy-placement="left"
                    data-tippy-inertia="true" data-tippy-animation="shift-away"
                    data-tippy-delay="50" data-tippy-arrow="true" data-tippy-theme="sharpborder"><i

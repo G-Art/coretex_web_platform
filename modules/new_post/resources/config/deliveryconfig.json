@@ -15,7 +15,7 @@
         "value": "Новая Почта"
       }
     ],
-    "apiKey": "bead4378ccf309a9e0f1bdccad6cc812",
+    "apiKey": "24b87016b5e66dd1820d5dddd1ec2e65",
     "endpoint": "https://api.novaposhta.ua/v2.0/",
     "dataFormat": "json",
     "senderCity": "e718466d-4b33-11e4-ab6d-005056801329",
