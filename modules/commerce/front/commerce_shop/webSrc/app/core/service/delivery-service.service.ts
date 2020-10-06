@@ -2,21 +2,18 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs"
 import {CartData} from "../data/cart.data";
-import {environment} from "../../../environments/environment";
 import {DeliveryServiceData} from "../data/delivery-service.data";
 import {map, share} from "rxjs/operators";
+import {App} from '../../app.constants';
 
 @Injectable()
 export class DeliveryServiceService {
-
-    apiUrl = environment.baseApiUrl;
 
     constructor(private http: HttpClient) {
     }
 
     getForCart(cart: CartData): Observable<DeliveryServiceData[]> {
-
-        return this.http.get<DeliveryServiceData[]>(`${this.apiUrl + '/delivery/service/cart/' + cart.uuid}`, {
+        return this.http.get<DeliveryServiceData[]>(App.API.deliveryServiceCart(cart.uuid), {
             observe: 'response'
         }).pipe(
             map(response => {

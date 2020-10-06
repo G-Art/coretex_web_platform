@@ -24,7 +24,7 @@
                                 </tr>
                                 <tr>
                                     <th scope="row">Login</th>
-                                    <td>${user.adminName}</td>
+                                    <td>${user.login}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Default language</th>

@@ -1,17 +1,14 @@
 import {Injectable} from '@angular/core';
 import {SearchResult} from '../data/search.result.data';
-import {ActivatedRoute} from '@angular/router';
-import {Observable, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {map, share} from 'rxjs/operators';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
+import {App} from '../../app.constants';
 
 @Injectable()
 export class SearchService {
 
-    type: string = 'category';
-
-    apiUrl = environment.baseApiUrl;
+    type = 'category';
 
     searchResult: Subject<SearchResult> = new Subject();
 
@@ -30,12 +27,12 @@ export class SearchService {
             })
         }
         if (sort) {
-            let strings = sort.split(':');
+            const strings = sort.split(':');
             params = params.append(`s(${strings[0]})`, strings[1]);
         }
 
-        this.http.get<any>(`${this.apiUrl}/categories/${code}/page${page ? '/' + page : ''}`, {
-            params: params,
+        this.http.get<any>(App.API.searchCategory(code, page), {
+            params,
             observe: 'response'
         }).pipe(
             map(response => {
@@ -62,12 +59,12 @@ export class SearchService {
             })
         }
         if (sort) {
-            let strings = sort.split(':');
+            const strings = sort.split(':');
             params = params.append(`s(${strings[0]})`, strings[1]);
         }
 
-        this.http.get<any>(`${this.apiUrl}/search/page${page ? '/' + page : ''}`, {
-            params: params,
+        this.http.get<any>(App.API.searchText(page), {
+            params,
             observe: 'response'
         }).pipe(
             map(response => {

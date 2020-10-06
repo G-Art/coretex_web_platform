@@ -21,7 +21,7 @@ export class CheckoutPageComponent implements OnInit {
 
     ngOnInit(): void {
         this.cartService
-            .currentCart
+            ._currentCart
             .subscribe(cart => {
                 if (cart && cart.entries && cart.entries.length > 0) {
                     this.cart = cart;

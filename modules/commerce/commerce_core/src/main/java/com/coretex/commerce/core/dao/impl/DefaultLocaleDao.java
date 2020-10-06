@@ -6,6 +6,7 @@ import com.coretex.relations.cx_core.StoreLocaleRelation;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -14,7 +15,7 @@ public class DefaultLocaleDao extends CustomLocaleDao {
 
 	@Override
 	public LocaleItem findByIso(String iso) {
-		return findSingle(Map.of(LocaleItem.ISO, iso), true);
+		return findOne(Map.of(LocaleItem.ISO, iso), true).orElseThrow(NoSuchElementException::new);
 	}
 
 	@Override

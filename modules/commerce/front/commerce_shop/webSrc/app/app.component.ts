@@ -3,7 +3,11 @@ import {Title} from '@angular/platform-browser';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 
 import {filter, map, mergeMap} from 'rxjs/operators';
-import {TranslateService} from "@ngx-translate/core";
+import {TranslateService} from '@ngx-translate/core';
+import {StoreService} from './core/service/store.service';
+import {LanguageData} from './core/data/language.data';
+import {AuthService} from './core/service/auth.service';
+import {UserService} from './core/service/user.service';
 
 @Component({
     selector: 'app-root',
@@ -12,16 +16,14 @@ import {TranslateService} from "@ngx-translate/core";
     encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
+    defaultStoreLanguage: LanguageData;
     pageTitle: string;
 
     constructor(private router: Router,
+                private storeService: StoreService,
                 private activatedRoute: ActivatedRoute,
-                private titleService: Title,
-                private translate: TranslateService) {
-        if(!this.translate.currentLang){
-            this.translate.setDefaultLang('en');
-            this.translate.use('en')
-        }
+                private titleService: Title,) {
+
     }
 
     ngOnInit() {
@@ -36,9 +38,9 @@ export class AppComponent implements OnInit {
             filter(route => route.outlet === 'primary'),
             mergeMap(route => route.data)
         ).subscribe(event => {
-                this.titleService.setTitle(event['title']);
-                this.pageTitle = event['pageTitle'];
-            });
+            this.titleService.setTitle(event['title']);
+            this.pageTitle = event['pageTitle'];
+        });
 
     }
 }

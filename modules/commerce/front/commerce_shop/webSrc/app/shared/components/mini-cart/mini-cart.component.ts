@@ -17,7 +17,7 @@ export class MiniCartComponent implements OnInit {
 
     ngOnInit() {
         this.cartService
-            .currentCart
+            ._currentCart
             .subscribe(cart => {
                 if (cart) {
                     this.miniCart = cart;

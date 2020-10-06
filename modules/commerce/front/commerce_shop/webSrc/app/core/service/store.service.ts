@@ -1,16 +1,14 @@
 import {Injectable} from '@angular/core';
-import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {map, share} from 'rxjs/operators';
 import {StoreData} from '../data/store.data';
+import {App} from '../../app.constants';
 
 @Injectable()
 export class StoreService {
     data: StoreData;
     observable;
-
-    apiUrl = environment.baseApiUrl;
 
     constructor(private http: HttpClient) {
     }
@@ -21,7 +19,7 @@ export class StoreService {
         } else if (this.observable) {
             return this.observable;
         } else {
-            this.observable = this.http.get(`${this.apiUrl + '/stores/current'}`, {
+            this.observable = this.http.get(App.API.currentStore, {
                 observe: 'response'
             }).pipe(
                 map(response => {

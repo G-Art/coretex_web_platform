@@ -2,22 +2,19 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {map, share} from "rxjs/operators";
-import {environment} from "../../../environments/environment";
 import {DeliveryServiceData} from "../data/delivery-service.data";
 import {DeliveryTypeData} from "../data/delivery-type.data";
 import {PaymentType} from '../data/payment-type.data';
+import {App} from '../../app.constants';
 
 @Injectable()
 export class DeliveryTypeService {
-
-    apiUrl = environment.baseApiUrl;
 
     constructor(private http: HttpClient) {
     }
 
     getDeliveryTypeForService(deliveryServiceData: DeliveryServiceData): Observable<DeliveryTypeData[]> {
-
-        return this.http.get<DeliveryTypeData[]>(`${this.apiUrl + `/delivery/service/${deliveryServiceData.uuid}/types` }`, {
+        return this.http.get<DeliveryTypeData[]>(App.API.deliveryServiceTypes(deliveryServiceData.uuid), {
             observe: 'response'
         }).pipe(
             map(response => {
@@ -33,7 +30,7 @@ export class DeliveryTypeService {
     }
 
     getPaymentTypesForDeliveryType(deliveryType: DeliveryTypeData): Observable<PaymentType[]> {
-        return this.http.get<DeliveryTypeData[]>(`${this.apiUrl + `/delivery/type/${deliveryType.code}/payments` }`, {
+        return this.http.get<DeliveryTypeData[]>(App.API.deliveryTypePayments(deliveryType.code), {
             observe: 'response'
         }).pipe(
             map(response => {

@@ -1,4 +1,5 @@
 import {AddressData} from './address.data';
+import {LanguageData} from './language.data';
 
 export interface UserData {
     email:string;
@@ -8,7 +9,7 @@ export interface UserData {
 
     billing?:AddressData;
     delivery?:AddressData;
-    // private LocaleData language;
+    language?:LanguageData;
     //
     // private AddressData billing;
     // private AddressData delivery;

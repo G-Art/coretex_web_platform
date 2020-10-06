@@ -58,8 +58,8 @@
                                                     <i class="icofont icofont-id-card"></i>
                                                 </span>
                                             </div>
-                                            <input type="text" name="adminName" class="form-control"
-                                                   value="${user.adminName}"
+                                            <input type="text" name="login" class="form-control"
+                                                   value="${user.login}"
                                                    placeholder="Login">
                                         </div>
                                     </td>
@@ -121,7 +121,7 @@
                                                 </span>
                                             </div>
                                             <div class="d-flex flex-grow-1">
-                                                <select name="merchantStore" class="form-control js-select-store">
+                                                <select name="store" class="form-control js-select-store">
                                                     <c:forEach var="store" items="${stores}">
                                                         <option ${store.uuid == user.store.uuid ? 'selected' : ''}
                                                                 value="${store.uuid}">${store.name}</option>

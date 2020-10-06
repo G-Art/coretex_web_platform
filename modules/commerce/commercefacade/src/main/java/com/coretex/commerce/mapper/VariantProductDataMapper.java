@@ -30,7 +30,8 @@ public interface VariantProductDataMapper extends GenericDataMapper<VariantProdu
 			@Mapping(target = "colorCssCode", expression = "java(this.getColorCode(productItem))"),
 			@Mapping(target = "size", expression = "java(this.getSize(productItem))"),
 			@Mapping(target = "baseProductCode", expression = "java(this.getBaseProductCode(productItem))"),
-			@Mapping(target = "colorName", expression = "java(this.getColorName(productItem))")
+			@Mapping(target = "colorName", expression = "java(this.getColorName(productItem))"),
+			@Mapping(target = "name", expression = "java(this.getName(productItem))")
 	})
 	VariantProductData fromItem(VariantProductItem productItem);
 
@@ -61,6 +62,16 @@ public interface VariantProductDataMapper extends GenericDataMapper<VariantProdu
 		}
 		if (productItem instanceof SizeVariantProductItem) {
 			return getColorCode(((SizeVariantProductItem) productItem).getBaseProduct());
+		}
+		return null;
+	}
+
+	default String getName(ProductItem productItem) {
+		if (Objects.nonNull(productItem.getName())) {
+			return productItem.getName();
+		}
+		if (productItem instanceof VariantProductItem) {
+			return getName(((VariantProductItem) productItem).getBaseProduct());
 		}
 		return null;
 	}

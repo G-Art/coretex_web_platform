@@ -2,26 +2,22 @@ import {EventEmitter, Injectable, OnInit} from '@angular/core';
 import {ProductVariantData} from '../data/product-variant.data';
 import {HttpClient} from '@angular/common/http';
 import {map, share} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
 import {CartData} from '../data/cart.data';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {CartEntryData} from '../data/cart-entry.data';
 import {DeliveryTypeData} from '../data/delivery-type.data';
 import {PaymentType} from '../data/payment-type.data';
+import {App} from '../../app.constants';
 
 @Injectable()
 export class CartService implements OnInit {
 
-    private _currentCart: BehaviorSubject<CartData>;
-    currentCart: Observable<CartData>;
+    _currentCart: BehaviorSubject<CartData> = new BehaviorSubject<CartData>(undefined);
 
     beforeOrderPlace: EventEmitter<any>;
 
-    apiUrl = environment.baseApiUrl;
 
     constructor(private http: HttpClient) {
-        this._currentCart = new BehaviorSubject<CartData>(undefined);
-        this.currentCart = this._currentCart.asObservable();
         this.beforeOrderPlace = new EventEmitter<any>();
         this.updateCurrentCart()
     }
@@ -30,7 +26,7 @@ export class CartService implements OnInit {
     }
 
     updateCurrentCart(): void {
-        this.http.get<CartData>(`${this.apiUrl + '/cart/current'}`, {
+        this.http.get<CartData>(App.API.currentCart, {
             observe: 'response'
         }).pipe(
             map(response => {
@@ -47,7 +43,7 @@ export class CartService implements OnInit {
     }
 
     updateEntryQuantity(entry: CartEntryData, next?: () => void) {
-        this.http.post<CartData>(`${this.apiUrl + '/cart/update'}`,
+        this.http.post<CartData>(App.API.cartUpdate,
             {entry: entry.uuid, quantity: entry.quantity},
             {
                 observe: 'response'
@@ -69,7 +65,7 @@ export class CartService implements OnInit {
     }
 
     addToCart(product: ProductVariantData, qty: number, next?: () => void) {
-        this.http.post<CartData>(`${this.apiUrl + '/cart/add'}`,
+        this.http.post<CartData>(App.API.cartAdd,
             {product: product.uuid, quantity: qty},
             {
                 observe: 'response'
@@ -92,7 +88,7 @@ export class CartService implements OnInit {
     }
 
     addDeliveryType(deliveryType?: DeliveryTypeData, next?: () => void) {
-        this.http.post<CartData>(`${this.apiUrl + '/cart/delivery/type'}`,
+        this.http.post<CartData>(App.API.cartDeliveryType,
             {uuid: deliveryType ? deliveryType.uuid : null},
             {
                 observe: 'response'
@@ -114,7 +110,7 @@ export class CartService implements OnInit {
     }
 
     placeOrder(next?: () => void) {
-        this.currentCart.subscribe(cart => {
+        this._currentCart.subscribe(cart => {
             if (cart && cart.address && cart.paymentMode && cart.deliveryType) {
                 this.finishOrderPlacement(cart)
                 if (next) {
@@ -126,7 +122,7 @@ export class CartService implements OnInit {
     }
 
     private finishOrderPlacement(cart: CartData) {
-        this.http.post<any>(`${this.apiUrl + '/cart/placeOrder'}`,
+        this.http.post<any>(App.API.cartPlaceOrder,
             null,
             {
                 observe: 'response'
@@ -148,7 +144,7 @@ export class CartService implements OnInit {
     }
 
     addDeliveryInfo(value: any, errorCode?: (code: number) => void) {
-        this.http.post<CartData>(`${this.apiUrl + '/cart/delivery/info'}`,
+        this.http.post<CartData>(App.API.cartDeliveryInfo,
             value,
             {
                 observe: 'response'
@@ -169,7 +165,7 @@ export class CartService implements OnInit {
     }
 
     addPaymentType(payment: PaymentType, next?: () => void) {
-        this.http.post<CartData>(`${this.apiUrl + '/cart/payment/type'}`,
+        this.http.post<CartData>(App.API.cartPaymentType,
             {uuid: payment ? payment.uuid : null},
             {
                 observe: 'response'

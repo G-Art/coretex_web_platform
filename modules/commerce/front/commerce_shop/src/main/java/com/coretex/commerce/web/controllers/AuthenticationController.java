@@ -5,10 +5,8 @@ import com.coretex.commerce.config.security.AuthResponse;
 import com.coretex.commerce.config.security.JWTUtil;
 import com.coretex.commerce.config.security.PBKDF2Encoder;
 import com.coretex.commerce.config.security.service.JWTUserService;
-import com.coretex.commerce.data.CustomerData;
 import com.coretex.commerce.data.requests.RegisterRequest;
 import com.coretex.commerce.facades.CustomerFacade;
-import com.coretex.commerce.mapper.CustomerDataMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -44,9 +42,6 @@ public class AuthenticationController {
 
 	@Resource
 	private CustomerFacade customerFacade;
-
-	@Resource
-	private CustomerDataMapper customerDataMapper;
 
 	@Value("${jwt.jjwt.expiration}")
 	private String expirationTime;
@@ -91,11 +86,6 @@ public class AuthenticationController {
 
 	}
 
-	@RequestMapping(value = "/user/current", method = RequestMethod.GET)
-	public Mono<CustomerData> currentUser(ServerWebExchange exchange) {
-		return userRepository.getCurrentUser(exchange)
-				.map(customerDataMapper::fromItem);
-	}
 
 	public HttpHeaders generateCookieHeader(String jwt, ServerHttpRequest request) {
 		String cookieHeaderLine = getAccessCookieHeader(request, jwt);
