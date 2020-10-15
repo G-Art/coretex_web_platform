@@ -41,7 +41,7 @@ public class InsertOperationSpec extends ModificationOperationSpec<Insert, Inser
 		this.setQuerySupplier(this::buildQuery);
 	}
 
-	private String buildQuery(){
+	private String buildQuery() {
 		this.newUuid = UUID.randomUUID();
 		LocalDateTime creationDate = LocalDateTime.now();
 		getItem().setCreateDate(creationDate);
@@ -71,7 +71,7 @@ public class InsertOperationSpec extends ModificationOperationSpec<Insert, Inser
 	}
 
 
-	public UUID getNewUuid(){
+	public UUID getNewUuid() {
 		return newUuid;
 	}
 

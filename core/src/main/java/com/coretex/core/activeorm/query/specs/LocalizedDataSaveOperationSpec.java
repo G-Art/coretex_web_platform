@@ -44,7 +44,7 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 		insertQuery = String.format(INSERT_LOCALIZED_DATA_QUERY, attributeTypeItem.getOwner().getTableName());
 		updateQuery = String.format(UPDATE_LOCALIZED_DATA_QUERY, attributeTypeItem.getOwner().getTableName());
 
-		return "SELECT 'Fake query' AS fake";
+		return "select 'Fake query' AS fake";
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 	}
 
 	@Override
-	public boolean constraintsApplicable() {
+	public boolean useInterceptors() {
 		return false;
 	}
 

@@ -48,7 +48,7 @@ public class InsertOperation extends ModificationOperation<Insert, InsertOperati
 	@Override
 	public void executeOperation() {
 		var query = getQuery();
-		if(LOG.isDebugEnabled()){
+		if (LOG.isDebugEnabled()) {
 			LOG.debug(String.format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), getOperationSpec() instanceof CascadeInsertOperationSpec));
 		}
 		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query,
@@ -57,23 +57,27 @@ public class InsertOperation extends ModificationOperation<Insert, InsertOperati
 
 	@Override
 	protected void executeAfter() {
+
 		getOperationSpec().getItem().setAttributeValue(GenericItem.UUID, getOperationSpec().getNewUuid());
+		getOperationSpec().getItemOperationInterceptorService()
+				.onSaved(getOperationSpec().getItem());
+
 		if (getOperationSpec().getHasLocalizedFields()) {
 			getOperationSpec().getLocalizedFields().stream()
 					.filter(attr -> this.getOperationSpec().getItem().getItemContext().isDirty(attr.getAttributeName()))
 					.forEach(field -> getOperationFactory().createSaveOperation(null, field, this).execute());
 		}
 
-		if (getOperationSpec().getHasRelationAttributes()){
+		if (getOperationSpec().getHasRelationAttributes()) {
 			getOperationSpec().getRelationAttributes().stream()
 					.filter(attr -> this.getOperationSpec().getItem().getItemContext().isDirty(attr.getAttributeName()))
 					.forEach(field -> {
 						Object value = this.getOperationSpec().getItem().getAttributeValue(field.getAttributeName());
-						if(Objects.nonNull(value)){
-							if(value instanceof Collection){
-								getOperationFactory().createRelationSaveOperations((Collection<GenericItem>)value, field, this).forEach(ModificationOperation::execute);
-							}else{
-								getOperationFactory().createRelationSaveOperations((GenericItem)value, field, this).forEach(ModificationOperation::execute);
+						if (Objects.nonNull(value)) {
+							if (value instanceof Collection) {
+								getOperationFactory().createRelationSaveOperations((Collection<GenericItem>) value, field, this).forEach(ModificationOperation::execute);
+							} else {
+								getOperationFactory().createRelationSaveOperations((GenericItem) value, field, this).forEach(ModificationOperation::execute);
 							}
 						}
 					});
@@ -84,6 +88,7 @@ public class InsertOperation extends ModificationOperation<Insert, InsertOperati
 	public static InsertValueDataHolder createInsertValueDataHolder(InsertOperationSpec operationSpec, MetaAttributeTypeItem attributeTypeItem) {
 		return new InsertValueDataHolder(attributeTypeItem, operationSpec);
 	}
+
 	@Override
 	protected boolean isTransactionInitiator() {
 		return true;

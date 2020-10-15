@@ -53,13 +53,28 @@ public class ItemUniqueFieldConstraint implements ItemConstraint {
 		var condition = new StringBuilder();
 		for (int i = 0, size = uniqueAttributes.size(); i < size; i++) {
 			MetaAttributeTypeItem uniqueAttribute = uniqueAttributes.get(i);
-			condition.append(String.format(SEARCH_QUERY_CONDITION, uniqueAttribute.getAttributeName(), ":" + uniqueAttribute.getAttributeName()));
+			condition.append(
+					String.format(
+							SEARCH_QUERY_CONDITION,
+							uniqueAttribute.getAttributeName(), ":" + uniqueAttribute.getAttributeName()
+					)
+			);
 			if (i < size - 1) {
 				condition.append(" OR ");
 			}
 		}
-		var result = searchService.<GenericItem>search(String.format(SEARCH_QUERY_STUB, item.getMetaType().getTypeCode(), condition), uniqueAttributes.stream()
-				.collect(Collectors.toMap(MetaAttributeTypeItem::getAttributeName, metaAttributeTypeItem -> item.getAttributeValue(metaAttributeTypeItem.getAttributeName()))));
+		var result = searchService.
+				<GenericItem>search(
+						String.format(SEARCH_QUERY_STUB, item.getMetaType().getTypeCode(), condition),
+						uniqueAttributes
+								.stream()
+								.collect(
+										Collectors.toMap(
+												MetaAttributeTypeItem::getAttributeName,
+												metaAttributeTypeItem -> item.getAttributeValue(metaAttributeTypeItem.getAttributeName())
+										)
+								)
+				);
 		return result.getResult();
 	}
 }

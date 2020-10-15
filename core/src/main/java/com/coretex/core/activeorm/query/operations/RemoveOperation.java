@@ -17,6 +17,7 @@ import java.util.Objects;
 
 import static com.coretex.core.general.utils.AttributeTypeUtils.isRegularTypeAttribute;
 import static com.coretex.core.general.utils.ItemUtils.isSystemType;
+import static java.lang.String.format;
 
 public class RemoveOperation extends ModificationOperation<Delete, RemoveOperationSpec> {
 	private Logger LOG = LoggerFactory.getLogger(RemoveOperation.class);
@@ -73,7 +74,7 @@ public class RemoveOperation extends ModificationOperation<Delete, RemoveOperati
 	public void executeOperation() {
 		var query = getQuery();
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), getOperationSpec() instanceof CascadeRemoveOperationSpec));
+			LOG.debug(format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), getOperationSpec() instanceof CascadeRemoveOperationSpec));
 		}
 		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query,
 				new ModificationSqlParameterSource<RemoveValueDataHolder>(getOperationSpec().getValueDatas())));
@@ -81,7 +82,8 @@ public class RemoveOperation extends ModificationOperation<Delete, RemoveOperati
 
 	@Override
 	protected void executeAfter() {
-
+		getOperationSpec().getItemOperationInterceptorService()
+				.onRemove(getOperationSpec().getItem());
 	}
 
 	@Override

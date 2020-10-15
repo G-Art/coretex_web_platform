@@ -73,6 +73,8 @@ public abstract class ItemContext implements Serializable {
 
 	public abstract void refresh();
 
+	public abstract boolean isSystemType();
+
 	public String getTypeCode() {
 		return typeCode;
 	}

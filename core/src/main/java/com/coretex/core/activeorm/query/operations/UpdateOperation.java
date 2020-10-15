@@ -72,6 +72,10 @@ public class UpdateOperation extends ModificationOperation<Update, UpdateOperati
 
 	@Override
 	protected void executeAfter() {
+
+		getOperationSpec().getItemOperationInterceptorService()
+				.onSaved(getOperationSpec().getItem());
+
 		if (getOperationSpec().getHasLocalizedFields()) {
 			getOperationSpec().getLocalizedFields().stream()
 					.filter(attr -> this.getOperationSpec().getItem().getItemContext().isDirty(attr.getAttributeName()))

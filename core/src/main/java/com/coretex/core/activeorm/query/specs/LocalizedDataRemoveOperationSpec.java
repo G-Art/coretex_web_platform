@@ -54,7 +54,9 @@ public class LocalizedDataRemoveOperationSpec extends ModificationOperationSpec<
 	}
 
 	@Override
-	public boolean constraintsApplicable() {
+	public boolean useInterceptors() {
 		return false;
 	}
+
+
 }

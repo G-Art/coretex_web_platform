@@ -19,6 +19,10 @@
     <import resource="core-query-transformation-spring.xml"/>
     <import resource="core-attribute-load-spring.xml"/>
 
+    <bean id="itemInterceptorsRegistry" class="com.coretex.core.activeorm.services.impl.DefaultItemInterceptorsRegistry"
+          init-method="init"/>
+    <bean id="applicationConfig" class="com.coretex.server.ApplicationConfig"/>
+
     <bean id="abstractJdbcService" class="com.coretex.core.activeorm.services.AbstractJdbcService">
         <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
         <lookup-method name="getTransactionTemplate" bean="transactionTemplate"/>
@@ -42,6 +46,8 @@
           class="com.coretex.core.activeorm.services.impl.DefaultSearchService"
           parent="abstractJdbcService">
     </bean>
+
+    <bean id="defaultItemOperationInterceptorService" class="com.coretex.core.activeorm.services.impl.DefaultItemOperationInterceptorService"/>
 
     <bean id="specFactory" class="com.coretex.core.activeorm.factories.OperationFactoryImpl" parent="abstractJdbcService">
     </bean>

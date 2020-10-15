@@ -242,6 +242,10 @@ public class DefaultItemContextImpl extends ItemContext {
 				.forEach(LocalizedAttributeValueHolder::refresh);
 	}
 
+	@Override
+	public boolean isSystemType() {
+		return false;
+	}
 
 	private final class HolderProcessor<H, T> {
 

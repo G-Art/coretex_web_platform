@@ -62,7 +62,7 @@ public class RemoveOperationSpec extends ModificationOperationSpec<Delete, Remov
 	}
 
 	@Override
-	public boolean constraintsApplicable() {
-		return false;
+	protected void onPrepare() {
+//		ignore
 	}
 }

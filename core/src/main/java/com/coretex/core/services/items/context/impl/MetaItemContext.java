@@ -114,4 +114,9 @@ public final class MetaItemContext extends ItemContext {
 	public void refresh() {
 		throw new UnsupportedOperationException(UPDATE_INITIAL_TYPE_ERROR_MSG);
 	}
+
+	@Override
+	public boolean isSystemType() {
+		return true;
+	}
 }

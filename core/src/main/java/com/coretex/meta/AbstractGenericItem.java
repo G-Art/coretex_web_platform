@@ -1,5 +1,6 @@
 package com.coretex.meta;
 
+import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
 import com.coretex.server.ApplicationContextProvider;
@@ -14,7 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Gerasimenko (g-art) Artem "gerasimenko.art@gmail.com"
- *         create by 12-02-2016
+ * create by 12-02-2016
  */
 public abstract class AbstractGenericItem implements Serializable {
 
@@ -30,11 +31,25 @@ public abstract class AbstractGenericItem implements Serializable {
     public AbstractGenericItem() {
         itemContextFactory = ApplicationContextProvider.getApplicationContext().getBean(ITEM_CONTEXT_FACTORY_QUALIFIER, ItemContextFactory.class);
         checkNotNull(this.itemContextFactory, ITEM_COX_FACTORY_UNAVAILABLE_ERROR_MSG);
-        this.ctx = getFactory().create(this.getClass());
+        create(getFactory().create(this.getClass()));
     }
 
     public AbstractGenericItem(ItemContext ctx) {
+        create(ctx);
+    }
+
+    private void create(ItemContext ctx) {
         this.ctx = ctx;
+        if (!ctx.isSystemType()) {
+            var operationInterceptorService = ApplicationContextProvider.getApplicationContext()
+                    .getBean(ItemOperationInterceptorService.class);
+            if (ctx.isNew()) {
+                operationInterceptorService.onCreate(this);
+            } else {
+                operationInterceptorService.onLoad(this);
+            }
+        }
+
     }
 
     public UUID getUuid() {
@@ -75,7 +90,8 @@ public abstract class AbstractGenericItem implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        if(Objects.nonNull(getUuid()) && Objects.nonNull(((AbstractGenericItem) o).getUuid())) return Objects.equals(getUuid(), ((AbstractGenericItem) o).getUuid());
+        if (Objects.nonNull(getUuid()) && Objects.nonNull(((AbstractGenericItem) o).getUuid()))
+            return Objects.equals(getUuid(), ((AbstractGenericItem) o).getUuid());
 
         return hashCode() == o.hashCode();
 
