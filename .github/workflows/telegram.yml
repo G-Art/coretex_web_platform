@@ -1,11 +1,9 @@
 # This is a basic workflow to help you get started with Actions
-
 name: Telegram message
-on: [push, create, delete, issues, label]
+on: [check_run, check_suite, create, delete, deployment, deployment_status, fork, gollum, issue_comment, issues, label, milestone, page_build, project, project_card, project_column, public, pull_request, pull_request_review, pull_request_review_comment, pull_request_target, push, registry_package, release, status, watch]
 jobs:
-
   notify:
-    name: New commit
+    name: Telegram action notification
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -14,4 +12,4 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_CHAT }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        args: Action [${{ github.event}}]::[${{github.event_name}}]::[${{github.actor}}]::[${{github.sha}}]::[${{github.ref}}]
+        args: New event action [[${{github.event_name}}]::[${{github.actor}}]::[${{github.sha}}]::[${{github.ref}}]
