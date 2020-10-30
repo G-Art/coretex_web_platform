@@ -1,6 +1,7 @@
 package com.coretex.core.activeorm.query.select.transformator.strategies;
 
 import com.coretex.core.activeorm.exceptions.QueryException;
+import com.coretex.core.activeorm.query.QueryStatementContext;
 import com.coretex.core.activeorm.query.select.SelectQueryTransformationHelper;
 import com.coretex.core.activeorm.query.select.data.TableTransformationData;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
@@ -18,6 +19,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -39,6 +41,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 	public SelectBody apply(TableDataInjectionPoint dataInjectionPoint) {
 		var tableTransformationData = dataInjectionPoint.getTableTransformationData();
 		var plainSelectScanner = dataInjectionPoint.getOwnerPlainSelectScanner();
+		QueryStatementContext<? extends Statement> context = dataInjectionPoint.getContext();
 
 		PlainSelect originalPlainSelect = plainSelectScanner
 				.map(selectBodyScanner -> (PlainSelect) selectBodyScanner.scannedObject())
@@ -47,7 +50,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 				});
 
 		if(addWrapper(plainSelectScanner.get(), tableTransformationData, dataInjectionPoint.isUseSubtypes())){
-			PlainSelect wrapper = getTransformationHelper().clone(originalPlainSelect);
+			PlainSelect wrapper = clone(originalPlainSelect);
 			plainSelectScanner.get().setWrapped(true);
 			var orderByElements = originalPlainSelect.getOrderByElements();
 			Limit limit = originalPlainSelect.getLimit();
@@ -67,7 +70,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 					subSelect.setAlias(alias);
 				}
 			}
-			subSelect.setSelectBody(adjustInheritance(tableTransformationData, plainSelectScanner.get(), dataInjectionPoint.isUseSubtypes()));
+			subSelect.setSelectBody(adjustInheritance(tableTransformationData, plainSelectScanner.get(), dataInjectionPoint.isUseSubtypes(), context));
 			wrapper.setFromItem(subSelect);
 			wrapper.setLimit(limit);
 			wrapper.setOffset(offset);
@@ -75,7 +78,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 			wrapper.setWhere(null);
 			return wrapper;
 		} else {
-			return adjustInheritance(tableTransformationData, plainSelectScanner.get(), dataInjectionPoint.isUseSubtypes());
+			return adjustInheritance(tableTransformationData, plainSelectScanner.get(), dataInjectionPoint.isUseSubtypes(), context);
 		}
 	}
 
@@ -94,21 +97,23 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 						(hasOffset || hasLimit || hasOrderBy) );
 	}
 
-	private SelectBody adjustInheritance(TableTransformationData tableTransformationData, SelectBodyScanner originalPlainSelectScanner, boolean useSubtypes){
+	private SelectBody adjustInheritance(TableTransformationData tableTransformationData, SelectBodyScanner originalPlainSelectScanner, boolean useSubtypes, QueryStatementContext<? extends Statement> context){
 		PlainSelect originalPlainSelect = (PlainSelect) originalPlainSelectScanner.scannedObject();
-        adjustSelectItem(originalPlainSelectScanner);
+        adjustSelectItem(originalPlainSelectScanner,context);
 		if (tableTransformationData.hasInheritance() && useSubtypes) {
 			SetOperationList setOperationList = new SetOperationList();
 			List<SelectBody> bodies = Lists.newArrayList();
 			List<Boolean> brackets = Lists.newArrayList(FALSE);
 			List<SetOperation> setOperations = Lists.newArrayList();
-			tableTransformationData.getInheritance().orElseGet(Collections::emptySet)
-					.stream().filter(metaTypeItem -> !metaTypeItem.getTableName().equals(tableTransformationData.getTypeItemBind().getTableName()))
+			tableTransformationData.getInheritance()
+					.orElseGet(Collections::emptySet)
+					.stream()
+					.filter(metaTypeItem -> !metaTypeItem.getTableName().equals(tableTransformationData.getTypeItemBind().getTableName()))
 					.forEach(metaTypeItem -> {
 						if (LOG.isDebugEnabled()) {
 							LOG.debug(String.format("Add union for subtype [%s]", metaTypeItem.getTypeCode()));
 						}
-						bodies.add(adjustPlaneSelect(getTransformationHelper().clone(originalPlainSelect), metaTypeItem, useSubtypes));
+						bodies.add(adjustPlaneSelect(clone(originalPlainSelect), metaTypeItem, useSubtypes));
 						brackets.add(FALSE);
 						UnionOp union = new UnionOp();
 						union.setAll(true);
@@ -125,7 +130,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 
 	private PlainSelect adjustPlaneSelect(PlainSelect plainSelect, MetaTypeItem metaTypeItem, boolean useSubtypes){
 		adjustWhere(plainSelect, metaTypeItem, useSubtypes);
-		return getTransformationHelper().amendTable(plainSelect, metaTypeItem);
+		return amendTable(plainSelect, metaTypeItem);
 	}
 
 	private void adjustWhere(PlainSelect newPlainSelect, MetaTypeItem metaTypeItem, boolean useSubtypes) {
@@ -146,20 +151,22 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 				.getCortexContext().findAttribute(metaTypeItem.getTypeCode(), GenericItem.META_TYPE).getColumnName());
 		Set<MetaTypeItem> subTypeItemSet = null;
 		if(useSubtypes){
-			subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ? ItemUtils.getAllSubtypes(metaTypeItem).stream()
+			subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ?
+					ItemUtils.getAllSubtypes(metaTypeItem).stream()
 					.filter(sub -> sub.getTableName().equals(metaTypeItem.getTableName()))
-					.collect(Collectors.toSet()) : null;
+					.collect(Collectors.toSet()) :
+					null;
 		}
 
 		return getTransformationHelper().createMetaEqExpression(metaTypeItem, left, subTypeItemSet);
 	}
 
-	private void adjustSelectItem(SelectBodyScanner selectBodyScanner) {
+	private void adjustSelectItem(SelectBodyScanner selectBodyScanner, QueryStatementContext<? extends Statement> statementContext) {
 		List<SelectItemScanner<?>> selectItemScanners = selectBodyScanner.getSelectItemScanners();
 		selectItemScanners.stream()
 				.filter(SelectItemScanner::isAllColumn)
 				.forEach(selectItemScanner -> {
-					SelectItemDataInjectionPoint selectItemDataInjectionPoint = getTransformationHelper().createDateInjectionPoint(selectItemScanner);
+					SelectItemDataInjectionPoint selectItemDataInjectionPoint = getTransformationHelper().createDateInjectionPoint(selectItemScanner, statementContext);
 					selectItemDataInjectionPoint.setSelectBodyScannerOwner(selectBodyScanner);
 					applyTransformation(selectItemDataInjectionPoint);
 				});
@@ -172,7 +179,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 					.createDateInjectionPointsWrapper(scanners, dateInjectionPoint -> {
 						dateInjectionPoint.setSelectBodyScannerOwner(selectBodyScanner);
 						return dateInjectionPoint;
-					});
+					}, statementContext);
 			wrapperInjectionPoint.setSelectBodyScannerOwner(selectBodyScanner);
 			selectBodyScanner.setSelectBody(applyTransformation(wrapperInjectionPoint));
 		}

@@ -23,6 +23,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -68,10 +69,10 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 
 		cortexContext.getAllAttributes(typeMetaType.getTypeCode()).values().stream()
 				.filter(metaAttributeTypeItem -> mapOfColValues.containsKey(metaAttributeTypeItem.getColumnName()))
-				.filter(metaAttributeTypeItem ->  AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem) ||
-												 (AttributeTypeUtils.isItemAttribute(metaAttributeTypeItem) &&
-												 (((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes() == null ||
-												 ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes().isEmpty())))
+				.filter(metaAttributeTypeItem -> AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem) ||
+						(AttributeTypeUtils.isItemAttribute(metaAttributeTypeItem) &&
+								(((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes() == null ||
+										((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes().isEmpty())))
 				.forEach(metaAttributeTypeItem -> item.initValue(metaAttributeTypeItem.getAttributeName(), mapOfColValues.get(metaAttributeTypeItem.getColumnName()).apply(metaAttributeTypeItem)));
 		return ItemUtils.createItem(targetClass, item);
 
@@ -101,7 +102,10 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 					return cortexContext.getTypeTranslator(((RegularTypeItem) metaAttributeTypeItem.getAttributeType()).getRegularClass()).read(rs, index);
 				} else {
 					Class<AbstractGenericItem> itemClass = ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getItemClass();
-					return ItemUtils.createItem(itemClass, itemContextFactory.create(itemClass, (UUID) JdbcUtils.getResultSetValue(rs, index)));
+					var value = JdbcUtils.getResultSetValue(rs, index);
+					return Objects.nonNull(value) ?
+							ItemUtils.createItem(itemClass, itemContextFactory.create(itemClass, (UUID) value)) :
+							null;
 				}
 			} catch (Exception e) {
 				if (LOG.isDebugEnabled()) {

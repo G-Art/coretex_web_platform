@@ -1,5 +1,6 @@
 package com.coretex.core.activeorm.query.specs;
 
+import com.coretex.core.activeorm.query.QueryStatementContext;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.operations.InsertOperation;
 import com.coretex.core.activeorm.query.operations.dataholders.InsertValueDataHolder;
@@ -76,7 +77,7 @@ public class InsertOperationSpec extends ModificationOperationSpec<Insert, Inser
 	}
 
 	@Override
-	public InsertOperation createOperation(QueryTransformationProcessor<Insert> processor) {
+	public InsertOperation createOperation(QueryTransformationProcessor<QueryStatementContext<Insert>> processor) {
 		return new InsertOperation(this);
 	}
 

@@ -1,5 +1,6 @@
 package com.coretex.core.activeorm.query.operations;
 
+import com.coretex.core.activeorm.query.QueryStatementContext;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.operations.sources.SelectSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.select.PageableSelectOperationSpec;
@@ -20,7 +21,7 @@ public class PageableSelectOperation<T> extends SelectOperation<T> {
 
 	private Long totalCount = 0L;
 
-	public PageableSelectOperation(PageableSelectOperationSpec<T> operationSpec, QueryTransformationProcessor<Select> transformationProcessor) {
+	public PageableSelectOperation(PageableSelectOperationSpec<T> operationSpec, QueryTransformationProcessor<QueryStatementContext<Select>> transformationProcessor) {
 		super(operationSpec, transformationProcessor);
 		this.pageableSelectOperationSpec = operationSpec;
 	}

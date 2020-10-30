@@ -1,5 +1,6 @@
 package com.coretex.core.activeorm.query.specs;
 
+import com.coretex.core.activeorm.query.QueryStatementContext;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.operations.RemoveOperation;
 import com.coretex.core.activeorm.query.operations.dataholders.RemoveValueDataHolder;
@@ -57,7 +58,7 @@ public class RemoveOperationSpec extends ModificationOperationSpec<Delete, Remov
 	}
 
 	@Override
-	public RemoveOperation createOperation(QueryTransformationProcessor<Delete> processor) {
+	public RemoveOperation createOperation(QueryTransformationProcessor<QueryStatementContext<Delete>> processor) {
 		return new RemoveOperation(this);
 	}
 

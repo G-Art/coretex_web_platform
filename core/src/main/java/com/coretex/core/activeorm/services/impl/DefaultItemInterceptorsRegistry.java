@@ -11,7 +11,7 @@ import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
 import com.coretex.core.utils.TypeUtil;
 import com.coretex.items.core.MetaTypeItem;
-import com.coretex.server.ApplicationConfig;
+import com.coretex.server.CoretexApplicationConfig;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
@@ -33,7 +33,7 @@ import static java.util.Collections.EMPTY_LIST;
 public class DefaultItemInterceptorsRegistry implements ItemInterceptorsRegistry {
 
 	@Resource
-	private ApplicationConfig applicationConfig;
+	private CoretexApplicationConfig coretexApplicationConfig;
 	@Resource
 	private MetaTypeProvider metaTypeProvider;
 	private ApplicationContext applicationContext;
@@ -52,7 +52,7 @@ public class DefaultItemInterceptorsRegistry implements ItemInterceptorsRegistry
 	@PostConstruct
 	private void init() {
 
-		var allInterceptorActive = this.applicationConfig.getConfig(SYSTEM_ORM_INTERCEPTORS_ALL_ACTIVE, Boolean.TYPE)
+		var allInterceptorActive = this.coretexApplicationConfig.getConfig(SYSTEM_ORM_INTERCEPTORS_ALL_ACTIVE, Boolean.TYPE)
 				.orElse(Boolean.TRUE);
 
 		if(!allInterceptorActive){
@@ -98,9 +98,9 @@ public class DefaultItemInterceptorsRegistry implements ItemInterceptorsRegistry
 	}
 
 	private boolean isActive(MetaTypeItem item, Object o) {
-		var itemInterceptorActive = this.applicationConfig.getConfig(String.format(SYSTEM_ORM_INTERCEPTORS_ITEM_ACTIVE, item.getTypeCode()), Boolean.TYPE)
+		var itemInterceptorActive = this.coretexApplicationConfig.getConfig(String.format(SYSTEM_ORM_INTERCEPTORS_ITEM_ACTIVE, item.getTypeCode()), Boolean.TYPE)
 				.orElse(Boolean.TRUE);
-		var interceptorActive = this.applicationConfig.getConfig(String.format(SYSTEM_ORM_INTERCEPTORS_ACTIVE, o.getClass().getSimpleName()), Boolean.TYPE)
+		var interceptorActive = this.coretexApplicationConfig.getConfig(String.format(SYSTEM_ORM_INTERCEPTORS_ACTIVE, o.getClass().getSimpleName()), Boolean.TYPE)
 				.orElse(Boolean.TRUE);
 		return interceptorActive && itemInterceptorActive;
 	}
@@ -170,7 +170,7 @@ public class DefaultItemInterceptorsRegistry implements ItemInterceptorsRegistry
 		public void addInterceptor(Object interceptor) {
 			for (MappedInterceptorType value : MappedInterceptorType.values()) {
 				if (value.clazz.isInstance(interceptor)) {
-					var typeInterceptorActive = applicationConfig.getConfig(String.format(SYSTEM_ORM_INTERCEPTORS_TYPE_ACTIVE, value.toString()), Boolean.TYPE)
+					var typeInterceptorActive = coretexApplicationConfig.getConfig(String.format(SYSTEM_ORM_INTERCEPTORS_TYPE_ACTIVE, value.toString()), Boolean.TYPE)
 							.orElse(Boolean.TRUE);
 					if (typeInterceptorActive) {
 						getMappedInterceptorTypeCollectionMap().get(value).add(interceptor);

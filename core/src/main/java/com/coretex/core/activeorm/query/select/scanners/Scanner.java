@@ -7,6 +7,11 @@ import net.sf.jsqlparser.expression.AllComparisonExpression;
 import net.sf.jsqlparser.expression.AnyComparisonExpression;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
+import net.sf.jsqlparser.statement.CreateFunctionalStatement;
+import net.sf.jsqlparser.statement.alter.sequence.AlterSequence;
+import net.sf.jsqlparser.statement.create.schema.CreateSchema;
+import net.sf.jsqlparser.statement.create.sequence.CreateSequence;
+import net.sf.jsqlparser.statement.grant.Grant;
 import net.sf.jsqlparser.statement.select.*;
 
 import java.util.Objects;
@@ -43,6 +48,26 @@ public abstract class Scanner<T, Q> implements SelectQueryVisitors {
 	public abstract Class<? extends T> scannedObjectClass();
 
 	@Override
+	public void visit(CreateFunctionalStatement createFunctionalStatement) {
+		throw new UnsupportedOperationException("Not supported.");
+	}
+
+	@Override
+	public void visit(CreateSchema aThis) {
+		throw new UnsupportedOperationException("Not supported.");
+	}
+
+	@Override
+	public void visit(Grant grant) {
+		throw new UnsupportedOperationException("Not supported.");
+	}
+
+	@Override
+	public void visit(CreateSequence createSequence) {
+		throw new UnsupportedOperationException("Not supported.");
+	}
+
+	@Override
 	public void visit(SelectExpressionItem item) {
 		item.getExpression().accept(this);
 	}
@@ -61,6 +86,11 @@ public abstract class Scanner<T, Q> implements SelectQueryVisitors {
 	public void visit(SubSelect subSelect) {
 		SubSelectScanner<Q> subSelectScanner = new SubSelectScanner<>(deep + 1, getParentStatement(), this);
 		subSelectScanner.scan(subSelect);
+	}
+
+	@Override
+	public void visit(AlterSequence alterSequence) {
+		throw new UnsupportedOperationException("Not supported.");
 	}
 
 	@Override

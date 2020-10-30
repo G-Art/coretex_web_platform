@@ -1,13 +1,14 @@
 package com.coretex.core.activeorm.query.specs.select;
 
-import com.coretex.core.activeorm.query.operations.SelectOperation;
+import com.coretex.core.activeorm.query.QueryStatementContext;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
+import com.coretex.core.activeorm.query.operations.SelectOperation;
 import com.coretex.core.activeorm.query.specs.SqlOperationSpec;
 import com.google.common.collect.Maps;
 import net.sf.jsqlparser.statement.select.Select;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Map;
 
 public class SelectOperationSpec<R> extends SqlOperationSpec<Select, SelectOperation> {
 
@@ -45,7 +46,7 @@ public class SelectOperationSpec<R> extends SqlOperationSpec<Select, SelectOpera
 	}
 
 	@Override
-	public SelectOperation<R> createOperation(QueryTransformationProcessor<Select> processorSupplier) {
+	public SelectOperation<R> createOperation(QueryTransformationProcessor<QueryStatementContext<Select>> processorSupplier) {
 		return new SelectOperation<>(this, processorSupplier);
 	}
 

@@ -28,7 +28,7 @@ public class SetOperationListTransformationStrategy extends AbstractTransformati
 		if(CollectionUtils.isNotEmpty(subSelectScanners)){
 			setOperationList.getSelects().clear();
 			subSelectScanners.stream()
-					.map(scanner -> (AbstractScannerDataInjectionPoint)getTransformationHelper().createDateInjectionPoint(scanner))
+					.map(scanner -> (AbstractScannerDataInjectionPoint)getTransformationHelper().createDateInjectionPoint(scanner, injectionPoint.getContext()))
 					.forEach(dataInjectionPoint -> {
 						SelectBody selectBody = this.applyTransformation(dataInjectionPoint);
 						setOperationList.getSelects().add(selectBody);

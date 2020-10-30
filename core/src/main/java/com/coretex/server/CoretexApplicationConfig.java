@@ -14,16 +14,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ApplicationConfig implements EnvironmentAware {
+public class CoretexApplicationConfig implements EnvironmentAware {
 
 	private final Map<String, Object> properties = new HashMap<>();
 
-	@Resource
+	@Resource(name = "conversionService")
 	private ConversionService conversionService;
 
 	private Environment environment;
 
-	private static final Logger LOG = LoggerFactory.getLogger(ApplicationConfig.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CoretexApplicationConfig.class);
 
 	public Map<String, Object> getConfigurations() {
 		if (properties.isEmpty()) {

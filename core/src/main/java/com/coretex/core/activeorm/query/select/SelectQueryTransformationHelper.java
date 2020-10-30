@@ -1,6 +1,7 @@
 package com.coretex.core.activeorm.query.select;
 
 import com.coretex.core.activeorm.exceptions.QueryException;
+import com.coretex.core.activeorm.query.QueryStatementContext;
 import com.coretex.core.activeorm.query.select.data.AliasInfoHolder;
 import com.coretex.core.activeorm.query.select.data.TableTransformationData;
 import com.coretex.core.activeorm.query.select.scanners.ExpressionScanner;
@@ -25,6 +26,7 @@ import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
@@ -44,14 +46,14 @@ public class SelectQueryTransformationHelper {
 	private DataInjectionPointFactory injectionPointFactory;
 
 	@SuppressWarnings("unchecked")
-	public <S extends Scanner, DIP extends AbstractScannerDataInjectionPoint<S>> DIP createDateInjectionPoint(S scanner) {
-		return (DIP) injectionPointFactory.getDataInjectionPoint(scanner);
+	public <S extends Scanner, DIP extends AbstractScannerDataInjectionPoint<S>> DIP createDateInjectionPoint(S scanner, QueryStatementContext<? extends Statement> statementContext) {
+		return (DIP) injectionPointFactory.getDataInjectionPoint(scanner, statementContext);
 	}
 
-	public <S extends Scanner<?, ?>, R extends AbstractScannerDataInjectionPoint<S>> WrapperInjectionPoint<List<R>> createDateInjectionPointsWrapper(List<S> scanners, Function<R, R> enrichFunction) {
+	public <S extends Scanner<?, ?>, R extends AbstractScannerDataInjectionPoint<S>> WrapperInjectionPoint<List<R>> createDateInjectionPointsWrapper(List<S> scanners, Function<R, R> enrichFunction, QueryStatementContext<? extends Statement> statementContext) {
 		return new WrapperInjectionPoint<>(scanners.stream()
 				.map(scanner -> {
-					R dateInjectionPoint = createDateInjectionPoint(scanner);
+					R dateInjectionPoint = createDateInjectionPoint(scanner, statementContext);
 					return enrichFunction.apply(dateInjectionPoint);
 				}).collect(Collectors.toList()));
 	}
@@ -102,7 +104,8 @@ public class SelectQueryTransformationHelper {
 	}
 
 	public TableTransformationData bindItem(Table table) {
-		return new TableTransformationData(table, cortexContext.findMetaType(table.getFullyQualifiedName().replaceAll("\"", "")));
+		var mType = cortexContext.findMetaType(table.getFullyQualifiedName().replaceAll("\"", ""));
+		return new TableTransformationData(table, mType);
 	}
 
 	public void adjustColumn(ExpressionScanner scanner, SelectBodyScanner ownerSelectBodyScanner) {
@@ -148,17 +151,6 @@ public class SelectQueryTransformationHelper {
 		}
 	}
 
-	private List<Expression> getColumnFromFunction(ExpressionScanner scanner) {
-		var columns = Lists.<Expression>newArrayList();
-			if(scanner.isColumn()){
-				columns.add(scanner.getExpression());
-			}
-			scanner.getInternalExpressions()
-					.forEach(exp-> columns.addAll(getColumnFromFunction((ExpressionScanner)exp)));
-
-		return columns;
-	}
-
 	public TableTransformationData getTableTransformationDataForTable(Table table, SelectBodyScanner ownerSelectBodyScanner){
 		var fromItemScanner = ownerSelectBodyScanner.getFromItemScanner();
 		if (isSameAlias(table, fromItemScanner.scannedObject())) {
@@ -184,15 +176,6 @@ public class SelectQueryTransformationHelper {
 		return null;
 	}
 
-	private void processInternalExpression(ExpressionScanner expressionScanner, SelectBodyScanner selectBodyScanner) {
-		if (expressionScanner.isColumn()) {
-			adjustColumn(expressionScanner, selectBodyScanner);
-		} else {
-			List<ExpressionScanner> internalExpressions = expressionScanner.getInternalExpressions();
-			internalExpressions.forEach(internalExpression -> processInternalExpression(internalExpression, selectBodyScanner));
-		}
-	}
-
 	public TableTransformationData getTableTransformationDataForColumn(Column column, SelectBodyScanner ownerSelectBodyScanner) {
 		var fromItemScanner = ownerSelectBodyScanner.getFromItemScanner();
 		var table = column.getTable();
@@ -200,6 +183,26 @@ public class SelectQueryTransformationHelper {
 			return fromItemScanner.getTableTransformationData();
 		}
 		return getTableTransformationDataForTable(table, ownerSelectBodyScanner);
+	}
+
+	private List<Expression> getColumnFromFunction(ExpressionScanner scanner) {
+		var columns = Lists.<Expression>newArrayList();
+			if(scanner.isColumn()){
+				columns.add(scanner.getExpression());
+			}
+			scanner.getInternalExpressions()
+					.forEach(exp-> columns.addAll(getColumnFromFunction((ExpressionScanner)exp)));
+
+		return columns;
+	}
+
+	private void processInternalExpression(ExpressionScanner expressionScanner, SelectBodyScanner selectBodyScanner) {
+		if (expressionScanner.isColumn()) {
+			adjustColumn(expressionScanner, selectBodyScanner);
+		} else {
+			List<ExpressionScanner> internalExpressions = expressionScanner.getInternalExpressions();
+			internalExpressions.forEach(internalExpression -> processInternalExpression(internalExpression, selectBodyScanner));
+		}
 	}
 
 	private boolean isSameAlias(FromItem left, FromItem right) {

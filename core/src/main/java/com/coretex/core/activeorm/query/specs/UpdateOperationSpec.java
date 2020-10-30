@@ -1,5 +1,6 @@
 package com.coretex.core.activeorm.query.specs;
 
+import com.coretex.core.activeorm.query.QueryStatementContext;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.operations.UpdateOperation;
 import com.coretex.core.activeorm.query.operations.dataholders.UpdateValueDataHolder;
@@ -61,7 +62,7 @@ public class UpdateOperationSpec extends ModificationOperationSpec<Update, Updat
 	}
 
 	@Override
-	public UpdateOperation createOperation(QueryTransformationProcessor<Update> processor) {
+	public UpdateOperation createOperation(QueryTransformationProcessor<QueryStatementContext<Update>> processor) {
 		return new UpdateOperation(this);
 	}
 

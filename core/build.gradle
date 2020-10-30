@@ -22,7 +22,7 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.9.3'
     implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.9'
 
-    implementation group: 'com.github.jsqlparser', name: 'jsqlparser', version: '3.0'
+    implementation group: 'com.github.jsqlparser', name: 'jsqlparser', version: '3.2'
 
     // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
     implementation group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'

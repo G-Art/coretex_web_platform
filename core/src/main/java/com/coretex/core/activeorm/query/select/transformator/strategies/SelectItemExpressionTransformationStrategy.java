@@ -56,11 +56,11 @@ public class SelectItemExpressionTransformationStrategy extends AbstractTransfor
 						selectExpressionItem.setExpression(new Column((Table) originalPlainSelect.getFromItem(), GenericItem.UUID));
 					}
 				}else{
-					getTransformationHelper().adjustColumn(selectItemScanner.getExpressionScanner(), selectBodyScanner);
+					adjustColumn(selectItemScanner.getExpressionScanner(), selectBodyScanner);
 				}
 			}else {
 				if (selectItemScanner.getExpressionScanner().isColumn()){
-					getTransformationHelper().adjustColumn(selectItemScanner.getExpressionScanner(), selectBodyScanner);
+					adjustColumn(selectItemScanner.getExpressionScanner(), selectBodyScanner);
 				}
 			}
 		});

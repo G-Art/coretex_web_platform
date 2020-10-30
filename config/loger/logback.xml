@@ -28,10 +28,10 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="com.coretex.core.activeorm.services.impl.DefaultItemInterceptorsRegistry" level="DEBUG" additivity="false">
+    <logger name="com.coretex.core.activeorm.services.impl.DefaultItemInterceptorsRegistry" level="INFO" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
-    <logger name="com.coretex.core.activeorm.interceptors.impl.CommonItemLifecycleLoggerInterceptor" level="DEBUG" additivity="false">
+    <logger name="com.coretex.core.activeorm.interceptors.impl.CommonItemLifecycleLoggerInterceptor" level="INFO" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 

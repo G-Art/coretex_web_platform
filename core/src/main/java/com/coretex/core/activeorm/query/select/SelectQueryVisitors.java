@@ -42,6 +42,7 @@ public interface SelectQueryVisitors extends SelectVisitor, FromItemVisitor, Exp
 
 	}
 
+
 	@Override
 	default void visit(Select select) {
 	}

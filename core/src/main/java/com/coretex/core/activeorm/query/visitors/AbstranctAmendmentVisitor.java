@@ -9,14 +9,18 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.*;
 import net.sf.jsqlparser.statement.alter.Alter;
+import net.sf.jsqlparser.statement.alter.sequence.AlterSequence;
 import net.sf.jsqlparser.statement.comment.Comment;
 import net.sf.jsqlparser.statement.create.index.CreateIndex;
+import net.sf.jsqlparser.statement.create.schema.CreateSchema;
+import net.sf.jsqlparser.statement.create.sequence.CreateSequence;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
 import net.sf.jsqlparser.statement.create.view.AlterView;
 import net.sf.jsqlparser.statement.create.view.CreateView;
 import net.sf.jsqlparser.statement.delete.Delete;
 import net.sf.jsqlparser.statement.drop.Drop;
 import net.sf.jsqlparser.statement.execute.Execute;
+import net.sf.jsqlparser.statement.grant.Grant;
 import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.merge.Merge;
 import net.sf.jsqlparser.statement.replace.Replace;
@@ -46,6 +50,30 @@ public abstract class AbstranctAmendmentVisitor implements SelectVisitor, FromIt
 		select.getSelectBody().accept(this);
 	}
 
+	@Override
+	public void visit(CreateFunctionalStatement createFunctionalStatement) {
+
+	}
+
+	@Override
+	public void visit(CreateSchema aThis) {
+
+	}
+
+	@Override
+	public void visit(Grant grant) {
+
+	}
+
+	@Override
+	public void visit(CreateSequence createSequence) {
+
+	}
+
+	@Override
+	public void visit(AlterSequence alterSequence) {
+
+	}
 
 	public void visit(WithItem withItem) {
 		withItem.getSelectBody().accept(this);

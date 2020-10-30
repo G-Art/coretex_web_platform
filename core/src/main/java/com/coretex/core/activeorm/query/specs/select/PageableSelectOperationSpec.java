@@ -1,5 +1,6 @@
 package com.coretex.core.activeorm.query.specs.select;
 
+import com.coretex.core.activeorm.query.QueryStatementContext;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.operations.PageableSelectOperation;
 import net.sf.jsqlparser.statement.select.Select;
@@ -43,7 +44,7 @@ public class PageableSelectOperationSpec<R> extends SelectOperationSpec<R> {
 	}
 
 	@Override
-	public PageableSelectOperation<R> createOperation(QueryTransformationProcessor<Select> processorSupplier) {
+	public PageableSelectOperation<R> createOperation(QueryTransformationProcessor<QueryStatementContext<Select>> processorSupplier) {
 		return new PageableSelectOperation<R>(this, processorSupplier);
 	}
 

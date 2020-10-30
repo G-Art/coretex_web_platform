@@ -1,8 +1,9 @@
 package com.coretex.core.activeorm.query.specs;
 
 import com.coretex.core.activeorm.factories.OperationFactory;
-import com.coretex.core.activeorm.query.operations.SqlOperation;
+import com.coretex.core.activeorm.query.QueryStatementContext;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
+import com.coretex.core.activeorm.query.operations.SqlOperation;
 import com.coretex.core.activeorm.services.AbstractJdbcService;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.server.ApplicationContextProvider;
@@ -56,7 +57,7 @@ public abstract class SqlOperationSpec<S extends Statement, O extends SqlOperati
 		this.querySupplier = querySupplier;
 	}
 
-	public abstract O createOperation(QueryTransformationProcessor<S> processor);
+	public abstract O createOperation(QueryTransformationProcessor<QueryStatementContext<S>> processor);
 
 	public OperationFactory getOperationFactory() {
 		return operationFactory;

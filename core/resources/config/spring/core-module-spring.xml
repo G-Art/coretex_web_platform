@@ -19,9 +19,10 @@
     <import resource="core-query-transformation-spring.xml"/>
     <import resource="core-attribute-load-spring.xml"/>
 
+    <bean id="conversionService" class="org.springframework.format.support.DefaultFormattingConversionService"/>
     <bean id="itemInterceptorsRegistry" class="com.coretex.core.activeorm.services.impl.DefaultItemInterceptorsRegistry"
           init-method="init"/>
-    <bean id="applicationConfig" class="com.coretex.server.ApplicationConfig"/>
+    <bean id="coretexApplicationConfig" class="com.coretex.server.CoretexApplicationConfig"/>
 
     <bean id="abstractJdbcService" class="com.coretex.core.activeorm.services.AbstractJdbcService">
         <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
@@ -32,9 +33,8 @@
 
     <bean id="idleQueryTransformationProcessor" class="com.coretex.core.activeorm.query.IdleQueryTransformationProcessor"/>
     <bean id="selectQueryTransformationProcessor" class="com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor">
-        <constructor-arg index="0" ref="defaultMetaTypeProvider" />
-        <constructor-arg index="1" ref="transformationStrategies"/>
-        <constructor-arg index="2" ref="queryTransformationHelper"/>
+        <constructor-arg index="0" ref="transformationStrategies"/>
+        <constructor-arg index="1" ref="queryTransformationHelper"/>
     </bean>
 
     <bean id="rowMapperFactory" class="com.coretex.core.activeorm.factories.RowMapperFactory">

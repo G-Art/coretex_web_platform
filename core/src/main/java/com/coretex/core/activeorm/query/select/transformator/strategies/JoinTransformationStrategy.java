@@ -42,7 +42,7 @@ public class JoinTransformationStrategy extends AbstractTransformationStrategy<J
 			Table table = (Table) fromItemScanner.scannedObject();
 			var tableTransformationData = getTransformationHelper().bindItem(table);
 			if (dataInjectionPoint.getSelectBodyScannerOwner().isPresent()) {
-				getTransformationHelper().adjustColumn(scanner.getJoinOnExpressionScanner(), dataInjectionPoint.getSelectBodyScannerOwner().get());
+				adjustColumn(scanner.getJoinOnExpressionScanner(), dataInjectionPoint.getSelectBodyScannerOwner().get());
 			}
 			if (tableTransformationData.hasInheritance()) {
 				modifyJoinInheritance(scanner, tableTransformationData);
@@ -110,7 +110,7 @@ public class JoinTransformationStrategy extends AbstractTransformationStrategy<J
 		plainSelect.setWhere(createMetaTypeExpression(table, targetType));
 		plainSelect.setSelectItems(genSelectItems(typeItemBind, table));
 
-		plainSelect = getTransformationHelper().clone(plainSelect); // clone to detach where expression (not optimal: try to find another way)
+		plainSelect = clone(plainSelect); // clone to detach where expression (not optimal: try to find another way)
 
 		plainSelectConsumer.accept(plainSelect);
 

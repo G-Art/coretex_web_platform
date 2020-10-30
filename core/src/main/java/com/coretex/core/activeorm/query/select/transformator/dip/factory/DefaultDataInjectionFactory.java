@@ -1,27 +1,42 @@
 package com.coretex.core.activeorm.query.select.transformator.dip.factory;
 
-import com.coretex.core.activeorm.query.select.scanners.*;
-import com.coretex.core.activeorm.query.select.transformator.dip.*;
+import com.coretex.core.activeorm.query.QueryStatementContext;
+import com.coretex.core.activeorm.query.select.scanners.ExpressionScanner;
+import com.coretex.core.activeorm.query.select.scanners.FromItemScanner;
+import com.coretex.core.activeorm.query.select.scanners.JoinScanner;
+import com.coretex.core.activeorm.query.select.scanners.Scanner;
+import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
+import com.coretex.core.activeorm.query.select.scanners.SelectItemScanner;
+import com.coretex.core.activeorm.query.select.scanners.SubSelectScanner;
+import com.coretex.core.activeorm.query.select.transformator.dip.AbstractScannerDataInjectionPoint;
+import com.coretex.core.activeorm.query.select.transformator.dip.ExpressionDataInjectionPoint;
+import com.coretex.core.activeorm.query.select.transformator.dip.JoinDataInjectionPoint;
+import com.coretex.core.activeorm.query.select.transformator.dip.SelectBodyDataInjectionPoint;
+import com.coretex.core.activeorm.query.select.transformator.dip.SelectItemDataInjectionPoint;
+import com.coretex.core.activeorm.query.select.transformator.dip.SubSelectDataInjectionPoint;
+import com.coretex.core.activeorm.query.select.transformator.dip.TableDataInjectionPoint;
 import com.google.common.collect.Maps;
+import net.sf.jsqlparser.statement.Statement;
 
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class DefaultDataInjectionFactory implements DataInjectionPointFactory {
 
-	private Map<Class<? extends Scanner>, Function<? super Scanner, ? extends AbstractScannerDataInjectionPoint<? extends Scanner>>> injectPointsMap = Maps.newHashMap();
+	private Map<Class<? extends Scanner>, BiFunction<? super Scanner, QueryStatementContext<? extends Statement> , ? extends AbstractScannerDataInjectionPoint<? extends Scanner>>> injectPointsMap = Maps.newHashMap();
 
 	public DefaultDataInjectionFactory() {
-		injectPointsMap.put(FromItemScanner.class, scanner -> new TableDataInjectionPoint((FromItemScanner) scanner));
-		injectPointsMap.put(SelectBodyScanner.class, scanner -> new SelectBodyDataInjectionPoint((SelectBodyScanner) scanner));
-		injectPointsMap.put(SubSelectScanner.class, scanner -> new SubSelectDataInjectionPoint((SubSelectScanner) scanner));
-		injectPointsMap.put(SelectItemScanner.class, scanner -> new SelectItemDataInjectionPoint((SelectItemScanner) scanner));
-		injectPointsMap.put(ExpressionScanner.class, scanner -> new ExpressionDataInjectionPoint((ExpressionScanner) scanner));
-		injectPointsMap.put(JoinScanner.class, scanner -> new JoinDataInjectionPoint((JoinScanner) scanner));
+		injectPointsMap.put(FromItemScanner.class, (scanner, context) -> new TableDataInjectionPoint((FromItemScanner) scanner, context));
+		injectPointsMap.put(SelectBodyScanner.class, (scanner, context) -> new SelectBodyDataInjectionPoint((SelectBodyScanner) scanner, context));
+		injectPointsMap.put(SubSelectScanner.class, (scanner, context) -> new SubSelectDataInjectionPoint((SubSelectScanner) scanner, context));
+		injectPointsMap.put(SelectItemScanner.class, (scanner, context) -> new SelectItemDataInjectionPoint((SelectItemScanner) scanner, context));
+		injectPointsMap.put(ExpressionScanner.class, (scanner, context) -> new ExpressionDataInjectionPoint((ExpressionScanner) scanner, context));
+		injectPointsMap.put(JoinScanner.class, (scanner, context) -> new JoinDataInjectionPoint((JoinScanner) scanner, context));
 	}
 
 	@Override
-	public <S extends Scanner> AbstractScannerDataInjectionPoint<? extends Scanner> getDataInjectionPoint(S scanner) {
-		return injectPointsMap.get(scanner.getClass()).apply(scanner);
+	public <S extends Scanner> AbstractScannerDataInjectionPoint<? extends Scanner> getDataInjectionPoint(S scanner, QueryStatementContext<? extends Statement> statementContext) {
+		return injectPointsMap.get(scanner.getClass())
+				.apply(scanner, statementContext);
 	}
 }
