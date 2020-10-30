@@ -12,4 +12,4 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_CHAT }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        args: New event action [[${{github.event_name}}]::[${{github.actor}}]::[${{github.sha}}]::[${{github.ref}}]
+        args: New event action [${{github.event_name}}]::[${{github.actor}}]::[https://github.com/G-Art/coretex_web_platform/commit/${{github.sha}}]::[${{github.ref}}]
