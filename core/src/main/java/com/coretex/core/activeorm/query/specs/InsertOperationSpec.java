@@ -1,8 +1,7 @@
 package com.coretex.core.activeorm.query.specs;
 
-import com.coretex.core.activeorm.query.QueryStatementContext;
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.operations.InsertOperation;
+import com.coretex.core.activeorm.query.operations.contexts.InsertOperationConfigContext;
 import com.coretex.core.activeorm.query.operations.dataholders.InsertValueDataHolder;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaRelationTypeItem;
@@ -19,7 +18,10 @@ import java.util.stream.Collectors;
 
 import static com.coretex.core.general.utils.ItemUtils.getTypeCode;
 
-public class InsertOperationSpec extends ModificationOperationSpec<Insert, InsertOperation> {
+public class InsertOperationSpec extends ModificationOperationSpec<
+		Insert,
+		InsertOperationSpec,
+		InsertOperationConfigContext> {
 
 	protected final static String INSERT_ITEM_QUERY = "insert into %s (%s) values (%s)";
 
@@ -76,13 +78,12 @@ public class InsertOperationSpec extends ModificationOperationSpec<Insert, Inser
 		return newUuid;
 	}
 
-	@Override
-	public InsertOperation createOperation(QueryTransformationProcessor<QueryStatementContext<Insert>> processor) {
-		return new InsertOperation(this);
-	}
-
-
 	public Map<String, InsertValueDataHolder> getInsertValueDatas() {
 		return insertValueDatas;
+	}
+
+	@Override
+	public InsertOperationConfigContext createOperationContext() {
+		return new InsertOperationConfigContext(this);
 	}
 }

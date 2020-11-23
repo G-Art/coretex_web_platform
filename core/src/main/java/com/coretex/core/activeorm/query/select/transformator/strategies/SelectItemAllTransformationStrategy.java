@@ -8,9 +8,11 @@ import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.SelectItemDataInjectionPoint;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
-import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.SelectBody;
+import net.sf.jsqlparser.statement.select.SelectExpressionItem;
+import net.sf.jsqlparser.statement.select.SelectItem;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,7 +38,7 @@ public class SelectItemAllTransformationStrategy extends AbstractTransformationS
 	}
 
 	private SelectBody amendForTable(TransformInfoHolder infoHolder) {
-		var selectBody = (PlainSelect)infoHolder.getSelectBodyScanner().scannedObject();
+		var selectBody = (PlainSelect) infoHolder.getSelectBodyScanner().scannedObject();
 
 		List<SelectItem> selectItems = selectBody.getSelectItems();
 		selectItems.remove(infoHolder.getDataInjectionPoint().getScanner().scannedObject());
@@ -53,17 +55,23 @@ public class SelectItemAllTransformationStrategy extends AbstractTransformationS
 	}
 
 	private boolean transformationRequired(TransformInfoHolder infoHolder) {
-		if(infoHolder.getDataInjectionPoint().isTableAware()){
+		if (infoHolder.getDataInjectionPoint().isTableAware()) {
 			Table table = infoHolder.getDataInjectionPoint().getTable();
 			var tableTransformationDataForTable = getTransformationHelper().getTableTransformationDataForTable(table, infoHolder.getSelectBodyScanner());
 			infoHolder.setTableTransformationData(tableTransformationDataForTable);
-			return Objects.nonNull(tableTransformationDataForTable) && tableTransformationDataForTable.isBind();
+			var transform = Objects.nonNull(tableTransformationDataForTable) && tableTransformationDataForTable.isBind();
+			if(Objects.nonNull(tableTransformationDataForTable)){
+				infoHolder.getDataInjectionPoint().getContext().addAllItemUsed(tableTransformationDataForTable.getUsedTypes());
+			}
+			return transform;
 		}
 
 		var fromItemScanner = infoHolder.getFromItemScanner();
 		return fromItemScanner.isPresent() && fromItemScanner.map(is -> {
-			infoHolder.setTableTransformationData(is.isTable() ? getTransformationHelper().bindItem((Table) is.scannedObject()) : null);
-			return Objects.nonNull(infoHolder.getTableTransformationData()) && infoHolder.getTableTransformationData().isBind();
+			infoHolder.setTableTransformationData(is.getTableTransformationData());
+			infoHolder.getDataInjectionPoint().getContext().addAllItemUsed(is.getTableTransformationData().getUsedTypes());
+			return Objects.nonNull(infoHolder.getTableTransformationData()) &&
+					infoHolder.getTableTransformationData().isBind();
 		}).get();
 	}
 

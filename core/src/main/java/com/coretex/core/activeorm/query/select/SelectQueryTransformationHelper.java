@@ -1,7 +1,8 @@
 package com.coretex.core.activeorm.query.select;
 
 import com.coretex.core.activeorm.exceptions.QueryException;
-import com.coretex.core.activeorm.query.QueryStatementContext;
+import com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext;
+import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.select.data.AliasInfoHolder;
 import com.coretex.core.activeorm.query.select.data.TableTransformationData;
 import com.coretex.core.activeorm.query.select.scanners.ExpressionScanner;
@@ -46,11 +47,11 @@ public class SelectQueryTransformationHelper {
 	private DataInjectionPointFactory injectionPointFactory;
 
 	@SuppressWarnings("unchecked")
-	public <S extends Scanner, DIP extends AbstractScannerDataInjectionPoint<S>> DIP createDateInjectionPoint(S scanner, QueryStatementContext<? extends Statement> statementContext) {
+	public <S extends Scanner, DIP extends AbstractScannerDataInjectionPoint<S>> DIP createDateInjectionPoint(S scanner, QueryInfoHolder<? extends Statement> statementContext) {
 		return (DIP) injectionPointFactory.getDataInjectionPoint(scanner, statementContext);
 	}
 
-	public <S extends Scanner<?, ?>, R extends AbstractScannerDataInjectionPoint<S>> WrapperInjectionPoint<List<R>> createDateInjectionPointsWrapper(List<S> scanners, Function<R, R> enrichFunction, QueryStatementContext<? extends Statement> statementContext) {
+	public <S extends Scanner<?, ?>, R extends AbstractScannerDataInjectionPoint<S>> WrapperInjectionPoint<List<R>> createDateInjectionPointsWrapper(List<S> scanners, Function<R, R> enrichFunction, QueryInfoHolder<? extends Statement> statementContext) {
 		return new WrapperInjectionPoint<>(scanners.stream()
 				.map(scanner -> {
 					R dateInjectionPoint = createDateInjectionPoint(scanner, statementContext);
@@ -87,8 +88,6 @@ public class SelectQueryTransformationHelper {
 			List<Expression> expressions = new ArrayList<>();
 			expressions.add(new StringValue(meta.getUuid().toString()));
 
-
-
 			subTypeItemSet.forEach(sub -> expressions.add(new StringValue(sub.getUuid().toString())));
 			expressionList.setExpressions(expressions);
 			((InExpression) whereExpression).setRightItemsList(expressionList);
@@ -104,8 +103,15 @@ public class SelectQueryTransformationHelper {
 	}
 
 	public TableTransformationData bindItem(Table table) {
-		var mType = cortexContext.findMetaType(table.getFullyQualifiedName().replaceAll("\"", ""));
-		return new TableTransformationData(table, mType);
+		var tableName = table.getFullyQualifiedName().replaceAll("\"", "");
+		var mType = cortexContext.findMetaType(tableName);
+		Set<MetaTypeItem>  metaTypesForTable;
+		if(Objects.isNull(mType)){
+			metaTypesForTable = cortexContext.findMetaTypeForTable(tableName);
+		}else {
+			metaTypesForTable = cortexContext.findMetaTypeForTable(mType.getTableName());
+		}
+		return new TableTransformationData(table, mType, metaTypesForTable);
 	}
 
 	public void adjustColumn(ExpressionScanner scanner, SelectBodyScanner ownerSelectBodyScanner) {

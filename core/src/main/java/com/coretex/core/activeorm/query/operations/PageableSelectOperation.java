@@ -1,54 +1,55 @@
 package com.coretex.core.activeorm.query.operations;
 
-import com.coretex.core.activeorm.query.QueryStatementContext;
+import com.coretex.core.activeorm.cache.CacheService;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
+import com.coretex.core.activeorm.query.operations.contexts.SelectOperationConfigContext;
+import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.operations.sources.SelectSqlParameterSource;
-import com.coretex.core.activeorm.query.specs.select.PageableSelectOperationSpec;
+import com.coretex.core.services.bootstrap.impl.CortexContext;
 import net.sf.jsqlparser.statement.select.Select;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
-public class PageableSelectOperation<T> extends SelectOperation<T> {
+public class PageableSelectOperation extends SelectOperation {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PageableSelectOperation.class);
 
-	private PageableSelectOperationSpec<T> pageableSelectOperationSpec;
+	private final CortexContext cortexContext;
 
-	private Long totalCount = 0L;
 
-	public PageableSelectOperation(PageableSelectOperationSpec<T> operationSpec, QueryTransformationProcessor<QueryStatementContext<Select>> transformationProcessor) {
-		super(operationSpec, transformationProcessor);
-		this.pageableSelectOperationSpec = operationSpec;
+	public PageableSelectOperation(QueryTransformationProcessor<QueryInfoHolder<Select>> transformationProcessor,
+	                               CortexContext cortexContext, ResultSetExtractor<Stream<?>> extractor, CacheService cacheService) {
+		super(transformationProcessor, cortexContext, extractor, cacheService);
+		this.cortexContext = cortexContext;
 	}
 
 	@Override
-	public void execute() {
-		super.execute();
-		Select countStatement = parseQuery(pageableSelectOperationSpec.getTotalCountQuery());
-		var results = getJdbcTemplate().query(countStatement.toString(),
-				new SelectSqlParameterSource(getOperationSpec()),
-				getExtractorFunction().apply(this)).collect(Collectors.toList());
-		if(CollectionUtils.isNotEmpty(results)){
-			Map rowResultMap = (Map) results.iterator().next();
-			totalCount = (Long) rowResultMap.get("count");
-		}
+	public <T> Stream<T> execute(SelectOperationConfigContext operationConfigContext) {
+		var execute = super.<T>execute(operationConfigContext);
+		searchQuerySupplier.andThen(query -> {
+			String countQuery = getTotalCountQuery(query.getStatement().toString());
+			var results = getJdbcTemplate().query(countQuery,
+					new SelectSqlParameterSource(operationConfigContext.getOperationSpec(), cortexContext),
+					getExtractor()).collect(Collectors.toList());
+			if(CollectionUtils.isNotEmpty(results)){
+				Map rowResultMap = (Map) results.iterator().next();
+				operationConfigContext.setTotalCount((Long) rowResultMap.get("count"));
+			}
+			return null;
+		}).apply(operationConfigContext.getOperationSpec());
+
+		return execute;
 	}
 
-	@Override
-	public PageableSelectOperationSpec<T> getOperationSpec() {
-		return pageableSelectOperationSpec;
+	private String getTotalCountQuery(String query){
+		return String.format("SELECT count(*) FROM (%s) as co", query);
 	}
 
-	public Long getTotalCount() {
-		return totalCount;
-	}
-
-	public void setTotalCount(Long totalCount) {
-		this.totalCount = totalCount;
-	}
 }

@@ -149,7 +149,7 @@ public class DefaultItemContextImpl extends ItemContext {
 	@Override
 	public boolean isExist() {
 		var loadedUUID = getProvider().getValue(AbstractGenericItem.UUID, this);
-		if (Objects.isNull(loadedUUID)) { // prevents implicit removing
+		if (Objects.isNull(loadedUUID)) { // prevents implicit removing from db
 			uuid = null;
 			return false;
 		}

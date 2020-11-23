@@ -1,6 +1,7 @@
 package com.coretex.core.activeorm.services;
 
-import com.coretex.core.activeorm.query.operations.PageableSelectOperation;
+import com.coretex.core.activeorm.query.operations.contexts.SelectOperationConfigContext;
+import com.coretex.core.activeorm.query.specs.select.PageableSelectOperationSpec;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,21 +14,25 @@ public class PageableSearchResult<T> extends SearchResult<T> {
 
 	private Logger LOG = LoggerFactory.getLogger(PageableSearchResult.class);
 
-	private transient PageableSelectOperation<T> selectOperation;
+	private transient SelectOperationConfigContext selectOperationConfigContext;
+	private transient PageableSelectOperationSpec operationSpec;
 
 	private Long totalCount;
 	private Integer totalPages;
 
-	public PageableSearchResult(PageableSelectOperation<T> selectOperation, Supplier<Stream<T>> resultSupplier) {
+	public PageableSearchResult(SelectOperationConfigContext selectOperationConfigContext, Supplier<Stream<T>> resultSupplier) {
 		super(resultSupplier);
-		this.selectOperation = selectOperation;
-		this.totalCount = selectOperation.getTotalCount();
-		this.totalPages = (int) Math.ceil(((double) totalCount)
-				/ selectOperation.getOperationSpec().getCount());
+		this.selectOperationConfigContext = selectOperationConfigContext;
+		if(selectOperationConfigContext.isPageable()){
+			operationSpec = (PageableSelectOperationSpec) selectOperationConfigContext.getOperationSpec();
+			this.totalCount = selectOperationConfigContext.getTotalCount();
+			this.totalPages = (int) Math.ceil(((double) totalCount)
+					/ operationSpec.getCount());
+		}
+
 	}
 
-	public SelectOperationSpec<T> nextPage(){
-		var operationSpec = selectOperation.getOperationSpec();
+	public SelectOperationSpec nextPage(){
 		if (Objects.nonNull(operationSpec.getCount()) && Objects.nonNull(operationSpec.getPage())){
 			operationSpec.setPage(operationSpec.getPage()+1);
 			return operationSpec;

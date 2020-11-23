@@ -1,6 +1,7 @@
 package com.coretex.core.activeorm.query.operations.sources;
 
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
+import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.items.core.GenericItem;
 import com.coretex.meta.AbstractGenericItem;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,9 +12,11 @@ import java.util.Objects;
 
 public class SelectSqlParameterSource extends MapSqlParameterSource {
 	private SelectOperationSpec selectOperationSpec;
+	private CortexContext cortexContext;
 
-	public SelectSqlParameterSource(SelectOperationSpec selectOperationSpec) {
+	public SelectSqlParameterSource(SelectOperationSpec selectOperationSpec, CortexContext cortexContext) {
 		this.selectOperationSpec = selectOperationSpec;
+		this.cortexContext = cortexContext;
 		addValues(selectOperationSpec.getParameters());
 	}
 
@@ -26,7 +29,7 @@ public class SelectSqlParameterSource extends MapSqlParameterSource {
 			return super.addValue(paramName, ((AbstractGenericItem) value).getUuid());
 		}
 		if(value instanceof Enum){
-			var metaEnumValueTypeItem = selectOperationSpec.getCortexContext().findMetaEnumValueTypeItem((Enum) value);
+			var metaEnumValueTypeItem = cortexContext.findMetaEnumValueTypeItem((Enum) value);
 			if(Objects.nonNull(metaEnumValueTypeItem)){
 				return super.addValue(paramName, metaEnumValueTypeItem.getUuid());
 			}

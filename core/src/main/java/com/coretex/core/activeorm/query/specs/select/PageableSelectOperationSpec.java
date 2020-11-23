@@ -1,14 +1,11 @@
 package com.coretex.core.activeorm.query.specs.select;
 
-import com.coretex.core.activeorm.query.QueryStatementContext;
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
-import com.coretex.core.activeorm.query.operations.PageableSelectOperation;
-import net.sf.jsqlparser.statement.select.Select;
+import com.coretex.core.activeorm.query.operations.contexts.SelectOperationConfigContext;
 
 import java.util.Map;
 import java.util.Objects;
 
-public class PageableSelectOperationSpec<R> extends SelectOperationSpec<R> {
+public class PageableSelectOperationSpec extends SelectOperationSpec {
 
 	private Long count = 100L;
 	private Long page = 0L;
@@ -22,9 +19,6 @@ public class PageableSelectOperationSpec<R> extends SelectOperationSpec<R> {
 		super(query, parameters);
 	}
 
-	public String getTotalCountQuery(){
-		return String.format("SELECT count(*) FROM (%s) as co", super.getQuery());
-	}
 
 	@Override
 	public String getQuery() {
@@ -43,11 +37,6 @@ public class PageableSelectOperationSpec<R> extends SelectOperationSpec<R> {
 		return super.getQuery();
 	}
 
-	@Override
-	public PageableSelectOperation<R> createOperation(QueryTransformationProcessor<QueryStatementContext<Select>> processorSupplier) {
-		return new PageableSelectOperation<R>(this, processorSupplier);
-	}
-
 	public Long getCount() {
 		return count;
 	}
@@ -62,5 +51,10 @@ public class PageableSelectOperationSpec<R> extends SelectOperationSpec<R> {
 
 	public void setPage(Long page) {
 		this.page = page;
+	}
+
+	@Override
+	public SelectOperationConfigContext createOperationContext() {
+		return new SelectOperationConfigContext(this, true);
 	}
 }

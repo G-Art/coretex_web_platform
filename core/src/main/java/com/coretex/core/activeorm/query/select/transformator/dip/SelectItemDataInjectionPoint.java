@@ -1,6 +1,6 @@
 package com.coretex.core.activeorm.query.select.transformator.dip;
 
-import com.coretex.core.activeorm.query.QueryStatementContext;
+import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
 import com.coretex.core.activeorm.query.select.scanners.SelectItemScanner;
 import net.sf.jsqlparser.schema.Table;
@@ -13,7 +13,7 @@ import java.util.Optional;
 public class SelectItemDataInjectionPoint extends AbstractScannerDataInjectionPoint<SelectItemScanner<?>> {
 
 	private Table table;
-	public SelectItemDataInjectionPoint(SelectItemScanner scanner, QueryStatementContext<? extends Statement> context) {
+	public SelectItemDataInjectionPoint(SelectItemScanner scanner, QueryInfoHolder<? extends Statement> context) {
 		super(scanner, context);
 		var selectItem = scanner.scannedObject();
 		if(selectItem instanceof AllTableColumns){

@@ -5,12 +5,18 @@ import com.coretex.core.activeorm.services.SearchService;
 import com.coretex.core.tests.extentions.MockitoExtension;
 import com.coretex.core.tests.tags.IntegrationTest;
 import com.coretex.enums.test_orm.TestRelationEnum;
-import com.coretex.items.test_orm.*;
+import com.coretex.items.test_orm.BiDirectionalRelatedItem;
+import com.coretex.items.test_orm.BiDirectionalRelationTestItem;
+import com.coretex.items.test_orm.EnumRelationTestItem;
+import com.coretex.items.test_orm.OneDirectionalRelatedItem;
+import com.coretex.items.test_orm.OneDirectionalRelationTestItem;
 import com.coretex.server.spring.CortexEnvironmentInitializer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -22,7 +28,11 @@ import java.util.Set;
 import java.util.UUID;
 
 import static java.lang.String.format;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @ContextConfiguration(
@@ -33,6 +43,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @IntegrationTest
 public class SaveUpdateItemRelationsTest {
 
+
+	private final Logger LOG = LoggerFactory.getLogger(SaveUpdateItemRelationsTest.class);
 
 	@Resource
 	private ItemService itemService;

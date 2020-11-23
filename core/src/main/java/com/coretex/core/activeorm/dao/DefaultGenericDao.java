@@ -51,8 +51,8 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public Long count(boolean strict) {
-		SelectOperationSpec<Map<String, Long>> query = this.createCountSearchQuery(strict);
-		var result = this.getSearchService().search(query).getResult();
+		SelectOperationSpec query = this.createCountSearchQuery(strict);
+		var result = this.getSearchService().<Map<String, Long>>search(query).getResult();
 		if (CollectionUtils.isEmpty(result)) {
 			return 0L;
 		}
@@ -79,8 +79,8 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public Stream<I> findReactive(boolean strict) {
-		SelectOperationSpec<I> query = this.createSearchQuery(strict);
-		return this.getSearchService().search(query).getResultStream();
+		SelectOperationSpec query = this.createSearchQuery(strict);
+		return this.getSearchService().<I>search(query).getResultStream();
 	}
 
 	@Override
@@ -190,7 +190,7 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public Stream<I> findReactive(Map<String, ?> params, boolean strict) {
-		SelectOperationSpec<I> query = this.createSearchQuery(params, strict);
+		SelectOperationSpec query = this.createSearchQuery(params, strict);
 		SearchResult<I> searchResult = this.getSearchService().search(query);
 		return searchResult.getResultStream();
 	}
@@ -212,8 +212,8 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public Stream<I> findReactive(SortParameters sortParameters, boolean strict) {
-		SelectOperationSpec<I> query = this.createSearchQuery(sortParameters, strict);
-		return this.getSearchService().search(query).getResultStream();
+		SelectOperationSpec query = this.createSearchQuery(sortParameters, strict);
+		return this.getSearchService().<I>search(query).getResultStream();
 	}
 
 	@Override
@@ -234,7 +234,7 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 	@Override
 	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
 		var query = this.createSearchQuery(params, sortParameters, strict);
-		return this.getSearchService().search(query).getResultStream();
+		return this.getSearchService().<I>search(query).getResultStream();
 	}
 
 	@Override
@@ -358,20 +358,20 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 		return findPageable(null, null, -1, strict);
 	}
 
-	protected SelectOperationSpec<I> createSearchQuery(boolean strict) {
+	protected SelectOperationSpec createSearchQuery(boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
-		return new SelectOperationSpec<>(builder.toString());
+		return new SelectOperationSpec(builder.toString());
 	}
 
-	protected SelectOperationSpec<Map<String, Long>> createCountSearchQuery(boolean strict) {
+	protected SelectOperationSpec createCountSearchQuery(boolean strict) {
 		StringBuilder builder = this.createCountQueryString(strict);
-		return new SelectOperationSpec<>(builder.toString());
+		return new SelectOperationSpec(builder.toString());
 	}
 
-	protected SelectOperationSpec<I> createSearchQuery(Map<String, ?> params, boolean strict) {
+	protected SelectOperationSpec createSearchQuery(Map<String, ?> params, boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
-		SelectOperationSpec<I> query = new SelectOperationSpec<>(builder.toString());
+		SelectOperationSpec query = new SelectOperationSpec(builder.toString());
 		if (params != null && !params.isEmpty()) {
 			query.addQueryParameters(params);
 		}
@@ -379,17 +379,17 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 		return query;
 	}
 
-	protected SelectOperationSpec<I> createSearchQuery(SortParameters sortParameters, boolean strict) {
+	protected SelectOperationSpec createSearchQuery(SortParameters sortParameters, boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
-		return new SelectOperationSpec<>(builder.toString());
+		return new SelectOperationSpec(builder.toString());
 	}
 
-	protected SelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
+	protected SelectOperationSpec createSearchQuery(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
-		SelectOperationSpec<I> query = new SelectOperationSpec<>(builder.toString());
+		SelectOperationSpec query = new SelectOperationSpec(builder.toString());
 		if (params != null && !params.isEmpty()) {
 			query.addQueryParameters(params);
 		}
@@ -397,11 +397,11 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 	}
 
 
-	protected PageableSelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict) {
+	protected PageableSelectOperationSpec createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
-		var query = new PageableSelectOperationSpec<I>(builder.toString());
+		var query = new PageableSelectOperationSpec(builder.toString());
 		if (count > 0) {
 			query.setCount(count);
 		}
@@ -413,11 +413,11 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 		return query;
 	}
 
-	protected PageableSelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict) {
+	protected PageableSelectOperationSpec createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
-		var query = new PageableSelectOperationSpec<I>(builder.toString());
+		var query = new PageableSelectOperationSpec(builder.toString());
 		query.setCount(count);
 		query.setPage(page);
 

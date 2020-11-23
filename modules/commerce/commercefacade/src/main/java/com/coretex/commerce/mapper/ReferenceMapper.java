@@ -23,7 +23,7 @@ public class ReferenceMapper {
 			return null;
 		}
 
-		var result = searchService.search(new SelectItemsOperationSpec<>(reference.getUuid(), targetClass)).getResult();
+		var result = searchService.<T>search(new SelectItemsOperationSpec(reference.getUuid(), targetClass)).getResult();
 		if(CollectionUtils.isNotEmpty(result)){
 			return result.iterator().next();
 		}
@@ -38,7 +38,7 @@ public class ReferenceMapper {
 			return null;
 		}
 
-		var result = searchService.search(new SelectItemsOperationSpec<>(reference, targetClass)).getResult();
+		var result = searchService.<T>search(new SelectItemsOperationSpec<>(reference, targetClass)).getResult();
 		if(CollectionUtils.isNotEmpty(result)){
 			return result.iterator().next();
 		}

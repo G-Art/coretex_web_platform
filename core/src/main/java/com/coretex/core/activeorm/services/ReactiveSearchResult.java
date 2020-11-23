@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public abstract class ReactiveSearchResult<T> {
+public class ReactiveSearchResult<T> {
 
 	private Logger LOG = LoggerFactory.getLogger(ReactiveSearchResult.class);
 

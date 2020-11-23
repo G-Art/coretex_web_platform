@@ -34,12 +34,12 @@ import com.coretex.meta.AbstractGenericItem;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.ImmutableTable.Builder;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -67,8 +67,8 @@ public class CortexContext implements MetaTypeProvider {
 	private ImmutableTable<Class, UUID, MetaEnumValueTypeItem> metaEnumValueTypesUuid;
 
 	private ImmutableMap<String, MetaTypeItem> metaTypes;
-	private ImmutableMap<String, String> metaTypesTableName;
 	private ImmutableMap<UUID, MetaTypeItem> uuidMetaTypes;
+	private ImmutableMap<String, Set<MetaTypeItem>> metaTypesForTable;
 
 	private ImmutableTable<String, String, MetaAttributeTypeItem> metaTypesAttributes;
 	private ImmutableMap<UUID, MetaAttributeTypeItem> uuidMetaTypesAttributes;
@@ -85,8 +85,10 @@ public class CortexContext implements MetaTypeProvider {
 		metaTypes = this.metaCollector.collectSystemMetaTypes().stream()
 				.collect(toImmutableMap(MetaTypeItem::getTypeCode, Function.identity()));
 
-		metaTypesTableName = this.metaCollector.collectSystemMetaTypes().stream()
-				.collect(toImmutableMap(MetaTypeItem::getTypeCode, MetaTypeItem::getTableName));
+		metaTypesForTable = this.metaCollector.collectSystemMetaTypes().stream()
+				.collect(toImmutableMap(MetaTypeItem::getTableName,
+						Set::of,
+						(o, o2) -> Sets.union(o, o2).immutableCopy()));
 
 		uuidMetaTypes = metaTypes.entrySet().stream()
 				.collect(toImmutableMap(entry -> entry.getValue().getUuid(), Map.Entry::getValue));
@@ -180,6 +182,10 @@ public class CortexContext implements MetaTypeProvider {
 		return metaTypes.get(typeCode);
 	}
 
+	public Set<MetaTypeItem> findMetaTypeForTable(String table){
+		return metaTypesForTable.get(table);
+	}
+
 	public MetaTypeItem findMetaType(UUID typeCodeUUID) {
 		return uuidMetaTypes.get(typeCodeUUID);
 	}
@@ -195,7 +201,7 @@ public class CortexContext implements MetaTypeProvider {
 
 	@Override
 	public <E extends Enum> E findMetaEnumValueTypeItem(Class clazz, UUID uuid) {
-		return  (E) Enum.valueOf(clazz, metaEnumValueTypesUuid.get(clazz, uuid).getValue().toUpperCase());
+		return (E) Enum.valueOf(clazz, metaEnumValueTypesUuid.get(clazz, uuid).getValue().toUpperCase());
 	}
 
 	@Override
@@ -209,12 +215,12 @@ public class CortexContext implements MetaTypeProvider {
 	}
 
 	@Override
-	public ImmutableMap<Class, RegularTypeItem> getRegularType(String typeCode){
+	public ImmutableMap<Class, RegularTypeItem> getRegularType(String typeCode) {
 		return regularTypes.column(typeCode);
 	}
 
 	@Override
-	public ImmutableMap<String, RegularTypeItem> getRegularType(Class typeCode){
+	public ImmutableMap<String, RegularTypeItem> getRegularType(Class typeCode) {
 		return regularTypes.row(typeCode);
 	}
 

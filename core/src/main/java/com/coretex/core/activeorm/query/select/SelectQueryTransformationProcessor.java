@@ -1,7 +1,8 @@
 package com.coretex.core.activeorm.query.select;
 
-import com.coretex.core.activeorm.query.QueryStatementContext;
+import com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
+import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
 import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.SelectBodyDataInjectionPoint;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 
-public class SelectQueryTransformationProcessor implements QueryTransformationProcessor<QueryStatementContext<Select>> {
+public class SelectQueryTransformationProcessor implements QueryTransformationProcessor<QueryInfoHolder<Select>> {
 
 	private Logger LOG = LoggerFactory.getLogger(SelectQueryTransformationProcessor.class);
 
@@ -30,7 +31,7 @@ public class SelectQueryTransformationProcessor implements QueryTransformationPr
 	}
 
 	@Override
-	public void transform(QueryStatementContext<Select> statementContext) {
+	public void transform(QueryInfoHolder<Select> statementContext) {
 
 		SelectBodyScanner<Select> selectBodyScanner = new SelectBodyScanner<>(0, statementContext.getStatement());
 

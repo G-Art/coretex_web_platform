@@ -1,19 +1,22 @@
 package com.coretex.core.activeorm.query.specs.select;
 
-import com.coretex.core.activeorm.query.QueryStatementContext;
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
-import com.coretex.core.activeorm.query.operations.SelectOperation;
+import com.coretex.core.activeorm.query.operations.contexts.SelectOperationConfigContext;
 import com.coretex.core.activeorm.query.specs.SqlOperationSpec;
 import com.google.common.collect.Maps;
 import net.sf.jsqlparser.statement.select.Select;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.util.Assert;
 
 import java.util.Map;
 
-public class SelectOperationSpec<R> extends SqlOperationSpec<Select, SelectOperation> {
+public class SelectOperationSpec extends SqlOperationSpec<
+		Select,
+		SelectOperationSpec,
+		SelectOperationConfigContext> {
 
-	private Class<R> expectedResultType;
+	private Class<?> expectedResultType;
 	private Map<String, Object> parameters;
+	private ResultSetExtractor<?> customExtractor;
 
 	public SelectOperationSpec(String query) {
 		this(query, Maps.newHashMap());
@@ -22,6 +25,16 @@ public class SelectOperationSpec<R> extends SqlOperationSpec<Select, SelectOpera
 	public SelectOperationSpec(String query, Map<String, Object> parameters) {
 		super(query);
 		this.parameters = parameters;
+	}
+
+	public SelectOperationSpec(String query, Map<String, Object> parameters, ResultSetExtractor<?> customExtractor) {
+		this(query, parameters);
+		this.customExtractor = customExtractor;
+	}
+
+	@Override
+	public SelectOperationConfigContext createOperationContext() {
+		return new SelectOperationConfigContext(this);
 	}
 
 	public Map<String, Object> getParameters() {
@@ -37,17 +50,16 @@ public class SelectOperationSpec<R> extends SqlOperationSpec<Select, SelectOpera
 		params.forEach(this::addQueryParameter);
 	}
 
-	public Class<R> getExpectedResultType() {
+	public Class<?> getExpectedResultType() {
 		return expectedResultType;
 	}
 
-	public void setExpectedResultType(Class<R> expectedResultType) {
+	public void setExpectedResultType(Class<?> expectedResultType) {
 		this.expectedResultType = expectedResultType;
 	}
 
-	@Override
-	public SelectOperation<R> createOperation(QueryTransformationProcessor<QueryStatementContext<Select>> processorSupplier) {
-		return new SelectOperation<>(this, processorSupplier);
+	public ResultSetExtractor<?> getCustomExtractor() {
+		return customExtractor;
 	}
 
 	@Override

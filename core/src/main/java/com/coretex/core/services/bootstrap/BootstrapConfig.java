@@ -18,8 +18,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.io.PrintWriter;
-import java.util.Properties;
 
 @Configuration
 public class BootstrapConfig {
@@ -108,7 +106,7 @@ public class BootstrapConfig {
     }
 
     @Bean("jdbcTemplate")
-    @Scope("prototype")
+//    @Scope("prototype")
     public NamedParameterJdbcTemplate newJdbcTemplate(@Autowired DataSource dataSource){
         return new NamedParameterJdbcTemplate(dataSource);
     }

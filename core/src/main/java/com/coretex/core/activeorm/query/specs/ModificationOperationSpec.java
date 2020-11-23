@@ -1,7 +1,6 @@
 package com.coretex.core.activeorm.query.specs;
 
-import com.coretex.core.activeorm.query.operations.ModificationOperation;
-import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
+import com.coretex.core.activeorm.query.operations.contexts.OperationConfigContext;
 import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
@@ -14,12 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class ModificationOperationSpec<S extends Statement, O extends ModificationOperation>
-		extends SqlOperationSpec<S, O> {
+public abstract class ModificationOperationSpec<
+		S extends Statement,
+		OS extends ModificationOperationSpec<S, OS, CTX>,
+		CTX extends OperationConfigContext<S, OS, CTX>>
+		extends SqlOperationSpec<S, OS, CTX> {
 
 	private MetaTypeProvider metaTypeProvider;
-
-	private ItemOperationInterceptorService itemOperationInterceptorService;
 
 	private GenericItem item;
 
@@ -31,12 +31,7 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 
 	public ModificationOperationSpec(GenericItem item) {
 		metaTypeProvider = ApplicationContextProvider.getApplicationContext().getBean(MetaTypeProvider.class);
-		itemOperationInterceptorService = ApplicationContextProvider.getApplicationContext().getBean(ItemOperationInterceptorService.class);
-
 		this.item = item;
-		if (useInterceptors()) {
-			onPrepare();
-		}
 		setNativeQuery(true);
 	}
 
@@ -106,15 +101,4 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 		item.getItemContext().flush();
 	}
 
-	protected boolean useInterceptors() {
-		return true;
-	}
-
-	protected void onPrepare() {
-		itemOperationInterceptorService.onSavePrepare(item);
-	}
-
-	public ItemOperationInterceptorService getItemOperationInterceptorService() {
-		return itemOperationInterceptorService;
-	}
 }

@@ -1,7 +1,7 @@
 package com.coretex.core.activeorm.query.select.transformator.strategies;
 
 import com.coretex.core.activeorm.exceptions.QueryException;
-import com.coretex.core.activeorm.query.QueryStatementContext;
+import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.select.SelectQueryTransformationHelper;
 import com.coretex.core.activeorm.query.select.data.TableTransformationData;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
@@ -20,12 +20,23 @@ import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.select.Limit;
+import net.sf.jsqlparser.statement.select.Offset;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.SelectBody;
+import net.sf.jsqlparser.statement.select.SetOperation;
+import net.sf.jsqlparser.statement.select.SetOperationList;
+import net.sf.jsqlparser.statement.select.SubSelect;
+import net.sf.jsqlparser.statement.select.UnionOp;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
@@ -41,7 +52,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 	public SelectBody apply(TableDataInjectionPoint dataInjectionPoint) {
 		var tableTransformationData = dataInjectionPoint.getTableTransformationData();
 		var plainSelectScanner = dataInjectionPoint.getOwnerPlainSelectScanner();
-		QueryStatementContext<? extends Statement> context = dataInjectionPoint.getContext();
+		QueryInfoHolder<? extends Statement> context = dataInjectionPoint.getContext();
 
 		PlainSelect originalPlainSelect = plainSelectScanner
 				.map(selectBodyScanner -> (PlainSelect) selectBodyScanner.scannedObject())
@@ -97,7 +108,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 						(hasOffset || hasLimit || hasOrderBy) );
 	}
 
-	private SelectBody adjustInheritance(TableTransformationData tableTransformationData, SelectBodyScanner originalPlainSelectScanner, boolean useSubtypes, QueryStatementContext<? extends Statement> context){
+	private SelectBody adjustInheritance(TableTransformationData tableTransformationData, SelectBodyScanner originalPlainSelectScanner, boolean useSubtypes, QueryInfoHolder<? extends Statement> context){
 		PlainSelect originalPlainSelect = (PlainSelect) originalPlainSelectScanner.scannedObject();
         adjustSelectItem(originalPlainSelectScanner,context);
 		if (tableTransformationData.hasInheritance() && useSubtypes) {
@@ -161,7 +172,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 		return getTransformationHelper().createMetaEqExpression(metaTypeItem, left, subTypeItemSet);
 	}
 
-	private void adjustSelectItem(SelectBodyScanner selectBodyScanner, QueryStatementContext<? extends Statement> statementContext) {
+	private void adjustSelectItem(SelectBodyScanner selectBodyScanner, QueryInfoHolder<? extends Statement> statementContext) {
 		List<SelectItemScanner<?>> selectItemScanners = selectBodyScanner.getSelectItemScanners();
 		selectItemScanners.stream()
 				.filter(SelectItemScanner::isAllColumn)

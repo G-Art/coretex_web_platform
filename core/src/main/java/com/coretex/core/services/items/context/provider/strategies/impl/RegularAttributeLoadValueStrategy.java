@@ -3,9 +3,8 @@ package com.coretex.core.services.items.context.provider.strategies.impl;
 import com.coretex.core.activeorm.exceptions.SearchException;
 import com.coretex.core.activeorm.extractors.CoretexReactiveResultSetExtractor;
 import com.coretex.core.activeorm.factories.RowMapperFactory;
-import com.coretex.core.activeorm.query.operations.SelectOperation;
-import com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
+import com.coretex.core.activeorm.services.ReactiveSearchResult;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.provider.strategies.AbstractLoadAttributeValueStrategy;
@@ -30,10 +29,6 @@ public class RegularAttributeLoadValueStrategy extends AbstractLoadAttributeValu
 
 	private static final String SELECT_REGULAR_FIELD_BY_UUID_TEMPLATE = "select %s from \"%s\" as item where item.uuid = :uuid";
 
-	public RegularAttributeLoadValueStrategy(SelectQueryTransformationProcessor transformationProcessor) {
-		super(transformationProcessor);
-	}
-
 	@Override
 	public Object load(ItemContext ctx, MetaAttributeTypeItem attribute) {
 		var loadedAttributes = ctx.loadedAttributes();
@@ -44,16 +39,12 @@ public class RegularAttributeLoadValueStrategy extends AbstractLoadAttributeValu
 				.filter(attr -> !attr.getLocalized())
 				.filter(attr -> !loadedAttributes.contains(attr.getAttributeName()))
 				.collect(Collectors.toList());
+		CoretexReactiveResultSetExtractor<List<Object>> extractor = new CoretexReactiveResultSetExtractor<>(getCortexContext());
+		extractor.setMapperFactorySupplier(() -> creteMapperFactory(unloadedAttributes));
+		ReactiveSearchResult<List<Object>> searchResult = getOperationExecutor().execute(
+				new SelectOperationSpec(createQuery(unloadedAttributes, ctx), createParameters(ctx), extractor).createOperationContext());
 
-		SelectOperationSpec<List<Object>> selectItemAttributeOperationSpec = new SelectOperationSpec<>(createQuery(unloadedAttributes, ctx), createParameters(ctx));
-		SelectOperation<List<Object>> selectOperation = selectItemAttributeOperationSpec.createOperation(getTransformationProcessor());
-		selectOperation.setJdbcTemplateSupplier(this::getJdbcTemplate);
-		selectOperation.setExtractorCreationFunction(select -> {
-			CoretexReactiveResultSetExtractor<List<Object>> extractor = new CoretexReactiveResultSetExtractor<>(select, getCortexContext());
-			extractor.setMapperFactorySupplier(() -> creteMapperFactory(unloadedAttributes));
-			return extractor;
-		});
-		return processResult(selectOperation, unloadedAttributes, attribute, ctx);
+		return processResult(searchResult, unloadedAttributes, attribute, ctx);
 	}
 
 	private RowMapperFactory creteMapperFactory(List<MetaAttributeTypeItem> unloadedAttributes) {
@@ -101,9 +92,9 @@ public class RegularAttributeLoadValueStrategy extends AbstractLoadAttributeValu
 		return String.format(SELECT_REGULAR_FIELD_BY_UUID_TEMPLATE, columns, ctx.getTypeCode());
 	}
 
-	private Object processResult(SelectOperation<List<Object>> selectOperation, List<MetaAttributeTypeItem> unloadedAttributes, MetaAttributeTypeItem attribute, ItemContext ctx) {
-		List<Object> resultRow;
-		List<List<Object>> searchResult = selectOperation.searchResult();
+	private Object processResult(ReactiveSearchResult<List<Object>> searchResultStream, List<MetaAttributeTypeItem> unloadedAttributes, MetaAttributeTypeItem attribute, ItemContext ctx) {
+		List<Object> resultRow = null;
+		List<List<Object>> searchResult = searchResultStream.getResultStream().collect(Collectors.toList());
 		if (CollectionUtils.isEmpty(searchResult)) {
 			return null;
 		} else {

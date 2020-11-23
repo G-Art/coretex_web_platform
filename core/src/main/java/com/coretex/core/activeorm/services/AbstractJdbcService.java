@@ -1,6 +1,6 @@
 package com.coretex.core.activeorm.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.coretex.core.activeorm.query.ActiveOrmOperationExecutor;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
@@ -18,6 +18,11 @@ public abstract class AbstractJdbcService {
 
 	@Lookup
 	public NamedParameterJdbcTemplate getJdbcTemplate() {
+		return null;
+	}
+
+	@Lookup
+	public ActiveOrmOperationExecutor getOrmOperationExecutor(){
 		return null;
 	}
 

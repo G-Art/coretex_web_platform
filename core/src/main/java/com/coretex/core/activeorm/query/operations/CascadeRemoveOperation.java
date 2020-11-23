@@ -1,19 +1,19 @@
 package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
-import com.coretex.core.activeorm.query.specs.RemoveOperationSpec;
-
-import static com.coretex.core.general.utils.ItemUtils.isSystemType;
+import com.coretex.core.activeorm.services.AbstractJdbcService;
+import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
 
 public class CascadeRemoveOperation extends RemoveOperation {
 
-	public CascadeRemoveOperation(RemoveOperationSpec operationSpec) {
-		super(operationSpec);
+
+	public CascadeRemoveOperation(AbstractJdbcService abstractJdbcService, ItemOperationInterceptorService itemOperationInterceptorService) {
+		super(abstractJdbcService, itemOperationInterceptorService);
 	}
 
 	@Override
 	public QueryType getQueryType() {
-		return QueryType.DELETE;
+		return QueryType.DELETE_CASCADE;
 	}
 
 	@Override

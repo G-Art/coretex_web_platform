@@ -1,6 +1,6 @@
 package com.coretex.core.activeorm.query.select.transformator.dip.factory;
 
-import com.coretex.core.activeorm.query.QueryStatementContext;
+import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.select.scanners.ExpressionScanner;
 import com.coretex.core.activeorm.query.select.scanners.FromItemScanner;
 import com.coretex.core.activeorm.query.select.scanners.JoinScanner;
@@ -23,7 +23,7 @@ import java.util.function.BiFunction;
 
 public class DefaultDataInjectionFactory implements DataInjectionPointFactory {
 
-	private Map<Class<? extends Scanner>, BiFunction<? super Scanner, QueryStatementContext<? extends Statement> , ? extends AbstractScannerDataInjectionPoint<? extends Scanner>>> injectPointsMap = Maps.newHashMap();
+	private Map<Class<? extends Scanner>, BiFunction<? super Scanner, QueryInfoHolder<? extends Statement>, ? extends AbstractScannerDataInjectionPoint<? extends Scanner>>> injectPointsMap = Maps.newHashMap();
 
 	public DefaultDataInjectionFactory() {
 		injectPointsMap.put(FromItemScanner.class, (scanner, context) -> new TableDataInjectionPoint((FromItemScanner) scanner, context));
@@ -35,7 +35,7 @@ public class DefaultDataInjectionFactory implements DataInjectionPointFactory {
 	}
 
 	@Override
-	public <S extends Scanner> AbstractScannerDataInjectionPoint<? extends Scanner> getDataInjectionPoint(S scanner, QueryStatementContext<? extends Statement> statementContext) {
+	public <S extends Scanner> AbstractScannerDataInjectionPoint<? extends Scanner> getDataInjectionPoint(S scanner, QueryInfoHolder<? extends Statement> statementContext) {
 		return injectPointsMap.get(scanner.getClass())
 				.apply(scanner, statementContext);
 	}

@@ -1,17 +1,19 @@
 package com.coretex.core.activeorm.query.specs;
 
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
-import com.coretex.core.activeorm.query.operations.LocalizedDataSaveOperation;
-import com.coretex.core.activeorm.query.operations.ModificationOperation;
+import com.coretex.core.activeorm.query.operations.contexts.AbstractOperationConfigContext;
+import com.coretex.core.activeorm.query.operations.contexts.LocalizedDataSaveOperationConfigContext;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.google.common.collect.Maps;
 import net.sf.jsqlparser.statement.Statement;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<Statement, LocalizedDataSaveOperation> {
+public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<Statement, LocalizedDataSaveOperationSpec, LocalizedDataSaveOperationConfigContext> {
 
 	private final static String INSERT_LOCALIZED_DATA_QUERY = "insert into %s_LOC (owner, attribute, localeiso, value) values (:owner, :attribute, :localeiso, :value)";
 	private final static String UPDATE_LOCALIZED_DATA_QUERY = "update %s_LOC set value = :value where owner = :owner and attribute = :attribute and localeiso = :localeiso";
@@ -23,7 +25,7 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 	private String insertQuery;
 	private String updateQuery;
 
-	public LocalizedDataSaveOperationSpec(ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator, MetaAttributeTypeItem attributeTypeItem) {
+	public LocalizedDataSaveOperationSpec(AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?,?,?> ,?> initiator, MetaAttributeTypeItem attributeTypeItem) {
 		super(initiator.getOperationSpec().getItem());
 		setNativeQuery(false);
 		this.attributeTypeItem = attributeTypeItem;
@@ -52,11 +54,6 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 		//ignored
 	}
 
-	@Override
-	public boolean useInterceptors() {
-		return false;
-	}
-
 	public String getInsertQuery() {
 		return insertQuery;
 	}
@@ -74,8 +71,8 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 	}
 
 	@Override
-	public LocalizedDataSaveOperation createOperation(QueryTransformationProcessor processor) {
-		return new LocalizedDataSaveOperation(this);
+	public LocalizedDataSaveOperationConfigContext createOperationContext() {
+		return new LocalizedDataSaveOperationConfigContext(this);
 	}
 
 

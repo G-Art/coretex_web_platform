@@ -14,13 +14,25 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
-import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.select.Join;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.SelectBody;
+import net.sf.jsqlparser.statement.select.SelectExpressionItem;
+import net.sf.jsqlparser.statement.select.SelectItem;
+import net.sf.jsqlparser.statement.select.SetOperation;
+import net.sf.jsqlparser.statement.select.SetOperationList;
+import net.sf.jsqlparser.statement.select.SubSelect;
+import net.sf.jsqlparser.statement.select.UnionOp;
 import net.sf.jsqlparser.util.deparser.ExpressionDeParser;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -37,10 +49,11 @@ public class JoinTransformationStrategy extends AbstractTransformationStrategy<J
 	@Override
 	public Join apply(JoinDataInjectionPoint dataInjectionPoint) {
 		var scanner = dataInjectionPoint.getScanner();
+		var context = dataInjectionPoint.getContext();
 		var fromItemScanner = scanner.getFromItemScanner();
 		if (fromItemScanner.isTable()) {
-			Table table = (Table) fromItemScanner.scannedObject();
-			var tableTransformationData = getTransformationHelper().bindItem(table);
+			var tableTransformationData = fromItemScanner.getTableTransformationData();
+			context.addAllItemUsed(tableTransformationData.getUsedTypes());
 			if (dataInjectionPoint.getSelectBodyScannerOwner().isPresent()) {
 				adjustColumn(scanner.getJoinOnExpressionScanner(), dataInjectionPoint.getSelectBodyScannerOwner().get());
 			}
