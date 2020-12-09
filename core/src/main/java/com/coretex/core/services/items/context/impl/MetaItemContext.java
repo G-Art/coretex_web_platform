@@ -119,4 +119,9 @@ public final class MetaItemContext extends ItemContext {
 	public boolean isSystemType() {
 		return true;
 	}
+
+	@Override
+	public MetaItemContext clone()  {
+		return this;//it is necessary only for MetaItemContext
+	}
 }

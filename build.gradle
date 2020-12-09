@@ -54,10 +54,10 @@ import com.bmuschko.gradle.docker.tasks.image.*
 
 task createDockerfile(type: Dockerfile, dependsOn: distTar) {
     destFile.set(project.layout.buildDirectory.file('distributions/Dockerfile'))
-    from('openjdk:11')
+    from('openjdk:14')
     addFile("gm-commerce-1.0-Alpha.tar", "/opt/coretex/")
     workingDir("/opt/coretex/gm-commerce-1.0-Alpha")
-    environmentVariable('JAVA_OPTS', '-Djava.awt.headless=true -server -Xms48m -Xmx1024M -XX:MaxPermSize=512m')
+    environmentVariable('JAVA_OPTS', '-Djava.awt.headless=true -server -Xms48m -Xmx768M -XX:MaxPermSize=512m')
     exposePort(8080)
 }
 //

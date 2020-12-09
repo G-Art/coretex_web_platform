@@ -19,7 +19,7 @@ import static java.util.Objects.nonNull;
  * @author Gerasimenko (g-art) Artem "gerasimenko.art@gmail.com"
  * create by 13-02-2016
  */
-public abstract class ItemContext implements Serializable {
+public abstract class ItemContext implements Serializable, Cloneable {
 
 	private String typeCode;
 
@@ -74,6 +74,15 @@ public abstract class ItemContext implements Serializable {
 	public abstract void refresh();
 
 	public abstract boolean isSystemType();
+
+	@Override
+	public ItemContext clone() throws CloneNotSupportedException {
+		var clone = (ItemContext)super.clone();
+		clone.uuid = this.uuid;
+		clone.typeCode = this.typeCode;
+		clone.provider = this.provider;
+		return clone;
+	}
 
 	public String getTypeCode() {
 		return typeCode;

@@ -1,12 +1,15 @@
 package com.coretex.server.listeners;
 
 import com.coretex.server.PluginAccessor;
-import com.coretex.server.data.Project;
+import com.coretex.server.data.AbstractProject;
+import com.coretex.server.data.ModuleProject;
 import com.coretex.server.data.WebProject;
 import com.coretex.server.spring.CortexEnvironmentInitializer;
 import org.apache.catalina.loader.ParallelWebappClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
@@ -19,8 +22,10 @@ import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 import static java.lang.String.format;
+import static java.util.function.Predicate.not;
 
 /**
  * @author Gerasimenko (g-art) Artem "gerasimenko.art@gmail.com"
@@ -47,6 +52,31 @@ public class CoretexContextLoaderListener extends ContextLoaderListener {
     @Override
     public WebApplicationContext initWebApplicationContext(ServletContext servletContext) {
         return super.initWebApplicationContext(servletContext);
+    }
+
+    @Override
+    protected WebApplicationContext createWebApplicationContext(ServletContext servletContext) {
+        return super.createWebApplicationContext(servletContext);
+    }
+
+    @Override
+    protected ApplicationContext loadParentContext(ServletContext servletContext) {
+        ApplicationContext applicationContext = null;
+        try {
+            var classLoader = servletContext.getClassLoader();
+            var moduleProject = getCoreModule(classLoader);
+            applicationContext = getSpringContext(classLoader, moduleProject, project -> {
+                var configLocation = project.getSpringXml().getAbsolutePath().substring(project.getPath().getAbsolutePath().length() + "/resources/".length());
+                var classPathXmlApplicationContext = new ClassPathXmlApplicationContext(new String[]{format("classpath:%s", configLocation)}, false);
+                new CortexEnvironmentInitializer().initialize(classPathXmlApplicationContext);
+                classPathXmlApplicationContext.refresh();
+                return classPathXmlApplicationContext;
+            });
+        } catch (Exception e) {
+            LOG.error("Application config creation exception", e);
+        }
+
+        return applicationContext;
     }
 
     @Override
@@ -91,11 +121,12 @@ public class CoretexContextLoaderListener extends ContextLoaderListener {
         return configs;
     }
 
-    private void collectSpringXml(Project project, Set<String> configs) {
+    private void collectSpringXml(AbstractProject project, Set<String> configs) {
         if(!CollectionUtils.isEmpty(project.getRelatedProjects())){
-            project.getRelatedProjects().forEach(p -> collectSpringXml(p, configs));
+            project.getRelatedProjects().stream()
+                    .filter(not(AbstractProject::isCore)).forEach(p -> collectSpringXml(p, configs));
         }
-        if(project.getSpringXml().exists()){
+        if(project.getSpringXml().exists() && !project.isCore()){
             configs.add(project.getSpringXml().getAbsolutePath().substring(project.getPath().getAbsolutePath().length()+"/resources/".length()));
         }else {
             LOG.error(format("Error: file [%s] doesn't exist", project.getSpringXml().getName()));
@@ -104,8 +135,28 @@ public class CoretexContextLoaderListener extends ContextLoaderListener {
 
 
     private WebProject findWebProject(ConfigurableWebApplicationContext applicationContext) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Object loader = retrieveLoader(applicationContext.getClassLoader());
-        return getProject(applicationContext.getClassLoader(), loader);
+        return findWebProject(applicationContext.getClassLoader());
+    }
+
+    private WebProject findWebProject(ClassLoader classLoader) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Object loader = retrieveLoader(classLoader);
+        return getProject(classLoader, loader);
+    }
+
+    private ModuleProject getCoreModule(ClassLoader classLoader) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Object loader = retrieveLoader(classLoader);
+        Class loaderClass = loader.getClass();
+
+        Method getProjectMethod = loaderClass.getMethod("getCoreModule", ClassLoader.class);
+        return (ModuleProject) getProjectMethod.invoke(loader, classLoader);
+    }
+
+    private ApplicationContext getSpringContext(ClassLoader classLoader, AbstractProject abstractProject, Function<AbstractProject, ApplicationContext> contextFunction) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Object loader = retrieveLoader(classLoader);
+        Class loaderClass = loader.getClass();
+
+        Method getProjectMethod = loaderClass.getMethod("getSpringContext", ClassLoader.class, Object.class, Function.class);
+        return (ApplicationContext) getProjectMethod.invoke(loader, classLoader, abstractProject.getObject(), contextFunction);
     }
 
     private Object retrieveLoader(ClassLoader classLoader){

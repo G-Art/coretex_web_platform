@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.isNull;
@@ -245,6 +246,33 @@ public class DefaultItemContextImpl extends ItemContext {
 	@Override
 	public boolean isSystemType() {
 		return false;
+	}
+
+	@Override
+	public DefaultItemContextImpl clone() {
+		try {
+			var clone = (DefaultItemContextImpl) super.clone();
+			clone.attributeHolders = attributeHolders.entrySet()
+					.stream()
+					.filter(e -> e.getValue().isLoaded())
+					.map(entry -> AttributeValueHolder.initValueHolder(entry.getKey(), clone, entry.getValue().get(clone.getProvider())))
+					.collect(Collectors.toMap(AttributeValueHolder::getAttributeName, Function.identity()));
+
+			clone.localizedAttributeHolders = localizedAttributeHolders.entrySet()
+					.stream()
+					.filter(e -> e.getValue().isLoaded())
+					.map(entry -> {
+						var stringObjectMap = entry.getValue().getAll(clone.getProvider())
+								.entrySet()
+								.stream()
+								.collect(Collectors.toMap(e -> e.getKey().toString(), Map.Entry::getValue));
+						return LocalizedAttributeValueHolder.initValueHolder(entry.getKey(), clone, stringObjectMap);
+					})
+					.collect(Collectors.toMap(LocalizedAttributeValueHolder::getAttributeName, Function.identity()));
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private final class HolderProcessor<H, T> {

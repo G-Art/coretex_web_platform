@@ -17,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Gerasimenko (g-art) Artem "gerasimenko.art@gmail.com"
  * create by 12-02-2016
  */
-public abstract class AbstractGenericItem implements Serializable {
+public abstract class AbstractGenericItem implements Serializable, Cloneable {
 
     public static final String UUID = "uuid";
 
@@ -100,5 +100,17 @@ public abstract class AbstractGenericItem implements Serializable {
     @Override
     public int hashCode() {
         return Objects.nonNull(getUuid()) ? Objects.hashCode(getUuid()) : super.hashCode();
+    }
+
+    @Override
+    public AbstractGenericItem clone() {
+        try {
+            var clone = (AbstractGenericItem)super.clone();
+            clone.ctx = this.ctx.clone();
+            clone.itemContextFactory = this.itemContextFactory;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

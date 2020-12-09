@@ -15,5 +15,5 @@ public interface Project {
 
     File getSpringXml();
 
-    List<Project> getRelatedProjects();
+    List<AbstractProject> getRelatedProjects();
 }
