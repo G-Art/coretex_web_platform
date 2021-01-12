@@ -215,13 +215,21 @@ public class CortexContext implements MetaTypeProvider {
 	}
 
 	@Override
-	public ImmutableMap<Class, RegularTypeItem> getRegularType(String typeCode) {
-		return regularTypes.column(typeCode);
+	public RegularTypeItem getRegularType(String typeCode) {
+		var column = regularTypes.column(typeCode);
+		if(column.isEmpty()){
+			return null;
+		}
+		return column.values().iterator().next();
 	}
 
 	@Override
-	public ImmutableMap<String, RegularTypeItem> getRegularType(Class typeCode) {
-		return regularTypes.row(typeCode);
+	public RegularTypeItem getRegularType(Class typeCode) {
+		var row = regularTypes.row(typeCode);
+		if(row.isEmpty()){
+			return null;
+		}
+		return row.values().iterator().next();
 	}
 
 	@Override

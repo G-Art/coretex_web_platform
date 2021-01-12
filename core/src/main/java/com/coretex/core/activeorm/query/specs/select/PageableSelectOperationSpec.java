@@ -20,6 +20,10 @@ public class PageableSelectOperationSpec extends SelectOperationSpec {
 	}
 
 
+	public String getOriginalQuery(){
+		return super.getQuery();
+	}
+
 	@Override
 	public String getQuery() {
 		if(Objects.nonNull(count) || Objects.nonNull(page)){

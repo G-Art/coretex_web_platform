@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
+import java.util.Objects;
 
 @Controller
 public class HomeController extends AbstractController {
@@ -28,7 +29,11 @@ public class HomeController extends AbstractController {
 				.atZone(ZoneId.systemDefault())
 				.toInstant()));
 		model.addAttribute("orderCount", staticForPeriod.get("count"));
-		model.addAttribute("orderTotal", BigDecimal.valueOf((Double) staticForPeriod.get("sum")).setScale(2, RoundingMode.HALF_UP));
+		Double sum = (Double) staticForPeriod.get("sum");
+		if (Objects.isNull(sum)){
+			sum = 0d;
+		}
+		model.addAttribute("orderTotal", BigDecimal.valueOf(sum).setScale(2, RoundingMode.HALF_UP));
 
 		return "home";
 	}

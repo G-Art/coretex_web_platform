@@ -28,6 +28,7 @@
         <constructor-arg name="cacheService" ref="activeSearchCacheService"/>
     </bean>
     <bean id="pageableSelectOperation" class="com.coretex.core.activeorm.query.operations.PageableSelectOperation" parent="selectOperation">
+        <lookup-method name="getOrmOperationExecutor" bean="activeOrmOperationExecutor"/>
     </bean>
 
     <bean id="modificationOperation" abstract="true" class="com.coretex.core.activeorm.query.operations.ModificationOperation" parent="sqlOperation">

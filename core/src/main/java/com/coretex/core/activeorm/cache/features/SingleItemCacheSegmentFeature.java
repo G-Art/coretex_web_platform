@@ -96,4 +96,16 @@ public class SingleItemCacheSegmentFeature implements CacheSegmentFeature {
 	public void setSubTypeInclude(boolean subTypeInclude) {
 		this.subTypeInclude = subTypeInclude;
 	}
+
+	public void setTypePrecisionMultiplier(int typePrecisionMultiplier) {
+		this.typePrecisionMultiplier = typePrecisionMultiplier;
+	}
+
+	public void setMinTypePrecisionMultiplier(int minTypePrecisionMultiplier) {
+		this.minTypePrecisionMultiplier = minTypePrecisionMultiplier;
+	}
+
+	public void setSubTypePrecisionSubtractionValue(int subTypePrecisionSubtractionValue) {
+		this.subTypePrecisionSubtractionValue = subTypePrecisionSubtractionValue;
+	}
 }

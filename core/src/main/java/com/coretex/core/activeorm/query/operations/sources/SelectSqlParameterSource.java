@@ -33,9 +33,9 @@ public class SelectSqlParameterSource extends MapSqlParameterSource {
 			if(Objects.nonNull(metaEnumValueTypeItem)){
 				return super.addValue(paramName, metaEnumValueTypeItem.getUuid());
 			}
-			return super.addValue(paramName, value.toString());
+			return super.addValue(paramName, value.toString(), cortexContext.getSqlType(cortexContext.getRegularType(String.class)));
 		}
-		return super.addValue(paramName, value);
+		return super.addValue(paramName, value, cortexContext.getSqlType(cortexContext.getRegularType(value.getClass())));
 	}
 
 	public MapSqlParameterSource addValues(@Nullable Map<String, ?> values) {
