@@ -17,6 +17,7 @@ public class SelectOperationSpec extends SqlOperationSpec<
 	private Class<?> expectedResultType;
 	private Map<String, Object> parameters;
 	private ResultSetExtractor<?> customExtractor;
+	private String transformedQuery;
 
 	public SelectOperationSpec(String query) {
 		this(query, Maps.newHashMap());
@@ -60,6 +61,14 @@ public class SelectOperationSpec extends SqlOperationSpec<
 
 	public ResultSetExtractor<?> getCustomExtractor() {
 		return customExtractor;
+	}
+
+	public String getTransformedQuery() {
+		return transformedQuery;
+	}
+
+	public void setTransformedQuery(String transformedQuery) {
+		this.transformedQuery = transformedQuery;
 	}
 
 	@Override

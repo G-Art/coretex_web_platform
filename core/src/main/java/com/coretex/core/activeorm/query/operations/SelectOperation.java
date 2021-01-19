@@ -56,16 +56,19 @@ public class SelectOperation
 			try {
 				Select select = (Select) CCJSqlParserUtil.parse(query);
 				try {
-					return new FeaturedStatementCacheContext<>(selectCache.get(Objects.hashCode(query), () -> {
+					var selectQueryInfoHolder = selectCache.get(Objects.hashCode(query), () -> {
 						var queryInfoHolder = new QueryInfoHolder<>(select);
 						this.transformationProcessor.transform(queryInfoHolder);
 						return queryInfoHolder;
-					}), operationSpec.getParameters());
+					});
+					operationSpec.setTransformedQuery(selectQueryInfoHolder.getStatement().toString());
+					return new FeaturedStatementCacheContext<>(selectQueryInfoHolder, operationSpec.getParameters());
 				} catch (ExecutionException e) {
 					LOGGER.error("Cache calculation error", e);
 
 					var queryInfoHolder = new QueryInfoHolder<>(select);
 					this.transformationProcessor.transform(queryInfoHolder);
+					operationSpec.setTransformedQuery(queryInfoHolder.getStatement().toString());
 					return new FeaturedStatementCacheContext<>(queryInfoHolder, operationSpec.getParameters());
 				}
 			} catch (JSQLParserException e) {

@@ -2,7 +2,6 @@ package com.coretex.core.activeorm.query.select.scanners;
 
 import com.coretex.core.activeorm.exceptions.QueryException;
 import com.coretex.core.activeorm.query.select.data.AliasInfoHolder;
-import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SubSelect;
 import net.sf.jsqlparser.statement.select.WithItem;
 

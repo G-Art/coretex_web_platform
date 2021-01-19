@@ -1,7 +1,6 @@
 package com.coretex.core.activeorm.query.select;
 
 import com.coretex.core.activeorm.exceptions.QueryException;
-import com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext;
 import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.select.data.AliasInfoHolder;
 import com.coretex.core.activeorm.query.select.data.TableTransformationData;
@@ -35,7 +34,11 @@ import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.SingletonMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -105,10 +108,10 @@ public class SelectQueryTransformationHelper {
 	public TableTransformationData bindItem(Table table) {
 		var tableName = table.getFullyQualifiedName().replaceAll("\"", "");
 		var mType = cortexContext.findMetaType(tableName);
-		Set<MetaTypeItem>  metaTypesForTable;
-		if(Objects.isNull(mType)){
+		Set<MetaTypeItem> metaTypesForTable;
+		if (Objects.isNull(mType)) {
 			metaTypesForTable = cortexContext.findMetaTypeForTable(tableName);
-		}else {
+		} else {
 			metaTypesForTable = cortexContext.findMetaTypeForTable(mType.getTableName());
 		}
 		return new TableTransformationData(table, mType, metaTypesForTable);
@@ -116,11 +119,11 @@ public class SelectQueryTransformationHelper {
 
 	public void adjustColumn(ExpressionScanner scanner, SelectBodyScanner ownerSelectBodyScanner) {
 		if (!scanner.isColumn()) {
-			if(ownerSelectBodyScanner.isWrapped()
+			if (ownerSelectBodyScanner.isWrapped()
 					&& scanner.isFunction()
-					&& ownerSelectBodyScanner.isPlaneSelect()){
+					&& ownerSelectBodyScanner.isPlaneSelect()) {
 				var columns = getColumnFromFunction(scanner);
-				if(!columns.isEmpty()){
+				if (!columns.isEmpty()) {
 					PlainSelect ps = (PlainSelect) ownerSelectBodyScanner.scannedObject();
 					ps.getSelectItems().remove(scanner.getParentStatement());
 					columns.forEach(column -> {
@@ -140,13 +143,13 @@ public class SelectQueryTransformationHelper {
 				if (Objects.isNull(column.getTable()) && !ownerSelectBodyScanner.isWrapped()) {
 					column.setTable(tableTransformationData.getTable());
 				}
-				if(Objects.isNull(column.getTable()) && ownerSelectBodyScanner.isWrapped()){
+				if (Objects.isNull(column.getTable()) && ownerSelectBodyScanner.isWrapped()) {
 					var table = new Table();
-					table.setAlias(((PlainSelect)ownerSelectBodyScanner.scannedObject()).getFromItem().getAlias());
+					table.setAlias(((PlainSelect) ownerSelectBodyScanner.scannedObject()).getFromItem().getAlias());
 					column.setTable(table);
 				}
 
-				if(tableTransformationData.isBind()){
+				if (tableTransformationData.isBind()) {
 					MetaAttributeTypeItem metaAttributeTypeItem = getCortexContext()
 							.findAttribute(tableTransformationData.getTypeItemBind().getTypeCode(), column.getColumnName().replaceAll("\"", ""));
 					if (Objects.nonNull(metaAttributeTypeItem)) {
@@ -157,7 +160,7 @@ public class SelectQueryTransformationHelper {
 		}
 	}
 
-	public TableTransformationData getTableTransformationDataForTable(Table table, SelectBodyScanner ownerSelectBodyScanner){
+	public TableTransformationData getTableTransformationDataForTable(Table table, SelectBodyScanner ownerSelectBodyScanner) {
 		var fromItemScanner = ownerSelectBodyScanner.getFromItemScanner();
 		if (isSameAlias(table, fromItemScanner.scannedObject())) {
 			if (fromItemScanner.isTable() && Objects.nonNull(fromItemScanner.getTableTransformationData())) {
@@ -174,10 +177,14 @@ public class SelectQueryTransformationHelper {
 			}
 		} else {
 			var optional = (Optional<AliasInfoHolder<?>>) ownerSelectBodyScanner.fingAliasInfoHolder(table.getName());
-			if (optional.isPresent() && optional.get().isTable()) {
-				AliasInfoHolder<FromItemScanner> aliasInfoHolder = (AliasInfoHolder<FromItemScanner>) optional.get();
-				return aliasInfoHolder.getOwner().getTableTransformationData();
-			}
+
+			return optional.map(aliasInfoHolder -> {
+				if (aliasInfoHolder.isTable()) {
+					AliasInfoHolder<FromItemScanner> aliasInfo = (AliasInfoHolder<FromItemScanner>) aliasInfoHolder;
+					return aliasInfo.getOwner().getTableTransformationData();
+				}
+				return null;
+			}).orElse(null);
 		}
 		return null;
 	}
@@ -193,11 +200,11 @@ public class SelectQueryTransformationHelper {
 
 	private List<Expression> getColumnFromFunction(ExpressionScanner scanner) {
 		var columns = Lists.<Expression>newArrayList();
-			if(scanner.isColumn()){
-				columns.add(scanner.getExpression());
-			}
-			scanner.getInternalExpressions()
-					.forEach(exp-> columns.addAll(getColumnFromFunction((ExpressionScanner)exp)));
+		if (scanner.isColumn()) {
+			columns.add(scanner.getExpression());
+		}
+		scanner.getInternalExpressions()
+				.forEach(exp -> columns.addAll(getColumnFromFunction((ExpressionScanner) exp)));
 
 		return columns;
 	}

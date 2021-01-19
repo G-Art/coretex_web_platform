@@ -20,6 +20,7 @@ import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.select.AllTableColumns;
 import net.sf.jsqlparser.statement.select.Limit;
 import net.sf.jsqlparser.statement.select.Offset;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -59,10 +60,11 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 				.orElseThrow(() -> {
 					throw new QueryException(String.format("Plane select token is not available for [%s] table", tableTransformationData.getTable().toString()));
 				});
+		var selectBodyScanner = plainSelectScanner.get();
 
-		if(addWrapper(plainSelectScanner.get(), tableTransformationData, dataInjectionPoint.isUseSubtypes())){
+		if (addWrapper(selectBodyScanner, tableTransformationData, dataInjectionPoint.isUseSubtypes())) {
 			PlainSelect wrapper = clone(originalPlainSelect);
-			plainSelectScanner.get().setWrapped(true);
+			selectBodyScanner.setWrapped(true);
 			var orderByElements = originalPlainSelect.getOrderByElements();
 			Limit limit = originalPlainSelect.getLimit();
 			Offset offset = originalPlainSelect.getOffset();
@@ -70,18 +72,19 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 			originalPlainSelect.setOffset(null);
 			originalPlainSelect.setOrderByElements(null);
 			SubSelect subSelect = new SubSelect();
-			if (plainSelectScanner.get().getFromItemScanner().isTable()) {
-				Table table = (Table) plainSelectScanner.get().getFromItemScanner().scannedObject();
-				subSelect.setAlias(table.getAlias() != null ? table.getAlias() : createAlias(table.getName(), plainSelectScanner.get().getDeep()));
+			if (selectBodyScanner.getFromItemScanner().isTable()) {
+				Table table = (Table) selectBodyScanner.getFromItemScanner().scannedObject();
+				subSelect.setAlias(table.getAlias() != null ? table.getAlias() : createAlias(table.getName(), selectBodyScanner.getDeep()));
 			} else {
-				var alias = plainSelectScanner.get().getFromItemScanner().scannedObject().getAlias();
+				var alias = selectBodyScanner.getFromItemScanner().scannedObject().getAlias();
 				if (Objects.isNull(alias)) {
-					subSelect.setAlias(createAlias("wrap_subs", plainSelectScanner.get().getDeep()));
+					subSelect.setAlias(createAlias("wrap_subs", selectBodyScanner.getDeep()));
 				} else {
 					subSelect.setAlias(alias);
 				}
 			}
-			subSelect.setSelectBody(adjustInheritance(tableTransformationData, plainSelectScanner.get(), dataInjectionPoint.isUseSubtypes(), context));
+			subSelect.setSelectBody(adjustInheritance(tableTransformationData, selectBodyScanner, dataInjectionPoint.isUseSubtypes(), context));
+			adjustWrapperSelectItems(selectBodyScanner, wrapper);
 			wrapper.setFromItem(subSelect);
 			wrapper.setLimit(limit);
 			wrapper.setOffset(offset);
@@ -89,12 +92,33 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 			wrapper.setWhere(null);
 			return wrapper;
 		} else {
-			return adjustInheritance(tableTransformationData, plainSelectScanner.get(), dataInjectionPoint.isUseSubtypes(), context);
+			return adjustInheritance(tableTransformationData, selectBodyScanner, dataInjectionPoint.isUseSubtypes(), context);
 		}
 	}
 
+	private void adjustWrapperSelectItems(SelectBodyScanner selectBodyScanner, PlainSelect wrapper) {
+		var wrapperSelectBodyScanner = new SelectBodyScanner<>(selectBodyScanner.getDeep(), selectBodyScanner.getParentStatement(), selectBodyScanner);
+		wrapperSelectBodyScanner.scan(wrapper);
+		wrapperSelectBodyScanner.getSelectItemScanners().forEach(selectItemScanner -> {
+			if (selectItemScanner.isAllColumn() ) {
+				if(Objects.nonNull(wrapper.getFromItem().getAlias())){
+					var selectItem = selectItemScanner.scannedObject();
+					if (selectItem instanceof AllTableColumns) {
+						var table = new Table();
+						table.setAlias(new Alias(wrapper.getFromItem().getAlias().getName(), false));
+						((AllTableColumns) selectItem).setTable(table);
+					}
+				}
+			} else {
+				var expressionScanner = selectItemScanner.getExpressionScanner();
+				adjustColumn(expressionScanner, wrapperSelectBodyScanner);
+			}
+
+		});
+	}
+
 	private boolean addWrapper(SelectBodyScanner selectBodyScanner, TableTransformationData tableTransformationData, boolean useInheritance) {
-		var selectItemScanners = (List<SelectItemScanner>)selectBodyScanner.getSelectItemScanners();
+		var selectItemScanners = (List<SelectItemScanner>) selectBodyScanner.getSelectItemScanners();
 		PlainSelect plainSelect = (PlainSelect) selectBodyScanner.scannedObject();
 		boolean hasOrderBy = CollectionUtils.isNotEmpty(plainSelect.getOrderByElements());
 		boolean hasLimit = Objects.nonNull(plainSelect.getLimit());
@@ -105,12 +129,12 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 				(tableTransformationData.hasInheritance() &&
 						tableTransformationData.isUnionTable() &&
 						useInheritance &&
-						(hasOffset || hasLimit || hasOrderBy) );
+						(hasOffset || hasLimit || hasOrderBy));
 	}
 
-	private SelectBody adjustInheritance(TableTransformationData tableTransformationData, SelectBodyScanner originalPlainSelectScanner, boolean useSubtypes, QueryInfoHolder<? extends Statement> context){
+	private SelectBody adjustInheritance(TableTransformationData tableTransformationData, SelectBodyScanner originalPlainSelectScanner, boolean useSubtypes, QueryInfoHolder<? extends Statement> context) {
 		PlainSelect originalPlainSelect = (PlainSelect) originalPlainSelectScanner.scannedObject();
-        adjustSelectItem(originalPlainSelectScanner,context);
+		adjustSelectItem(originalPlainSelectScanner, context);
 		if (tableTransformationData.hasInheritance() && useSubtypes) {
 			SetOperationList setOperationList = new SetOperationList();
 			List<SelectBody> bodies = Lists.newArrayList();
@@ -139,7 +163,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 		}
 	}
 
-	private PlainSelect adjustPlaneSelect(PlainSelect plainSelect, MetaTypeItem metaTypeItem, boolean useSubtypes){
+	private PlainSelect adjustPlaneSelect(PlainSelect plainSelect, MetaTypeItem metaTypeItem, boolean useSubtypes) {
 		adjustWhere(plainSelect, metaTypeItem, useSubtypes);
 		return amendTable(plainSelect, metaTypeItem);
 	}
@@ -161,11 +185,11 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 		Expression left = new Column((Table) newPlainSelect.getFromItem(), getTransformationHelper()
 				.getCortexContext().findAttribute(metaTypeItem.getTypeCode(), GenericItem.META_TYPE).getColumnName());
 		Set<MetaTypeItem> subTypeItemSet = null;
-		if(useSubtypes){
+		if (useSubtypes) {
 			subTypeItemSet = CollectionUtils.isNotEmpty(metaTypeItem.getSubtypes()) ?
 					ItemUtils.getAllSubtypes(metaTypeItem).stream()
-					.filter(sub -> sub.getTableName().equals(metaTypeItem.getTableName()))
-					.collect(Collectors.toSet()) :
+							.filter(sub -> sub.getTableName().equals(metaTypeItem.getTableName()))
+							.collect(Collectors.toSet()) :
 					null;
 		}
 

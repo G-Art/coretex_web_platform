@@ -26,6 +26,14 @@
 
         <div id="queryExecutor">
             <div class="row">
+                <div class="col-2">
+                    <label>Count</label> <input v-model="count" id="count" type="text"/>
+                </div>
+                <div class="col-2">
+                    <label>Page</label> <input v-model="page" id="page" type="text"/>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-1">
                     <span id="execute" href="#" class="btn btn-warning btn-sm" v-on:click="execute">Execute</span>
                 </div>

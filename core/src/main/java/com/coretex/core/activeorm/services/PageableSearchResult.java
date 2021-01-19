@@ -2,7 +2,6 @@ package com.coretex.core.activeorm.services;
 
 import com.coretex.core.activeorm.query.operations.contexts.SelectOperationConfigContext;
 import com.coretex.core.activeorm.query.specs.select.PageableSelectOperationSpec;
-import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,13 +31,21 @@ public class PageableSearchResult<T> extends SearchResult<T> {
 
 	}
 
-	public SelectOperationSpec nextPage(){
+	public PageableSelectOperationSpec nextPage(){
 		if (Objects.nonNull(operationSpec.getCount()) && Objects.nonNull(operationSpec.getPage())){
 			operationSpec.setPage(operationSpec.getPage()+1);
 			return operationSpec;
 		}else {
 			throw new IllegalStateException("Query [" + operationSpec.getQuery() +"] is not pageable");
 		}
+	}
+
+	public Long getPage(){
+		return operationSpec.getPage();
+	}
+
+	public String getTransformedQuery() {
+		return operationSpec.getTransformedQuery();
 	}
 
 	public Long getTotalCount() {
