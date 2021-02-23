@@ -54,6 +54,7 @@ public class JoinTransformationStrategy extends AbstractTransformationStrategy<J
 		if (fromItemScanner.isTable()) {
 			var tableTransformationData = fromItemScanner.getTableTransformationData();
 			context.addAllItemUsed(tableTransformationData.getUsedTypes());
+			context.setLocalizedTable(tableTransformationData.isLocalizedTable());
 			if (dataInjectionPoint.getSelectBodyScannerOwner().isPresent()) {
 				adjustColumn(scanner.getJoinOnExpressionScanner(), dataInjectionPoint.getSelectBodyScannerOwner().get());
 			}

@@ -7,9 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import sun.misc.Unsafe;
+import org.springframework.r2dbc.core.DatabaseClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
@@ -21,11 +21,29 @@ public class MetaDataExtractorTest {
 
     private MetaDataExtractor metaDataExtractor = new MetaDataExtractor();
 
-    private NamedParameterJdbcTemplate mockJdbcTemplate;
+    private DatabaseClient databaseClient;
 
     @BeforeEach
     void setUp() {
-        metaDataExtractor.setJdbcTemplate(mockJdbcTemplate);
+        metaDataExtractor.setDatabaseClient(databaseClient);
+    }
+
+    @Test
+    @DisplayName("test")
+    void test() {
+
+        Flux.range(1, 10)
+                .map(integer -> {
+                    Mono.fromSupplier(()->{
+                        return Flux.from(Flux.range(integer, integer*10)).
+                                doOnNext(System.out::println).
+                                collectList()
+                                .block();
+                    }).block();
+                    return integer;
+                })
+                .collectList()
+                .block();
     }
 
     @Test

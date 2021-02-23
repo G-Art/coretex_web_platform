@@ -9,7 +9,7 @@ import com.coretex.items.core.MetaEnumTypeItem;
 import com.coretex.items.core.MetaTypeItem;
 import com.coretex.items.core.RegularTypeItem;
 import com.coretex.meta.AbstractGenericItem;
-import org.springframework.jdbc.core.SqlParameterValue;
+import org.springframework.r2dbc.core.DatabaseClient;
 
 import java.util.Objects;
 
@@ -29,8 +29,22 @@ public abstract class AbstractValueDataHolder<S extends ModificationOperationSpe
 		this.attributeTypeItem = attributeTypeItem;
 
 		this.itemRelation = attributeTypeItem.getAttributeType() instanceof MetaTypeItem;
-		if(itemRelation) {
-			this.relatedItem = ((GenericItem)getItem().getAttributeValue(attributeTypeItem.getAttributeName()));
+		if (itemRelation) {
+			this.relatedItem = ((GenericItem) getItem().getAttributeValue(attributeTypeItem.getAttributeName()));
+		}
+	}
+
+	public DatabaseClient.GenericExecuteSpec bind(DatabaseClient.GenericExecuteSpec spec, String key) {
+		var value = getValue();
+
+		if (Objects.isNull(value) && isMandatory()) {
+			throw new MandatoryAttributeException(String.format("Mandatory attribute [%s::%s] is not defined", attributeTypeItem.getOwner().getTypeCode(), attributeTypeItem.getAttributeName()));
+		}
+
+		if (Objects.nonNull(value)) {
+			return spec.bind(key, value);
+		} else {
+			return spec.bindNull(key, getRegularType(getRegularType(getAttributeTypeItem().getAttributeType())).getRegularClass());
 		}
 	}
 
@@ -38,18 +52,19 @@ public abstract class AbstractValueDataHolder<S extends ModificationOperationSpe
 		return operationSpec;
 	}
 
-	public Boolean isMandatory(){
+	public Boolean isMandatory() {
 		return !attributeTypeItem.getOptional();
 	}
 
 	public MetaAttributeTypeItem getAttributeTypeItem() {
 		return attributeTypeItem;
 	}
-	public String getAttributeName(){
+
+	public String getAttributeName() {
 		return attributeTypeItem.getAttributeName();
 	}
 
-	protected MetaTypeProvider getMetaTypeProvider(){
+	protected MetaTypeProvider getMetaTypeProvider() {
 		return operationSpec.getMetaTypeProvider();
 	}
 
@@ -57,26 +72,8 @@ public abstract class AbstractValueDataHolder<S extends ModificationOperationSpe
 		return operationSpec.getItem();
 	}
 
-	public SqlParameterValue createSqlParameterValue(){
-		Object value = getValue();
-
-		if(Objects.isNull(value) && isMandatory()){
-			throw new MandatoryAttributeException(String.format("Mandatory attribute [%s::%s] is not defined", attributeTypeItem.getOwner().getTypeCode(), attributeTypeItem.getAttributeName()));
-		}
-
-		return new SqlParameterValue(getSqlType(), typeName(), value instanceof Class ? ((Class) value).getCanonicalName() : value);
-	}
-
-	private String typeName() {
-		return getMetaTypeProvider().getSqlTypeName(getRegularType(getAttributeTypeItem().getAttributeType()));
-	}
-
-	private int getSqlType() {
-		return getMetaTypeProvider().getSqlType(getRegularType(getAttributeTypeItem().getAttributeType()));
-	}
-
 	private RegularTypeItem getRegularType(GenericItem attributeType) {
-		if(attributeType instanceof MetaTypeItem || attributeType instanceof MetaEnumTypeItem){
+		if (attributeType instanceof MetaTypeItem || attributeType instanceof MetaEnumTypeItem) {
 			return (RegularTypeItem) getMetaTypeProvider().findAttribute(getTypeCode(attributeType), AbstractGenericItem.UUID).getAttributeType();
 		}
 		return (RegularTypeItem) attributeType;
@@ -93,7 +90,7 @@ public abstract class AbstractValueDataHolder<S extends ModificationOperationSpe
 	public abstract Object getValue();
 
 
-	public boolean availableForBeforeExecution(){
+	public boolean availableForBeforeExecution() {
 		return nonNull(getRelatedItem()) &&
 				(getRelatedItem().getItemContext().isDirty() || getRelatedItem().getItemContext().isNew()) &&
 				isLoopSafe(getOperationSpec(), getRelatedItem());

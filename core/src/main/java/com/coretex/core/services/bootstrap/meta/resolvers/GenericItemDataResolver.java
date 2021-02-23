@@ -3,7 +3,7 @@ package com.coretex.core.services.bootstrap.meta.resolvers;
 import com.coretex.core.services.bootstrap.meta.MetaDataContext;
 import com.coretex.items.core.GenericItem;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,11 +28,11 @@ public class GenericItemDataResolver extends DataResolver {
 
         Object createDate = itemData.get(GenericItem.CREATE_DATE);
         Object updateDate = itemData.get(GenericItem.UPDATE_DATE);
-        validState(createDate instanceof Date && updateDate instanceof Date,
+        validState(createDate instanceof LocalDateTime && updateDate instanceof LocalDateTime,
                 "Create and Update date are expected to be instances of Date, but create date is %s, update date is %s",
                 defaultIfNull(createDate, NULL).getClass().getName(), defaultIfNull(updateDate, NULL).getClass().getName());
 
-        itemData.put(GenericItem.CREATE_DATE, ((Date) createDate).toInstant().atZone(SYSTEM_TIME_ZONE).toLocalDateTime());
-        itemData.put(GenericItem.UPDATE_DATE, ((Date) updateDate).toInstant().atZone(SYSTEM_TIME_ZONE).toLocalDateTime());
+        itemData.put(GenericItem.CREATE_DATE, ((LocalDateTime) createDate).atZone(SYSTEM_TIME_ZONE).toLocalDateTime());
+        itemData.put(GenericItem.UPDATE_DATE, ((LocalDateTime) updateDate).atZone(SYSTEM_TIME_ZONE).toLocalDateTime());
     }
 }

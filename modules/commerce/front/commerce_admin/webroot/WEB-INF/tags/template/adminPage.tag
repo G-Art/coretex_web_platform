@@ -67,7 +67,11 @@
                         <common:leftNavBar/>
                         <div class="pcoded-content">
 
-                            <common-components:alertBlocks/>
+                            <div class="row justify-content-center">
+                                <div class="col-12">
+                                    <common-components:alertBlocks/>
+                                </div>
+                            </div>
 
                             <div class="pcoded-inner-content">
                                 <!-- Main-body start -->

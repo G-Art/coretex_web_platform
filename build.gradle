@@ -13,12 +13,12 @@ buildscript {
         maven { url "https://jetbrains.bintray.com/trove4j/" }
     }
     dependencies {
-        classpath(group: 'com.coretex.build.plugin', name: 'build.plugin', version: '1.1-Beta')
+        classpath(group: 'com.coretex.build.plugin', name: 'build.plugin', version: '1.1-Beta-+')
         classpath(group: 'com.bmuschko', name: 'gradle-docker-plugin', version: '6.6.1')
     }
 }
 wrapper {
-    gradleVersion = '6.3'
+    gradleVersion = '6.8.2'
 }
 
 apply plugin: 'distribution'
@@ -54,10 +54,10 @@ import com.bmuschko.gradle.docker.tasks.image.*
 
 task createDockerfile(type: Dockerfile, dependsOn: distTar) {
     destFile.set(project.layout.buildDirectory.file('distributions/Dockerfile'))
-    from('openjdk:14')
+    from('openjdk:15')
     addFile("gm-commerce-1.0-Alpha.tar", "/opt/coretex/")
     workingDir("/opt/coretex/gm-commerce-1.0-Alpha")
-    environmentVariable('JAVA_OPTS', '-Djava.awt.headless=true -server -Xms48m -Xmx768M -XX:MaxPermSize=512m')
+    environmentVariable('JAVA_OPTS', '-Djava.awt.headless=true -server -Xms48m -Xmx378M -XX:MaxPermSize=378m')
     exposePort(8080)
 }
 //

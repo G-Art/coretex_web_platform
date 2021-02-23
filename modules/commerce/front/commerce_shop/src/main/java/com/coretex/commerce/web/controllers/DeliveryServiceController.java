@@ -37,6 +37,6 @@ public class DeliveryServiceController {
 
 	@GetMapping(path = {"/type/{code}/payments"})
 	private Flux<PaymentTypeData> getPaymentsForType(@PathVariable("code") String code) {
-		return Flux.fromStream(paymentFacade.getPaymentModesForDeliveryType(code));
+		return paymentFacade.getPaymentModesForDeliveryType(code);
 	}
 }

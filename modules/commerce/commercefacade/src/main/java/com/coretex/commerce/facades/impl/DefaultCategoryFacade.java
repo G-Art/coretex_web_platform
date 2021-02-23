@@ -11,13 +11,12 @@ import com.coretex.commerce.mapper.minimal.MinimalCategoryDataMapper;
 import com.coretex.commerce.mapper.minimal.MinimalCategoryHierarchyDataMapper;
 import com.coretex.items.cx_core.CategoryItem;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class DefaultCategoryFacade implements CategoryFacade {
@@ -36,7 +35,7 @@ public class DefaultCategoryFacade implements CategoryFacade {
 	public List<CategoryHierarchyData> categoryHierarchyLeverByNodeUUID(UUID uuid) {
 		return categoryService.listByParent(uuid)
 				.map(CategoryHierarchyData::new)
-				.collect(Collectors.toList());
+				.collectList().block();
 	}
 
 	@Override
@@ -57,7 +56,7 @@ public class DefaultCategoryFacade implements CategoryFacade {
 	}
 
 	@Override
-	public Stream<MinimalCategoryHierarchyData> rootCategories() {
+	public Flux<MinimalCategoryHierarchyData> rootCategories() {
 		return categoryService
 				.listByRoot()
 				.map(minimalCategoryHierarchyDataMapper::fromItem);
@@ -67,7 +66,7 @@ public class DefaultCategoryFacade implements CategoryFacade {
 	public List<MinimalCategoryData> categories() {
 		return categoryService.listReactive()
 				.map(minimalCategoryDataMapper::fromItem)
-				.collect(Collectors.toList());
+				.collectList().block();
 	}
 
 	@Override

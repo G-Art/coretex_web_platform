@@ -59,28 +59,28 @@ public class ApplicationConfigurerAdapter implements WebFluxConfigurer {
                 "/*.eot",
                 "/*.otf",
                 "/*.ttf",
-                "/**/*.json",
-                "/**/*.css",
-                "/**/*.ico",
-                "/**/*.js",
-                "/**/*.gif",
-                "/**/*.map",
-                "/**/*.png",
-                "/**/*.jpg",
-                "/**/*.svg",
-                "/**/*.woff",
-                "/**/*.woff2",
-                "/**/*.eot",
-                "/**/*.otf",
-                "/**/*.ttf")
+                "/*/*.json",
+                "/*/*.css",
+                "/*/*.ico",
+                "/*/*.js",
+                "/*/*.gif",
+                "/*/*.map",
+                "/*/*.png",
+                "/*/*.jpg",
+                "/*/*.svg",
+                "/*/*.woff",
+                "/*/*.woff2",
+                "/*/*.eot",
+                "/*/*.otf",
+                "/*/*.ttf")
                 .addResourceLocations(staticLocations)
                 .setCacheControl(CacheControl.maxAge(100000, TimeUnit.SECONDS));
 
         registry.addResourceHandler(
                 "/*.html",
                 "/*.json",
-                "/**/*.html",
-                "/**/*.json")
+                "/*/*.html",
+                "/*/*.json")
                 .addResourceLocations(staticLocations)
                 .setCacheControl(CacheControl.maxAge(600, TimeUnit.SECONDS));
 

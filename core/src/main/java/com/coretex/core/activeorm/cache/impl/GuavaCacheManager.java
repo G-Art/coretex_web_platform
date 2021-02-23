@@ -49,6 +49,16 @@ public class GuavaCacheManager extends CacheManager {
 	}
 
 	@Override
+	public <K, V> void put(K key, Callable<? extends V> loader) {
+		try {
+			cache.put(key, loader.call());
+		} catch (Exception e) {
+			Throwables.throwIfUnchecked(e);
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
 	public <K, V> V getIfPresent(K key) {
 		return (V) cache.getIfPresent(key);
 	}

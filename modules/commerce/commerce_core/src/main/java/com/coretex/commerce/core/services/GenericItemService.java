@@ -1,10 +1,10 @@
 package com.coretex.commerce.core.services;
 
 import com.coretex.items.core.GenericItem;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public interface GenericItemService<E extends GenericItem> extends PageableService<E> {
 
@@ -19,7 +19,7 @@ public interface GenericItemService<E extends GenericItem> extends PageableServi
 	void delete(E item);
 
 	List<E> list();
-	Stream<E> listReactive();
+	Flux<E> listReactive();
 
 	Long count();
 }

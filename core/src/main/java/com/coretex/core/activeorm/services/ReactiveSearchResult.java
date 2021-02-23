@@ -2,21 +2,21 @@ package com.coretex.core.activeorm.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class ReactiveSearchResult<T> {
 
 	private Logger LOG = LoggerFactory.getLogger(ReactiveSearchResult.class);
 
-	private Stream<T> result;
+	private Flux<T> result;
 
-	public ReactiveSearchResult(Supplier<Stream<T>> resultSupplier) {
+	public ReactiveSearchResult(Supplier<Flux<T>> resultSupplier) {
 		this.result = resultSupplier.get();
 	}
 
-	public Stream<T> getResultStream() {
+	public Flux<T> getResultStream() {
 		return result;
 	}
 }

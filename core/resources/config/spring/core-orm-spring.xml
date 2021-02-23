@@ -15,16 +15,16 @@
     <import resource="core-attribute-load-spring.xml"/>
 
     <bean id="sqlOperation" abstract="true" class="com.coretex.core.activeorm.query.operations.SqlOperation">
-        <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
+        <lookup-method name="getDatabaseClient" bean="databaseClient"/>
     </bean>
 
-    <bean id="defailtReactiveResultSetExtractor" class="com.coretex.core.activeorm.extractors.CoretexReactiveResultSetExtractor" >
+    <bean id="coretexReactiveRowMapper" class="com.coretex.core.activeorm.extractors.CoretexReactiveRowMapper" >
         <constructor-arg name="context" ref="defaultBootstrapContext"/>
         <constructor-arg name="defaultRowMapperFactory" ref="rowMapperFactory"/>
     </bean>
     <bean id="selectOperation" class="com.coretex.core.activeorm.query.operations.SelectOperation" parent="sqlOperation">
         <constructor-arg name="cortexContext" ref="defaultBootstrapContext"/>
-        <constructor-arg name="extractor" ref="defailtReactiveResultSetExtractor"/>
+        <constructor-arg name="mapper" ref="coretexReactiveRowMapper"/>
         <constructor-arg name="cacheService" ref="activeSearchCacheService"/>
     </bean>
     <bean id="pageableSelectOperation" class="com.coretex.core.activeorm.query.operations.PageableSelectOperation" parent="selectOperation">

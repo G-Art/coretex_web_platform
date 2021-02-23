@@ -13,17 +13,28 @@
 
 <template:adminPage pageTitle="Stores">
     <jsp:attribute name="pageCss">
-        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/pages/advance-elements/css/bootstrap-datetimepicker.css"/>"/>
-        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/bootstrap-daterangepicker/css/daterangepicker.css"/>"/>
-        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/datedropper/css/datedropper.min.css"/>"/>
-        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/pages/data-table/css/buttons.dataTables.min.css"/>"/>
-        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css"/>"/>
-        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css"/>"/>
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/assets/pages/advance-elements/css/bootstrap-datetimepicker.css"/>"/>
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/bower_components/bootstrap-daterangepicker/css/daterangepicker.css"/>"/>
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/bower_components/datedropper/css/datedropper.min.css"/>"/>
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/assets/pages/data-table/css/buttons.dataTables.min.css"/>"/>
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css"/>"/>
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css"/>"/>
         <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/icon/feather/css/feather.css"/>"/>
-        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/css/jquery.mCustomScrollbar.css"/>">
-        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/select2/css/select2.min.css"/>">
-        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/switchery/css/switchery.min.css"/>">
-        <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/bootstrap-tagsinput/css/bootstrap-tagsinput.css"/>">
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/assets/css/jquery.mCustomScrollbar.css"/>">
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/bower_components/select2/css/select2.min.css"/>">
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/bower_components/switchery/css/switchery.min.css"/>">
+        <link rel="stylesheet" type="text/css"
+              href="<c:url value="/resources/bower_components/bootstrap-tagsinput/css/bootstrap-tagsinput.css"/>">
+	    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/bower_components/sweetalert/css/sweetalert.css"/>"/>
 	</jsp:attribute>
 
     <jsp:attribute name="pageScripts">
@@ -59,6 +70,10 @@
         <script type="text/javascript"
                 src="<c:url value="/resources/bower_components/switchery/js/switchery.min.js"/>"></script>
         <script type="text/javascript"
+                src="<c:url value="/resources/assets/js/modalEffects.js"/>"></script>
+        <script type="text/javascript"
+                src="<c:url value="/resources/bower_components/sweetalert/js/sweetalert.min.js"/>"></script>
+        <script type="text/javascript"
                 src="<c:url value="/resources/bower_components/select2/js/select2.full.min.js"/>"></script>
         <script type="text/javascript"
                 src="<c:url value="/resources/bower_components/bootstrap-tagsinput/js/bootstrap-tagsinput.js"/>"></script>
@@ -84,14 +99,15 @@
 
         <!-- Page-body start -->
         <div class="page-body">
-            <components:storeInfoComponent/>
 
             <components:tableComponent title="All stores"
                                        description="List of stores"
                                        tableId="storesTable"
                                        dataSourceLink="/store/paginated"
                                        rowId="uuid"
-                                       actionTarget="5" >
+                                       actionTarget="5"
+                                       actionPath="/store"
+                                       deleteActionPath="/store/remove">
                 <jsp:attribute name="theader">
                     <tr>
                         <th>Code</th>

@@ -80,8 +80,8 @@
                 <div class="col-lg-8">
                     <div class="page-header-title">
                         <div class="d-inline">
-                            <h4>Stores</h4>
-                            <span></span>
+                            <h4>Store</h4>
+                            <span>${store.name} - ${store.code} [ ${store.uuid} ]</span>
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
 
         <!-- Page-body start -->
         <div class="page-body">
-
+            <jsp:include page="sections/storeTabsSections.jsp"/>
         </div>
         <!-- Page-body end -->
 

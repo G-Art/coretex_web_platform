@@ -24,8 +24,7 @@
     <bean id="coretexApplicationConfig" class="com.coretex.server.CoretexApplicationConfig"/>
 
     <bean id="abstractJdbcService" abstract="true" class="com.coretex.core.activeorm.services.AbstractJdbcService">
-        <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
-        <lookup-method name="getTransactionTemplate" bean="transactionTemplate"/>
+        <lookup-method name="getTransactionalOperator" bean="transactionalOperator"/>
         <lookup-method name="getOrmOperationExecutor" bean="activeOrmOperationExecutor"/>
     </bean>
 

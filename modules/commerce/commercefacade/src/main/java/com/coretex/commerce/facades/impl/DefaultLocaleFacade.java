@@ -13,10 +13,10 @@ import com.coretex.items.core.LocaleItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.Resource;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
 public class DefaultLocaleFacade implements LocaleFacade {
@@ -38,17 +38,17 @@ public class DefaultLocaleFacade implements LocaleFacade {
 	}
 
 	@Override
-	public Stream<LocaleData> getByStore(UUID uuid) {
+	public Flux<LocaleData> getByStore(UUID uuid) {
 		return storeService.findForStore(uuid).map(localeDataMapper::fromItem);
 	}
 
 	@Override
-	public Stream<LocaleData> getByStore(StoreData storeData) {
+	public Flux<LocaleData> getByStore(StoreData storeData) {
 		return storeService.findForStore(storeData.getUuid()).map(localeDataMapper::fromItem);
 	}
 
 	@Override
-	public Stream<LocaleData> getAll() {
+	public Flux<LocaleData> getAll() {
 		return storeService.listReactive()
 				.map(localeDataMapper::fromItem);
 	}

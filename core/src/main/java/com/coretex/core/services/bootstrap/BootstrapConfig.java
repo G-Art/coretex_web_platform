@@ -4,111 +4,113 @@ import com.coretex.core.services.bootstrap.dialect.DbDialectFactory;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.core.services.bootstrap.meta.MetaCollector;
 import com.coretex.core.services.bootstrap.meta.MetaDataExtractor;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import io.r2dbc.pool.ConnectionPool;
+import io.r2dbc.pool.ConnectionPoolConfiguration;
+import io.r2dbc.pool.PoolingConnectionFactoryProvider;
+import io.r2dbc.spi.ConnectionFactory;
+import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.r2dbc.connection.R2dbcTransactionManager;
+import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.transaction.ReactiveTransactionManager;
+import org.springframework.transaction.reactive.TransactionalOperator;
 
 import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 @Configuration
 public class BootstrapConfig {
 
-    public static final String ITEM_CONTEXT_FACTORY_QUALIFIER = "defaultItemContextFactory";
+	public static final String ITEM_CONTEXT_FACTORY_QUALIFIER = "defaultItemContextFactory";
 
-    public static final String META_TYPE_PROVIDER_QUALIFIER = "defaultMetaTypeProvider";
+	public static final String META_TYPE_PROVIDER_QUALIFIER = "defaultMetaTypeProvider";
 
-    public static final String BOOTSTRAP_CONTEXT_QUALIFIER = "defaultBootstrapContext";
+	public static final String BOOTSTRAP_CONTEXT_QUALIFIER = "defaultBootstrapContext";
 
-    public static final String DATASOURCE_QUALIFIER = "dataSource";
+	public static final String DATASOURCE_QUALIFIER = "dataSource";
+	public static final String DATABASE_CLIENT_QUALIFIER = "databaseClient";
 
-    @Value("${db.driver.class.name}")
-    private String driverClassName;
+	@Value("${db.driver.class.name}")
+	private String driverClassName;
 
-    @Value("${db.url}")
-    private String dbUrl;
+	@Value("${db.url}")
+	private String dbUrl;
 
-    @Value("${db.user.name}")
-    private String userName;
+	@Value("${db.url.reactive}")
+	private String dbUrlReactive;
 
-    @Value("${db.user.password}")
-    private String password;
+	@Value("${db.user.name}")
+	private String userName;
 
-    @Value("${db.dialect}")
-    private String dialect;
+	@Value("${db.user.password}")
+	private String password;
 
-    private DriverManagerDataSource dataSource;
+	@Value("${db.dialect}")
+	private String dialect;
 
-    private DbDialectFactory dialectFactory = new DbDialectFactory();
+	private ConnectionFactory connectionFactory;
 
-    @PostConstruct
-    private void init(){
-        dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(dbUrl);
-        dataSource.setUsername(userName);
-        dataSource.setPassword(password);
-    }
+	private final DbDialectFactory dialectFactory = new DbDialectFactory();
 
-    @Bean(DATASOURCE_QUALIFIER)
-    public DataSource defaultDataSource() {
-//        props.put("dataSource.logWriter", new PrintWriter(System.out));
+	@PostConstruct
+	private void init() {
 
-        HikariConfig config = new HikariConfig();
-        config.setDataSource(dataSource);
-        return new HikariDataSource(config);
-    }
+        ConnectionPoolConfiguration.Builder builder = ConnectionPoolConfiguration.builder(
+                dialectFactory.getConnectionFactory(dialect, ConnectionFactoryOptions
+				.parse(dbUrlReactive)
+				.mutate()
+				.option(PoolingConnectionFactoryProvider.MAX_IDLE_TIME, Duration.of(1, ChronoUnit.MINUTES))
+				.option(PoolingConnectionFactoryProvider.INITIAL_SIZE, 10)
+				.option(PoolingConnectionFactoryProvider.MAX_SIZE, 100)
+				.build()
+		));
 
-    @Bean
-    public DataSourceTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(defaultDataSource());
-    }
+        connectionFactory = new ConnectionPool(builder.build());
+	}
 
-    @Bean
-    @Scope("prototype")
-    public TransactionTemplate transactionTemplate(){
-        return new TransactionTemplate(transactionManager());
-    }
+	@Bean(DATABASE_CLIENT_QUALIFIER)
+	public DatabaseClient databaseClient() {
+		return DatabaseClient.create(connectionFactory);
+	}
 
-    @Bean
-    public DbDialectService dbDialectService(){
-        return dialectFactory.getDialectService(dataSource, dialect);
-    }
+	@Bean
+	public ReactiveTransactionManager reactiveTransactionManager() {
+		return new R2dbcTransactionManager(connectionFactory);
+	}
 
-    @Bean
-    protected MetaDataExtractor metaDataExtractor(@Autowired NamedParameterJdbcTemplate jdbcTemplate) {
-        MetaDataExtractor extractor = new MetaDataExtractor();
-        extractor.setJdbcTemplate(jdbcTemplate);
-        return extractor;
-    }
+	@Bean
+	public TransactionalOperator transactionalOperator(ReactiveTransactionManager transactionManager) {
+		return TransactionalOperator.create(transactionManager);
+	}
 
-    @Bean
-    protected MetaCollector metaCollector(@Autowired MetaDataExtractor metaDataExtractor) {
-        MetaCollector collector = new MetaCollector();
-        collector.setExtractor(metaDataExtractor);
-        return collector;
-    }
+	@Bean
+	public DbDialectService dbDialectService() {
+		return dialectFactory.getDialectService(databaseClient(), dialect);
+	}
 
-    @Bean(name = {META_TYPE_PROVIDER_QUALIFIER, BOOTSTRAP_CONTEXT_QUALIFIER})
-    public CortexContext cortexContext(@Autowired MetaCollector metaCollector) {
-        CortexContext cortexContext = new CortexContext();
-        cortexContext.setMetaCollector(metaCollector);
-        cortexContext.setDbDialectService(dbDialectService());
-        return cortexContext;
-    }
+	@Bean
+	protected MetaDataExtractor metaDataExtractor() {
+		MetaDataExtractor extractor = new MetaDataExtractor();
+		extractor.setDatabaseClient(databaseClient());
+		return extractor;
+	}
 
-    @Bean("jdbcTemplate")
-//    @Scope("prototype")
-    public NamedParameterJdbcTemplate newJdbcTemplate(@Autowired DataSource dataSource){
-        return new NamedParameterJdbcTemplate(dataSource);
-    }
+	@Bean
+	protected MetaCollector metaCollector(@Autowired MetaDataExtractor metaDataExtractor) {
+		MetaCollector collector = new MetaCollector();
+		collector.setExtractor(metaDataExtractor);
+		return collector;
+	}
 
+	@Bean(name = {META_TYPE_PROVIDER_QUALIFIER, BOOTSTRAP_CONTEXT_QUALIFIER})
+	public CortexContext cortexContext(@Autowired MetaCollector metaCollector) {
+		CortexContext cortexContext = new CortexContext();
+		cortexContext.setMetaCollector(metaCollector);
+		cortexContext.setDbDialectService(dbDialectService());
+		return cortexContext;
+	}
 }

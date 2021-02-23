@@ -8,7 +8,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.stream.Collectors;
 
 @Component
 public class PageInfoInterceptorExtension implements BeforeViewHandlerInterceptorExtension {
@@ -21,7 +20,7 @@ public class PageInfoInterceptorExtension implements BeforeViewHandlerIntercepto
 		modelAndView.addObject("requestPath", request.getRequestURI());
 		modelAndView.addObject("applicationBaseUrl", getApplicationBaseUrl(request));
 
-		modelAndView.addObject("locales", localeFacade.getAll().collect(Collectors.toList()));
+		modelAndView.addObject("locales", localeFacade.getAll().collectList().block());
 	}
 
 	private String getApplicationBaseUrl(final HttpServletRequest request){

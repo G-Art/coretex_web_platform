@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -144,21 +145,22 @@ public class InitializationLoader {
 
 				loadData();
 
-			}
-			solrClientService.execute(client -> {
-				try {
-					var solrInputDocumentStream = productDao.findReactive()
-							.flatMap(productItem -> productItem.getVariants().stream())
-							.flatMap(variantProductItem -> variantProductItem.getVariants().stream())
-							.filter(Objects::nonNull)
-							.filter(variantProductItem -> CollectionUtils.isEmpty(variantProductItem.getVariants()))
-							.map(this::buildSolrInput);
+				solrClientService.execute(client -> {
+					try {
+						var solrInputDocumentStream = productDao.findReactive()
+								.flatMap(productItem -> Flux.fromIterable(productItem.getVariants()))
+								.flatMap(variantProductItem -> Flux.fromIterable(variantProductItem.getVariants()))
+								.filter(Objects::nonNull)
+								.filter(variantProductItem -> CollectionUtils.isEmpty(variantProductItem.getVariants()))
+								.map(this::buildSolrInput);
 
-					solrClientService.index(solrInputDocumentStream);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			});
+						solrClientService.index(solrInputDocumentStream.toStream());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
+			}
+
 
 		} catch (Exception e) {
 			LOGGER.error("Error in the init method", e);

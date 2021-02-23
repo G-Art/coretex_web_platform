@@ -7,10 +7,11 @@ import com.coretex.core.activeorm.services.AbstractJdbcService;
 import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
 import net.sf.jsqlparser.statement.Statement;
 import org.springframework.beans.factory.annotation.Lookup;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
-import java.util.stream.Stream;
+import java.util.function.Supplier;
 
 public abstract class ModificationOperation<
 		S extends Statement,
@@ -27,37 +28,33 @@ public abstract class ModificationOperation<
 	}
 
 	@Override
-	public <T> Stream<T> execute(CTX operationConfigContext) {
+	public <T> Flux<T> execute(CTX operationConfigContext) {
 		if (useInterceptors(operationConfigContext)) {
 			onPrepare(operationConfigContext);
 		}
-		doTransactional(operationConfigContext, () -> {
-			executeBefore(operationConfigContext);
-			executeOperation(operationConfigContext);
-			executeAfter(operationConfigContext);
-			operationConfigContext.getOperationSpec().flush();
-		});
-		return Stream.empty();
+		return (Flux<T>) Flux.just(doTransactional(operationConfigContext, () -> Flux.just(
+				executeBefore(operationConfigContext)
+						.subscribeOn(Schedulers.boundedElastic())
+						.publishOn(Schedulers.boundedElastic()),
+				executeOperation(operationConfigContext)
+						.subscribeOn(Schedulers.boundedElastic())
+						.publishOn(Schedulers.boundedElastic()),
+				executeAfter(operationConfigContext)
+						.subscribeOn(Schedulers.boundedElastic())
+						.publishOn(Schedulers.boundedElastic())
+		)));
 	}
 
 
-	protected void doTransactional(CTX operationConfigContext, Runnable executor) {
+	protected Mono<Integer> doTransactional(CTX operationConfigContext, Supplier<Flux<Mono<Integer>>> executor) {
 		var operationSpec = operationConfigContext.getOperationSpec();
 		if (isTransactionInitiator() && operationSpec.isTransactionEnabled()) {
-			getJdbcService().executeInTransaction(() -> new TransactionCallbackWithoutResult() {
-				@Override
-				protected void doInTransactionWithoutResult(
-						TransactionStatus transactionStatus) {
-					try {
-						executor.run();
-					} catch (Exception e) {
-						transactionStatus.setRollbackOnly();
-						throw e;
-					}
-				}
-			});
+			return getJdbcService().executeInReactiveTransaction(tx -> executor.get().onErrorResume(throwable -> {
+				tx.setRollbackOnly();
+				return Flux.error(throwable);
+			}));
 		} else {
-			executor.run();
+			return Flux.concat(executor.get()).reduce(0, Integer::sum);
 		}
 	}
 
@@ -84,11 +81,11 @@ public abstract class ModificationOperation<
 
 	protected abstract boolean isTransactionInitiator();
 
-	protected abstract void executeBefore(CTX operationConfigContext);
+	protected abstract Mono<Integer> executeBefore(CTX operationConfigContext);
 
-	public abstract void executeOperation(CTX operationConfigContext);
+	public abstract Mono<Integer> executeOperation(CTX operationConfigContext);
 
-	protected abstract void executeAfter(CTX operationConfigContext);
+	protected abstract Mono<Integer> executeAfter(CTX operationConfigContext);
 
 
 }

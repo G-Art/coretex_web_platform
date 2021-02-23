@@ -27,6 +27,7 @@ import org.apache.commons.collections4.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -34,7 +35,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service("productFacade")
 public class DefaultProductFacade implements ProductFacade {
@@ -149,7 +149,7 @@ public class DefaultProductFacade implements ProductFacade {
 	}
 
 	@Override
-	public Stream<ProductData> getAll() {
+	public Flux<ProductData> getAll() {
 		return productService.listReactive()
 				.map(productDataMapper::fromItem);
 	}

@@ -13,11 +13,11 @@ import com.coretex.items.cx_core.OrderItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class DefaultCartService extends AbstractGenericItemService<CartItem> implements CartService {
@@ -35,7 +35,7 @@ public class DefaultCartService extends AbstractGenericItemService<CartItem> imp
 	}
 
 	@Override
-	public Stream<CartItem> getCartsForCustomer(CustomerItem customerItem) {
+	public Flux<CartItem> getCartsForCustomer(CustomerItem customerItem) {
 		return getRepository().getCartsForCustomer(customerItem);
 	}
 

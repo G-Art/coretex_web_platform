@@ -29,6 +29,5 @@ public interface MetaTypeProvider {
 
 	Map<String, MetaAttributeTypeItem> getAllAttributes(MetaTypeItem metaType);
 
-	String getSqlTypeName(RegularTypeItem regularTypeItem);
-	Integer getSqlType(RegularTypeItem regularTypeItem);
+	String getSqlTypeName(RegularTypeItem regularTypeItem);;
 }

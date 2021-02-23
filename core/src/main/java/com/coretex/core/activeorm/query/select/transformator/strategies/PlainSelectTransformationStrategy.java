@@ -93,6 +93,7 @@ public class PlainSelectTransformationStrategy extends AbstractTransformationStr
 		if (Objects.nonNull(fromItemScanner) && fromItemScanner.isTable()) {
 			var tableTransformationData = fromItemScanner.getTableTransformationData();
 			statementContext.addAllItemUsed(tableTransformationData.getUsedTypes());
+			statementContext.setLocalizedTable(tableTransformationData.isLocalizedTable());
 			if (tableTransformationData.isBind()) {
 				TableDataInjectionPoint tableDataInjectionPoint = getTransformationHelper().createDateInjectionPoint(fromItemScanner, statementContext);
 				tableDataInjectionPoint.setTableTransformationData(tableTransformationData);

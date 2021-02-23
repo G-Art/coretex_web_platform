@@ -11,14 +11,14 @@
     <div class="col-lg-12">
         <c:choose>
             <c:when test="${not empty baseProduct}">
-                <c:url var="productSaveUrl" value="/product/${baseProduct.uuid}/variant/save"/>
+                <c:url var="saveUrl" value="/product/${baseProduct.uuid}/variant/save"/>
             </c:when>
             <c:otherwise>
-                <c:url var="productSaveUrl" value="/product/save"/>
+                <c:url var="saveUrl" value="/product/save"/>
             </c:otherwise>
         </c:choose>
 
-        <form id="productForm" action="${productSaveUrl}" method="post"
+        <form id="productForm" action="${saveUrl}" method="post"
               class="md-float-material card-block">
             <c:if test="${not empty baseProduct}">
                 <input type="hidden" name="variantType" value="${product.variantType}">

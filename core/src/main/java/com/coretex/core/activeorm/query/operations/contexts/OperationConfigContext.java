@@ -4,9 +4,9 @@ import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.specs.SqlOperationSpec;
 import com.coretex.core.activeorm.services.ReactiveSearchResult;
 import net.sf.jsqlparser.statement.Statement;
+import reactor.core.publisher.Flux;
 
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public interface OperationConfigContext<
 		S extends Statement,
@@ -19,5 +19,5 @@ public interface OperationConfigContext<
 
 	QueryType getQueryType();
 
-	<R extends ReactiveSearchResult<T>, T> R wrapResult(Stream<T> result);
+	<R extends ReactiveSearchResult<T>, T> R wrapResult(Flux<T> result);
 }

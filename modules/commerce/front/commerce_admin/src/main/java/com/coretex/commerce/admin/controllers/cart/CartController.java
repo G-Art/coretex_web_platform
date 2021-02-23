@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.util.UUID;
@@ -30,6 +31,15 @@ public class CartController extends PageableDataTableAbstractController<CartData
 		var order = cartFacade.getByUUID(uuid);
 		model.addAttribute("order", order);
 		return "order/cart";
+	}
+
+	@RequestMapping(path = {"/remove/{uuid}"}, method = {RequestMethod.GET, RequestMethod.DELETE})
+	public String removeStore(@PathVariable(value = "uuid") UUID uuid,
+	                          RedirectAttributes redirectAttributes) {
+		cartFacade.delete(uuid);
+		addInfoFlashMessage(redirectAttributes, "Cart removed");
+
+		return redirect("/cart");
 	}
 
 	@Override

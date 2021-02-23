@@ -57,9 +57,10 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 
 		originalValue = provider.getValue(attributeName, owner);
 		if(originalValue instanceof Collection){
-			var collection = originalValue instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
+			var collection = originalValue instanceof Set ? new ObservedHashSet(this) : new ObservedArrayList(this);
 			collection.addAll((Collection<?>) originalValue);
 			value = collection;
+			dirty = false;
 		}else{
 			value = originalValue;
 		}
@@ -75,7 +76,7 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 
 	public void set(Object newValue) {
 		if(newValue instanceof Collection){
-			var collection = newValue instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
+			var collection = newValue instanceof Set ? new ObservedHashSet(this) : new ObservedArrayList(this);
 			collection.addAll((Collection<?>) newValue);
 			value = collection;
 		}else{
@@ -88,7 +89,7 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 	@Override
 	public void flush() {
 		if(value instanceof Collection){
-			var collection = value instanceof Set ? new ObservedHashSet() : new ObservedArrayList();
+			var collection = value instanceof Set ? new ObservedHashSet(this) : new ObservedArrayList(this);
 			collection.addAll((Collection<?>) value);
 			originalValue = collection;
 		}else{
@@ -126,34 +127,46 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 
 	protected class ObservedArrayList extends ForwardingList<Object> {
 		final List<Object> delegate = Lists.newArrayList(); // backing list
+		private final AttributeValueHolder attributeValueHolder;
+
+		public ObservedArrayList(AttributeValueHolder attributeValueHolder) {
+			this.attributeValueHolder = attributeValueHolder;
+		}
+
 		@Override protected List<Object> delegate() {
 			return delegate;
 		}
 		@Override public void add(int index, Object elem) {
-			dirty = true;
+			attributeValueHolder.dirty = true;
 			super.add(index, elem);
 		}
 		@Override public boolean add(Object elem) {
-			dirty = true;
+			attributeValueHolder.dirty = true;
 			return standardAdd(elem);
 		}
 		@Override public boolean addAll(Collection<?> c) {
-			dirty = true;
+			attributeValueHolder.dirty = true;
 			return standardAddAll(c);
 		}
 	}
 
 	protected class ObservedHashSet extends ForwardingSet<Object> {
 		final Set<Object> delegate = Sets.newHashSet(); // backing list
+		private AttributeValueHolder attributeValueHolder;
+
+		public ObservedHashSet(AttributeValueHolder attributeValueHolder) {
+			this.attributeValueHolder = attributeValueHolder;
+		}
+
 		@Override protected Set<Object> delegate() {
 			return delegate;
 		}
 		@Override public boolean add(Object elem) {
-			dirty = true;
+			attributeValueHolder.dirty = true;
 			return super.add(elem); // implements in terms of add(int, E)
 		}
 		@Override public boolean addAll(Collection<?> c) {
-			dirty = true;
+			attributeValueHolder.dirty = true;
 			return standardAddAll(c);
 		}
 	}

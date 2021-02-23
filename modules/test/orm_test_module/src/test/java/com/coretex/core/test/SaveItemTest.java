@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -358,7 +359,7 @@ public class SaveItemTest {
 		assertEquals(testItem, searchedTestItem);
 		assertEquals(testItem.getUuidType(), searchedTestItem.getUuidType());
 		assertEquals(testItem.getClassType(), searchedTestItem.getClassType());
-		assertEquals(testItem.getBigDecimalType(), searchedTestItem.getBigDecimalType());
+		assertEquals(testItem.getBigDecimalType(), searchedTestItem.getBigDecimalType().setScale(2, RoundingMode.HALF_UP));
 		assertEquals(testItem.getByteType(), searchedTestItem.getByteType());
 		assertEquals(testItem.getStringType(), searchedTestItem.getStringType());
 		assertEquals(testItem.getLongType(), searchedTestItem.getLongType());

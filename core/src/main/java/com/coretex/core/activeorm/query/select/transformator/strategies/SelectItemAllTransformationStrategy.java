@@ -62,6 +62,7 @@ public class SelectItemAllTransformationStrategy extends AbstractTransformationS
 			var transform = Objects.nonNull(tableTransformationDataForTable) && tableTransformationDataForTable.isBind();
 			if(Objects.nonNull(tableTransformationDataForTable)){
 				infoHolder.getDataInjectionPoint().getContext().addAllItemUsed(tableTransformationDataForTable.getUsedTypes());
+				infoHolder.getDataInjectionPoint().getContext().setLocalizedTable(tableTransformationDataForTable.isLocalizedTable());
 			}
 			return transform;
 		}
@@ -70,6 +71,7 @@ public class SelectItemAllTransformationStrategy extends AbstractTransformationS
 		return fromItemScanner.isPresent() && fromItemScanner.map(is -> {
 			infoHolder.setTableTransformationData(is.getTableTransformationData());
 			infoHolder.getDataInjectionPoint().getContext().addAllItemUsed(is.getTableTransformationData().getUsedTypes());
+			infoHolder.getDataInjectionPoint().getContext().setLocalizedTable(is.getTableTransformationData().isLocalizedTable());
 			return Objects.nonNull(infoHolder.getTableTransformationData()) &&
 					infoHolder.getTableTransformationData().isBind();
 		}).get();

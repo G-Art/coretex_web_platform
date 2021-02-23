@@ -6,10 +6,12 @@ import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.google.common.collect.Maps;
 import net.sf.jsqlparser.statement.Statement;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,7 +27,7 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 	private String insertQuery;
 	private String updateQuery;
 
-	public LocalizedDataSaveOperationSpec(AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?,?,?> ,?> initiator, MetaAttributeTypeItem attributeTypeItem) {
+	public LocalizedDataSaveOperationSpec(AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator, MetaAttributeTypeItem attributeTypeItem) {
 		super(initiator.getOperationSpec().getItem());
 		setNativeQuery(false);
 		this.attributeTypeItem = attributeTypeItem;
@@ -34,7 +36,7 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 
 
 	private String buildQuery() {
-		if(AttributeTypeUtils.isRelationAttribute(attributeTypeItem)){
+		if (AttributeTypeUtils.isRelationAttribute(attributeTypeItem)) {
 			throw new IllegalArgumentException(String.format("Relation attribute cant be localized [name: %s] [owner: %s]", attributeTypeItem.getAttributeName(), attributeTypeItem.getOwner().getTypeCode()));
 		}
 
@@ -89,13 +91,13 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 			this.localizedValues = Optional.ofNullable(localizedValues).orElseGet(Maps::newHashMap);
 		}
 
-		public boolean hasValuesForUpdate(){
-			if(update == null){
+		public boolean hasValuesForUpdate() {
+			if (update == null) {
 				update = localizedValues.entrySet()
 						.stream()
 						.filter(entry -> {
-							if(originLocalizedValues.containsKey(entry.getKey())){
-								return !originLocalizedValues.get(entry.getKey()).equals(entry.getKey());
+							if (originLocalizedValues.containsKey(entry.getKey())) {
+								return !originLocalizedValues.get(entry.getKey()).equals(entry.getValue());
 							}
 							return false;
 						}).collect(
@@ -107,12 +109,14 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 			return !update.isEmpty();
 		}
 
-		public boolean hasValuesForInsert(){
-			if(insert == null){
+		public boolean hasValuesForInsert() {
+			if (insert == null) {
 				insert = new HashMap<>();
 				insert = localizedValues.entrySet()
 						.stream()
-						.filter(entry -> !originLocalizedValues.containsKey(entry.getKey())).collect(
+						.filter(entry -> !originLocalizedValues.containsKey(entry.getKey()))
+						.filter(entry -> entry.getValue() instanceof String ? StringUtils.isNotBlank((CharSequence) entry.getValue()) : Objects.nonNull(entry.getValue()))
+						.collect(
 								Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)
 						);
 			}
@@ -121,11 +125,11 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 		}
 
 
-		public Map<Locale, Object> getUpdateValues(){
+		public Map<Locale, Object> getUpdateValues() {
 			return update;
 		}
 
-		public Map<Locale, Object> getInsertValues(){
+		public Map<Locale, Object> getInsertValues() {
 			return insert;
 		}
 

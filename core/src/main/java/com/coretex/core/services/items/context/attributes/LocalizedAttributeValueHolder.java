@@ -23,8 +23,8 @@ public class LocalizedAttributeValueHolder implements AttributeValueHolderState 
 
 	public static LocalizedAttributeValueHolder initValueHolder(String attributeName, ItemContext owner, Map<String, Object>  initialValue) {
 		LocalizedAttributeValueHolder valueHolder = createLazyValueHolder(attributeName, owner);
-		valueHolder.originalValue = Optional.ofNullable(initialValue).orElseGet(Maps::newHashMap);
-		valueHolder.value = Optional.ofNullable(initialValue).orElseGet(Maps::newHashMap);
+		valueHolder.originalValue = Optional.ofNullable(initialValue).map(Maps::newHashMap).orElseGet(Maps::newHashMap);
+		valueHolder.value = Optional.ofNullable(initialValue).map(Maps::newHashMap).orElseGet(Maps::newHashMap);
 		valueHolder.loaded = true;
 		return valueHolder;
 	}
@@ -132,7 +132,7 @@ public class LocalizedAttributeValueHolder implements AttributeValueHolderState 
 		if(value != null && !value.isEmpty()){
 			originalValue.forEach(value::putIfAbsent);
 		}else {
-			value = originalValue;
+			value = Maps.newHashMap(originalValue);
 		}
 
 		loaded = true;
@@ -141,7 +141,7 @@ public class LocalizedAttributeValueHolder implements AttributeValueHolderState 
 	private Map<Locale, Object> transform(Map<String, Object> value) {
 		Map<Locale, Object> result = new HashMap<>();
 		value.forEach((key, val) -> result.put(LocaleUtils.toLocale(key), val));
-		return result.isEmpty() ? null : result;
+		return result;
 	}
 
 	public String getAttributeName() {

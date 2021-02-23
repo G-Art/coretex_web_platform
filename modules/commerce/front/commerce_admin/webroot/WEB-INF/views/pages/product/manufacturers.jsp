@@ -89,7 +89,8 @@
                                        tableId="manufacturersTable"
                                        dataSourceLink="/manufacturer/paginated"
                                        rowId="uuid"
-                                       actionTarget="3" >
+                                       actionTarget="3"
+                                       deleteActionPath="/manufacturer/remove">
                 <jsp:attribute name="theader">
                     <tr>
                         <th>Code</th>

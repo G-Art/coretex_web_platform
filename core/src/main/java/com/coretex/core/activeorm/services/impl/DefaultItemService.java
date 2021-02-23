@@ -65,7 +65,7 @@ public class DefaultItemService implements ItemService {
 
 	@Override
 	public <T extends GenericItem> T save(T item){
-		activeOrmOperationExecutor.executeSaveOperation(item);
+		var integer = activeOrmOperationExecutor.executeSaveOperation(item);
 		return item;
 	}
 

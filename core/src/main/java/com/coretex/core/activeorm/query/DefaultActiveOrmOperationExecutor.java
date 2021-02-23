@@ -21,6 +21,9 @@ import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaRelationTypeItem;
 import com.coretex.meta.AbstractGenericItem;
 import org.springframework.beans.factory.annotation.Lookup;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -50,55 +53,61 @@ public class DefaultActiveOrmOperationExecutor implements ActiveOrmOperationExec
 
 
 	@Override
-	public <T extends GenericItem> boolean executeSaveOperation(T item) {
+	public <T extends GenericItem> Integer executeSaveOperation(T item) {
 
+		ReactiveSearchResult<Mono<Integer>> result;
 		if (isNew(item)) {
-			execute(new InsertOperationSpec(item).createOperationContext());
+			result = execute(new InsertOperationSpec(item).createOperationContext());
 		} else {
-			execute(new UpdateOperationSpec(item).createOperationContext());
+			result = execute(new UpdateOperationSpec(item).createOperationContext());
 		}
-		return true;
+		return Flux.concat(result.getResultStream())
+				.reduce(0, Integer::sum).block();
 	}
 
 	@Override
-	public <T extends GenericItem> boolean executeSaveOperation(T item,
+	public <T extends GenericItem> Integer executeSaveOperation(T item,
 	                                                            MetaAttributeTypeItem attributeTypeItem,
 	                                                            AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator) {
-
+		ReactiveSearchResult<Mono<Integer>> result;
 		if (attributeTypeItem.getLocalized()) {
-			execute(new LocalizedDataSaveOperationSpec(initiator, attributeTypeItem).createOperationContext());
+			result = execute(new LocalizedDataSaveOperationSpec(initiator, attributeTypeItem).createOperationContext());
 		} else {
 			if (isNew(item)) {
-				execute(new CascadeInsertOperationSpec(initiator, item, attributeTypeItem).createOperationContext());
+				result = execute(new CascadeInsertOperationSpec(initiator, item, attributeTypeItem).createOperationContext());
 			} else {
-				execute(new CascadeUpdateOperationSpec(initiator, item, attributeTypeItem).createOperationContext());
+				result = execute(new CascadeUpdateOperationSpec(initiator, item, attributeTypeItem).createOperationContext());
 			}
 		}
-		return true;
+		return Flux.concat(result.getResultStream())
+				.reduce(0, Integer::sum).block();
 	}
 
 	@Override
-	public <T extends GenericItem> boolean executeRelationSaveOperations(Collection<T> items,
+	public <T extends GenericItem> Integer executeRelationSaveOperations(Collection<T> items,
 	                                                                     MetaAttributeTypeItem attributeTypeItem,
 	                                                                     AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator) {
 		ModificationOperationSpec<?, ?, ?> initiatorOperationSpec = initiator.getOperationSpec();
 		GenericItem ownerItem = initiatorOperationSpec.getItem();
-		items.stream()
+
+		return items.stream()
 				.filter(Objects::nonNull)
 				.filter(item -> OperationUtils.isLoopSafe(initiatorOperationSpec, item))
-				.forEach(item -> {
+				.mapToInt(item -> {
+					var i = 0;
 					if (item.getItemContext().isDirty()) {
-						executeSaveOperation(item, attributeTypeItem, initiator);
+						i = i + executeSaveOperation(item, attributeTypeItem, initiator);
 					}
 					if (isNew(item) || !OperationUtils.haveRelation(item, ownerItem, attributeTypeItem)) {
-						executeRelationSaveOperation(item, ownerItem, attributeTypeItem, initiator);
+						i = i + executeRelationSaveOperation(item, ownerItem, attributeTypeItem, initiator);
 					}
-				});
-		return true;
+					return i;
+				}).sum();
+
 	}
 
 	@Override
-	public <T extends GenericItem> boolean executeRelationSaveOperations(T item,
+	public <T extends GenericItem> Integer executeRelationSaveOperations(T item,
 	                                                                     MetaAttributeTypeItem attributeTypeItem,
 	                                                                     AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator) {
 
@@ -106,42 +115,47 @@ public class DefaultActiveOrmOperationExecutor implements ActiveOrmOperationExec
 	}
 
 	@Override
-	public <T extends GenericItem> boolean executeDeleteOperation(T item) {
-		execute(new RemoveOperationSpec(item).createOperationContext());
-		return true;
+	public <T extends GenericItem> Integer executeDeleteOperation(T item) {
+		ReactiveSearchResult<Mono<Integer>> searchResult = execute(new RemoveOperationSpec(item).createOperationContext());
+		return Flux.concat(searchResult.getResultStream())
+				.subscribeOn(Schedulers.boundedElastic())
+				.publishOn(Schedulers.boundedElastic()).reduce(0, Integer::sum).block();
 	}
 
-	public <T extends GenericItem> boolean executeDeleteOperation(T item,
+	public <T extends GenericItem> Integer executeDeleteOperation(T item,
 	                                                              MetaAttributeTypeItem attributeTypeItem,
 	                                                              AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator) {
-
+		ReactiveSearchResult<Mono<Integer>> searchResult;
 		if (attributeTypeItem.getLocalized()) {
-			execute(new LocalizedDataRemoveOperationSpec(initiator, attributeTypeItem).createOperationContext());
+			searchResult = execute(new LocalizedDataRemoveOperationSpec(initiator, attributeTypeItem).createOperationContext());
 		} else {
-			execute(new CascadeRemoveOperationSpec(initiator, item, attributeTypeItem).createOperationContext());
+			searchResult = execute(new CascadeRemoveOperationSpec(initiator, item, attributeTypeItem).createOperationContext());
 		}
-		return true;
+		return Flux.concat(searchResult.getResultStream())
+				.reduce(0, Integer::sum).block();
 	}
 
 	@Override
-	public <T extends GenericItem> boolean executeRelationDeleteOperations(Collection<T> items,
+	public <T extends GenericItem> Integer executeRelationDeleteOperations(Collection<T> items,
 	                                                                       MetaAttributeTypeItem attributeTypeItem,
 	                                                                       AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator) {
 		GenericItem ownerItem = initiator.getOperationSpec().getItem();
-		items.stream().filter(Objects::nonNull).forEach(item -> {
-			boolean loopSave = isLoopSafe(initiator.getOperationSpec(), item);
-			if (attributeTypeItem.getAssociated() && loopSave) {
-				executeDeleteOperation(item, attributeTypeItem, initiator);
-			}
-			if (loopSave) {
-				executeRelationDeleteOperation(item, ownerItem, attributeTypeItem, initiator);
-			}
-		});
-		return true;
+		return items.stream().filter(Objects::nonNull)
+				.mapToInt(item -> {
+					var i = 0;
+					boolean loopSave = isLoopSafe(initiator.getOperationSpec(), item);
+					if (attributeTypeItem.getAssociated() && loopSave) {
+						i = i+ executeDeleteOperation(item, attributeTypeItem, initiator);
+					}
+					if (loopSave) {
+						i = i+ executeRelationDeleteOperation(item, ownerItem, attributeTypeItem, initiator);
+					}
+					return i;
+				}).sum();
 	}
 
 	@Override
-	public <T extends GenericItem> boolean executeRelationDeleteOperations(T item,
+	public <T extends GenericItem> Integer executeRelationDeleteOperations(T item,
 	                                                                       MetaAttributeTypeItem attributeTypeItem,
 	                                                                       AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator) {
 
@@ -149,7 +163,7 @@ public class DefaultActiveOrmOperationExecutor implements ActiveOrmOperationExec
 	}
 
 
-	private <T extends GenericItem> boolean executeRelationDeleteOperation(T item,
+	private <T extends GenericItem> Integer executeRelationDeleteOperation(T item,
 	                                                                       GenericItem ownerItem,
 	                                                                       MetaAttributeTypeItem attributeTypeItem,
 	                                                                       AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator) {
@@ -165,7 +179,7 @@ public class DefaultActiveOrmOperationExecutor implements ActiveOrmOperationExec
 		return executeDeleteOperation(relation, attributeTypeItem, initiator);
 	}
 
-	private <T extends GenericItem> boolean executeRelationSaveOperation(T item,
+	private <T extends GenericItem> Integer executeRelationSaveOperation(T item,
 	                                                                     GenericItem ownerItem,
 	                                                                     MetaAttributeTypeItem attributeTypeItem,
 	                                                                     AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator) {

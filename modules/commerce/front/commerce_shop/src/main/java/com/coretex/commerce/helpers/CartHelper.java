@@ -35,7 +35,7 @@ public class CartHelper {
 					var sessionCart = getOrCreateUserCart(cartUUID, customer, domain);
 					cartFacade.getCartsForCustomer(customer.getUuid())
 							.filter(userCart -> !userCart.getUuid().equals(sessionCart.getUuid()))
-							.forEach(userCart -> cartFacade.merge(sessionCart, userCart));
+							.subscribe(userCart -> cartFacade.merge(sessionCart, userCart));
 					sessionManager.setCurrentCartUUID(exchange, sessionCart);
 					return sessionCart;
 				}).switchIfEmpty(

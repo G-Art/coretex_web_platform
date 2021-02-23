@@ -1,4 +1,5 @@
 <%--@elvariable id="currentUser" type="com.coretex.commerce.data.UserData"--%>
+<%@ page session="true"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
@@ -16,6 +17,8 @@
           href="<c:url value="/resources/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/icon/feather/css/feather.css"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/resources/assets/css/jquery.mCustomScrollbar.css"/>">
+    <link rel="stylesheet" type="text/css"
+          href="<c:url value="/resources/bower_components/sweetalert/css/sweetalert.css"/>"/>
 	</jsp:attribute>
 
     <jsp:attribute name="pageScripts">
@@ -33,7 +36,10 @@
             src="<c:url value="/resources/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"/>"></script>
     <script type="text/javascript"
             src="<c:url value="/resources/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"/>"></script>
-
+    <script type="text/javascript"
+            src="<c:url value="/resources/assets/js/modalEffects.js"/>"></script>
+    <script type="text/javascript"
+            src="<c:url value="/resources/bower_components/sweetalert/js/sweetalert.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/resources/assets/js/script.js"/>"></script>
 
 	</jsp:attribute>
@@ -46,7 +52,8 @@
                                        dataSourceLink="/cart/paginated"
                                        rowId="uuid"
                                        actionTarget="3"
-                                       actionPath="/cart">
+                                       actionPath="/cart"
+                                       deleteActionPath="/cart/remove">
                 <jsp:attribute name="theader">
                     <tr>
                         <th>Total</th>

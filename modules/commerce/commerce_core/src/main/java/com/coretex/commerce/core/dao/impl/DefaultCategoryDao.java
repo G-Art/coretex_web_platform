@@ -5,11 +5,11 @@ import com.coretex.core.activeorm.dao.DefaultGenericDao;
 import com.coretex.items.cx_core.CategoryItem;
 import com.coretex.relations.cx_core.CategoryCategoryRelation;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Component
 public class DefaultCategoryDao extends DefaultGenericDao<CategoryItem> implements CategoryDao {
@@ -19,7 +19,7 @@ public class DefaultCategoryDao extends DefaultGenericDao<CategoryItem> implemen
 	}
 
 	@Override
-	public Stream<CategoryItem> findByParent(UUID parentId) {
+	public Flux<CategoryItem> findByParent(UUID parentId) {
 
 		String qs = "SELECT * FROM " + CategoryItem.ITEM_TYPE + " AS category ";
 

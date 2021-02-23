@@ -16,6 +16,7 @@ public class TableTransformationData {
 
 	private Table table;
 	private String tableName;
+	private boolean localizedTable;
 	private MetaTypeItem typeItemBind;
 	private Set<MetaTypeItem> inheritance;
 	private Set<MetaTypeItem> usedTypes;
@@ -24,6 +25,7 @@ public class TableTransformationData {
 
 	public TableTransformationData(Table table, MetaTypeItem typeItemBind, Set<MetaTypeItem> metaTypesForTable) {
 		this.table = table;
+		this.localizedTable = false;
 		if(CollectionUtils.isNotEmpty(metaTypesForTable)){
 			this.usedTypes = Sets.newHashSet(metaTypesForTable);
 		}
@@ -39,6 +41,11 @@ public class TableTransformationData {
 			this.tableName = table.getFullyQualifiedName().replaceAll("\"", "");
 		}
 	}
+	public TableTransformationData(Table table, MetaTypeItem typeItemBind, Set<MetaTypeItem> metaTypesForTable, boolean localizedTable) {
+		this(table,typeItemBind, metaTypesForTable);
+		this.localizedTable = localizedTable;
+	}
+
 
 	public Table getTable() {
 		return table;
@@ -76,4 +83,7 @@ public class TableTransformationData {
 		return Optional.ofNullable(inheritance);
 	}
 
+	public boolean isLocalizedTable() {
+		return localizedTable;
+	}
 }

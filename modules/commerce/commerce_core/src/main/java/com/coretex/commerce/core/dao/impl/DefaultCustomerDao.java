@@ -21,12 +21,12 @@ public class DefaultCustomerDao extends DefaultGenericDao<CustomerItem> implemen
 	@Override
 	public boolean isEmailExist(String email) {
 		return getSearchService()
-				.<Map<String, Long>> search("SELECT count(c.uuid) "
+				.<Map<String, Long>>search("SELECT count(c.uuid) "
 						+ "FROM " + CustomerItem.ITEM_TYPE + " AS c "
 						+ "WHERE c." + CustomerItem.EMAIL + " = :email", Map.of(CustomerItem.EMAIL, email))
 				.getResultStream()
-				.findFirst()
-				.orElse(Map.of("count", 0L))
-				.get("count") > 0;
+				.single(Map.of("count", 0L))
+				.map(map -> map.get("count"))
+				.block() > 0;
 	}
 }

@@ -29,7 +29,7 @@ public class CategoryController extends SearchController {
 
 	@GetMapping(path = "/menu")
 	private Flux<MinimalCategoryHierarchyData> getMenuCategories() {
-		return Flux.fromStream(categoryFacade::rootCategories);
+		return categoryFacade.rootCategories();
 	}
 
 

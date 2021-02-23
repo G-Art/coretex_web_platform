@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.coretex.core.general.utils.AttributeTypeUtils.isCollection;
 
@@ -62,8 +61,7 @@ public class RelationAttributeLoadValueStrategy extends AbstractLoadAttributeVal
 
 	protected Object processResult(ReactiveSearchResult<Object> searchResultStream, MetaAttributeTypeItem attribute, ItemContext ctx) {
 
-		List<Object> searchResult = searchResultStream.getResultStream().collect(Collectors.toList());
-
+		List<Object> searchResult = searchResultStream.getResultStream().collectList().block();
 		if (CollectionUtils.isEmpty(searchResult) ) {
 			if (isCollection(attribute)){
 				Class containerType = attribute.getContainerType();

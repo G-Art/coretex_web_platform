@@ -6,6 +6,7 @@ import com.coretex.items.cx_commercedelivery_api.DeliveryTypeItem;
 import com.coretex.items.cxpaymentapi.PaymentModeItem;
 import com.coretex.relations.cxpaymentapi.PaymentModeDeliveryTypeRelation;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
 import java.util.stream.Stream;
@@ -22,7 +23,7 @@ public class DefaultPaymentModeDao extends DefaultGenericDao<PaymentModeItem> im
 	}
 
 	@Override
-	public Stream<PaymentModeItem> findByDeliveryType(String code) {
+	public Flux<PaymentModeItem> findByDeliveryType(String code) {
 		return findReactive(" SELECT * FROM " + PaymentModeItem.ITEM_TYPE + " as pm " +
 				"JOIN " + PaymentModeDeliveryTypeRelation.ITEM_TYPE + " as pmdt ON pmdt.source = pm.uuid " +
 				"JOIN " + DeliveryTypeItem.ITEM_TYPE + " as dt ON pmdt.target = dt.uuid " +

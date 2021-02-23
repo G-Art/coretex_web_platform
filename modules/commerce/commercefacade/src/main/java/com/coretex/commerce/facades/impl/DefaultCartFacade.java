@@ -21,6 +21,7 @@ import com.coretex.items.cx_core.CartItem;
 import com.coretex.items.cx_core.CustomerItem;
 import com.coretex.items.cx_core.VariantProductItem;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -29,7 +30,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 @Component
 public class DefaultCartFacade implements CartFacade {
@@ -103,10 +103,10 @@ public class DefaultCartFacade implements CartFacade {
 	}
 
 	@Override
-	public Stream<CartData> getCartsForCustomer(UUID customerUuid) {
+	public Flux<CartData> getCartsForCustomer(UUID customerUuid) {
 		return Optional.ofNullable(customerService.getByUUID(customerUuid))
 				.map(cartService::getCartsForCustomer)
-				.map(stream -> stream.map(cartDataMapper::fromItem)).orElseGet(Stream::empty);
+				.map(stream -> stream.map(cartDataMapper::fromItem)).orElseGet(Flux::empty);
 	}
 
 	@Override
@@ -231,6 +231,11 @@ public class DefaultCartFacade implements CartFacade {
 		cartService.placeOrder(cartItem);
 
 		return orderPlaceResult;
+	}
+
+	@Override
+	public void delete(UUID uuid) {
+		cartService.delete(itemService.create(CartItem.class, uuid));
 	}
 
 	private CartData executeForCart(UUID cart, Function<CartItem, CartItem> cartItemFunction) {

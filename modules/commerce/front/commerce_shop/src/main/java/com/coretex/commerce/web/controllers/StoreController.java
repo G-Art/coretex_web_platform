@@ -2,7 +2,6 @@ package com.coretex.commerce.web.controllers;
 
 import com.coretex.commerce.data.StoreData;
 import com.coretex.commerce.facades.StoreFacade;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +32,7 @@ public class StoreController {
 
 	@GetMapping
 	public Flux<StoreData> getAll() {
-		return Flux.fromStream(storeFacade::getAll);
+		return storeFacade.getAll();
 	}
 
 }

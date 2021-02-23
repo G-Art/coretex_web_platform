@@ -8,13 +8,15 @@ import com.coretex.commerce.facades.StoreFacade;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.StoreDataMapper;
 import com.coretex.commerce.mapper.minimal.MinimalStoreDataMapper;
+import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.items.cx_core.StoreItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.Resource;
-import java.util.stream.Stream;
+import java.util.UUID;
 
 @Service
 public class DefaultStoreFacade implements StoreFacade {
@@ -27,6 +29,9 @@ public class DefaultStoreFacade implements StoreFacade {
 
 	@Resource
 	private MinimalStoreDataMapper minimalStoreDataMapper;
+
+	@Resource
+	private ItemService itemService;
 
 	private static final Logger LOG = LoggerFactory.getLogger(DefaultStoreFacade.class);
 
@@ -41,11 +46,20 @@ public class DefaultStoreFacade implements StoreFacade {
 	}
 
 	@Override
-	public Stream<StoreData> getAll() {
+	public Flux<StoreData> getAll() {
 		return storeService.listReactive()
 				.map(storeDataMapper::fromItem);
 	}
 
+	@Override
+	public StoreData getByUuid(UUID uuid) {
+		return storeDataMapper.fromItem(storeService.getByUUID(uuid));
+	}
+
+	@Override
+	public void delete(UUID uuid) {
+		storeService.delete(itemService.create(StoreItem.class, uuid));
+	}
 
 	@Override
 	public PageableService<StoreItem> getPageableService() {

@@ -5,9 +5,9 @@ import com.coretex.commerce.facades.PaymentFacade;
 import com.coretex.commerce.mapper.PaymentTypeDataMapper;
 import com.coretex.commerce.payment.service.PaymentModeService;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import javax.annotation.Resource;
-import java.util.stream.Stream;
 
 @Component
 public class DefaultPaymentFacade implements PaymentFacade {
@@ -19,7 +19,7 @@ public class DefaultPaymentFacade implements PaymentFacade {
 	private PaymentTypeDataMapper paymentTypeDataMapper;
 
 	@Override
-	public Stream<PaymentTypeData> getPaymentModesForDeliveryType(String code){
+	public Flux<PaymentTypeData> getPaymentModesForDeliveryType(String code){
 		return paymentModeService.getPaymentsForDeliveryType(code)
 				.map(paymentTypeDataMapper::fromItem);
 	}

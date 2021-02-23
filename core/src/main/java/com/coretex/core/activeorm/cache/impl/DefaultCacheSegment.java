@@ -6,6 +6,7 @@ import com.coretex.core.activeorm.cache.CacheKeyComputationStrategy;
 import com.coretex.core.activeorm.cache.CacheManager;
 import com.coretex.core.activeorm.cache.CacheSegment;
 import com.coretex.core.activeorm.cache.CacheSegmentFeature;
+import com.coretex.core.activeorm.cache.CacheValueRetrievingStrategy;
 import com.coretex.core.activeorm.cache.CacheValueStoringStrategy;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class DefaultCacheSegment<CICTX extends CacheInvalidationContext, CCTX ex
 
 	private final CacheKeyComputationStrategy<?, CCTX> cacheKeyComputationStrategy;
 	private final CacheValueStoringStrategy cacheValueStoringStrategy;
+	private final CacheValueRetrievingStrategy cacheValueRetrievingStrategy;
 
 	private final Class<CICTX> invalidationCtxClass;
 	private final Class<CCTX> ctxClass;
@@ -30,6 +32,7 @@ public class DefaultCacheSegment<CICTX extends CacheInvalidationContext, CCTX ex
 
 	public DefaultCacheSegment(CacheKeyComputationStrategy<?, CCTX> cacheKeyComputationStrategy,
 	                           CacheValueStoringStrategy cacheValueStoringStrategy,
+	                           CacheValueRetrievingStrategy cacheValueRetrievingStrategy,
 	                           Class<CCTX> ctxClass, Class<CICTX> invalidationCtxClass,
 	                           CacheManager cacheManager, List<CacheSegmentFeature> features) {
 		Objects.requireNonNull(cacheManager);
@@ -41,6 +44,7 @@ public class DefaultCacheSegment<CICTX extends CacheInvalidationContext, CCTX ex
 		Objects.requireNonNull(cacheManager);
 
 		this.cacheValueStoringStrategy = cacheValueStoringStrategy;
+		this.cacheValueRetrievingStrategy = cacheValueRetrievingStrategy;
 		this.cacheKeyComputationStrategy = cacheKeyComputationStrategy;
 		this.ctxClass = ctxClass;
 		this.invalidationCtxClass = invalidationCtxClass;
@@ -80,7 +84,7 @@ public class DefaultCacheSegment<CICTX extends CacheInvalidationContext, CCTX ex
 
 	@Override
 	public <R> R retrieveValue(Supplier<?> supplier) {
-		return (R) cacheValueStoringStrategy.storeOutcome(supplier.get());
+		return (R) cacheValueRetrievingStrategy.storeOutcome(supplier.get());
 	}
 
 	@Override

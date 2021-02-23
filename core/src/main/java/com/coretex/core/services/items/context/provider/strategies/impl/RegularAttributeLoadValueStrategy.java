@@ -1,8 +1,6 @@
 package com.coretex.core.services.items.context.provider.strategies.impl;
 
 import com.coretex.core.activeorm.exceptions.SearchException;
-import com.coretex.core.activeorm.extractors.CoretexReactiveResultSetExtractor;
-import com.coretex.core.activeorm.factories.RowMapperFactory;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
 import com.coretex.core.activeorm.services.ReactiveSearchResult;
 import com.coretex.core.general.utils.AttributeTypeUtils;
@@ -12,16 +10,17 @@ import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.RegularTypeItem;
 import com.coretex.meta.AbstractGenericItem;
 import com.google.common.collect.Lists;
+import io.r2dbc.spi.Row;
+import io.r2dbc.spi.RowMetadata;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.JdbcUtils;
 
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 public class RegularAttributeLoadValueStrategy extends AbstractLoadAttributeValueStrategy {
@@ -39,45 +38,41 @@ public class RegularAttributeLoadValueStrategy extends AbstractLoadAttributeValu
 				.filter(attr -> !attr.getLocalized())
 				.filter(attr -> !loadedAttributes.contains(attr.getAttributeName()))
 				.collect(Collectors.toList());
-		CoretexReactiveResultSetExtractor<List<Object>> extractor = new CoretexReactiveResultSetExtractor<>(getCortexContext());
-		extractor.setMapperFactorySupplier(() -> creteMapperFactory(unloadedAttributes));
 		ReactiveSearchResult<List<Object>> searchResult = getOperationExecutor().execute(
-				new SelectOperationSpec(createQuery(unloadedAttributes, ctx), createParameters(ctx), extractor).createOperationContext());
+				new SelectOperationSpec(createQuery(unloadedAttributes, ctx),
+						createParameters(ctx),
+						createMapper(unloadedAttributes)).createOperationContext());
 
 		return processResult(searchResult, unloadedAttributes, attribute, ctx);
 	}
 
-	private RowMapperFactory creteMapperFactory(List<MetaAttributeTypeItem> unloadedAttributes) {
-		return new RowMapperFactory() {
-			@Override
-			public <T> RowMapper<T> createMapper(Class<T> ignore) {
-				return (rs, rowNum) -> {
+	private BiFunction<Row, RowMetadata, ?> createMapper(List<MetaAttributeTypeItem> unloadedAttributes) {
+		return (row, rowMetadata) -> {
 
-					List<Object> resultRow = Lists.newArrayList();
+			List<Object> resultRow = Lists.newArrayList();
 
-					for (int column = 1; column <= unloadedAttributes.size(); column++) {
-						var metaAttr = unloadedAttributes.get(column - 1);
-						try {
-							var result = getCortexContext().getTypeTranslator(((RegularTypeItem) metaAttr.getAttributeType())
-									.getRegularClass())
-									.read(rs, column);
-							resultRow.add(result);
-						} catch (Exception e) {
-							if (LOG.isDebugEnabled()) {
-								LOG.error(String.format("Can't read column [%s] number %s", metaAttr.getAttributeName(), rowNum), e);
-							}
-							try {
-								resultRow.add(JdbcUtils.getResultSetValue(rs, rowNum));
-							} catch (SQLException e1) {
-								throw new RuntimeException(e1);
-							}
-						}
+			for (int column = 1; column <= unloadedAttributes.size(); column++) {
+				var metaAttr = unloadedAttributes.get(column - 1);
+				var attributeType = (RegularTypeItem) metaAttr.getAttributeType();
+				try {
+//					var result = getCortexContext().getTypeTranslator(((RegularTypeItem) metaAttr.getAttributeType())
+//							.getRegularClass())
+//							.read(rs, column);
+					resultRow.add(row.get(metaAttr.getColumnName(), attributeType.getRegularClass()));
+				} catch (Exception e) {
+					if (LOG.isDebugEnabled()) {
+						LOG.error(String.format("Can't read column [%s]", metaAttr.getAttributeName()), e);
 					}
-
-					return (T) resultRow;
-
-				};
+					try {
+						resultRow.add(row.get(metaAttr.getColumnName(), attributeType.getRegularClass()));
+					} catch (Exception e1) {
+						throw new RuntimeException(e1);
+					}
+				}
 			}
+
+			return resultRow;
+
 		};
 	}
 
@@ -93,21 +88,23 @@ public class RegularAttributeLoadValueStrategy extends AbstractLoadAttributeValu
 	}
 
 	private Object processResult(ReactiveSearchResult<List<Object>> searchResultStream, List<MetaAttributeTypeItem> unloadedAttributes, MetaAttributeTypeItem attribute, ItemContext ctx) {
-		List<Object> resultRow = null;
-		List<List<Object>> searchResult = searchResultStream.getResultStream().collect(Collectors.toList());
+
+		List<List<Object>> searchResult = searchResultStream.getResultStream()
+				.collectList()
+				.defaultIfEmpty(List.of(List.of()))
+				.block();
 		if (CollectionUtils.isEmpty(searchResult)) {
 			return null;
 		} else {
 			if (searchResult.size() > 1) {
 				throw new SearchException(String.format("Ambiguous search result for [%s:%s] attribute", ctx.getTypeCode(), attribute.getAttributeName()));
 			}
-			resultRow = searchResult.iterator().next();
-
 		}
 
-		return enrichContextAndGetResult(ctx, unloadedAttributes, attribute,
-				resultRow
-		);
+		return enrichContextAndGetResult(ctx,
+				unloadedAttributes,
+				attribute,
+				IteratorUtils.get(searchResult.iterator(), 0));
 
 	}
 

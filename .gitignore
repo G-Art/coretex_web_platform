@@ -12,11 +12,11 @@ obj/
 *.iml
 
 velocity.log
-*lib/
+*libs/
 /tmp/*
 /data/*
 **/package-lock.json
-/modules/commerce/front/commerce_shop/jsbuild/
+/modules/**/jsbuild/
 **/node_modules/
 **/webroot/resources/static/
 !/config/solr/

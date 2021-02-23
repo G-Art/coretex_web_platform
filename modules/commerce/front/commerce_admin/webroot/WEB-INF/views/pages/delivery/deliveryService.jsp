@@ -122,7 +122,7 @@
                 <div class="col-lg-12">
                     <form id="deliveryServiceForm"
                           action="
-                          <c:url var="productSaveUrl" value="/delivery/service/${ds.uuid}/save"/>" method="post"
+                          <c:url var="saveUrl" value="/delivery/service/${ds.uuid}/save"/>" method="post"
                           class="md-float-material card-block">
                         <input type="hidden" name="uuid" value="${ds.uuid}">
                         <input type="hidden" name="type" value="${ds.type}"/>

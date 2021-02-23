@@ -6,6 +6,7 @@ import com.coretex.commerce.data.minimal.MinimalManufacturerData;
 import com.coretex.commerce.facades.ManufacturerFacade;
 import com.coretex.commerce.mapper.GenericDataMapper;
 import com.coretex.commerce.mapper.minimal.MinimalManufacturerDataMapper;
+import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.items.cx_core.ManufacturerItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +14,16 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Service("manufacturerFacade")
 public class DefaultManufacturerFacade implements ManufacturerFacade {
 
 	@Resource
 	private ManufacturerService manufacturerService;
+
+	@Resource
+	private ItemService itemService;
 
 	@Resource
 	private MinimalManufacturerDataMapper minimalManufacturerDataMapper;
@@ -40,7 +44,12 @@ public class DefaultManufacturerFacade implements ManufacturerFacade {
 	public List<MinimalManufacturerData> getAll() {
 		return manufacturerService.listReactive()
 				.map(minimalManufacturerDataMapper::fromItem)
-				.collect(Collectors.toList());
+				.collectList().block();
+	}
+
+	@Override
+	public void delete(UUID uuid) {
+		manufacturerService.delete(itemService.create(ManufacturerItem.class, uuid));
 	}
 
 	@Override

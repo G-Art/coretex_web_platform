@@ -12,15 +12,13 @@ import com.coretex.items.core.MetaRelationTypeItem;
 import com.coretex.items.core.MetaTypeItem;
 import com.coretex.items.core.RegularTypeItem;
 import com.coretex.meta.AbstractGenericItem;
+import io.r2dbc.spi.ColumnMetadata;
+import io.r2dbc.spi.Row;
+import io.r2dbc.spi.RowMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -45,18 +43,16 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public T mapRow(ResultSet rs, int rowNum) throws SQLException {
+	public T mapRow(Row row, RowMetadata rowMetadata) {
 
-		ResultSetMetaData rsmd = rs.getMetaData();
-		int columnCount = rsmd.getColumnCount();
-		Map<String, ColumnValueProvider> mapOfColValues = new LinkedCaseInsensitiveMap<>(columnCount);
-		for (int i = 1; i <= columnCount; i++) {
-			String key = JdbcUtils.lookupColumnName(rsmd, i);
-			mapOfColValues.put(key, new ColumnValueProvider(rs, i));
+		int columnCount = rowMetadata.getColumnNames().size();
+		Map<String, ColumnValueProvider> mapOfColValues = new LinkedCaseInsensitiveMap<>();
+		for (int i = 0; i < columnCount; i++) {
+			ColumnMetadata columnMetadata = rowMetadata.getColumnMetadata(i);
+			mapOfColValues.put(columnMetadata.getName(), new ColumnValueProvider(row, columnMetadata));
 		}
 
 		MetaTypeItem typeMetaType = ((MetaTypeItem) mapOfColValues.get(metaTypeAttributeTypeItem.getColumnName()).apply(metaTypeAttributeTypeItem));
-		Class<T> targetClass = typeMetaType.getItemClass();
 
 		if (ItemUtils.isSystemType(typeMetaType)) {
 			if (ItemUtils.isMetaAttributeType(typeMetaType)) {
@@ -64,7 +60,7 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 			}
 			return (T) cortexContext.findMetaType((UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
 		}
-
+		Class<T> targetClass = typeMetaType.getItemClass();
 		ItemContext item = itemContextFactory.create(targetClass, (UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
 
 		cortexContext.getAllAttributes(typeMetaType.getTypeCode()).values().stream()
@@ -81,39 +77,39 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 
 	private class ColumnValueProvider implements Function<MetaAttributeTypeItem, Object> {
 
-		private ResultSet rs;
-		private int index;
+		private Row row;
+		private ColumnMetadata columnMetadata;
 
-		private ColumnValueProvider(ResultSet rs, int index) {
-			this.rs = rs;
-			this.index = index;
+		private ColumnValueProvider(Row row, ColumnMetadata columnMetadata) {
+			this.row = row;
+			this.columnMetadata = columnMetadata;
 		}
 
 		@Override
 		public Object apply(MetaAttributeTypeItem metaAttributeTypeItem) {
 			try {
 				if (metaAttributeTypeItem.getAttributeType() instanceof MetaTypeItem && Arrays.asList(MetaTypeItem.ITEM_TYPE, MetaRelationTypeItem.ITEM_TYPE).contains(((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getTypeCode())) {
-					return cortexContext.findMetaType((UUID) JdbcUtils.getResultSetValue(rs, index));
+					return cortexContext.findMetaType(row.get(columnMetadata.getName(), UUID.class));
 				}
 				if (AttributeTypeUtils.isEnumTypeAttribute(metaAttributeTypeItem)) {
-					return cortexContext.findMetaEnumValueTypeItem(((MetaEnumTypeItem) metaAttributeTypeItem.getAttributeType()).getEnumClass(), (UUID) JdbcUtils.getResultSetValue(rs, index));
+					return cortexContext.findMetaEnumValueTypeItem(((MetaEnumTypeItem) metaAttributeTypeItem.getAttributeType()).getEnumClass(), row.get(columnMetadata.getName(), UUID.class));
 				}
 				if (AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem)) {
-					return cortexContext.getTypeTranslator(((RegularTypeItem) metaAttributeTypeItem.getAttributeType()).getRegularClass()).read(rs, index);
+					return row.get(columnMetadata.getName(), ((RegularTypeItem) metaAttributeTypeItem.getAttributeType()).getRegularClass());
 				} else {
 					Class<AbstractGenericItem> itemClass = ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getItemClass();
-					var value = JdbcUtils.getResultSetValue(rs, index);
+					var value = row.get(columnMetadata.getName(), UUID.class);
 					return Objects.nonNull(value) ?
-							ItemUtils.createItem(itemClass, itemContextFactory.create(itemClass, (UUID) value)) :
+							ItemUtils.createItem(itemClass, itemContextFactory.create(itemClass, value)) :
 							null;
 				}
 			} catch (Exception e) {
 				if (LOG.isDebugEnabled()) {
-					LOG.error(String.format("Can't read column number %s", index), e);
+					LOG.error(String.format("Can't read column %s", columnMetadata.getName()), e);
 				}
 				try {
-					return JdbcUtils.getResultSetValue(rs, index);
-				} catch (SQLException e1) {
+					return row.get(columnMetadata.getName(), columnMetadata.getJavaType());
+				} catch (Exception e1) {
 					throw new RuntimeException(e1);
 				}
 			}

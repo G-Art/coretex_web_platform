@@ -7,7 +7,6 @@
 <c:set var="errors" value="${ERROR_MESSAGES}"/>
 <c:set var="warnings" value="${WARNING_MESSAGES}"/>
 <c:set var="infos" value="${INFO_MESSAGES}"/>
-
 <c:if test="${(not empty errors) || (not empty warnings) || (not empty infos)}">
 
     <c:if test="${not empty infos}">

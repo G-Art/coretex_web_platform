@@ -5,9 +5,9 @@ import com.coretex.core.activeorm.dao.DefaultGenericDao;
 import com.coretex.items.cx_core.CartItem;
 import com.coretex.items.cx_core.CustomerItem;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
-import java.util.stream.Stream;
 
 @Component
 public class DefaultCartDao extends DefaultGenericDao<CartItem> implements CartDao {
@@ -16,7 +16,7 @@ public class DefaultCartDao extends DefaultGenericDao<CartItem> implements CartD
 	}
 
 	@Override
-	public Stream<CartItem> getCartsForCustomer(CustomerItem customerItem){
+	public Flux<CartItem> getCartsForCustomer(CustomerItem customerItem){
 		return findReactive(Map.of(CartItem.CUSTOMER, customerItem));
 	}
 }

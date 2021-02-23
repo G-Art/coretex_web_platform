@@ -107,6 +107,11 @@ public class SelectQueryTransformationHelper {
 
 	public TableTransformationData bindItem(Table table) {
 		var tableName = table.getFullyQualifiedName().replaceAll("\"", "");
+		if(tableName.endsWith("_LOC")){
+			String locTable = tableName.replace("_LOC", "");
+			Set<MetaTypeItem> metaTypeForTable = cortexContext.findMetaTypeForTable(locTable);
+			return new TableTransformationData(table, null, metaTypeForTable, true);
+		}
 		var mType = cortexContext.findMetaType(tableName);
 		Set<MetaTypeItem> metaTypesForTable;
 		if (Objects.isNull(mType)) {

@@ -5,11 +5,11 @@ import com.coretex.commerce.core.services.AbstractGenericItemService;
 import com.coretex.commerce.core.services.CategoryService;
 import com.coretex.items.cx_core.CategoryItem;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
 public class DefaultCategoryService extends AbstractGenericItemService<CategoryItem> implements CategoryService {
@@ -22,17 +22,17 @@ public class DefaultCategoryService extends AbstractGenericItemService<CategoryI
 	}
 
 	@Override
-	public Stream<CategoryItem> listByParent(CategoryItem category) {
+	public Flux<CategoryItem> listByParent(CategoryItem category) {
 		return listByParent(Objects.isNull(category) ? null : category.getUuid());
 	}
 
 	@Override
-	public Stream<CategoryItem> listByRoot() {
+	public Flux<CategoryItem> listByRoot() {
 		return categoryDao.findByParent(null);
 	}
 
 	@Override
-	public Stream<CategoryItem> listByParent(UUID categoryUuid) {
+	public Flux<CategoryItem> listByParent(UUID categoryUuid) {
 		return categoryDao.findByParent(categoryUuid);
 	}
 

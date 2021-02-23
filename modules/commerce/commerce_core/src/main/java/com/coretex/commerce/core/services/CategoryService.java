@@ -1,16 +1,16 @@
 package com.coretex.commerce.core.services;
 
 import com.coretex.items.cx_core.CategoryItem;
+import reactor.core.publisher.Flux;
 
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public interface CategoryService extends GenericItemService<CategoryItem> {
-	Stream<CategoryItem> listByParent(CategoryItem category);
+	Flux<CategoryItem> listByParent(CategoryItem category);
 
-	Stream<CategoryItem> listByRoot();
+	Flux<CategoryItem> listByRoot();
 
-	Stream<CategoryItem> listByParent(UUID categoryUuid);
+	Flux<CategoryItem> listByParent(UUID categoryUuid);
 
 	CategoryItem findByCode(String code);
 

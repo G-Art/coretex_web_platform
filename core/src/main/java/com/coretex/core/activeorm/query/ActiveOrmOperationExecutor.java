@@ -13,20 +13,20 @@ public interface ActiveOrmOperationExecutor {
 
 	<T, R extends ReactiveSearchResult<T>, CTX extends OperationConfigContext<?,?,CTX>> R execute(CTX context);
 
-	<T extends GenericItem> boolean executeSaveOperation(T item);
+	<T extends GenericItem> Integer executeSaveOperation(T item);
 
-	<T extends GenericItem> boolean executeSaveOperation(T item, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
+	<T extends GenericItem> Integer executeSaveOperation(T item, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
 
-	<T extends GenericItem> boolean executeRelationSaveOperations(Collection<T> items, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
+	<T extends GenericItem> Integer executeRelationSaveOperations(Collection<T> items, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
 
-	<T extends GenericItem> boolean executeRelationSaveOperations(T items, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
+	<T extends GenericItem> Integer executeRelationSaveOperations(T items, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
 
-	<T extends GenericItem> boolean executeDeleteOperation(T item);
+	<T extends GenericItem> Integer executeDeleteOperation(T item);
 
-	<T extends GenericItem> boolean executeDeleteOperation(T item, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
+	<T extends GenericItem> Integer executeDeleteOperation(T item, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
 
-	<T extends GenericItem> boolean executeRelationDeleteOperations(Collection<T> items, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
+	<T extends GenericItem> Integer executeRelationDeleteOperations(Collection<T> items, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
 
-	<T extends GenericItem> boolean executeRelationDeleteOperations(T item, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
+	<T extends GenericItem> Integer executeRelationDeleteOperations(T item, MetaAttributeTypeItem attributeTypeItem, AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator);
 
 }

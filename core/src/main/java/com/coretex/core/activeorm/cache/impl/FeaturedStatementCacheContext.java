@@ -22,6 +22,9 @@ public class FeaturedStatementCacheContext<S extends Statement> implements Cache
 		return queryInfoHolder.getStatement();
 	}
 
+	public boolean isLocalized() {
+		return queryInfoHolder.isLocalizedTable();
+	}
 
 	public Set<MetaTypeItem> getItemsUsed() {
 		return queryInfoHolder.getItemsUsed();

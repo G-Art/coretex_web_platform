@@ -6,11 +6,11 @@ import com.coretex.commerce.data.SearchPageResult;
 import com.coretex.commerce.data.forms.ProductForm;
 import com.coretex.commerce.data.minimal.MinimalProductData;
 import com.coretex.items.cx_core.ProductItem;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public interface ProductFacade extends PageableDataTableFacade<ProductItem, MinimalProductData> {
 
@@ -22,7 +22,7 @@ public interface ProductFacade extends PageableDataTableFacade<ProductItem, Mini
 	DataTableResults<MinimalProductData> getVariantsForProduct(UUID uuid, String draw, long page, Long length);
 
 	Long count();
-	Stream<ProductData> getAll();
+	Flux<ProductData> getAll();
 
 	ProductItem save(ProductForm productform, UUID uuid);
 }

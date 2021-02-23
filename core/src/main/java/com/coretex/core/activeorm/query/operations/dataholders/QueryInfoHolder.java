@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class QueryInfoHolder<S extends Statement> {
 	private final S statement;
+	private boolean localizedTable = false;
 	private final Set<MetaTypeItem> itemsUsed = Sets.newHashSet();
 
 	public QueryInfoHolder(S statement) {
@@ -33,4 +34,11 @@ public class QueryInfoHolder<S extends Statement> {
 		}
 	}
 
+	public boolean isLocalizedTable() {
+		return localizedTable;
+	}
+
+	public void setLocalizedTable(boolean localizedTable) {
+		this.localizedTable = localizedTable;
+	}
 }

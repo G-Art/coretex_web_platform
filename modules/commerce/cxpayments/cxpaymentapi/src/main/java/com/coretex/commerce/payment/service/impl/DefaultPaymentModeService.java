@@ -5,8 +5,7 @@ import com.coretex.commerce.payment.dao.PaymentModeDao;
 import com.coretex.commerce.payment.service.PaymentModeService;
 import com.coretex.items.cxpaymentapi.PaymentModeItem;
 import org.springframework.stereotype.Service;
-
-import java.util.stream.Stream;
+import reactor.core.publisher.Flux;
 
 @Service
 public class DefaultPaymentModeService extends AbstractGenericItemService<PaymentModeItem> implements PaymentModeService {
@@ -21,7 +20,7 @@ public class DefaultPaymentModeService extends AbstractGenericItemService<Paymen
 	}
 
 	@Override
-	public Stream<PaymentModeItem> getPaymentsForDeliveryType(String code) {
+	public Flux<PaymentModeItem> getPaymentsForDeliveryType(String code) {
 		return getRepository().findByDeliveryType(code);
 	}
 

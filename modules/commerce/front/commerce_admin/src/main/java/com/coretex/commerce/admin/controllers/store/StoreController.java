@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.util.UUID;
@@ -28,7 +29,17 @@ public class StoreController extends PageableDataTableAbstractController<Minimal
 
 	@RequestMapping(path = "/{uuid}", method = RequestMethod.GET)
 	public String getStore(@PathVariable("uuid") UUID uuid, Model model) {
+		model.addAttribute("store", storeFacade.getByUuid(uuid));
 		return "store/store";
+	}
+
+	@RequestMapping(path = {"/remove/{uuid}"}, method = {RequestMethod.GET, RequestMethod.DELETE})
+	public String removeStore(@PathVariable(value = "uuid") UUID uuid,
+	                            RedirectAttributes redirectAttributes) {
+		storeFacade.delete(uuid);
+		addInfoFlashMessage(redirectAttributes, "Store removed");
+
+		return redirect("/store");
 	}
 
 	@Override

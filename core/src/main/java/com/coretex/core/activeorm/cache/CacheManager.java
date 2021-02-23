@@ -19,6 +19,8 @@ public abstract class CacheManager {
 
 	public abstract <K, V> V get(K key, Callable<? extends V> loader);
 
+	public abstract <K, V> void put(K key, Callable<? extends V> loader);
+
 	public abstract <K, V> V getIfPresent(K key);
 
 	public abstract Stats<?> stats();

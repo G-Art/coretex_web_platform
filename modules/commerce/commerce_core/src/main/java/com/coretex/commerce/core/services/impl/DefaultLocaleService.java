@@ -6,9 +6,9 @@ import com.coretex.commerce.core.services.LocaleService;
 import com.coretex.items.core.LocaleItem;
 import com.coretex.items.cx_core.StoreItem;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
 public class DefaultLocaleService extends AbstractGenericItemService<LocaleItem> implements LocaleService {
@@ -26,12 +26,12 @@ public class DefaultLocaleService extends AbstractGenericItemService<LocaleItem>
 	}
 
 	@Override
-	public Stream<LocaleItem> findForStore(UUID uuid) {
+	public Flux<LocaleItem> findForStore(UUID uuid) {
 		return customLocaleDao.findForStore(uuid);
 	}
 
 	@Override
-	public Stream<LocaleItem> findForStore(StoreItem store) {
+	public Flux<LocaleItem> findForStore(StoreItem store) {
 		return findForStore(store.getUuid());
 	}
 }

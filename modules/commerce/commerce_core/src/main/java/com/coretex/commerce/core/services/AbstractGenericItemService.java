@@ -3,12 +3,12 @@ package com.coretex.commerce.core.services;
 import com.coretex.core.activeorm.dao.Dao;
 import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.items.core.GenericItem;
+import reactor.core.publisher.Flux;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public abstract class AbstractGenericItemService<E extends GenericItem> implements GenericItemService<E> {
 
@@ -60,7 +60,7 @@ public abstract class AbstractGenericItemService<E extends GenericItem> implemen
 		return repository.find();
 	}
 
-	public Stream<E> listReactive() {
+	public Flux<E> listReactive() {
 		return repository.findReactive();
 	}
 

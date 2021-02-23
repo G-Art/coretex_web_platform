@@ -88,7 +88,7 @@ public class AbstractController {
 
 	@ModelAttribute("stores")
 	public Collection<StoreData> getStores() {
-		return storeFacade.getAll().collect(Collectors.toSet());
+		return storeFacade.getAll().collect(Collectors.toSet()).block();
 	}
 
 	@ModelAttribute("languages")

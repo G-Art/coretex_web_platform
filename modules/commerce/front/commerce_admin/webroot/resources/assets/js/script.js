@@ -153,10 +153,7 @@ function removeItemModalPanel(requestUrl) {
         closeOnConfirm: true,
         showLoaderOnConfirm: true
     }, function () {
-        fetch(requestUrl, { method: 'GET'})
-            .then(response => {
-                    window.location.href = response.url;
-            });
+        window.location.href = requestUrl;
     });
 }
 

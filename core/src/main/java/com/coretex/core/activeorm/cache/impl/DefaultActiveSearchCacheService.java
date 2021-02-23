@@ -8,11 +8,13 @@ import com.coretex.core.activeorm.cache.CacheService;
 import com.coretex.core.activeorm.cache.SegmentManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.cache.CacheFlux;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -26,17 +28,34 @@ public class DefaultActiveSearchCacheService implements CacheService {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <R> R get(CacheContext cacheContext, Supplier<R> supplier) {
 		CacheSegment<CacheInvalidationContext, CacheContext> segment = (CacheSegment<CacheInvalidationContext, CacheContext>) segmentManager.findSegment(cacheContext);
 
 		if (Objects.isNull(segment)) {
 			return supplier.get();
 		}
-		return segment.retrieveValue(() -> segment.apply(cacheManager -> {
-			var key = segment.createKey(cacheContext);
-			Callable<Object> callable = () -> segment.storeValue(supplier);
-			return cacheManager.get(key, callable);
-		}));
+
+		var key = segment.createKey(cacheContext);
+		return (R) CacheFlux.lookup(
+				k -> segment.apply(
+						cacheManager -> segment.retrieveValue(
+								() -> cacheManager.getIfPresent(k)
+						)
+				),
+				key)
+				.onCacheMissResume((Supplier<Flux<Object>>) supplier)
+				.andWriteWith(
+						(k, signals) -> Mono.just(signals)
+								.doOnNext(sig -> segment.apply(
+										cacheManager -> {
+											cacheManager.put(k, () -> segment.storeValue(() -> sig));
+											return Mono.empty();
+										}
+								))
+								.then()
+				);
+
 
 	}
 

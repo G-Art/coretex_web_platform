@@ -4,10 +4,10 @@ import com.coretex.commerce.data.CategoryHierarchyData;
 import com.coretex.commerce.data.minimal.MinimalCategoryData;
 import com.coretex.commerce.data.minimal.MinimalCategoryHierarchyData;
 import com.coretex.items.cx_core.CategoryItem;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public interface CategoryFacade extends PageableDataTableFacade<CategoryItem, MinimalCategoryData> {
 
@@ -17,7 +17,7 @@ public interface CategoryFacade extends PageableDataTableFacade<CategoryItem, Mi
 
 	void setParent(UUID category, UUID parent);
 
-	Stream<MinimalCategoryHierarchyData> rootCategories();
+	Flux<MinimalCategoryHierarchyData> rootCategories();
 
 	List<MinimalCategoryData> categories();
 

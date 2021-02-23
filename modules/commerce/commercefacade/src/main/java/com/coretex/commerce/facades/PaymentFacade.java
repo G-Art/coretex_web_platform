@@ -1,9 +1,8 @@
 package com.coretex.commerce.facades;
 
 import com.coretex.commerce.data.PaymentTypeData;
-
-import java.util.stream.Stream;
+import reactor.core.publisher.Flux;
 
 public interface PaymentFacade {
-	Stream<PaymentTypeData> getPaymentModesForDeliveryType(String code);
+	Flux<PaymentTypeData> getPaymentModesForDeliveryType(String code);
 }
