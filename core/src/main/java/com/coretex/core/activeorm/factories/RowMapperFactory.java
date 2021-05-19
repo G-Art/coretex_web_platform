@@ -1,14 +1,14 @@
 package com.coretex.core.activeorm.factories;
 
 import com.coretex.core.activeorm.exceptions.QueryException;
-import com.coretex.core.activeorm.factories.mappers.ColumnMapRowMapperAdapter;
 import com.coretex.core.activeorm.factories.mappers.ItemRowMapper;
-import com.coretex.core.activeorm.factories.mappers.RowMapper;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
 import com.coretex.meta.AbstractGenericItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 
 import java.util.Map;
 
@@ -33,7 +33,7 @@ public class RowMapperFactory {
 	}
 
 	protected <T> RowMapper<T> createMapMapper() {
-		return (RowMapper<T>) new ColumnMapRowMapperAdapter();
+		return (RowMapper<T>) new ColumnMapRowMapper();
 	}
 
 	protected <T> RowMapper<T> createItemMapper(Class<? super T> type) {

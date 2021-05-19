@@ -5,6 +5,7 @@ import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
+import com.coretex.core.utils.TypeUtil;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaEnumTypeItem;
@@ -12,13 +13,15 @@ import com.coretex.items.core.MetaRelationTypeItem;
 import com.coretex.items.core.MetaTypeItem;
 import com.coretex.items.core.RegularTypeItem;
 import com.coretex.meta.AbstractGenericItem;
-import io.r2dbc.spi.ColumnMetadata;
-import io.r2dbc.spi.Row;
-import io.r2dbc.spi.RowMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -43,16 +46,18 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public T mapRow(Row row, RowMetadata rowMetadata) {
+	public T mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-		int columnCount = rowMetadata.getColumnNames().size();
-		Map<String, ColumnValueProvider> mapOfColValues = new LinkedCaseInsensitiveMap<>();
-		for (int i = 0; i < columnCount; i++) {
-			ColumnMetadata columnMetadata = rowMetadata.getColumnMetadata(i);
-			mapOfColValues.put(columnMetadata.getName(), new ColumnValueProvider(row, columnMetadata));
+		ResultSetMetaData rsmd = rs.getMetaData();
+		int columnCount = rsmd.getColumnCount();
+		Map<String, ColumnValueProvider> mapOfColValues = new LinkedCaseInsensitiveMap<>(columnCount);
+		for (int i = 1; i <= columnCount; i++) {
+			String key = JdbcUtils.lookupColumnName(rsmd, i);
+			mapOfColValues.put(key, new ColumnValueProvider(rs, i));
 		}
 
 		MetaTypeItem typeMetaType = ((MetaTypeItem) mapOfColValues.get(metaTypeAttributeTypeItem.getColumnName()).apply(metaTypeAttributeTypeItem));
+		Class<T> targetClass = typeMetaType.getItemClass();
 
 		if (ItemUtils.isSystemType(typeMetaType)) {
 			if (ItemUtils.isMetaAttributeType(typeMetaType)) {
@@ -60,7 +65,7 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 			}
 			return (T) cortexContext.findMetaType((UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
 		}
-		Class<T> targetClass = typeMetaType.getItemClass();
+
 		ItemContext item = itemContextFactory.create(targetClass, (UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
 
 		cortexContext.getAllAttributes(typeMetaType.getTypeCode()).values().stream()
@@ -77,39 +82,43 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 
 	private class ColumnValueProvider implements Function<MetaAttributeTypeItem, Object> {
 
-		private Row row;
-		private ColumnMetadata columnMetadata;
+		private ResultSet rs;
+		private int index;
 
-		private ColumnValueProvider(Row row, ColumnMetadata columnMetadata) {
-			this.row = row;
-			this.columnMetadata = columnMetadata;
+		private ColumnValueProvider(ResultSet rs, int index) {
+			this.rs = rs;
+			this.index = index;
 		}
 
 		@Override
 		public Object apply(MetaAttributeTypeItem metaAttributeTypeItem) {
 			try {
 				if (metaAttributeTypeItem.getAttributeType() instanceof MetaTypeItem && Arrays.asList(MetaTypeItem.ITEM_TYPE, MetaRelationTypeItem.ITEM_TYPE).contains(((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getTypeCode())) {
-					return cortexContext.findMetaType(row.get(columnMetadata.getName(), UUID.class));
+					return cortexContext.findMetaType((UUID) JdbcUtils.getResultSetValue(rs, index));
 				}
 				if (AttributeTypeUtils.isEnumTypeAttribute(metaAttributeTypeItem)) {
-					return cortexContext.findMetaEnumValueTypeItem(((MetaEnumTypeItem) metaAttributeTypeItem.getAttributeType()).getEnumClass(), row.get(columnMetadata.getName(), UUID.class));
+					return cortexContext.findMetaEnumValueTypeItem(((MetaEnumTypeItem) metaAttributeTypeItem.getAttributeType()).getEnumClass(), (UUID) JdbcUtils.getResultSetValue(rs, index));
 				}
 				if (AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem)) {
-					return row.get(columnMetadata.getName(), ((RegularTypeItem) metaAttributeTypeItem.getAttributeType()).getRegularClass());
+					var value = cortexContext.getTypeTranslator(((RegularTypeItem) metaAttributeTypeItem.getAttributeType()).getRegularClass()).read(rs, index);
+					if(Objects.isNull(value) && Objects.nonNull(metaAttributeTypeItem.getDefaultValue())){
+						return TypeUtil.toType(metaAttributeTypeItem.getDefaultValue(), (RegularTypeItem) metaAttributeTypeItem.getAttributeType());
+					}
+					return value;
 				} else {
 					Class<AbstractGenericItem> itemClass = ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getItemClass();
-					var value = row.get(columnMetadata.getName(), UUID.class);
+					var value = JdbcUtils.getResultSetValue(rs, index);
 					return Objects.nonNull(value) ?
-							ItemUtils.createItem(itemClass, itemContextFactory.create(itemClass, value)) :
+							ItemUtils.createItem(itemClass, itemContextFactory.create(itemClass, (UUID) value)) :
 							null;
 				}
 			} catch (Exception e) {
 				if (LOG.isDebugEnabled()) {
-					LOG.error(String.format("Can't read column %s", columnMetadata.getName()), e);
+					LOG.error(String.format("Can't read column number %s", index), e);
 				}
 				try {
-					return row.get(columnMetadata.getName(), columnMetadata.getJavaType());
-				} catch (Exception e1) {
+					return JdbcUtils.getResultSetValue(rs, index);
+				} catch (SQLException e1) {
 					throw new RuntimeException(e1);
 				}
 			}

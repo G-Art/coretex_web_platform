@@ -2,12 +2,12 @@ package com.coretex.core.activeorm.dao;
 
 import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.meta.AbstractGenericItem;
-import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public interface Dao<I extends AbstractGenericItem> {
 
@@ -21,8 +21,8 @@ public interface Dao<I extends AbstractGenericItem> {
 	List<I> find();
 	List<I> find(boolean strict);
 
-	Flux<I> findReactive();
-	Flux<I> findReactive(boolean strict);
+	Stream<I> findReactive();
+	Stream<I> findReactive(boolean strict);
 
 	I find(UUID uuid);
 	I find(UUID uuid, boolean strict);
@@ -34,40 +34,40 @@ public interface Dao<I extends AbstractGenericItem> {
 	Optional<I> findOne(Map<String, ?> params, boolean throwAmbiguousException, boolean strict);
 
 	List<I> find(String query);
-	Flux<I> findReactive(String query);
+	Stream<I> findReactive(String query);
 
 	List<I> find(String query, Map<String, Object> params);
-	Flux<I> findReactive(String query, Map<String, Object> params);
+	Stream<I> findReactive(String query, Map<String, Object> params);
 
 	List<I> find(Map<String, ?> params);
 	List<I> find(Map<String, ?> params, boolean strict);
 
-	Flux<I> findReactive(Map<String, ?> params);
-	Flux<I> findReactive(Map<String, ?> params, boolean strict);
+	Stream<I> findReactive(Map<String, ?> params);
+	Stream<I> findReactive(Map<String, ?> params, boolean strict);
 
 	List<I> find(SortParameters sortParameters);
 	List<I> find(SortParameters sortParameters, boolean strict);
 
-	Flux<I> findReactive(SortParameters sortParameters);
-	Flux<I> findReactive(SortParameters sortParameters, boolean strict);
+	Stream<I> findReactive(SortParameters sortParameters);
+	Stream<I> findReactive(SortParameters sortParameters, boolean strict);
 
 	List<I> find(Map<String, ?> params, SortParameters sortParameters);
 	List<I> find(Map<String, ?> params, SortParameters sortParameters, boolean strict);
 
-	Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters);
-	Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters, boolean strict);
+	Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters);
+	Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, boolean strict);
 
 	List<I> find(Map<String, ?> params, SortParameters sortParameters, long count);
 	List<I> find(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict);
 
-	Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count);
-	Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict);
+	Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count);
+	Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict);
 
 	List<I> find(Map<String, ?> params, SortParameters sortParameters, long count, long page);
 	List<I> find(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict);
 
-	Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page);
-	Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict);
+	Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page);
+	Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict);
 
 	PageableSearchResult<I> findPageable(Map<String, ?> params, SortParameters sortParameters, long count);
 	PageableSearchResult<I> findPageable(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict);

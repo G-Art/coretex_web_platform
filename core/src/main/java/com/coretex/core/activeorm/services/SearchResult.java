@@ -4,12 +4,13 @@ import com.google.common.collect.ImmutableList;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SearchResult<T> extends ReactiveSearchResult<T> {
 
@@ -18,11 +19,11 @@ public class SearchResult<T> extends ReactiveSearchResult<T> {
 	private List<T> result;
 	private int count;
 
-	public SearchResult(Supplier<Flux<T>> resultSupplier) {
+	public SearchResult(Supplier<Stream<T>> resultSupplier) {
 		super(resultSupplier);
 		List<T> result = Collections.emptyList();
 		try {
-			result = getResultStream().collectList().block();
+			result = getResultStream().collect(Collectors.toList());
 		} catch (Exception e) {
 			LOG.error("No result by search was supplied", e);
 		}
@@ -39,9 +40,9 @@ public class SearchResult<T> extends ReactiveSearchResult<T> {
 	}
 
 	@Override
-	public Flux<T> getResultStream() {
+	public Stream<T> getResultStream() {
 		if (Objects.nonNull(this.result)) {
-			return Flux.fromIterable(this.result);
+			return this.result.stream();
 		}
 		return super.getResultStream();
 	}

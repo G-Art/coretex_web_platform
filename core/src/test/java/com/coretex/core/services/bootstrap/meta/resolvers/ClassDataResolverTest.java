@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @UnitTest
 @DisplayName("A Class Data Resolver")
@@ -52,10 +53,7 @@ class ClassDataResolverTest extends DataResolverUnitTest {
         // given:
         dataResult.put(testAttributeName, "IllegalClassName");
 
-        // when:
-        dataResolver.resolve(testUuid);
-
         // then:
-        assertNull(dataResult.get(testAttributeName));
+        assertThrows(RuntimeException.class, () -> dataResolver.resolve(testUuid));
     }
 }

@@ -17,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -393,7 +392,7 @@ public class SaveUpdateItemTest {
 		// given:
 		RegularTypeContainerTestItem testItem = itemService.create(RegularTypeContainerTestItem.class);
 		testItem.setUuidType(UUID.randomUUID());
-		testItem.setBigDecimalType(BigDecimal.valueOf(10.11));
+		testItem.setBigDecimalType(BigDecimal.valueOf(10.12));
 		testItem.setByteType(Byte.MAX_VALUE);
 		testItem.setStringType("String");
 		testItem.setLongType(Long.MAX_VALUE);
@@ -439,7 +438,7 @@ public class SaveUpdateItemTest {
 		assertEquals(testItem, searchedTestItem);
 		assertEquals(testItem.getUuidType(), searchedTestItem.getUuidType());
 		assertEquals(testItem.getClassType(), searchedTestItem.getClassType());
-		assertEquals(testItem.getBigDecimalType(), searchedTestItem.getBigDecimalType().setScale(2, RoundingMode.HALF_UP));
+		assertEquals(testItem.getBigDecimalType(), searchedTestItem.getBigDecimalType());
 		assertEquals(testItem.getByteType(), searchedTestItem.getByteType());
 		assertEquals(testItem.getStringType(), searchedTestItem.getStringType());
 		assertEquals(testItem.getLongType(), searchedTestItem.getLongType());

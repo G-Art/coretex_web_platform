@@ -86,7 +86,7 @@ public class ItemsController extends AbstractController {
 					});
 					return params;
 
-				}).collectList().block();
+				}).collect(Collectors.toList());
 	}
 
 

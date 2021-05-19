@@ -5,16 +5,14 @@ import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
 import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.core.activeorm.services.ReactiveSearchResult;
 import com.coretex.core.activeorm.services.SearchResult;
-import io.r2dbc.spi.Row;
-import io.r2dbc.spi.RowMetadata;
 import net.sf.jsqlparser.statement.select.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class SelectOperationConfigContext extends AbstractOperationConfigContext<
 		Select,
@@ -45,13 +43,13 @@ public class SelectOperationConfigContext extends AbstractOperationConfigContext
 		return QueryType.SELECT;
 	}
 
-	public Optional<BiFunction<Row, RowMetadata, ?>> customMapper(){
-		return Optional.ofNullable(getOperationSpec().getCustomMapper());
+	public Optional<ResultSetExtractor<?>> customExtractor(){
+		return Optional.ofNullable(getOperationSpec().getCustomExtractor());
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <R extends ReactiveSearchResult<T>, T> R wrapResult(Flux<T> result) {
+	public <R extends ReactiveSearchResult<T>, T> R wrapResult(Stream<T> result) {
 		return pageable ? (R) new PageableSearchResult<T>(this, () -> result) : (R) new SearchResult<T>(() -> result);
 	}
 

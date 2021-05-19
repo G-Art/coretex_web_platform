@@ -1,26 +1,21 @@
 package com.coretex.core.services.bootstrap.meta;
 
-import com.coretex.items.core.GenericItem;
-import com.coretex.items.core.MetaAttributeTypeItem;
-import com.coretex.items.core.MetaEnumTypeItem;
-import com.coretex.items.core.MetaEnumValueTypeItem;
-import com.coretex.items.core.MetaRelationTypeItem;
-import com.coretex.items.core.MetaTypeItem;
-import com.coretex.items.core.RegularTypeItem;
+import com.coretex.items.core.*;
 import com.coretex.meta.AbstractGenericItem;
-import com.coretex.relations.core.MataTypeInheritanceRelation;
+import com.coretex.relations.core.MetaTypeInheritanceRelation;
 import com.coretex.relations.core.MetaAttributeOwnerRelation;
 import com.coretex.relations.core.MetaEnumValueOwnerRelation;
-import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MetaDataExtractor {
 
-    private DatabaseClient databaseClient;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
-	public List<Map<String, Object>> selectTypeItems() {
+    public List<Map<String, Object>> selectTypeItems() {
         String typeAlias = "meta";
         String inhRefAlias = "mtir";
         String sql = "SELECT " +
@@ -38,11 +33,11 @@ public class MetaDataExtractor {
                 selectField(typeAlias, MetaRelationTypeItem.SOURCE_TYPE) + ", " +
                 selectField(typeAlias, MetaRelationTypeItem.TARGET_TYPE) + ", " +
                 selectField(typeAlias, GenericItem.META_TYPE) + ", " +
-                selectField(inhRefAlias, MataTypeInheritanceRelation.TARGET, MetaTypeItem.PARENT) +
+                selectField(inhRefAlias, MetaTypeInheritanceRelation.TARGET, MetaTypeItem.PARENT) +
                 " FROM " + fromTable(MetaTypeItem.ITEM_TYPE, typeAlias) +
-                " LEFT JOIN " + fromTable(MataTypeInheritanceRelation.ITEM_TYPE, inhRefAlias) + " ON " +
-                onField(typeAlias, AbstractGenericItem.UUID) + " = " + onField(inhRefAlias, MataTypeInheritanceRelation.SOURCE);
-        return databaseClient.sql(sql).fetch().all().collectList().block();
+                " LEFT JOIN " + fromTable(MetaTypeInheritanceRelation.ITEM_TYPE, inhRefAlias) + " ON " +
+                onField(typeAlias, AbstractGenericItem.UUID) + " = " + onField(inhRefAlias, MetaTypeInheritanceRelation.SOURCE);
+        return jdbcTemplate.queryForList(sql, new HashMap<>());
     }
 
     public List<Map<String, Object>> selectAttributeItems() {
@@ -69,7 +64,7 @@ public class MetaDataExtractor {
                 " FROM " + fromTable(MetaAttributeTypeItem.ITEM_TYPE, attrAlias) +
                 " LEFT JOIN " + fromTable(MetaAttributeOwnerRelation.ITEM_TYPE, ownerRelAlieas) + " ON " +
                 onField(attrAlias, AbstractGenericItem.UUID) + " = " + onField(ownerRelAlieas, MetaAttributeOwnerRelation.SOURCE);
-        return databaseClient.sql(sql).fetch().all().collectList().block();
+        return jdbcTemplate.queryForList(sql, new HashMap<>());
     }
 
     public List<Map<String, Object>> selectRegularItems() {
@@ -85,7 +80,7 @@ public class MetaDataExtractor {
                 selectField(regularAlias, RegularTypeItem.UPDATE_DATE) + ", " +
                 selectField(regularAlias, GenericItem.META_TYPE) +
                 " FROM " + fromTable(RegularTypeItem.ITEM_TYPE, regularAlias);
-        return databaseClient.sql(sql).fetch().all().collectList().block();
+        return jdbcTemplate.queryForList(sql, new HashMap<>());
     }
 
     public List<Map<String, Object>> selectEnumTypes() {
@@ -98,7 +93,7 @@ public class MetaDataExtractor {
                 selectField(enumRef, MetaEnumTypeItem.UPDATE_DATE) + ", " +
                 selectField(enumRef, GenericItem.META_TYPE) +
                 " FROM " + fromTable(MetaEnumTypeItem.ITEM_TYPE, enumRef);
-        return databaseClient.sql(sql).fetch().all().collectList().block();
+        return jdbcTemplate.queryForList(sql, new HashMap<>());
     }
 
     public List<Map<String, Object>> selectEnumValues() {
@@ -115,7 +110,16 @@ public class MetaDataExtractor {
                 " FROM " + fromTable(MetaEnumValueTypeItem.ITEM_TYPE, enumValRef) +
                 " LEFT JOIN " + fromTable(MetaEnumValueOwnerRelation.ITEM_TYPE, ownerRef) + " ON " +
                 onField(enumValRef, AbstractGenericItem.UUID) + " = " + onField(ownerRef, MetaEnumValueOwnerRelation.SOURCE);
-        return databaseClient.sql(sql).fetch().all().collectList().block();
+        return jdbcTemplate.queryForList(sql, new HashMap<>());
+    }
+
+
+    public NamedParameterJdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
+
+    public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     private String fromTable(String tableName, String alias) {
@@ -144,9 +148,5 @@ public class MetaDataExtractor {
 
     private String wrapColumn(String attributeName) {
         return "c_" + attributeName;
-    }
-
-    public void setDatabaseClient(DatabaseClient databaseClient) {
-        this.databaseClient = databaseClient;
     }
 }

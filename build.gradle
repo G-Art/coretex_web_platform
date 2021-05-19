@@ -1,19 +1,19 @@
 group 'com.coretex.core'
-version '1.0-Alpha'
+version '1.0-Beta'
 
 buildscript {
     repositories {
         mavenCentral()
-        mavenLocal()
+//        mavenLocal()
         jcenter()
-        maven { url "https://repo.repsy.io/mvn/gerasimenko_art/coretex"}
+        maven { url "http://repo.coretexplatform.com/artifactory/coretex_repo-libs-release/"}
         maven { url "https://repo.spring.io/milestone" }
         maven { url 'https://jitpack.io' }
         maven { url "https://repo.spring.io/libs-release-remote" }
         maven { url "https://jetbrains.bintray.com/trove4j/" }
     }
     dependencies {
-        classpath(group: 'com.coretex.build.plugin', name: 'build.plugin', version: '1.1-Beta-+')
+        classpath(group: 'com.coretex.build.plugin', name: 'build.plugin', version: '1.1-Beta')
         classpath(group: 'com.bmuschko', name: 'gradle-docker-plugin', version: '6.6.1')
     }
 }
@@ -43,12 +43,13 @@ distributions {
             exclude '**/commerce_shop/template'
             exclude '**/genSrc'
             exclude 'build'
+            exclude 'data'
         }
     }
 }
 
 //distTar.enabled = false
-distZip.enabled = false
+//distZip.enabled = false
 
 import com.bmuschko.gradle.docker.tasks.image.*
 
@@ -57,7 +58,7 @@ task createDockerfile(type: Dockerfile, dependsOn: distTar) {
     from('openjdk:15')
     addFile("gm-commerce-1.0-Alpha.tar", "/opt/coretex/")
     workingDir("/opt/coretex/gm-commerce-1.0-Alpha")
-    environmentVariable('JAVA_OPTS', '-Djava.awt.headless=true -server -Xms48m -Xmx378M -XX:MaxPermSize=378m')
+    environmentVariable('JAVA_OPTS', '-Djava.awt.headless=true -server -Xms48m -Xmx512M -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/tmp/heapdump.bin')
     exposePort(8080)
 }
 //

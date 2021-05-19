@@ -4,10 +4,10 @@ import com.coretex.core.activeorm.query.operations.contexts.SelectOperationConfi
 import com.coretex.core.activeorm.query.specs.select.PageableSelectOperationSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
 
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class PageableSearchResult<T> extends SearchResult<T> {
 
@@ -19,7 +19,7 @@ public class PageableSearchResult<T> extends SearchResult<T> {
 	private Long totalCount;
 	private Integer totalPages;
 
-	public PageableSearchResult(SelectOperationConfigContext selectOperationConfigContext, Supplier<Flux<T>> resultSupplier) {
+	public PageableSearchResult(SelectOperationConfigContext selectOperationConfigContext, Supplier<Stream<T>> resultSupplier) {
 		super(resultSupplier);
 		this.selectOperationConfigContext = selectOperationConfigContext;
 		if(selectOperationConfigContext.isPageable()){

@@ -4,7 +4,8 @@ import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.specs.UpdateOperationSpec;
 import com.coretex.core.activeorm.services.ReactiveSearchResult;
 import net.sf.jsqlparser.statement.update.Update;
-import reactor.core.publisher.Flux;
+
+import java.util.stream.Stream;
 
 public class UpdateOperationConfigContext
 		extends AbstractOperationConfigContext<Update, UpdateOperationSpec, UpdateOperationConfigContext> {
@@ -19,7 +20,7 @@ public class UpdateOperationConfigContext
 	}
 
 	@Override
-	public <R extends ReactiveSearchResult<T>, T> R wrapResult(Flux<T> result) {
+	public <R extends ReactiveSearchResult<T>, T> R wrapResult(Stream<T> result) {
 		return (R) new ReactiveSearchResult<>(() -> result);
 	}
 }

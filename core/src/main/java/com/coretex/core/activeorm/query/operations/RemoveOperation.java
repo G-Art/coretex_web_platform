@@ -2,6 +2,8 @@ package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.contexts.RemoveOperationConfigContext;
+import com.coretex.core.activeorm.query.operations.dataholders.RemoveValueDataHolder;
+import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.CascadeRemoveOperationSpec;
 import com.coretex.core.activeorm.query.specs.RemoveOperationSpec;
 import com.coretex.core.activeorm.services.AbstractJdbcService;
@@ -12,7 +14,6 @@ import com.coretex.items.core.MetaTypeItem;
 import net.sf.jsqlparser.statement.delete.Delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -35,22 +36,21 @@ public class RemoveOperation extends ModificationOperation<Delete, RemoveOperati
 	}
 
 	@Override
-	protected Mono<Integer> executeBefore(RemoveOperationConfigContext operationConfigContext) {
+	protected void executeBefore(RemoveOperationConfigContext operationConfigContext) {
 		var operationSpec = operationConfigContext.getOperationSpec();
 		if (operationSpec.isCascadeEnabled()) {
-			return Mono.fromSupplier(() -> operationSpec.getAllAttributes()
+			operationSpec.getAllAttributes()
 					.values()
 					.stream()
 					.filter(attributeTypeItem -> !isRegularTypeAttribute(attributeTypeItem) || attributeTypeItem.getLocalized())
-					.map(attributeTypeItem -> {
-						var i = 0;
+					.forEach(attributeTypeItem -> {
 						if (attributeTypeItem.getLocalized()) {
-							i = i + getActiveOrmOperationExecutor().executeDeleteOperation(operationSpec.getItem(), attributeTypeItem, operationConfigContext);
+							getActiveOrmOperationExecutor().executeDeleteOperation(operationSpec.getItem(), attributeTypeItem, operationConfigContext);
 						}
 						if (attributeTypeItem.getAttributeTypeCode().equals(MetaTypeItem.ITEM_TYPE) && !isSystemType(attributeTypeItem.getAttributeType()) && attributeTypeItem.getAssociated()) {
 							var attributeValue = operationSpec.getItem().getAttributeValue(attributeTypeItem.getAttributeName());
 							if (Objects.nonNull(attributeValue)) {
-								i = i + getActiveOrmOperationExecutor()
+								getActiveOrmOperationExecutor()
 										.executeDeleteOperation((GenericItem) (attributeValue), attributeTypeItem, operationConfigContext);
 							}
 						}
@@ -58,47 +58,35 @@ public class RemoveOperation extends ModificationOperation<Delete, RemoveOperati
 							Object value = operationSpec.getItem().getAttributeValue(attributeTypeItem.getAttributeName());
 							if (Objects.nonNull(value)) {
 								if (value instanceof Collection) {
-									i = i + getActiveOrmOperationExecutor().executeRelationDeleteOperations((Collection<GenericItem>) value, attributeTypeItem, operationConfigContext);
+									getActiveOrmOperationExecutor().executeRelationDeleteOperations((Collection<GenericItem>) value, attributeTypeItem, operationConfigContext);
 								} else {
-									i = i + getActiveOrmOperationExecutor().executeRelationDeleteOperations((GenericItem) value, attributeTypeItem, operationConfigContext);
+									getActiveOrmOperationExecutor().executeRelationDeleteOperations((GenericItem) value, attributeTypeItem, operationConfigContext);
 								}
 							}
 						}
-						return i;
-					})
-					.findFirst()
-					.orElse(0));
+					});
 		} else {
 			LOG.warn("Cascade is switched off it may affect data consistent");
 		}
 
-		return Mono.just(0);
 	}
 
 	@Override
-	public Mono<Integer> executeOperation(RemoveOperationConfigContext operationConfigContext) {
+	public void executeOperation(RemoveOperationConfigContext operationConfigContext) {
 		var operationSpec = operationConfigContext.getOperationSpec();
 		var query = operationConfigContext.getQuerySupplier().get();
 		if (LOG.isDebugEnabled()) {
 			LOG.debug(format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), operationSpec instanceof CascadeRemoveOperationSpec));
 		}
-		return executeReactiveOperation(databaseClient -> {
-			var sql = bindForEach(
-					databaseClient.sql(query),
-					operationSpec.getValueDatas(),
-					(spec, entry) -> entry.getValue().bind(spec, entry.getKey())
-			);
-			return sql.fetch().rowsUpdated();
-		});
+		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query,
+				new ModificationSqlParameterSource<RemoveValueDataHolder>(operationSpec.getValueDatas())));
 	}
 
 	@Override
-	protected Mono<Integer> executeAfter(RemoveOperationConfigContext operationConfigContext) {
-		return Mono.just(0).doOnSuccess(integer -> {
-			var operationSpec = operationConfigContext.getOperationSpec();
-			getItemOperationInterceptorService()
-					.onRemove(operationSpec.getItem());
-		});
+	protected void executeAfter(RemoveOperationConfigContext operationConfigContext) {
+		var operationSpec = operationConfigContext.getOperationSpec();
+		getItemOperationInterceptorService()
+				.onRemove(operationSpec.getItem());
 	}
 
 	@Override

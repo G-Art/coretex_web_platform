@@ -2,14 +2,10 @@ package com.coretex.core.services.bootstrap.meta.resolvers;
 
 import com.coretex.core.tests.tags.UnitTest;
 import com.coretex.items.core.GenericItem;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.stream.Stream;
 
@@ -36,8 +32,8 @@ class GenericItemDataResolverTest extends DataResolverUnitTest {
         createDate = LocalDateTime.now(SYSTEM_TIME_ZONE);
         updateDate = LocalDateTime.now(SYSTEM_TIME_ZONE);
 
-        dataResult.put(GenericItem.CREATE_DATE, createDate);
-        dataResult.put(GenericItem.UPDATE_DATE, updateDate);
+        dataResult.put(GenericItem.CREATE_DATE, Timestamp.from(createDate.atZone(SYSTEM_TIME_ZONE).toInstant()));
+        dataResult.put(GenericItem.UPDATE_DATE, Timestamp.from(updateDate.atZone(SYSTEM_TIME_ZONE).toInstant()));
         dataResolver = new GenericItemDataResolver(metaDataContext);
     }
 
@@ -58,10 +54,10 @@ class GenericItemDataResolverTest extends DataResolverUnitTest {
     @DisplayName("Throws exception when ...")
     Stream<DynamicTest> checkCreateUpdateClass() {
         return DynamicTest.stream(asList(
-                of(GenericItem.CREATE_DATE, Date.from(createDate.atZone(ZoneId.systemDefault()).toInstant())),
+                of(GenericItem.CREATE_DATE, createDate),
                 of(GenericItem.CREATE_DATE, null),
                 of(GenericItem.UPDATE_DATE, null),
-                of(GenericItem.UPDATE_DATE, Date.from(updateDate.atZone(ZoneId.systemDefault()).toInstant()))).iterator(),
+                of(GenericItem.UPDATE_DATE, updateDate)).iterator(),
                 entry -> format("%s attribute with value type %s", entry.getKey(), defaultIfNull(entry.getValue(), NULL).getClass().getSimpleName()),
                 entry -> checkIllegalInstance(entry.getKey(), entry.getValue()));
 

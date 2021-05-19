@@ -99,6 +99,7 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 	private void adjustWrapperSelectItems(SelectBodyScanner selectBodyScanner, PlainSelect wrapper) {
 		var wrapperSelectBodyScanner = new SelectBodyScanner<>(selectBodyScanner.getDeep(), selectBodyScanner.getParentStatement(), selectBodyScanner);
 		wrapperSelectBodyScanner.scan(wrapper);
+		wrapperSelectBodyScanner.setWrapped(true);
 		wrapperSelectBodyScanner.getSelectItemScanners().forEach(selectItemScanner -> {
 			if (selectItemScanner.isAllColumn() ) {
 				if(Objects.nonNull(wrapper.getFromItem().getAlias())){

@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.coretex.core.utils.TypeUtil.toType;
 
@@ -44,10 +45,11 @@ public class LocalizedRegularAttributeLoadValueStrategy extends AbstractLoadAttr
 	}
 
 	private Object processResult(ReactiveSearchResult<?> searchResultStream, MetaAttributeTypeItem attribute, ItemContext ctx) {
-		Object result = Maps.newHashMap();
-		List<Object> searchResult = (List<Object>) searchResultStream.getResultStream().collectList().block();
+		Object result = null;
+		List<Object> searchResult = searchResultStream.getResultStream().collect(Collectors.toList());
 
 		if (!searchResult.isEmpty()) {
+			result = Maps.newHashMap();
 			for (Object map : searchResult) {
 				if (map instanceof Map) {
 					((Map) result).put(((Map) map).get("localeiso"), toType(((Map) map).get("value"), ((RegularTypeItem) attribute.getAttributeType())));

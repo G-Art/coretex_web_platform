@@ -10,7 +10,6 @@ import com.coretex.core.activeorm.services.SearchResult;
 import com.coretex.core.activeorm.services.SearchService;
 import com.coretex.items.core.GenericItem;
 import org.apache.commons.collections4.CollectionUtils;
-import reactor.core.publisher.Flux;
 
 import javax.annotation.Resource;
 import java.util.Iterator;
@@ -18,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
@@ -68,16 +69,16 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 	}
 	@Override
 	public List<I> find(boolean strict) {
-		return findReactive(strict).collectList().block();
+		return findReactive(strict).collect(Collectors.toList());
 	}
 
 	@Override
-	public Flux<I> findReactive() {
+	public Stream<I> findReactive() {
 		return findReactive(false);
 	}
 
 	@Override
-	public Flux<I> findReactive(boolean strict) {
+	public Stream<I> findReactive(boolean strict) {
 		SelectOperationSpec query = this.createSearchQuery(strict);
 		return this.getSearchService().<I>search(query).getResultStream();
 	}
@@ -150,11 +151,11 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find(String query) {
-		return findReactive(query).collectList().block();
+		return findReactive(query).collect(Collectors.toList());
 	}
 
 	@Override
-	public Flux<I> findReactive(String query) {
+	public Stream<I> findReactive(String query) {
 		SearchService ss = this.getSearchService();
 		SearchResult<I> searchResult = ss.search(query);
 		return searchResult.getResultStream();
@@ -162,11 +163,11 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find(String query, Map<String, Object> params) {
-		return findReactive(query, params).collectList().block();
+		return findReactive(query, params).collect(Collectors.toList());
 	}
 
 	@Override
-	public Flux<I> findReactive(String query, Map<String, Object> params) {
+	public Stream<I> findReactive(String query, Map<String, Object> params) {
 		SearchService ss = this.getSearchService();
 		SearchResult<I> searchResult = ss.search(query, params);
 		return searchResult.getResultStream();
@@ -179,16 +180,16 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find(Map<String, ?> params, boolean strict) {
-		return findReactive(params, strict).collectList().block();
+		return findReactive(params, strict).collect(Collectors.toList());
 	}
 
 	@Override
-	public Flux<I> findReactive(Map<String, ?> params) {
+	public Stream<I> findReactive(Map<String, ?> params) {
 		return findReactive(params, false);
 	}
 
 	@Override
-	public Flux<I> findReactive(Map<String, ?> params, boolean strict) {
+	public Stream<I> findReactive(Map<String, ?> params, boolean strict) {
 		SelectOperationSpec query = this.createSearchQuery(params, strict);
 		SearchResult<I> searchResult = this.getSearchService().search(query);
 		return searchResult.getResultStream();
@@ -201,16 +202,16 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find(SortParameters sortParameters, boolean strict) {
-		return findReactive(sortParameters, strict).collectList().block();
+		return findReactive(sortParameters, strict).collect(Collectors.toList());
 	}
 
 	@Override
-	public Flux<I> findReactive(SortParameters sortParameters) {
+	public Stream<I> findReactive(SortParameters sortParameters) {
 		return findReactive(sortParameters, false);
 	}
 
 	@Override
-	public Flux<I> findReactive(SortParameters sortParameters, boolean strict) {
+	public Stream<I> findReactive(SortParameters sortParameters, boolean strict) {
 		SelectOperationSpec query = this.createSearchQuery(sortParameters, strict);
 		return this.getSearchService().<I>search(query).getResultStream();
 	}
@@ -222,16 +223,16 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public List<I> find(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
-		return findReactive(params, sortParameters, strict).collectList().block();
+		return findReactive(params, sortParameters, strict).collect(Collectors.toList());
 	}
 
 	@Override
-	public Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters) {
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters) {
 		return findReactive(params,sortParameters, false);
 	}
 
 	@Override
-	public Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
 		var query = this.createSearchQuery(params, sortParameters, strict);
 		return this.getSearchService().<I>search(query).getResultStream();
 	}
@@ -247,12 +248,12 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 	}
 
 	@Override
-	public Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count) {
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count) {
 		return findReactive(params, sortParameters, count, false);
 	}
 
 	@Override
-	public Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict) {
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict) {
 		return findPageable(params, sortParameters, count, strict).getResultStream();
 	}
 
@@ -267,12 +268,12 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 	}
 
 	@Override
-	public Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page) {
 		return findReactive(params, sortParameters, count, page, false);
 	}
 
 	@Override
-	public Flux<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict) {
+	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict) {
 		return findPageable(params, sortParameters, count, page, strict).getResultStream();
 	}
 

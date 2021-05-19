@@ -4,7 +4,8 @@ import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.specs.LocalizedDataSaveOperationSpec;
 import com.coretex.core.activeorm.services.ReactiveSearchResult;
 import net.sf.jsqlparser.statement.Statement;
-import reactor.core.publisher.Flux;
+
+import java.util.stream.Stream;
 
 import static com.coretex.core.activeorm.query.QueryType.LOCALIZED_DATA_SAVE;
 
@@ -21,7 +22,7 @@ public class LocalizedDataSaveOperationConfigContext
 	}
 
 	@Override
-	public <R extends ReactiveSearchResult<T>, T> R wrapResult(Flux<T> result) {
+	public <R extends ReactiveSearchResult<T>, T> R wrapResult(Stream<T> result) {
 		return (R) new ReactiveSearchResult<>(() -> result);
 	}
 }

@@ -4,6 +4,7 @@ import com.coretex.core.activeorm.factories.RowMapperFactory;
 import com.coretex.core.activeorm.query.ActiveOrmOperationExecutor;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.annotation.Resource;
 
@@ -11,6 +12,11 @@ public abstract class AbstractLoadAttributeValueStrategy implements LoadAttribut
 
 	@Resource
 	private CortexContext cortexContext;
+
+	@Lookup
+	public NamedParameterJdbcTemplate getJdbcTemplate() {
+		return null;
+	}
 
 	@Lookup
 	public RowMapperFactory getRowMapperFactory() {

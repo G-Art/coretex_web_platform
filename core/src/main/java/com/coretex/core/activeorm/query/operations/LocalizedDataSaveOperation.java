@@ -8,24 +8,19 @@ import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.core.services.bootstrap.DbDialectService;
 import com.coretex.items.core.MetaAttributeTypeItem;
-import com.google.common.collect.Lists;
 import net.sf.jsqlparser.statement.Statement;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.math.MathFlux;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class LocalizedDataSaveOperation extends ModificationOperation<Statement, LocalizedDataSaveOperationSpec, LocalizedDataSaveOperationConfigContext> {
+public class LocalizedDataSaveOperation extends ModificationOperation<Statement,LocalizedDataSaveOperationSpec, LocalizedDataSaveOperationConfigContext> {
 
 	private Logger LOG = LoggerFactory.getLogger(LocalizedDataSaveOperation.class);
 	private DbDialectService dbDialectService;
@@ -36,9 +31,8 @@ public class LocalizedDataSaveOperation extends ModificationOperation<Statement,
 	}
 
 	@Override
-	protected Mono<Integer> executeBefore(LocalizedDataSaveOperationConfigContext operationConfigContext) {
+	protected void executeBefore(LocalizedDataSaveOperationConfigContext operationConfigContext) {
 		//not required
-		return Mono.just(0);
 	}
 
 	@Override
@@ -47,96 +41,58 @@ public class LocalizedDataSaveOperation extends ModificationOperation<Statement,
 	}
 
 	@Override
-	public Mono<Integer> executeOperation(LocalizedDataSaveOperationConfigContext operationConfigContext) {
+	public void executeOperation(LocalizedDataSaveOperationConfigContext operationConfigContext) {
 		var operationSpec = operationConfigContext.getOperationSpec();
 		LocalizedDataSaveOperationSpec.LocalizedAttributeSaveFetcher fetcher = operationSpec.getFetcher();
 
-		return Mono.fromSupplier(() -> {
-			var i = 0;
-			if (fetcher.hasValuesForInsert()) {
-				Map<Locale, Object> insertValues = fetcher.getInsertValues();
-				var query = operationSpec.getInsertQuery();
-				if (LOG.isDebugEnabled()) {
-					LOG.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));
-				}
-				i = i + executeReactiveOperation(databaseClient ->
-						MathFlux.sumInt(
-								Flux.fromIterable(buildParams(insertValues, operationSpec))
-										.map(stringObjectMap -> {
-											var sql = bindForEach(
-													databaseClient.sql(query),
-													stringObjectMap,
-													(spec, entry) -> {
-														if (Objects.isNull(entry.getValue().getLeft())) {
-															return spec.bindNull(entry.getKey(), entry.getValue().getRight());
-														}
-														return spec.bind(entry.getKey(), entry.getValue().getLeft());
-													}
-											);
-											return sql.fetch().rowsUpdated();
-										})
-										.defaultIfEmpty(Mono.just(0))
-										.map(Mono::block))).block();
+		if(fetcher.hasValuesForInsert()){
+			Map<Locale, Object> insertValues = fetcher.getInsertValues();
+			var query = operationSpec.getInsertQuery();
+			if(LOG.isDebugEnabled()){
+				LOG.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));
 			}
-			if (fetcher.hasValuesForUpdate()) {
-				Map<Locale, Object> updateValues = fetcher.getUpdateValues();
-				var query = operationSpec.getUpdateQuery();
-				if (LOG.isDebugEnabled()) {
-					LOG.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));
-				}
-				i = i + executeReactiveOperation(databaseClient ->
-						MathFlux.sumInt(
-								Flux.fromIterable(buildParams(updateValues, operationSpec))
-										.map(stringObjectMap -> {
-											var sql = bindForEach(
-													databaseClient.sql(query),
-													stringObjectMap,
-													(spec, entry) -> {
-														if (Objects.isNull(entry.getValue().getLeft())) {
-															return spec.bindNull(entry.getKey(), entry.getValue().getRight());
-														}
-														return spec.bind(entry.getKey(), entry.getValue().getLeft());
-													}
-											);
-											return sql.fetch().rowsUpdated();
-										})
-										.defaultIfEmpty(Mono.just(0))
-										.map(Mono::block))).block();
+			executeJdbcOperation(jdbcTemplate -> jdbcTemplate.batchUpdate(query, buildParams(insertValues, operationSpec)));
+		}
+		if(fetcher.hasValuesForUpdate()){
+			Map<Locale, Object> updateValues = fetcher.getUpdateValues();
+			var query = operationSpec.getUpdateQuery();
+			if(LOG.isDebugEnabled()){
+				LOG.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));
 			}
-			return i;
-		});
+			executeJdbcOperation(jdbcTemplate -> jdbcTemplate.batchUpdate(query, buildParams(updateValues, operationSpec)));
+		}
 	}
 
-	private List<Map<String, Pair<Object, Class<?>>>> buildParams(Map<Locale, Object> values, LocalizedDataSaveOperationSpec operationSpec) {
-		List<Map<String, Pair<Object, Class<?>>>> parameterSources = Lists.newArrayList();
+	private SqlParameterSource[] buildParams(Map<Locale, Object> values, LocalizedDataSaveOperationSpec operationSpec) {
+		SqlParameterSource[] parameterSources = new SqlParameterSource[values.size()];
+		AtomicInteger index = new AtomicInteger();
 		values.forEach((locale, o) -> {
-			Map<String, Pair<Object, Class<?>>> params = new HashMap<>();
-			params.put("owner", Pair.of(operationSpec.getItem().getUuid(), UUID.class));
-			params.put("attribute", Pair.of(operationSpec.getAttributeTypeItem().getUuid(), UUID.class));
-			params.put("localeiso", Pair.of(locale.toString(), String.class));
-			params.put("value", Pair.of(toString(o, operationSpec.getAttributeTypeItem()), String.class));
-			parameterSources.add(params);
+			Map<String, Object> params = new HashMap<>();
+			params.put("owner", operationSpec.getItem().getUuid());
+			params.put("attribute", operationSpec.getAttributeTypeItem().getUuid());
+			params.put("localeiso", locale.toString());
+			params.put("value", toString(o, operationSpec.getAttributeTypeItem()));
+			parameterSources[index.getAndIncrement()] = new MapSqlParameterSource(params);
 		});
 		return parameterSources;
 	}
 
 	private Object toString(Object o, MetaAttributeTypeItem attribute) {
-		if (AttributeTypeUtils.isRegularTypeAttribute(attribute)) {
+		if(AttributeTypeUtils.isRegularTypeAttribute(attribute)){
 			Class regularClass = AttributeTypeUtils.getItemClass(attribute);
-			if (regularClass != null && regularClass.isAssignableFrom(Class.class)) {
-				return ((Class) o).getName();
+			if(regularClass != null && regularClass.isAssignableFrom(Class.class)){
+				return ((Class)o).getName();
 			}
-			if (regularClass != null && regularClass.equals(Date.class)) {
-				return dbDialectService.dateToString(new java.sql.Timestamp(((Date) o).getTime()));
+			if(regularClass != null && regularClass.equals(Date.class)){
+				return dbDialectService.dateToString(new java.sql.Timestamp(((Date)o).getTime()));
 			}
 		}
 		return o;
 	}
 
 	@Override
-	protected Mono<Integer> executeAfter(LocalizedDataSaveOperationConfigContext operationConfigContext) {
+	protected void executeAfter(LocalizedDataSaveOperationConfigContext operationConfigContext) {
 		//not required
-		return Mono.just(0);
 	}
 
 	@Override

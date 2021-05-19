@@ -12,6 +12,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.Objects;
 import java.util.Set;
@@ -86,4 +88,8 @@ public class DefaultAttributeProvider implements AttributeProvider {
 		this.loadAttributeValueStrategyProvider = loadAttributeValueStrategyProvider;
 	}
 
+	@Lookup
+	public NamedParameterJdbcTemplate getJdbcTemplate() {
+		return null;
+	}
 }

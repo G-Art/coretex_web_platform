@@ -5,17 +5,18 @@
 
     <bean id="defaultCacheConfiguration" class="com.coretex.core.activeorm.cache.CacheConfiguration">
         <property name="softValue" value="true"/>
-        <property name="maximumSize" value="1048"/>
+        <property name="maximumSize" value="1024"/>
         <property name="concurrencyLevel" value="2"/>
         <property name="duration" value="#{T(java.time.Duration).ofDays(2)}"/>
     </bean>
 
     <bean id="featuredCacheKeyComputationStrategy" class="com.coretex.core.activeorm.cache.impl.FeaturedCacheKeyComputationStrategy" scope="prototype"/>
-    <bean id="cachedFluxValueStoringStrategy" class="com.coretex.core.activeorm.cache.impl.CachedFluxValueStoringStrategy"/>
+    <bean id="streamAsListCacheValueStoringStrategy" class="com.coretex.core.activeorm.cache.impl.StreamAsListCacheValueStoringStrategy"/>
 
     <bean id="genericCacheSegment" class="com.coretex.core.activeorm.cache.impl.DefaultCacheSegment">
         <constructor-arg name="cacheKeyComputationStrategy" ref="featuredCacheKeyComputationStrategy"/>
-        <constructor-arg name="cacheValueStoringStrategy" ref="cachedFluxValueStoringStrategy"/>
+        <constructor-arg name="cacheValueStoringStrategy" ref="streamAsListCacheValueStoringStrategy"/>
+        <constructor-arg name="cacheValueRetrievingStrategy" ref="streamAsListCacheValueStoringStrategy"/>
         <constructor-arg name="ctxClass" value="com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext"/>
         <constructor-arg name="invalidationCtxClass" value="com.coretex.core.activeorm.cache.impl.ItemBasedCacheInvalidationContext"/>
         <constructor-arg name="cacheManager">
@@ -32,7 +33,8 @@
 
     <bean id="genericItemTypeLocalizedFeaturedCacheSegment" class="com.coretex.core.activeorm.cache.impl.DefaultCacheSegment">
         <constructor-arg name="cacheKeyComputationStrategy" ref="featuredCacheKeyComputationStrategy"/>
-        <constructor-arg name="cacheValueStoringStrategy" ref="cachedFluxValueStoringStrategy"/>
+        <constructor-arg name="cacheValueStoringStrategy" ref="streamAsListCacheValueStoringStrategy"/>
+        <constructor-arg name="cacheValueRetrievingStrategy" ref="streamAsListCacheValueStoringStrategy"/>
         <constructor-arg name="ctxClass" value="com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext"/>
         <constructor-arg name="invalidationCtxClass" value="com.coretex.core.activeorm.cache.impl.ItemBasedCacheInvalidationContext"/>
         <constructor-arg name="cacheManager">
@@ -50,29 +52,12 @@
             </list>
         </constructor-arg>
     </bean>
-    <bean id="productsItemTypeFeaturedCacheSegment" class="com.coretex.core.activeorm.cache.impl.DefaultCacheSegment">
-        <constructor-arg name="cacheKeyComputationStrategy" ref="featuredCacheKeyComputationStrategy"/>
-        <constructor-arg name="cacheValueStoringStrategy" ref="cachedFluxValueStoringStrategy"/>
-        <constructor-arg name="ctxClass" value="com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext"/>
-        <constructor-arg name="invalidationCtxClass" value="com.coretex.core.activeorm.cache.impl.ItemBasedCacheInvalidationContext"/>
-        <constructor-arg name="cacheManager">
-            <bean class="com.coretex.core.activeorm.cache.impl.GuavaCacheManager">
-                <constructor-arg ref="defaultCacheConfiguration"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg name="features">
-            <list>
-                <bean class="com.coretex.core.activeorm.cache.features.ItemTypeCacheSegmentFeature">
-                    <constructor-arg name="type" value="#{T(com.coretex.items.cx_core.AbstractProductItem).ITEM_TYPE}"/>
-                    <constructor-arg name="cortexContext" ref="defaultMetaTypeProvider"/>
-                </bean>
-            </list>
-        </constructor-arg>
-    </bean>
+
 
     <bean id="singleItemFeaturedCacheSegment" class="com.coretex.core.activeorm.cache.impl.DefaultCacheSegment">
         <constructor-arg name="cacheKeyComputationStrategy" ref="featuredCacheKeyComputationStrategy"/>
-        <constructor-arg name="cacheValueStoringStrategy" ref="cachedFluxValueStoringStrategy"/>
+        <constructor-arg name="cacheValueStoringStrategy" ref="streamAsListCacheValueStoringStrategy"/>
+        <constructor-arg name="cacheValueRetrievingStrategy" ref="streamAsListCacheValueStoringStrategy"/>
         <constructor-arg name="ctxClass" value="com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext"/>
         <constructor-arg name="invalidationCtxClass" value="com.coretex.core.activeorm.cache.impl.ItemBasedCacheInvalidationContext"/>
         <constructor-arg name="cacheManager">

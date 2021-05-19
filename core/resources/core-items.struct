@@ -1,7 +1,7 @@
 elements {
 
     relations {
-        MataTypeInheritanceRelation(source: MetaType, target: MetaType) {
+        MetaTypeInheritanceRelation(source: MetaType, target: MetaType) {
             source(parent) {
                 description = "Super Type uuid"
             }

@@ -138,7 +138,7 @@ public class RemoveItemTest {
 
 		assertEquals(7, searchRelated.getCount());
 
-		searchRelated.getResultStream().subscribe(removeRelatedItem ->
+		searchRelated.getResultStream().forEach(removeRelatedItem ->
 				assertAll(() -> assertTrue(CollectionUtils.isEmpty(removeRelatedItem.getManyToManySources())),
 				() -> assertTrue(CollectionUtils.isEmpty(removeRelatedItem.getManyToOneSources())),
 				() -> assertNull(removeRelatedItem.getOneToManySource()),

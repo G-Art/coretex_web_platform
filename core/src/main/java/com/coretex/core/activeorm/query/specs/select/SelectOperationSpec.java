@@ -3,13 +3,11 @@ package com.coretex.core.activeorm.query.specs.select;
 import com.coretex.core.activeorm.query.operations.contexts.SelectOperationConfigContext;
 import com.coretex.core.activeorm.query.specs.SqlOperationSpec;
 import com.google.common.collect.Maps;
-import io.r2dbc.spi.Row;
-import io.r2dbc.spi.RowMetadata;
 import net.sf.jsqlparser.statement.select.Select;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.util.Assert;
 
 import java.util.Map;
-import java.util.function.BiFunction;
 
 public class SelectOperationSpec extends SqlOperationSpec<
 		Select,
@@ -18,7 +16,7 @@ public class SelectOperationSpec extends SqlOperationSpec<
 
 	private Class<?> expectedResultType;
 	private Map<String, Object> parameters;
-	private BiFunction<Row, RowMetadata, ?> customMapper;
+	private ResultSetExtractor<?> customExtractor;
 	private String transformedQuery;
 
 	public SelectOperationSpec(String query) {
@@ -30,9 +28,9 @@ public class SelectOperationSpec extends SqlOperationSpec<
 		this.parameters = parameters;
 	}
 
-	public SelectOperationSpec(String query, Map<String, Object> parameters, BiFunction<Row, RowMetadata, ?> customMapper) {
+	public SelectOperationSpec(String query, Map<String, Object> parameters, ResultSetExtractor<?> customExtractor) {
 		this(query, parameters);
-		this.customMapper = customMapper;
+		this.customExtractor = customExtractor;
 	}
 
 	@Override
@@ -61,8 +59,8 @@ public class SelectOperationSpec extends SqlOperationSpec<
 		this.expectedResultType = expectedResultType;
 	}
 
-	public BiFunction<Row, RowMetadata, ?> getCustomMapper() {
-		return customMapper;
+	public ResultSetExtractor<?> getCustomExtractor() {
+		return customExtractor;
 	}
 
 	public String getTransformedQuery() {

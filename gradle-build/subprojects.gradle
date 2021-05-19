@@ -19,9 +19,9 @@ subprojects {
 
     repositories {
         mavenCentral()
-        mavenLocal()
+//        mavenLocal()
         jcenter()
-        maven { url 'https://repo.repsy.io/mvn/gerasimenko_art/coretex/'}
+        maven { url 'http://repo.coretexplatform.com/artifactory/coretex_repo-libs-release/'}
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://repo.spring.io/libs-release-remote" }
         maven { url "https://jetbrains.bintray.com/trove4j/" }
