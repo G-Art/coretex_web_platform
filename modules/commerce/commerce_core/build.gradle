@@ -1,5 +1,0 @@
-
-dependencies {
-  implementation project(":core")
-  implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.11'
-}
