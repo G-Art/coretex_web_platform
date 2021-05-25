@@ -1,5 +1,5 @@
 group 'com.coretex.core'
-version '1.0-Beta'
+version 'H-1.0'
 
 buildscript {
     repositories {
@@ -29,10 +29,9 @@ apply plugin: 'com.bmuschko.docker-remote-api'
 
 distributions {
     main {
-        distributionBaseName = 'gm-commerce'
+        distributionBaseName = 'coretex-web-platform'
         contents {
             from projectDir
-            exclude '**/src'
             exclude 'tmp'
             exclude '**/*.iml'
             exclude '**/.idea'
@@ -40,8 +39,9 @@ distributions {
             exclude '**/node_modules'
             exclude '**/jsbuild'
             exclude '**/webSrc'
-            exclude '**/commerce_shop/template'
             exclude '**/genSrc'
+            exclude '**/classes'
+            exclude '**/libs'
             exclude 'build'
             exclude 'data'
         }
@@ -56,8 +56,8 @@ import com.bmuschko.gradle.docker.tasks.image.*
 task createDockerfile(type: Dockerfile, dependsOn: distTar) {
     destFile.set(project.layout.buildDirectory.file('distributions/Dockerfile'))
     from('openjdk:15')
-    addFile("gm-commerce-1.0-Alpha.tar", "/opt/coretex/")
-    workingDir("/opt/coretex/gm-commerce-1.0-Alpha")
+    addFile("coretex-web-platform-H-1.0.tar", "/opt/coretex/")
+    workingDir("/opt/coretex/coretex-web-platform-H-1.0")
     environmentVariable('JAVA_OPTS', '-Djava.awt.headless=true -server -Xms48m -Xmx512M -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/opt/tmp/heapdump.bin')
     exposePort(8080)
 }
