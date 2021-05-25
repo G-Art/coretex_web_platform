@@ -1,7 +1,6 @@
 package com.coretex.core.activeorm.services.impl;
 
-import com.coretex.core.activeorm.factories.OperationFactory;
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
+import com.coretex.core.activeorm.query.ActiveOrmOperationExecutor;
 import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
@@ -32,7 +31,7 @@ public class DefaultItemService implements ItemService {
 	private MetaTypeProvider metaTypeProvider;
 
 	@Autowired
-	private OperationFactory operationFactory;
+	private ActiveOrmOperationExecutor activeOrmOperationExecutor;
 
 	@Override
 	public <T extends AbstractGenericItem>  T create(Class<T> itemClass){
@@ -66,7 +65,7 @@ public class DefaultItemService implements ItemService {
 
 	@Override
 	public <T extends GenericItem> T save(T item){
-		operationFactory.createSaveOperation(item).execute();
+		activeOrmOperationExecutor.executeSaveOperation(item);
 		return item;
 	}
 
@@ -78,7 +77,8 @@ public class DefaultItemService implements ItemService {
 
 	@Override
 	public <T extends GenericItem> void delete(T item){
-		operationFactory.createDeleteOperation(item).execute();
+		item.getItemContext().refresh();
+		activeOrmOperationExecutor.executeDeleteOperation(item);
 	}
 
 	@Override

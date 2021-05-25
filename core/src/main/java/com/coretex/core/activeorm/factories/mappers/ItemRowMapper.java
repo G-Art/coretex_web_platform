@@ -5,6 +5,7 @@ import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.core.services.bootstrap.impl.CortexContext;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
+import com.coretex.core.utils.TypeUtil;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaEnumTypeItem;
@@ -23,6 +24,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -68,10 +70,10 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 
 		cortexContext.getAllAttributes(typeMetaType.getTypeCode()).values().stream()
 				.filter(metaAttributeTypeItem -> mapOfColValues.containsKey(metaAttributeTypeItem.getColumnName()))
-				.filter(metaAttributeTypeItem ->  AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem) ||
-												 (AttributeTypeUtils.isItemAttribute(metaAttributeTypeItem) &&
-												 (((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes() == null ||
-												 ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes().isEmpty())))
+				.filter(metaAttributeTypeItem -> AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem) ||
+						(AttributeTypeUtils.isItemAttribute(metaAttributeTypeItem) &&
+								(((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes() == null ||
+										((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getSubtypes().isEmpty())))
 				.forEach(metaAttributeTypeItem -> item.initValue(metaAttributeTypeItem.getAttributeName(), mapOfColValues.get(metaAttributeTypeItem.getColumnName()).apply(metaAttributeTypeItem)));
 		return ItemUtils.createItem(targetClass, item);
 
@@ -98,10 +100,17 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 					return cortexContext.findMetaEnumValueTypeItem(((MetaEnumTypeItem) metaAttributeTypeItem.getAttributeType()).getEnumClass(), (UUID) JdbcUtils.getResultSetValue(rs, index));
 				}
 				if (AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem)) {
-					return cortexContext.getTypeTranslator(((RegularTypeItem) metaAttributeTypeItem.getAttributeType()).getRegularClass()).read(rs, index);
+					var value = cortexContext.getTypeTranslator(((RegularTypeItem) metaAttributeTypeItem.getAttributeType()).getRegularClass()).read(rs, index);
+					if(Objects.isNull(value) && Objects.nonNull(metaAttributeTypeItem.getDefaultValue())){
+						return TypeUtil.toType(metaAttributeTypeItem.getDefaultValue(), (RegularTypeItem) metaAttributeTypeItem.getAttributeType());
+					}
+					return value;
 				} else {
 					Class<AbstractGenericItem> itemClass = ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getItemClass();
-					return ItemUtils.createItem(itemClass, itemContextFactory.create(itemClass, (UUID) JdbcUtils.getResultSetValue(rs, index)));
+					var value = JdbcUtils.getResultSetValue(rs, index);
+					return Objects.nonNull(value) ?
+							ItemUtils.createItem(itemClass, itemContextFactory.create(itemClass, (UUID) value)) :
+							null;
 				}
 			} catch (Exception e) {
 				if (LOG.isDebugEnabled()) {

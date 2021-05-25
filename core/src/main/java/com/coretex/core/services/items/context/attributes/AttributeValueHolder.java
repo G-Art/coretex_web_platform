@@ -120,6 +120,10 @@ public class AttributeValueHolder implements AttributeValueHolderState {
 		dirty = false;
 	}
 
+	public String getAttributeName() {
+		return attributeName;
+	}
+
 	protected class ObservedArrayList extends ForwardingList<Object> {
 		final List<Object> delegate = Lists.newArrayList(); // backing list
 		@Override protected List<Object> delegate() {

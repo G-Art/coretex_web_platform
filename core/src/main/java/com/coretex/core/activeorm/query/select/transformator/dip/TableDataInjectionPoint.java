@@ -1,8 +1,10 @@
 package com.coretex.core.activeorm.query.select.transformator.dip;
 
+import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.select.data.TableTransformationData;
 import com.coretex.core.activeorm.query.select.scanners.FromItemScanner;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
+import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
 import java.util.Optional;
@@ -12,8 +14,8 @@ public class TableDataInjectionPoint extends AbstractScannerDataInjectionPoint<F
 	private static final String TABLE_TRANSFORMATION_DATA = "TABLE_TRANSFORMATION_DATA";
 	private static final String USE_SUBTYPES = "USE_SUBTYPES";
 
-	public TableDataInjectionPoint(FromItemScanner scanner) {
-		super(scanner);
+	public TableDataInjectionPoint(FromItemScanner scanner, QueryInfoHolder<? extends Statement> context) {
+		super(scanner, context);
 	}
 
 	public void setUseSubtypes(Boolean useSubtypes){

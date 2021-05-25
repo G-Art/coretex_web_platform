@@ -1,28 +1,25 @@
 package com.coretex.core.activeorm.query.specs;
 
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
-import com.coretex.core.activeorm.query.operations.LocalizedDataRemoveOperation;
-import com.coretex.core.activeorm.query.operations.ModificationOperation;
+import com.coretex.core.activeorm.query.operations.contexts.AbstractOperationConfigContext;
+import com.coretex.core.activeorm.query.operations.contexts.LocalizedDataRemoveOperationConfigContext;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.items.core.MetaAttributeTypeItem;
-import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.delete.Delete;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class LocalizedDataRemoveOperationSpec extends ModificationOperationSpec<Statement, LocalizedDataRemoveOperation> {
+public class LocalizedDataRemoveOperationSpec extends ModificationOperationSpec<Delete, LocalizedDataRemoveOperationSpec, LocalizedDataRemoveOperationConfigContext> {
 
 	private final static String DELETE_LOCALIZED_DATA_QUERY = "delete from %s_LOC where owner = :owner and attribute = :attribute";
 
 	private MetaAttributeTypeItem attributeTypeItem;
 	private Map<String, Object> params = new HashMap<>();
 
-	private ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator;
 
-	public LocalizedDataRemoveOperationSpec(ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator, MetaAttributeTypeItem attributeTypeItem) {
+	public LocalizedDataRemoveOperationSpec(AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?,?,?> ,?> initiator, MetaAttributeTypeItem attributeTypeItem) {
 		super(initiator.getOperationSpec().getItem());
 		setNativeQuery(false);
-		this.initiator = initiator;
 		this.attributeTypeItem = attributeTypeItem;
 		this.setQuerySupplier(this::buildQuery);
 	}
@@ -43,7 +40,7 @@ public class LocalizedDataRemoveOperationSpec extends ModificationOperationSpec<
 
 	@Override
 	public void flush() {
-
+		//ignored
 	}
 
 	public MetaAttributeTypeItem getAttributeTypeItem() {
@@ -51,9 +48,7 @@ public class LocalizedDataRemoveOperationSpec extends ModificationOperationSpec<
 	}
 
 	@Override
-	public LocalizedDataRemoveOperation createOperation(QueryTransformationProcessor processor) {
-		return new LocalizedDataRemoveOperation(this);
+	public LocalizedDataRemoveOperationConfigContext createOperationContext() {
+		return new LocalizedDataRemoveOperationConfigContext(this);
 	}
-
-
 }

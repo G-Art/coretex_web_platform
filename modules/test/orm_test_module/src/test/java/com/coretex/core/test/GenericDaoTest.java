@@ -127,7 +127,7 @@ public class GenericDaoTest {
 		var defaultGenericDao = new DefaultGenericDao<SearchTestItem>(SearchTestItem.ITEM_TYPE);
 		defaultGenericDao.setSearchService(searchService);
 
-		List<SearchTestItem> result = defaultGenericDao.find(Collections.emptyMap(), SortParameters.singletonAscending(SearchTestItem.CODE), 3, 1);
+		List<SearchTestItem> result = defaultGenericDao.find(Collections.emptyMap(), SortParameters.singletonAscending(SearchTestItem.CODE), 3L, 0);
 		//then:
 
 		assertEquals(3, result.size());

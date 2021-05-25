@@ -18,12 +18,24 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger] - %msg%n</pattern>
         </encoder>
     </appender>
+    <logger name="com.coretex.newpost" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="com.coretex.searchengine" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
 
-    <logger name="com.coretex.newpost" level="debug" additivity="false">
+    <logger name="com.coretex.core.activeorm.services.impl.DefaultItemInterceptorsRegistry" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="com.coretex.core.activeorm.interceptors.impl.CommonItemLifecycleLoggerInterceptor" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="com.coretex.core.activeorm.query" level="INFO" additivity="false">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
     </logger>
-
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

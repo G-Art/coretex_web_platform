@@ -6,7 +6,7 @@
 
     <bean id="abstractLoadAttributeValueStrategy" abstract="true"
           class="com.coretex.core.services.items.context.provider.strategies.AbstractLoadAttributeValueStrategy">
-        <constructor-arg index="0" ref="selectQueryTransformationProcessor"/>
+        <lookup-method name="getOperationExecutor" bean="activeOrmOperationExecutor"/>
         <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
         <lookup-method name="getRowMapperFactory" bean="rowMapperFactory"/>
     </bean>

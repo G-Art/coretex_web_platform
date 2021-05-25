@@ -1,7 +1,6 @@
 package com.coretex.core.activeorm.query.specs;
 
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
-import com.coretex.core.activeorm.query.operations.RemoveOperation;
+import com.coretex.core.activeorm.query.operations.contexts.RemoveOperationConfigContext;
 import com.coretex.core.activeorm.query.operations.dataholders.RemoveValueDataHolder;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static com.coretex.core.general.utils.ItemUtils.getTypeCode;
 
-public class RemoveOperationSpec extends ModificationOperationSpec<Delete, RemoveOperation> {
+public class RemoveOperationSpec extends ModificationOperationSpec<Delete, RemoveOperationSpec, RemoveOperationConfigContext> {
 
 	protected final static String DELETE_ITEM_QUERY = "delete from %s where %s";
 
@@ -57,8 +56,7 @@ public class RemoveOperationSpec extends ModificationOperationSpec<Delete, Remov
 	}
 
 	@Override
-	public RemoveOperation createOperation(QueryTransformationProcessor<Delete> processor) {
-		return new RemoveOperation(this);
+	public RemoveOperationConfigContext createOperationContext() {
+		return new RemoveOperationConfigContext(this);
 	}
-
 }

@@ -14,6 +14,11 @@
     </jsp:attribute>
     <jsp:attribute name="footerJs">
       <jsp:invoke fragment="footerJs"/>
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
     </jsp:attribute>
 
     <jsp:body>

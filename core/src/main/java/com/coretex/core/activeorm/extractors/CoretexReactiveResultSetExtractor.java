@@ -1,7 +1,6 @@
 package com.coretex.core.activeorm.extractors;
 
 import com.coretex.core.activeorm.factories.RowMapperFactory;
-import com.coretex.core.activeorm.query.operations.SelectOperation;
 import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaTypeItem;
@@ -31,14 +30,17 @@ public class CoretexReactiveResultSetExtractor<T> implements ResultSetExtractor<
 	private Logger LOG = LoggerFactory.getLogger(RowMapperFactory.class);
 
 	private SqlRowSetResultSetExtractor sqlRowSetResultSetExtractor;
-	private SelectOperation selectOperation;
 	private MetaTypeProvider metaTypeProvider;
 	private Supplier<RowMapperFactory> mapperFactorySupplier;
 
-	public CoretexReactiveResultSetExtractor(SelectOperation selectOperation, MetaTypeProvider context) {
+	public CoretexReactiveResultSetExtractor(MetaTypeProvider context) {
 		this.sqlRowSetResultSetExtractor = new SqlRowSetResultSetExtractor();
 		this.metaTypeProvider = context;
-		this.selectOperation = selectOperation;
+	}
+
+	public CoretexReactiveResultSetExtractor(MetaTypeProvider context, RowMapperFactory defaultRowMapperFactory) {
+		this(context);
+		mapperFactorySupplier = () -> defaultRowMapperFactory;
 	}
 
 	@Override

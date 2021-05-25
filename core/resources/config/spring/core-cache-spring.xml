@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="defaultCacheConfiguration" class="com.coretex.core.activeorm.cache.CacheConfiguration">
+        <property name="softValue" value="true"/>
+        <property name="maximumSize" value="1024"/>
+        <property name="concurrencyLevel" value="2"/>
+        <property name="duration" value="#{T(java.time.Duration).ofDays(2)}"/>
+    </bean>
+
+    <bean id="featuredCacheKeyComputationStrategy" class="com.coretex.core.activeorm.cache.impl.FeaturedCacheKeyComputationStrategy" scope="prototype"/>
+    <bean id="streamAsListCacheValueStoringStrategy" class="com.coretex.core.activeorm.cache.impl.StreamAsListCacheValueStoringStrategy"/>
+
+    <bean id="genericCacheSegment" class="com.coretex.core.activeorm.cache.impl.DefaultCacheSegment">
+        <constructor-arg name="cacheKeyComputationStrategy" ref="featuredCacheKeyComputationStrategy"/>
+        <constructor-arg name="cacheValueStoringStrategy" ref="streamAsListCacheValueStoringStrategy"/>
+        <constructor-arg name="cacheValueRetrievingStrategy" ref="streamAsListCacheValueStoringStrategy"/>
+        <constructor-arg name="ctxClass" value="com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext"/>
+        <constructor-arg name="invalidationCtxClass" value="com.coretex.core.activeorm.cache.impl.ItemBasedCacheInvalidationContext"/>
+        <constructor-arg name="cacheManager">
+            <bean class="com.coretex.core.activeorm.cache.impl.GuavaCacheManager">
+                <constructor-arg ref="defaultCacheConfiguration"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg name="features">
+            <list>
+                <bean class="com.coretex.core.activeorm.cache.features.GenericTypeCacheSegmentFeature"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="genericItemTypeLocalizedFeaturedCacheSegment" class="com.coretex.core.activeorm.cache.impl.DefaultCacheSegment">
+        <constructor-arg name="cacheKeyComputationStrategy" ref="featuredCacheKeyComputationStrategy"/>
+        <constructor-arg name="cacheValueStoringStrategy" ref="streamAsListCacheValueStoringStrategy"/>
+        <constructor-arg name="cacheValueRetrievingStrategy" ref="streamAsListCacheValueStoringStrategy"/>
+        <constructor-arg name="ctxClass" value="com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext"/>
+        <constructor-arg name="invalidationCtxClass" value="com.coretex.core.activeorm.cache.impl.ItemBasedCacheInvalidationContext"/>
+        <constructor-arg name="cacheManager">
+            <bean class="com.coretex.core.activeorm.cache.impl.GuavaCacheManager">
+                <constructor-arg ref="defaultCacheConfiguration"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg name="features">
+            <list>
+                <bean class="com.coretex.core.activeorm.cache.features.ItemTypeLocalizedCacheSegmentFeature">
+                    <constructor-arg name="type" value="#{T(com.coretex.items.core.GenericItem).ITEM_TYPE}"/>
+                    <constructor-arg name="useSubTypes" value="true"/>
+                    <constructor-arg name="cortexContext" ref="defaultMetaTypeProvider"/>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+
+    <bean id="singleItemFeaturedCacheSegment" class="com.coretex.core.activeorm.cache.impl.DefaultCacheSegment">
+        <constructor-arg name="cacheKeyComputationStrategy" ref="featuredCacheKeyComputationStrategy"/>
+        <constructor-arg name="cacheValueStoringStrategy" ref="streamAsListCacheValueStoringStrategy"/>
+        <constructor-arg name="cacheValueRetrievingStrategy" ref="streamAsListCacheValueStoringStrategy"/>
+        <constructor-arg name="ctxClass" value="com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext"/>
+        <constructor-arg name="invalidationCtxClass" value="com.coretex.core.activeorm.cache.impl.ItemBasedCacheInvalidationContext"/>
+        <constructor-arg name="cacheManager">
+            <bean class="com.coretex.core.activeorm.cache.impl.GuavaCacheManager">
+                <constructor-arg ref="defaultCacheConfiguration"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg name="features">
+            <list>
+                <bean class="com.coretex.core.activeorm.cache.features.SingleItemCacheSegmentFeature"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="activeSearchCacheService" class="com.coretex.core.activeorm.cache.impl.DefaultActiveSearchCacheService">
+        <constructor-arg ref="defaultSegmentManager"/>
+    </bean>
+
+</beans>

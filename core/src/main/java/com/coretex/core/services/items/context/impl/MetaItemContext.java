@@ -3,6 +3,7 @@ package com.coretex.core.services.items.context.impl;
 import com.coretex.core.services.bootstrap.meta.MetaAttributeValueProvider;
 import com.coretex.core.services.items.context.ItemContext;
 
+import java.io.ObjectStreamException;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -13,10 +14,20 @@ import static java.util.Objects.nonNull;
 public final class MetaItemContext extends ItemContext {
 
 	private static final String UPDATE_INITIAL_TYPE_ERROR_MSG = "Update initial type is unsupported";
+	private static final String SERIALIZATION_INITIAL_TYPE_ERROR_MSG = "Serialization/Deserialization initial type is unsupported";
 
 	public MetaItemContext(ItemContextBuilder builder) {
 		super(builder);
 		checkState(nonNull(getUuid()), "Uuid is mandatory value to build initial type context");
+	}
+
+	@Override
+	protected Object readResolve() throws ObjectStreamException {
+		throw new UnsupportedOperationException(SERIALIZATION_INITIAL_TYPE_ERROR_MSG);
+	}
+
+	protected Object writeReplace() throws ObjectStreamException{
+		throw new UnsupportedOperationException(SERIALIZATION_INITIAL_TYPE_ERROR_MSG);
 	}
 
 	@Override
@@ -102,5 +113,15 @@ public final class MetaItemContext extends ItemContext {
 	@Override
 	public void refresh() {
 		throw new UnsupportedOperationException(UPDATE_INITIAL_TYPE_ERROR_MSG);
+	}
+
+	@Override
+	public boolean isSystemType() {
+		return true;
+	}
+
+	@Override
+	public MetaItemContext clone()  {
+		return this;//it is necessary only for MetaItemContext
 	}
 }

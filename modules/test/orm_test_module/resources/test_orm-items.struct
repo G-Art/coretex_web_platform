@@ -516,6 +516,24 @@ elements {
             }
         }
 
+        RequiredFieldContainerTest {
+            description = "Item with mandatory field"
+            attributes {
+                mandatoryTestField(String){
+                    optional = false
+                }
+            }
+        }
+
+        UniqueFieldContainerTest {
+            description = "Item with unique field"
+            attributes {
+                uniqueTestField(String){
+                    unique = true
+                }
+            }
+        }
+
     }
 
     enums {

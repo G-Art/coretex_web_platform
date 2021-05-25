@@ -1,19 +1,19 @@
 package com.coretex.core.services.bootstrap.meta;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaEnumValueTypeItem;
 import com.coretex.items.core.MetaTypeItem;
 import com.coretex.items.core.RegularTypeItem;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 public interface MetaTypeProvider {
 
-	Map<Class, RegularTypeItem> getRegularType(String typeCode);
+	RegularTypeItem getRegularType(String typeCode);
 
-	Map<String, RegularTypeItem> getRegularType(Class typeCode);
+	RegularTypeItem getRegularType(Class typeCode);
 
 	MetaTypeItem findMetaType(String typeCode);
 	MetaTypeItem findMetaType(UUID typeCodeUUID);

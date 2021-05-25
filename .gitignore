@@ -12,5 +12,12 @@ obj/
 *.iml
 
 velocity.log
-*lib/
+*libs/
 /tmp/*
+/data/*
+**/package-lock.json
+/modules/**/jsbuild/
+**/node_modules/
+**/webroot/resources/static/
+!/config/solr/
+!**/solrserver/resources/**

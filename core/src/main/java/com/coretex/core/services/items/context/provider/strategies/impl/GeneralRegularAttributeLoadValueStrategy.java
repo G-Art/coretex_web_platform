@@ -1,6 +1,5 @@
 package com.coretex.core.services.items.context.provider.strategies.impl;
 
-import com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.provider.strategies.AbstractLoadAttributeValueStrategy;
 import com.coretex.core.services.items.context.provider.strategies.LoadAttributeValueStrategy;
@@ -13,10 +12,6 @@ public class GeneralRegularAttributeLoadValueStrategy extends AbstractLoadAttrib
 
 	private LoadAttributeValueStrategy localizedRegularAttributeLoadValueStrategy;
 	private LoadAttributeValueStrategy regularAttributeLoadValueStrategy;
-
-	public GeneralRegularAttributeLoadValueStrategy(SelectQueryTransformationProcessor transformationProcessor) {
-		super(transformationProcessor);
-	}
 
 	@Override
 	public Object load(ItemContext ctx, MetaAttributeTypeItem attribute) {

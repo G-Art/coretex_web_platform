@@ -2,7 +2,7 @@ package com.coretex.core.services.bootstrap.meta;
 
 import com.coretex.items.core.*;
 import com.coretex.meta.AbstractGenericItem;
-import com.coretex.relations.core.MataTypeInheritanceRelation;
+import com.coretex.relations.core.MetaTypeInheritanceRelation;
 import com.coretex.relations.core.MetaAttributeOwnerRelation;
 import com.coretex.relations.core.MetaEnumValueOwnerRelation;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -33,11 +33,10 @@ public class MetaDataExtractor {
                 selectField(typeAlias, MetaRelationTypeItem.SOURCE_TYPE) + ", " +
                 selectField(typeAlias, MetaRelationTypeItem.TARGET_TYPE) + ", " +
                 selectField(typeAlias, GenericItem.META_TYPE) + ", " +
-                selectField(inhRefAlias, MataTypeInheritanceRelation.TARGET, MetaTypeItem.PARENT) +
+                selectField(inhRefAlias, MetaTypeInheritanceRelation.TARGET, MetaTypeItem.PARENT) +
                 " FROM " + fromTable(MetaTypeItem.ITEM_TYPE, typeAlias) +
-                " LEFT JOIN " + fromTable(MataTypeInheritanceRelation.ITEM_TYPE, inhRefAlias) + " ON " +
-                onField(typeAlias, AbstractGenericItem.UUID) + " = " + onField(inhRefAlias, MataTypeInheritanceRelation.SOURCE);
-
+                " LEFT JOIN " + fromTable(MetaTypeInheritanceRelation.ITEM_TYPE, inhRefAlias) + " ON " +
+                onField(typeAlias, AbstractGenericItem.UUID) + " = " + onField(inhRefAlias, MetaTypeInheritanceRelation.SOURCE);
         return jdbcTemplate.queryForList(sql, new HashMap<>());
     }
 

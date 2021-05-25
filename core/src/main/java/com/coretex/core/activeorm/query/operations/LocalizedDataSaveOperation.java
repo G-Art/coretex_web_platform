@@ -1,17 +1,14 @@
 package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
+import com.coretex.core.activeorm.query.operations.contexts.LocalizedDataSaveOperationConfigContext;
 import com.coretex.core.activeorm.query.specs.LocalizedDataSaveOperationSpec;
+import com.coretex.core.activeorm.services.AbstractJdbcService;
+import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.core.services.bootstrap.DbDialectService;
-import com.coretex.core.utils.TypeUtil;
-import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
-import com.coretex.items.core.RegularTypeItem;
-import com.coretex.server.ApplicationContextProvider;
 import net.sf.jsqlparser.statement.Statement;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,18 +20,18 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class LocalizedDataSaveOperation extends ModificationOperation<Statement, LocalizedDataSaveOperationSpec> {
+public class LocalizedDataSaveOperation extends ModificationOperation<Statement,LocalizedDataSaveOperationSpec, LocalizedDataSaveOperationConfigContext> {
 
 	private Logger LOG = LoggerFactory.getLogger(LocalizedDataSaveOperation.class);
 	private DbDialectService dbDialectService;
 
-	public LocalizedDataSaveOperation(LocalizedDataSaveOperationSpec operationSpec) {
-		super(operationSpec);
-		dbDialectService = ApplicationContextProvider.getApplicationContext().getBean(DbDialectService.class);
+	public LocalizedDataSaveOperation(AbstractJdbcService abstractJdbcService, DbDialectService dbDialectService, ItemOperationInterceptorService itemOperationInterceptorService) {
+		super(abstractJdbcService, itemOperationInterceptorService);
+		this.dbDialectService = dbDialectService;
 	}
 
 	@Override
-	protected void executeBefore() {
+	protected void executeBefore(LocalizedDataSaveOperationConfigContext operationConfigContext) {
 		//not required
 	}
 
@@ -44,28 +41,37 @@ public class LocalizedDataSaveOperation extends ModificationOperation<Statement,
 	}
 
 	@Override
-	public void executeOperation() {
-		LocalizedDataSaveOperationSpec.LocalizedAttributeSaveFetcher fetcher = getOperationSpec().getFetcher();
+	public void executeOperation(LocalizedDataSaveOperationConfigContext operationConfigContext) {
+		var operationSpec = operationConfigContext.getOperationSpec();
+		LocalizedDataSaveOperationSpec.LocalizedAttributeSaveFetcher fetcher = operationSpec.getFetcher();
 
 		if(fetcher.hasValuesForInsert()){
 			Map<Locale, Object> insertValues = fetcher.getInsertValues();
-			executeJdbcOperation(jdbcTemplate -> jdbcTemplate.batchUpdate(getOperationSpec().getInsertQuery(), buildParams(insertValues)));
+			var query = operationSpec.getInsertQuery();
+			if(LOG.isDebugEnabled()){
+				LOG.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));
+			}
+			executeJdbcOperation(jdbcTemplate -> jdbcTemplate.batchUpdate(query, buildParams(insertValues, operationSpec)));
 		}
 		if(fetcher.hasValuesForUpdate()){
 			Map<Locale, Object> updateValues = fetcher.getUpdateValues();
-			executeJdbcOperation(jdbcTemplate -> jdbcTemplate.batchUpdate(getOperationSpec().getUpdateQuery(), buildParams(updateValues)));
+			var query = operationSpec.getUpdateQuery();
+			if(LOG.isDebugEnabled()){
+				LOG.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));
+			}
+			executeJdbcOperation(jdbcTemplate -> jdbcTemplate.batchUpdate(query, buildParams(updateValues, operationSpec)));
 		}
 	}
 
-	private SqlParameterSource[] buildParams(Map<Locale, Object> values) {
+	private SqlParameterSource[] buildParams(Map<Locale, Object> values, LocalizedDataSaveOperationSpec operationSpec) {
 		SqlParameterSource[] parameterSources = new SqlParameterSource[values.size()];
 		AtomicInteger index = new AtomicInteger();
 		values.forEach((locale, o) -> {
 			Map<String, Object> params = new HashMap<>();
-			params.put("owner", getOperationSpec().getItem().getUuid());
-			params.put("attribute", getOperationSpec().getAttributeTypeItem().getUuid());
+			params.put("owner", operationSpec.getItem().getUuid());
+			params.put("attribute", operationSpec.getAttributeTypeItem().getUuid());
 			params.put("localeiso", locale.toString());
-			params.put("value", toString(o, getOperationSpec().getAttributeTypeItem()));
+			params.put("value", toString(o, operationSpec.getAttributeTypeItem()));
 			parameterSources[index.getAndIncrement()] = new MapSqlParameterSource(params);
 		});
 		return parameterSources;
@@ -85,7 +91,7 @@ public class LocalizedDataSaveOperation extends ModificationOperation<Statement,
 	}
 
 	@Override
-	protected void executeAfter() {
+	protected void executeAfter(LocalizedDataSaveOperationConfigContext operationConfigContext) {
 		//not required
 	}
 
@@ -94,4 +100,8 @@ public class LocalizedDataSaveOperation extends ModificationOperation<Statement,
 		return false;
 	}
 
+	@Override
+	protected boolean useInterceptors(LocalizedDataSaveOperationConfigContext operationConfigContext) {
+		return false;
+	}
 }

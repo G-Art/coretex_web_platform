@@ -6,7 +6,7 @@ import com.coretex.items.core.GenericItem;
 import java.util.Map;
 import java.util.UUID;
 
-public class SelectItemsOperationSpec<R extends GenericItem> extends SelectOperationSpec<R> {
+public class SelectItemsOperationSpec<R extends GenericItem> extends SelectOperationSpec {
 
 	private static final String SELECT_ITEM_BY_UUID_TEMPLATE = "select item.* from \"%s\" as item where item.uuid = :uuid";
 

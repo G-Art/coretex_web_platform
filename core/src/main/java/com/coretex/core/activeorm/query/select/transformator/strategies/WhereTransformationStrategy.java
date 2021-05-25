@@ -18,7 +18,7 @@ public class WhereTransformationStrategy extends AbstractTransformationStrategy<
 		var scanner = dataInjectionPoint.getScanner();
 		var ownerSelectBodyScanner = dataInjectionPoint.getSelectBodyScannerOwner();
 
-		ownerSelectBodyScanner.ifPresent(selectBodyScanner -> getTransformationHelper().adjustColumn(scanner, selectBodyScanner));
+		ownerSelectBodyScanner.ifPresent(selectBodyScanner -> adjustColumn(scanner, selectBodyScanner));
 
 		return null;
 	}

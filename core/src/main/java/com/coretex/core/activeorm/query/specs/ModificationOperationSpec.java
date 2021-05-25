@@ -1,6 +1,6 @@
 package com.coretex.core.activeorm.query.specs;
 
-import com.coretex.core.activeorm.query.operations.ModificationOperation;
+import com.coretex.core.activeorm.query.operations.contexts.OperationConfigContext;
 import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
@@ -13,7 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class ModificationOperationSpec<S extends Statement, O extends ModificationOperation> extends SqlOperationSpec<S, O> {
+public abstract class ModificationOperationSpec<
+		S extends Statement,
+		OS extends ModificationOperationSpec<S, OS, CTX>,
+		CTX extends OperationConfigContext<S, OS, CTX>>
+		extends SqlOperationSpec<S, OS, CTX> {
 
 	private MetaTypeProvider metaTypeProvider;
 
@@ -30,6 +34,7 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 		this.item = item;
 		setNativeQuery(true);
 	}
+
 
 	public ModificationOperationSpec(GenericItem item, boolean cascade) {
 		this(item);
@@ -48,6 +53,7 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 	public MetaTypeProvider getMetaTypeProvider() {
 		return metaTypeProvider;
 	}
+
 	public boolean isCascadeEnabled() {
 		return cascadeEnabled;
 	}
@@ -60,12 +66,12 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 		return CollectionUtils.isNotEmpty(getLocalizedFields());
 	}
 
-	public boolean getHasRelationAttributes(){
+	public boolean getHasRelationAttributes() {
 		return CollectionUtils.isNotEmpty(getRelationAttributes());
 	}
 
 	public List<MetaAttributeTypeItem> getLocalizedFields() {
-		if(localizedFields == null){
+		if (localizedFields == null) {
 			localizedFields = getAllAttributes().values()
 					.stream()
 					.filter(MetaAttributeTypeItem::getLocalized)
@@ -75,7 +81,7 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 	}
 
 	public List<MetaAttributeTypeItem> getRelationAttributes() {
-		if(relationAttributes == null){
+		if (relationAttributes == null) {
 			relationAttributes = getAllAttributes().values()
 					.stream()
 					.filter(attr -> attr.getAttributeType() instanceof MetaRelationTypeItem)
@@ -85,13 +91,13 @@ public abstract class ModificationOperationSpec<S extends Statement, O extends M
 	}
 
 	public Map<String, MetaAttributeTypeItem> getAllAttributes() {
-		if(allAttributes == null){
+		if (allAttributes == null) {
 			allAttributes = getMetaTypeProvider().getAllAttributes(getItem().getMetaType());
 		}
 		return allAttributes;
 	}
 
-	public void flush(){
+	public void flush() {
 		item.getItemContext().flush();
 	}
 

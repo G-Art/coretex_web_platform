@@ -1,10 +1,8 @@
 package com.coretex.core.services.items.context.provider.strategies.impl;
 
 import com.coretex.core.activeorm.exceptions.SearchException;
-import com.coretex.core.activeorm.extractors.CoretexReactiveResultSetExtractor;
-import com.coretex.core.activeorm.query.operations.SelectOperation;
-import com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
+import com.coretex.core.activeorm.services.ReactiveSearchResult;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.provider.strategies.AbstractLoadAttributeValueStrategy;
 import com.coretex.items.core.MetaAttributeTypeItem;
@@ -20,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.coretex.core.general.utils.AttributeTypeUtils.isCollection;
 
@@ -27,22 +26,10 @@ public class RelationAttributeLoadValueStrategy extends AbstractLoadAttributeVal
 
 	private static final String SELECT_RELATION_ITEM_FIELD_BY_UUID_TEMPLATE = "select item.* FROM \"%s\" as item LEFT JOIN \"%s\" as rel ON item.uuid = rel.%s where rel.%s = :uuid ORDER BY rel.createDate";
 
-	public RelationAttributeLoadValueStrategy(SelectQueryTransformationProcessor transformationProcessor) {
-		super(transformationProcessor);
-	}
-
 	@Override
 	public Object load(ItemContext ctx, MetaAttributeTypeItem attribute) {
-
-		SelectOperationSpec<Object> selectItemAttributeOperationSpec = new SelectOperationSpec<>(createQuery(attribute), createParameters(attribute, ctx));
-		SelectOperation<Object> selectOperation = selectItemAttributeOperationSpec.createOperation(getTransformationProcessor());
-		selectOperation.setJdbcTemplateSupplier(this::getJdbcTemplate);
-		selectOperation.setExtractorCreationFunction(select -> {
-			CoretexReactiveResultSetExtractor<Object> extractor = new CoretexReactiveResultSetExtractor<>(select, getCortexContext());
-			extractor.setMapperFactorySupplier(this::getRowMapperFactory);
-			return extractor;
-		});
-		return processResult(selectOperation, attribute, ctx);
+		var searchResult = getOperationExecutor().execute(new SelectOperationSpec(createQuery(attribute), createParameters(attribute, ctx)).createOperationContext());
+		return processResult(searchResult, attribute, ctx);
 	}
 
 	protected Map<String, Object> createParameters(MetaAttributeTypeItem attribute, ItemContext ctx) {
@@ -73,15 +60,15 @@ public class RelationAttributeLoadValueStrategy extends AbstractLoadAttributeVal
 				.orElseThrow(() -> new SearchException(String.format("Column for attribute [%s] is not exist", attributeName))).getColumnName();
 	}
 
-	protected Object processResult(SelectOperation<Object> selectOperation, MetaAttributeTypeItem attribute, ItemContext ctx) {
+	protected Object processResult(ReactiveSearchResult<Object> searchResultStream, MetaAttributeTypeItem attribute, ItemContext ctx) {
 
-		List<Object> searchResult = selectOperation.searchResult();
+		List<Object> searchResult = searchResultStream.getResultStream().collect(Collectors.toList());
 
 		if (CollectionUtils.isEmpty(searchResult) ) {
 			if (isCollection(attribute)){
 				Class containerType = attribute.getContainerType();
 				if (Objects.nonNull(containerType) && Set.class.isAssignableFrom(containerType)) {
-					return Sets.newHashSet();
+					return Sets.newLinkedHashSet();
 				}
 				return Lists.newArrayList();
 			}
@@ -91,7 +78,7 @@ public class RelationAttributeLoadValueStrategy extends AbstractLoadAttributeVal
 		if(isCollection(attribute)){
 			Class containerType = attribute.getContainerType();
 			if (Objects.nonNull(containerType) && Set.class.isAssignableFrom(containerType)) {
-				return Sets.newHashSet(searchResult);
+				return Sets.newLinkedHashSet(searchResult);
 			}
 			return Lists.newArrayList(searchResult);
 		}

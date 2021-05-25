@@ -198,4 +198,31 @@ public class SearchItemTest {
 
 	}
 
+	@Test
+	@DisplayName("should select pageable requested column by limit and offset")
+	void shouldSelectPageableRequestedColumnByLimitAndOffset() {
+		// given:
+		String CODE = "search_test_" + UUID.randomUUID().toString();
+
+		SearchTestItem searchTestItem = itemService.create(SearchTestItem.class);
+		searchTestItem.setCode(CODE);
+
+		SearchExtendsWithoutTableTestItem searchExtendsWithoutTableTestItem = itemService.create(SearchExtendsWithoutTableTestItem.class);
+		searchExtendsWithoutTableTestItem.setCode(CODE);
+		searchExtendsWithoutTableTestItem.setIndicatorNoTableField("test indicator");
+
+		SearchExtendsWithTableTestItem searchExtendsWithTableTestItem = itemService.create(SearchExtendsWithTableTestItem.class);
+		searchExtendsWithTableTestItem.setCode(CODE);
+		searchExtendsWithTableTestItem.setIndicatorTableField("test separate table indicator");
+
+		itemService.saveAll(List.of(searchTestItem, searchExtendsWithTableTestItem, searchExtendsWithoutTableTestItem));
+		// when:
+
+		SearchResult<SearchTestItem> search = searchService.search(format("select st." + SearchTestItem.CODE + " from %s as st ORDER BY st.code LIMIT 2 OFFSET 1", SearchTestItem.ITEM_TYPE));
+		//then:
+
+		assertEquals(2, search.getCount());
+
+	}
+
 }

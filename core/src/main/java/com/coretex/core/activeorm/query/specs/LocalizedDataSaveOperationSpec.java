@@ -1,36 +1,37 @@
 package com.coretex.core.activeorm.query.specs;
 
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
-import com.coretex.core.activeorm.query.operations.LocalizedDataSaveOperation;
-import com.coretex.core.activeorm.query.operations.ModificationOperation;
+import com.coretex.core.activeorm.query.operations.contexts.AbstractOperationConfigContext;
+import com.coretex.core.activeorm.query.operations.contexts.LocalizedDataSaveOperationConfigContext;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.google.common.collect.Maps;
 import net.sf.jsqlparser.statement.Statement;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<Statement, LocalizedDataSaveOperation> {
+public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<Statement, LocalizedDataSaveOperationSpec, LocalizedDataSaveOperationConfigContext> {
 
 	private final static String INSERT_LOCALIZED_DATA_QUERY = "insert into %s_LOC (owner, attribute, localeiso, value) values (:owner, :attribute, :localeiso, :value)";
 	private final static String UPDATE_LOCALIZED_DATA_QUERY = "update %s_LOC set value = :value where owner = :owner and attribute = :attribute and localeiso = :localeiso";
 
 	private MetaAttributeTypeItem attributeTypeItem;
 
-	private ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator;
 	private LocalizedAttributeSaveFetcher fetcher;
 
 	private String insertQuery;
 	private String updateQuery;
 
-	public LocalizedDataSaveOperationSpec(ModificationOperation<? extends Statement, ? extends ModificationOperationSpec> initiator, MetaAttributeTypeItem attributeTypeItem) {
+	public LocalizedDataSaveOperationSpec(AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?,?,?> ,?> initiator, MetaAttributeTypeItem attributeTypeItem) {
 		super(initiator.getOperationSpec().getItem());
 		setNativeQuery(false);
-		this.initiator = initiator;
 		this.attributeTypeItem = attributeTypeItem;
 		this.setQuerySupplier(this::buildQuery);
 	}
+
 
 	private String buildQuery() {
 		if(AttributeTypeUtils.isRelationAttribute(attributeTypeItem)){
@@ -45,12 +46,12 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 		insertQuery = String.format(INSERT_LOCALIZED_DATA_QUERY, attributeTypeItem.getOwner().getTableName());
 		updateQuery = String.format(UPDATE_LOCALIZED_DATA_QUERY, attributeTypeItem.getOwner().getTableName());
 
-		return "SELECT 'Fake query' AS fake";
+		return "select 'Fake query' AS fake";
 	}
 
 	@Override
 	public void flush() {
-
+		//ignored
 	}
 
 	public String getInsertQuery() {
@@ -70,8 +71,8 @@ public class LocalizedDataSaveOperationSpec extends ModificationOperationSpec<St
 	}
 
 	@Override
-	public LocalizedDataSaveOperation createOperation(QueryTransformationProcessor processor) {
-		return new LocalizedDataSaveOperation(this);
+	public LocalizedDataSaveOperationConfigContext createOperationContext() {
+		return new LocalizedDataSaveOperationConfigContext(this);
 	}
 
 

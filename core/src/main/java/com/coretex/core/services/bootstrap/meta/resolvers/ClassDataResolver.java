@@ -38,8 +38,7 @@ public class ClassDataResolver extends DataResolver {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            logger.error(format("Can't find class for meta attribute '%s'.", attributeName), e);
+           throw new RuntimeException(format("Can't find class for meta attribute '%s'.", attributeName), e);
         }
-        return null;
     }
 }

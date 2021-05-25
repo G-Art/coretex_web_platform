@@ -1,7 +1,7 @@
 elements {
 
     relations {
-        MataTypeInheritanceRelation(source: MetaType, target: MetaType) {
+        MetaTypeInheritanceRelation(source: MetaType, target: MetaType) {
             source(parent) {
                 description = "Super Type uuid"
             }
@@ -245,6 +245,8 @@ elements {
                     index = ['active_iso_idx']
                 }
                 iso(String) {
+                    unique = true
+                    optional = false
                     description = "Locale iso code"
                     index = ['iso_idx', 'active_iso_idx']
                 }

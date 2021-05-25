@@ -7,6 +7,7 @@ import com.coretex.items.core.GenericItem;
 import com.coretex.meta.AbstractGenericItem;
 import com.google.common.collect.Sets;
 
+import java.io.ObjectStreamException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
@@ -15,6 +16,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.isNull;
@@ -27,8 +29,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public class DefaultItemContextImpl extends ItemContext {
 
-	private Map<String, AttributeValueHolder> attributeHolders;
-	private Map<String, LocalizedAttributeValueHolder> localizedAttributeHolders;
+	private transient Map<String, AttributeValueHolder> attributeHolders;
+	private transient Map<String, LocalizedAttributeValueHolder> localizedAttributeHolders;
 
 	public DefaultItemContextImpl(ItemContextBuilder builder) {
 		super(builder);
@@ -37,6 +39,14 @@ public class DefaultItemContextImpl extends ItemContext {
 		if (isNew()) {
 			attributeHolders.put(GenericItem.META_TYPE, AttributeValueHolder.createLazyValueHolder(GenericItem.META_TYPE, this));
 		}
+	}
+
+	@Override
+	protected Object readResolve() throws ObjectStreamException {
+		var o = super.readResolve();
+		attributeHolders = new HashMap<>();
+		localizedAttributeHolders = new HashMap<>();
+		return o;
 	}
 
 	@Override
@@ -129,7 +139,7 @@ public class DefaultItemContextImpl extends ItemContext {
 	@Override
 	public Collection<String> loadedAttributes() {
 		return Sets.union(attributeHolders.keySet(),
-				          attributeHolders.keySet());
+				localizedAttributeHolders.keySet());
 	}
 
 	@Override
@@ -139,7 +149,12 @@ public class DefaultItemContextImpl extends ItemContext {
 
 	@Override
 	public boolean isExist() {
-		return getProvider().getValue(AbstractGenericItem.UUID, this).equals(getUuid());
+		var loadedUUID = getProvider().getValue(AbstractGenericItem.UUID, this);
+		if (Objects.isNull(loadedUUID)) { // prevents implicit removing from db
+			uuid = null;
+			return false;
+		}
+		return loadedUUID.equals(getUuid());
 	}
 
 	@Override
@@ -228,6 +243,37 @@ public class DefaultItemContextImpl extends ItemContext {
 				.forEach(LocalizedAttributeValueHolder::refresh);
 	}
 
+	@Override
+	public boolean isSystemType() {
+		return false;
+	}
+
+	@Override
+	public DefaultItemContextImpl clone() {
+		try {
+			var clone = (DefaultItemContextImpl) super.clone();
+			clone.attributeHolders = attributeHolders.entrySet()
+					.stream()
+					.filter(e -> e.getValue().isLoaded())
+					.map(entry -> AttributeValueHolder.initValueHolder(entry.getKey(), clone, entry.getValue().get(clone.getProvider())))
+					.collect(Collectors.toMap(AttributeValueHolder::getAttributeName, Function.identity()));
+
+			clone.localizedAttributeHolders = localizedAttributeHolders.entrySet()
+					.stream()
+					.filter(e -> e.getValue().isLoaded())
+					.map(entry -> {
+						var stringObjectMap = entry.getValue().getAll(clone.getProvider())
+								.entrySet()
+								.stream()
+								.collect(Collectors.toMap(e -> e.getKey().toString(), Map.Entry::getValue));
+						return LocalizedAttributeValueHolder.initValueHolder(entry.getKey(), clone, stringObjectMap);
+					})
+					.collect(Collectors.toMap(LocalizedAttributeValueHolder::getAttributeName, Function.identity()));
+			return clone;
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	private final class HolderProcessor<H, T> {
 

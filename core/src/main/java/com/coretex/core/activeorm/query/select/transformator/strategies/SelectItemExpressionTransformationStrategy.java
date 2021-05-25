@@ -7,7 +7,6 @@ import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.SelectItemDataInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.dip.WrapperInjectionPoint;
 import com.coretex.items.core.GenericItem;
-import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
@@ -57,11 +56,11 @@ public class SelectItemExpressionTransformationStrategy extends AbstractTransfor
 						selectExpressionItem.setExpression(new Column((Table) originalPlainSelect.getFromItem(), GenericItem.UUID));
 					}
 				}else{
-					getTransformationHelper().adjustColumn(selectItemScanner.getExpressionScanner(), selectBodyScanner);
+					adjustColumn(selectItemScanner.getExpressionScanner(), selectBodyScanner);
 				}
 			}else {
 				if (selectItemScanner.getExpressionScanner().isColumn()){
-					getTransformationHelper().adjustColumn(selectItemScanner.getExpressionScanner(), selectBodyScanner);
+					adjustColumn(selectItemScanner.getExpressionScanner(), selectBodyScanner);
 				}
 			}
 		});

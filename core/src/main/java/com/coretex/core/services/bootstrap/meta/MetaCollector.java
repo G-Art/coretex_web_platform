@@ -1,6 +1,11 @@
 package com.coretex.core.services.bootstrap.meta;
 
-import com.coretex.items.core.*;
+import com.coretex.items.core.GenericItem;
+import com.coretex.items.core.MetaAttributeTypeItem;
+import com.coretex.items.core.MetaEnumTypeItem;
+import com.coretex.items.core.MetaEnumValueTypeItem;
+import com.coretex.items.core.MetaTypeItem;
+import com.coretex.items.core.RegularTypeItem;
 import com.coretex.meta.AbstractGenericItem;
 import org.apache.commons.lang3.ClassUtils;
 

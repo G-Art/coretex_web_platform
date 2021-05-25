@@ -1,8 +1,9 @@
 package com.coretex.web.controllers;
 
 import com.coretex.converter.QueryResultConverter;
+import com.coretex.core.activeorm.query.specs.select.PageableSelectOperationSpec;
 import com.coretex.core.activeorm.services.ItemService;
-import com.coretex.core.activeorm.services.SearchResult;
+import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.core.activeorm.services.SearchService;
 import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
 import com.coretex.data.MetaTypeDTO;
@@ -46,8 +47,12 @@ public class TypesController extends AbstractController {
 
 	@RequestMapping(method = RequestMethod.POST, path = "/query")
 	@ResponseBody
-	public Object executeQuery(@RequestBody final MultiValueMap<String, String>  formData) {
-		SearchResult<Object> resultSet = searchService.search(formData.getFirst("query"));
+	public Object executeQuery(@RequestBody final MultiValueMap<String, Object>  formData) {
+		PageableSelectOperationSpec pageableSelectOperationSpec = new PageableSelectOperationSpec((String) formData.getFirst("query"));
+		pageableSelectOperationSpec.setCount(formData.containsKey("count") ? Long.valueOf((String) formData.getFirst("count")): 100L);
+		pageableSelectOperationSpec.setPage(formData.containsKey("page") ? Long.valueOf((String) formData.getFirst("page"))-1: 0L);
+
+		PageableSearchResult<Object> resultSet = searchService.searchPageable(pageableSelectOperationSpec);
 		return queryResultConverter.convert(resultSet);
 	}
 }

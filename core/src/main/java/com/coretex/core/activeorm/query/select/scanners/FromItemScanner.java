@@ -49,9 +49,14 @@ public class FromItemScanner<Q> extends Scanner<FromItem, Q> {
 			}
 		}
 
-		tableTransformationData = transformationHelper.bindItem(table);
+		this.tableTransformationData = transformationHelper.bindItem(table);
 
-		isTable = true;
+		this.isTable = true;
+	}
+
+	@Override
+	public void visit(SubSelect subSelect) {
+		super.visit(subSelect);
 	}
 
 	@Override

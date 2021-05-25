@@ -14,22 +14,26 @@
     <aop:config />
 
     <context:spring-configured />
+    <context:component-scan base-package="com.coretex.core" />
 
-    <import resource="core-query-transformation-spring.xml"/>
-    <import resource="core-attribute-load-spring.xml"/>
+    <import resource="core-orm-spring.xml"/>
 
-    <bean id="abstractJdbcService" class="com.coretex.core.activeorm.services.AbstractJdbcService">
+    <bean id="conversionService" class="org.springframework.format.support.DefaultFormattingConversionService"/>
+    <bean id="itemInterceptorsRegistry" class="com.coretex.core.activeorm.services.impl.DefaultItemInterceptorsRegistry"
+          init-method="init"/>
+    <bean id="coretexApplicationConfig" class="com.coretex.server.CoretexApplicationConfig"/>
+
+    <bean id="abstractJdbcService" abstract="true" class="com.coretex.core.activeorm.services.AbstractJdbcService">
         <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
         <lookup-method name="getTransactionTemplate" bean="transactionTemplate"/>
+        <lookup-method name="getOrmOperationExecutor" bean="activeOrmOperationExecutor"/>
     </bean>
 
     <bean id="bootstrapConfig" class="com.coretex.core.services.bootstrap.BootstrapConfig"/>
 
-    <bean id="idleQueryTransformationProcessor" class="com.coretex.core.activeorm.query.IdleQueryTransformationProcessor"/>
     <bean id="selectQueryTransformationProcessor" class="com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor">
-        <constructor-arg index="0" ref="defaultMetaTypeProvider" />
-        <constructor-arg index="1" ref="transformationStrategies"/>
-        <constructor-arg index="2" ref="queryTransformationHelper"/>
+        <constructor-arg index="0" ref="transformationStrategies"/>
+        <constructor-arg index="1" ref="queryTransformationHelper"/>
     </bean>
 
     <bean id="rowMapperFactory" class="com.coretex.core.activeorm.factories.RowMapperFactory">
@@ -42,8 +46,7 @@
           parent="abstractJdbcService">
     </bean>
 
-    <bean id="specFactory" class="com.coretex.core.activeorm.factories.OperationFactoryImpl" parent="abstractJdbcService">
-    </bean>
+    <bean id="defaultItemOperationInterceptorService" class="com.coretex.core.activeorm.services.impl.DefaultItemOperationInterceptorService"/>
 
     <alias name="defaultItemService" alias="itemService"/>
     <bean id="defaultItemService" class="com.coretex.core.activeorm.services.impl.DefaultItemService" >
@@ -58,4 +61,5 @@
         <property name="attributeProvider" ref="defaultAttributeProvider"/>
     </bean>
 
+    <bean id="commandExecutor" class="com.coretex.core.shell.impl.DefaultCommandExecutor"/>
 </beans>

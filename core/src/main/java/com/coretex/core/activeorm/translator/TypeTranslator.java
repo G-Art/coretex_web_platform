@@ -16,7 +16,6 @@
  */
 package com.coretex.core.activeorm.translator;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 

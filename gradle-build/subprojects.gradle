@@ -1,11 +1,17 @@
 subprojects {
+    def v = [
+            spring: '5.3.3',
+            slf4j : '1.7.7',
+    ]
+    ext.v = v
+
     java {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_15
+        targetCompatibility = JavaVersion.VERSION_15
     }
 
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_15
+    targetCompatibility = JavaVersion.VERSION_15
 
     [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -13,14 +19,12 @@ subprojects {
 
     repositories {
         mavenCentral()
-        mavenLocal()
-        maven { url "http://repo.spring.io/snapshot" }
-        maven { url "http://central.maven.org/maven2/" }
-        maven { url "http://repo.spring.io/milestone" }
-        maven { url "http://repo.spring.io/libs-release-remote" }
-        maven { url 'http://www.datanucleus.org/downloads/maven2/'}
+//        mavenLocal()
+        jcenter()
+        maven { url 'http://repo.coretexplatform.com/artifactory/coretex_repo-libs-release/'}
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/libs-release-remote" }
         maven { url "https://jetbrains.bintray.com/trove4j/" }
-        maven { url 'https://mymavenrepo.com/repo/Er2QKn4UMp1axP0ll14Z/'}
     }
 
     dependencies {

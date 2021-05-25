@@ -1,0 +1,106 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.3.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-4.3.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <import resource="core-cache-spring.xml"/>
+    <import resource="core-query-transformation-spring.xml"/>
+    <import resource="core-attribute-load-spring.xml"/>
+
+    <bean id="sqlOperation" abstract="true" class="com.coretex.core.activeorm.query.operations.SqlOperation">
+        <lookup-method name="getJdbcTemplate" bean="jdbcTemplate"/>
+    </bean>
+
+    <bean id="defailtReactiveResultSetExtractor" class="com.coretex.core.activeorm.extractors.CoretexReactiveResultSetExtractor" >
+        <constructor-arg name="context" ref="defaultBootstrapContext"/>
+        <constructor-arg name="defaultRowMapperFactory" ref="rowMapperFactory"/>
+    </bean>
+    <bean id="selectOperation" class="com.coretex.core.activeorm.query.operations.SelectOperation" parent="sqlOperation">
+        <constructor-arg name="cortexContext" ref="defaultBootstrapContext"/>
+        <constructor-arg name="extractor" ref="defailtReactiveResultSetExtractor"/>
+        <constructor-arg name="cacheService" ref="activeSearchCacheService"/>
+    </bean>
+    <bean id="pageableSelectOperation" class="com.coretex.core.activeorm.query.operations.PageableSelectOperation" parent="selectOperation">
+        <lookup-method name="getOrmOperationExecutor" bean="activeOrmOperationExecutor"/>
+    </bean>
+
+    <bean id="modificationOperation" abstract="true" class="com.coretex.core.activeorm.query.operations.ModificationOperation" parent="sqlOperation">
+        <constructor-arg name="abstractJdbcService" ref="defaultSearchService"/>
+        <constructor-arg name="itemOperationInterceptorService" ref="defaultItemOperationInterceptorService"/>
+        <lookup-method name="getActiveOrmOperationExecutor" bean="activeOrmOperationExecutor"/>
+    </bean>
+    <bean id="insertOperation" class="com.coretex.core.activeorm.query.operations.InsertOperation" parent="modificationOperation"/>
+    <bean id="cascadeInsertOperation" class="com.coretex.core.activeorm.query.operations.CascadeInsertOperation" parent="insertOperation"/>
+    <bean id="updateOperation" class="com.coretex.core.activeorm.query.operations.UpdateOperation" parent="modificationOperation"/>
+    <bean id="cascadeUpdateOperation" class="com.coretex.core.activeorm.query.operations.CascadeUpdateOperation" parent="updateOperation"/>
+    <bean id="removeOperation" class="com.coretex.core.activeorm.query.operations.RemoveOperation" parent="modificationOperation"/>
+    <bean id="cascadeRemoveOperation" class="com.coretex.core.activeorm.query.operations.CascadeRemoveOperation" parent="removeOperation"/>
+
+    <bean id="localizedDataRemoveOperation" class="com.coretex.core.activeorm.query.operations.LocalizedDataRemoveOperation" parent="modificationOperation"/>
+    <bean id="localizedDataSaveOperation" class="com.coretex.core.activeorm.query.operations.LocalizedDataSaveOperation" parent="modificationOperation">
+        <constructor-arg name="dbDialectService" ref="dbDialectService"/>
+    </bean>
+
+    <util:map id="activeOrmOperationMap"
+              key-type="com.coretex.core.activeorm.query.QueryType">
+        <entry key="SELECT">
+            <bean class="com.coretex.core.activeorm.query.operations.suppliers.SelectOperationSupplier">
+                <constructor-arg name="pageableSelectOperation" ref="pageableSelectOperation"/>
+                <constructor-arg name="selectOperation" ref="selectOperation"/>
+            </bean>
+        </entry>
+        <entry key="INSERT">
+            <bean class="com.coretex.core.activeorm.query.operations.suppliers.GenericOperationSupplier">
+                <constructor-arg name="operation" ref="insertOperation"/>
+            </bean>
+        </entry>
+        <entry key="INSERT_CASCADE">
+            <bean class="com.coretex.core.activeorm.query.operations.suppliers.GenericOperationSupplier">
+                <constructor-arg name="operation" ref="cascadeInsertOperation"/>
+            </bean>
+        </entry>
+        <entry key="UPDATE">
+            <bean class="com.coretex.core.activeorm.query.operations.suppliers.GenericOperationSupplier">
+                <constructor-arg name="operation" ref="updateOperation"/>
+            </bean>
+        </entry>
+        <entry key="UPDATE_CASCADE">
+            <bean class="com.coretex.core.activeorm.query.operations.suppliers.GenericOperationSupplier">
+                <constructor-arg name="operation" ref="cascadeUpdateOperation"/>
+            </bean>
+        </entry>
+        <entry key="DELETE">
+            <bean class="com.coretex.core.activeorm.query.operations.suppliers.GenericOperationSupplier">
+                <constructor-arg name="operation" ref="removeOperation"/>
+            </bean>
+        </entry>
+        <entry key="DELETE_CASCADE">
+            <bean class="com.coretex.core.activeorm.query.operations.suppliers.GenericOperationSupplier">
+                <constructor-arg name="operation" ref="cascadeRemoveOperation"/>
+            </bean>
+        </entry>
+        <entry key="LOCALIZED_DATA_SAVE">
+            <bean class="com.coretex.core.activeorm.query.operations.suppliers.GenericOperationSupplier">
+                <constructor-arg name="operation" ref="localizedDataSaveOperation"/>
+            </bean>
+        </entry>
+        <entry key="LOCALIZED_DATA_DELETE">
+            <bean class="com.coretex.core.activeorm.query.operations.suppliers.GenericOperationSupplier">
+                <constructor-arg name="operation" ref="localizedDataRemoveOperation"/>
+            </bean>
+        </entry>
+    </util:map>
+
+    <bean id="activeOrmOperationExecutor" class="com.coretex.core.activeorm.query.DefaultActiveOrmOperationExecutor">
+        <constructor-arg name="activeOrmOperationMap" ref="activeOrmOperationMap"/>
+        <lookup-method name="getItemService" bean="defaultItemService"/>
+    </bean>
+
+</beans>

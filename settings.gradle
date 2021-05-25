@@ -4,11 +4,11 @@
  * is added to the main project as a subproject.
  */
 println("Searching projects for build ... ")
-rootDir.eachFileRecurse { f ->
-    if ( f.name == "build.gradle" ) {
-        String relativePath = f.parentFile.absolutePath - rootDir.absolutePath
-        if(f.parentFile.absolutePath != rootDir.absolutePath){
-            f.parentFile.eachFileRecurse {
+rootDir.eachFileRecurse { module ->
+    if ( module.name == "build.gradle" ) {
+        String relativePath = module.parentFile.absolutePath - rootDir.absolutePath
+        if(module.parentFile.absolutePath != rootDir.absolutePath){
+            module.parentFile.eachFileRecurse {
                 if (it.isFile() && it.name ==~ /^module\.properties$/) {
                     def propFile = it
                     if (propFile) {
@@ -19,8 +19,8 @@ rootDir.eachFileRecurse { f ->
 
                         if(!moduleName.empty){
                             include moduleName
-                            project(":${moduleName}").projectDir = f.parentFile
-                            println("Include :${moduleName} project to build [dir: ${project(":${moduleName}").projectDir}]")
+                            project(":${moduleName}").projectDir = module.parentFile
+                            println("Module included to build [name :${moduleName}, dir: ${project(":${moduleName}").projectDir}]")
                         }else{
                             println("No defined module name for ${relativePath} project")
                         }

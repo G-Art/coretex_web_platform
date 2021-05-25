@@ -1,7 +1,6 @@
 package com.coretex.core.activeorm.query.specs;
 
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
-import com.coretex.core.activeorm.query.operations.UpdateOperation;
+import com.coretex.core.activeorm.query.operations.contexts.UpdateOperationConfigContext;
 import com.coretex.core.activeorm.query.operations.dataholders.UpdateValueDataHolder;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaRelationTypeItem;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static com.coretex.core.general.utils.ItemUtils.getTypeCode;
 
-public class UpdateOperationSpec extends ModificationOperationSpec<Update, UpdateOperation> {
+public class UpdateOperationSpec extends ModificationOperationSpec<Update, UpdateOperationSpec, UpdateOperationConfigContext> {
 
 	private final static String UPDATE_ITEM_QUERY = "update %s set %s where uuid = :uuid";
 
@@ -44,7 +43,9 @@ public class UpdateOperationSpec extends ModificationOperationSpec<Update, Updat
 		Map<String, UpdateValueDataHolder> saveColumnValues = getAllAttributes().entrySet().stream()
 				.filter(entry -> !(entry.getValue().getAttributeType() instanceof MetaRelationTypeItem))
 				.filter(entry -> StringUtils.isNoneBlank(entry.getValue().getColumnName()))
-				.filter(entry -> getItem().getItemContext().isDirty(entry.getKey()) || Objects.nonNull(entry.getValue().getDefaultValue()))
+				.filter(entry -> getItem().getItemContext().isDirty(entry.getKey()) ||
+						Objects.nonNull(entry.getValue().getDefaultValue()) ||
+						!entry.getValue().getOptional())
 				.collect(Collectors.toMap(entry -> entry.getValue().getColumnName(), entry -> new UpdateValueDataHolder( entry.getValue(), this)));
 
 		updateValueDatas = saveColumnValues.entrySet()
@@ -58,12 +59,12 @@ public class UpdateOperationSpec extends ModificationOperationSpec<Update, Updat
 				entries.stream().map(e -> String.format("%s = :%s", e.getKey(), e.getValue().getAttributeName())).collect(Collectors.joining(",")));
 	}
 
-	@Override
-	public UpdateOperation createOperation(QueryTransformationProcessor<Update> processor) {
-		return new UpdateOperation(this);
-	}
-
 	public Map<String, UpdateValueDataHolder> getUpdateValueDatas() {
 		return updateValueDatas;
+	}
+
+	@Override
+	public UpdateOperationConfigContext createOperationContext() {
+		return new UpdateOperationConfigContext(this);
 	}
 }

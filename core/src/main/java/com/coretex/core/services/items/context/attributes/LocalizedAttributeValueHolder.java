@@ -144,5 +144,7 @@ public class LocalizedAttributeValueHolder implements AttributeValueHolderState 
 		return result.isEmpty() ? null : result;
 	}
 
-
+	public String getAttributeName() {
+		return attributeName;
+	}
 }

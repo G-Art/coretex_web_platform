@@ -1,7 +1,7 @@
 package com.coretex.core.activeorm.query.specs;
 
-import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.operations.InsertOperation;
+import com.coretex.core.activeorm.query.operations.contexts.InsertOperationConfigContext;
 import com.coretex.core.activeorm.query.operations.dataholders.InsertValueDataHolder;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaRelationTypeItem;
@@ -18,7 +18,10 @@ import java.util.stream.Collectors;
 
 import static com.coretex.core.general.utils.ItemUtils.getTypeCode;
 
-public class InsertOperationSpec extends ModificationOperationSpec<Insert, InsertOperation> {
+public class InsertOperationSpec extends ModificationOperationSpec<
+		Insert,
+		InsertOperationSpec,
+		InsertOperationConfigContext> {
 
 	protected final static String INSERT_ITEM_QUERY = "insert into %s (%s) values (%s)";
 
@@ -41,7 +44,7 @@ public class InsertOperationSpec extends ModificationOperationSpec<Insert, Inser
 		this.setQuerySupplier(this::buildQuery);
 	}
 
-	private String buildQuery(){
+	private String buildQuery() {
 		this.newUuid = UUID.randomUUID();
 		LocalDateTime creationDate = LocalDateTime.now();
 		getItem().setCreateDate(creationDate);
@@ -50,7 +53,9 @@ public class InsertOperationSpec extends ModificationOperationSpec<Insert, Inser
 		Map<String, InsertValueDataHolder> saveColumnValues = getAllAttributes().entrySet().stream()
 				.filter(entry -> !(entry.getValue().getAttributeType() instanceof MetaRelationTypeItem))
 				.filter(entry -> StringUtils.isNoneBlank(entry.getValue().getColumnName()))
-				.filter(entry -> getItem().getItemContext().isDirty(entry.getKey()) || Objects.nonNull(entry.getValue().getDefaultValue()))
+				.filter(entry -> getItem().getItemContext().isDirty(entry.getKey()) ||
+						Objects.nonNull(entry.getValue().getDefaultValue()) ||
+						!entry.getValue().getOptional())
 				.collect(Collectors.toMap(entry -> entry.getValue().getColumnName(), entry -> InsertOperation.createInsertValueDataHolder(this, entry.getValue())));
 
 		saveColumnValues.put(AbstractGenericItem.UUID, InsertOperation.createInsertValueDataHolder(this, getMetaTypeProvider().findAttribute(getTypeCode(getItem()), AbstractGenericItem.UUID)));
@@ -69,17 +74,16 @@ public class InsertOperationSpec extends ModificationOperationSpec<Insert, Inser
 	}
 
 
-	public UUID getNewUuid(){
+	public UUID getNewUuid() {
 		return newUuid;
 	}
 
-	@Override
-	public InsertOperation createOperation(QueryTransformationProcessor<Insert> processor) {
-		return new InsertOperation(this);
-	}
-
-
 	public Map<String, InsertValueDataHolder> getInsertValueDatas() {
 		return insertValueDatas;
+	}
+
+	@Override
+	public InsertOperationConfigContext createOperationContext() {
+		return new InsertOperationConfigContext(this);
 	}
 }

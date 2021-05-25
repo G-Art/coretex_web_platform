@@ -19,7 +19,7 @@ public class GroupByTransformationStrategy extends AbstractTransformationStrateg
 		var ownerSelectBodyScanner = dataInjectionPoint.getSelectBodyScannerOwner();
 
 		if(ownerSelectBodyScanner.isPresent()){
-			getTransformationHelper().adjustColumn(scanner, ownerSelectBodyScanner.get());
+			adjustColumn(scanner, ownerSelectBodyScanner.get());
 		}
 
 		return null;

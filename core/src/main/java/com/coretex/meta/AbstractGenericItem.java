@@ -1,9 +1,11 @@
 package com.coretex.meta;
 
+import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
 import com.coretex.server.ApplicationContextProvider;
 
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
@@ -13,9 +15,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author Gerasimenko (g-art) Artem "gerasimenko.art@gmail.com"
- *         create by 12-02-2016
+ * create by 12-02-2016
  */
-public abstract class AbstractGenericItem {
+public abstract class AbstractGenericItem implements Serializable, Cloneable {
 
     public static final String UUID = "uuid";
 
@@ -24,16 +26,30 @@ public abstract class AbstractGenericItem {
 
     private ItemContext ctx;
 
-    private ItemContextFactory itemContextFactory;
+    private transient ItemContextFactory itemContextFactory;
 
     public AbstractGenericItem() {
         itemContextFactory = ApplicationContextProvider.getApplicationContext().getBean(ITEM_CONTEXT_FACTORY_QUALIFIER, ItemContextFactory.class);
         checkNotNull(this.itemContextFactory, ITEM_COX_FACTORY_UNAVAILABLE_ERROR_MSG);
-        this.ctx = getFactory().create(this.getClass());
+        create(getFactory().create(this.getClass()));
     }
 
     public AbstractGenericItem(ItemContext ctx) {
+        create(ctx);
+    }
+
+    private void create(ItemContext ctx) {
         this.ctx = ctx;
+        if (!ctx.isSystemType()) {
+            var operationInterceptorService = ApplicationContextProvider.getApplicationContext()
+                    .getBean(ItemOperationInterceptorService.class);
+            if (ctx.isNew()) {
+                operationInterceptorService.onCreate(this);
+            } else {
+                operationInterceptorService.onLoad(this);
+            }
+        }
+
     }
 
     public UUID getUuid() {
@@ -74,7 +90,8 @@ public abstract class AbstractGenericItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        if(Objects.nonNull(getUuid()) && Objects.nonNull(((AbstractGenericItem) o).getUuid())) return Objects.equals(getUuid(), ((AbstractGenericItem) o).getUuid());
+        if (Objects.nonNull(getUuid()) && Objects.nonNull(((AbstractGenericItem) o).getUuid()))
+            return Objects.equals(getUuid(), ((AbstractGenericItem) o).getUuid());
 
         return hashCode() == o.hashCode();
 
@@ -83,5 +100,17 @@ public abstract class AbstractGenericItem {
     @Override
     public int hashCode() {
         return Objects.nonNull(getUuid()) ? Objects.hashCode(getUuid()) : super.hashCode();
+    }
+
+    @Override
+    public AbstractGenericItem clone() {
+        try {
+            var clone = (AbstractGenericItem)super.clone();
+            clone.ctx = this.ctx.clone();
+            clone.itemContextFactory = this.itemContextFactory;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

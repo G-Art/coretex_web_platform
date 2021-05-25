@@ -10,9 +10,12 @@ import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import java.util.Objects;
 import java.util.Set;
 
 import static com.coretex.core.general.utils.AttributeTypeUtils.isCollection;
@@ -22,6 +25,8 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class DefaultAttributeProvider implements AttributeProvider {
+
+	private final Logger LOG = LoggerFactory.getLogger(DefaultAttributeProvider.class);
 
 	private static final String MISSED_ATTRIBUTE_TYPE_ERROR_MSG =
 			"To retrieve attribute value attribute definition must be not null. For item: %s with Type %s";
@@ -42,6 +47,12 @@ public class DefaultAttributeProvider implements AttributeProvider {
 		}
 
 		MetaAttributeTypeItem attribute = metaTypeProvider.findAttribute(ctx.getTypeCode(), attributeName);
+
+		if(Objects.isNull(attribute)){
+			LOG.warn("Attribute [{}::{}] is not exist. Please update data base.", ctx.getTypeCode(), attributeName);
+			return null;
+		}
+
 		if (!ctx.isNew() && nonNull(ctx.getUuid())) {
 			return (T) retrieveValue(attribute, attributeName, ctx);
 		}
@@ -49,7 +60,7 @@ public class DefaultAttributeProvider implements AttributeProvider {
 		if (isCollection(attribute)) {
 			Class containerType = attribute.getContainerType();
 			if (Set.class.isAssignableFrom(containerType)) {
-				return (T) Sets.newHashSet();
+				return (T) Sets.newLinkedHashSet();
 			}
 			return (T) Lists.newArrayList();
 		}

@@ -1,10 +1,11 @@
 package com.coretex.core.activeorm.query.select.transformator.dip;
 
+import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
 import com.coretex.core.activeorm.query.select.scanners.SelectItemScanner;
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.AllTableColumns;
-import net.sf.jsqlparser.statement.select.SelectItem;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -12,8 +13,8 @@ import java.util.Optional;
 public class SelectItemDataInjectionPoint extends AbstractScannerDataInjectionPoint<SelectItemScanner<?>> {
 
 	private Table table;
-	public SelectItemDataInjectionPoint(SelectItemScanner scanner) {
-		super(scanner);
+	public SelectItemDataInjectionPoint(SelectItemScanner scanner, QueryInfoHolder<? extends Statement> context) {
+		super(scanner, context);
 		var selectItem = scanner.scannedObject();
 		if(selectItem instanceof AllTableColumns){
 			table = ((AllTableColumns) selectItem).getTable();

@@ -51,8 +51,8 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public Long count(boolean strict) {
-		SelectOperationSpec<Map<String, Long>> query = this.createCountSearchQuery(strict);
-		var result = this.getSearchService().search(query).getResult();
+		SelectOperationSpec query = this.createCountSearchQuery(strict);
+		var result = this.getSearchService().<Map<String, Long>>search(query).getResult();
 		if (CollectionUtils.isEmpty(result)) {
 			return 0L;
 		}
@@ -79,8 +79,8 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public Stream<I> findReactive(boolean strict) {
-		SelectOperationSpec<I> query = this.createSearchQuery(strict);
-		return this.getSearchService().search(query).getResultStream();
+		SelectOperationSpec query = this.createSearchQuery(strict);
+		return this.getSearchService().<I>search(query).getResultStream();
 	}
 
 	@Override
@@ -91,6 +91,13 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 	@Override
 	public I find(UUID uuid, boolean strict) {
 		return findSingle(Map.of("uuid", uuid), false, strict);
+	}
+
+	public <R> SearchResult<R> findByQuery(String query, Map<String, Object> params){
+		 return this.getSearchService().search(query, params);
+	}
+	public <R> SearchResult<R> findByQuery(String query){
+		return this.getSearchService().search(query);
 	}
 
 	@Override
@@ -104,6 +111,33 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 			throw new AmbiguousResultException(String.format("Result contain more than one result (result count: %s)", result.size()));
 		}
 		return CollectionUtils.isNotEmpty(result) ? result.iterator().next() : null;
+	}
+
+	public  <R> R findSingleByQuery(String query, Map<String, Object> params){
+		var searchResult = findByQuery(query, params);
+		var result = searchResult.getResult();
+
+		if (CollectionUtils.isNotEmpty(result) && result.size() > 1 ) {
+			throw new AmbiguousResultException(String.format("Result contain more than one result (result count: %s)", result.size()));
+		}
+		if(result.isEmpty()){
+			return null;
+		}else{
+			return (R) result.get(0);
+		}
+	}
+	public <R> R findSingleByQuery(String query){
+		var searchResult = findByQuery(query);
+		var result = searchResult.getResult();
+
+		if (CollectionUtils.isNotEmpty(result) && result.size() > 1 ) {
+			throw new AmbiguousResultException(String.format("Result contain more than one result (result count: %s)", result.size()));
+		}
+		if(result.isEmpty()){
+			return null;
+		}else{
+			return (R) result.get(0);
+		}
 	}
 
 	@Override
@@ -156,7 +190,7 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public Stream<I> findReactive(Map<String, ?> params, boolean strict) {
-		SelectOperationSpec<I> query = this.createSearchQuery(params, strict);
+		SelectOperationSpec query = this.createSearchQuery(params, strict);
 		SearchResult<I> searchResult = this.getSearchService().search(query);
 		return searchResult.getResultStream();
 	}
@@ -178,8 +212,8 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 	@Override
 	public Stream<I> findReactive(SortParameters sortParameters, boolean strict) {
-		SelectOperationSpec<I> query = this.createSearchQuery(sortParameters, strict);
-		return this.getSearchService().search(query).getResultStream();
+		SelectOperationSpec query = this.createSearchQuery(sortParameters, strict);
+		return this.getSearchService().<I>search(query).getResultStream();
 	}
 
 	@Override
@@ -200,7 +234,7 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 	@Override
 	public Stream<I> findReactive(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
 		var query = this.createSearchQuery(params, sortParameters, strict);
-		return this.getSearchService().search(query).getResultStream();
+		return this.getSearchService().<I>search(query).getResultStream();
 	}
 
 	@Override
@@ -324,20 +358,20 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 		return findPageable(null, null, -1, strict);
 	}
 
-	private SelectOperationSpec<I> createSearchQuery(boolean strict) {
+	protected SelectOperationSpec createSearchQuery(boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
-		return new SelectOperationSpec<>(builder.toString());
+		return new SelectOperationSpec(builder.toString());
 	}
 
-	private SelectOperationSpec<Map<String, Long>> createCountSearchQuery(boolean strict) {
+	protected SelectOperationSpec createCountSearchQuery(boolean strict) {
 		StringBuilder builder = this.createCountQueryString(strict);
-		return new SelectOperationSpec<>(builder.toString());
+		return new SelectOperationSpec(builder.toString());
 	}
 
-	private SelectOperationSpec<I> createSearchQuery(Map<String, ?> params, boolean strict) {
+	protected SelectOperationSpec createSearchQuery(Map<String, ?> params, boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
-		SelectOperationSpec<I> query = new SelectOperationSpec<>(builder.toString());
+		SelectOperationSpec query = new SelectOperationSpec(builder.toString());
 		if (params != null && !params.isEmpty()) {
 			query.addQueryParameters(params);
 		}
@@ -345,17 +379,17 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 		return query;
 	}
 
-	private SelectOperationSpec<I> createSearchQuery(SortParameters sortParameters, boolean strict) {
+	protected SelectOperationSpec createSearchQuery(SortParameters sortParameters, boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
-		return new SelectOperationSpec<>(builder.toString());
+		return new SelectOperationSpec(builder.toString());
 	}
 
-	private SelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
+	protected SelectOperationSpec createSearchQuery(Map<String, ?> params, SortParameters sortParameters, boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
-		SelectOperationSpec<I> query = new SelectOperationSpec<>(builder.toString());
+		SelectOperationSpec query = new SelectOperationSpec(builder.toString());
 		if (params != null && !params.isEmpty()) {
 			query.addQueryParameters(params);
 		}
@@ -363,11 +397,11 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 	}
 
 
-	private PageableSelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict) {
+	protected PageableSelectOperationSpec createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
-		var query = new PageableSelectOperationSpec<I>(builder.toString());
+		var query = new PageableSelectOperationSpec(builder.toString());
 		if (count > 0) {
 			query.setCount(count);
 		}
@@ -379,11 +413,11 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 		return query;
 	}
 
-	private PageableSelectOperationSpec<I> createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict) {
+	protected PageableSelectOperationSpec createSearchQuery(Map<String, ?> params, SortParameters sortParameters, long count, long page, boolean strict) {
 		StringBuilder builder = this.createQueryString(strict);
 		this.appendWhereClausesToBuilder(builder, params);
 		this.appendOrderByClausesToBuilder(builder, sortParameters);
-		var query = new PageableSelectOperationSpec<I>(builder.toString());
+		var query = new PageableSelectOperationSpec(builder.toString());
 		query.setCount(count);
 		query.setPage(page);
 
@@ -394,7 +428,7 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 		return query;
 	}
 
-	private StringBuilder createQueryString(boolean strict) {
+	protected StringBuilder createQueryString(boolean strict, String typecode) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT * ");
 		builder.append("FROM \"");
@@ -402,11 +436,11 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 		if (strict) {
 			builder.append("#");
 		}
-		builder.append(this.typecode).append("\" AS c ");
+		builder.append(typecode).append("\" AS c ");
 		return builder;
 	}
 
-	private StringBuilder createCountQueryString(boolean strict) {
+	protected StringBuilder createCountQueryString(boolean strict, String typecode) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SELECT count(c.uuid) ");
 		builder.append("FROM \"");
@@ -414,8 +448,16 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 		if (strict) {
 			builder.append("#");
 		}
-		builder.append(this.typecode).append("\" AS c ");
+		builder.append(typecode).append("\" AS c ");
 		return builder;
+	}
+
+	protected StringBuilder createQueryString(boolean strict) {
+		return createQueryString(strict, this.typecode);
+	}
+
+	protected StringBuilder createCountQueryString(boolean strict) {
+		return createCountQueryString(strict, this.typecode);
 	}
 
 	private void appendWhereClausesToBuilder(StringBuilder builder, Map<String, ?> params) {
@@ -449,6 +491,8 @@ public class DefaultGenericDao<I extends GenericItem> implements Dao<I> {
 
 				builder.append("c.").append(name).append(" ").append(sortParams.get(name));
 			}
+		} else {
+			builder.append("ORDER BY c.").append(GenericItem.CREATE_DATE);
 		}
 
 	}

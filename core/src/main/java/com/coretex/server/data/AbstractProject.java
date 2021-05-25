@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Gerasimenko (g-art) Artem "gerasimenko.art@gmail.com"
@@ -19,10 +20,19 @@ public abstract class AbstractProject implements Project {
     private String name;
     private File path;
     private File springXml;
-    private List<Project> relatedProjects;
+    private List<AbstractProject> relatedProjects;
 
     private Object object;
 
+    private Properties properties;
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
 
     public boolean isCore() {
         return !StringUtils.isEmpty(getName()) && getName().toLowerCase().equals(CORE_PROJECT_NAME);
@@ -48,7 +58,7 @@ public abstract class AbstractProject implements Project {
     }
 
     @Override
-    public List<Project> getRelatedProjects() {
+    public List<AbstractProject> getRelatedProjects() {
         return relatedProjects;
     }
 
@@ -74,11 +84,11 @@ public abstract class AbstractProject implements Project {
     }
 
 
-    public void setRelatedProjects(List<Project> relatedProjects) {
+    public void setRelatedProjects(List<AbstractProject> relatedProjects) {
         this.relatedProjects = relatedProjects;
     }
 
-    public void addRelatedProject(Project relatedProject){
+    public void addRelatedProject(AbstractProject relatedProject){
         if(this.relatedProjects == null){
             this.relatedProjects = new LinkedList<>();
         }

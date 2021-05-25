@@ -19,9 +19,7 @@ package com.coretex.core.activeorm.translator.standard;
 
 import com.coretex.core.activeorm.translator.TypeTranslator;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Types;
 
 public class BooleanTranslator implements TypeTranslator<Boolean>
 {

@@ -1,83 +1,36 @@
 package com.coretex.core.activeorm.query.operations;
 
-import com.coretex.core.activeorm.exceptions.QueryException;
-import com.coretex.core.activeorm.factories.OperationFactory;
 import com.coretex.core.activeorm.query.QueryType;
+import com.coretex.core.activeorm.query.operations.contexts.OperationConfigContext;
 import com.coretex.core.activeorm.query.specs.SqlOperationSpec;
-import com.coretex.core.activeorm.services.AbstractJdbcService;
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-public abstract class SqlOperation<S extends Statement, O extends SqlOperationSpec<S, ? extends SqlOperation>> {
+public abstract class SqlOperation<
+		S extends Statement,
+		OS extends SqlOperationSpec<S, OS, CTX>,
+		CTX extends OperationConfigContext<S, OS, CTX>> {
 
 	private Logger LOG = LoggerFactory.getLogger(SqlOperation.class);
-	private O operationSpec;
-
-	private Supplier<String> querySupplier;
-
-	private Supplier<NamedParameterJdbcTemplate> jdbcTemplateSupplier;
-
-	public SqlOperation(O operationSpec) {
-		this.operationSpec = operationSpec;
-		var query = operationSpec.getQuery();
-		if(LOG.isDebugEnabled()){
-			LOG.debug("Sql operation by query [{}]", query);
-		}
-		if (!operationSpec.isNativeQuery()) {
-			querySupplier = () -> {
-				S statement = parseQuery(query);
-				return statement.toString();
-			};
-		} else {
-			querySupplier = () -> query;
-		}
-	}
-
-	public O getOperationSpec() {
-		return operationSpec;
-	}
-
-	public String getQuery() {
-		return querySupplier.get();
-	}
-
-	protected S parseQuery(String query) {
-		try {
-			return (S) CCJSqlParserUtil.parse(query);
-		} catch (JSQLParserException e) {
-			throw new QueryException(String.format("Query parsing error [%s]", query), e);
-		}
-	}
 
 	public abstract QueryType getQueryType();
 
-	public abstract void execute();
+	public abstract <T> Stream<T> execute(CTX operationConfigContext);
 
+	@Lookup
 	public NamedParameterJdbcTemplate getJdbcTemplate() {
-		return jdbcTemplateSupplier.get();
+		return null;
 	}
 
 	protected void executeJdbcOperation(Consumer<NamedParameterJdbcTemplate> jdbcTemplateConsumer) {
-		jdbcTemplateConsumer.accept(jdbcTemplateSupplier.get());
+		jdbcTemplateConsumer.accept(getJdbcTemplate());
 	}
 
-	protected AbstractJdbcService getJdbcService() {
-		return getOperationSpec().getJdbcService();
-	}
-
-	public void setJdbcTemplateSupplier(Supplier<NamedParameterJdbcTemplate> jdbcTemplateSupplier) {
-		this.jdbcTemplateSupplier = jdbcTemplateSupplier;
-	}
-
-	public OperationFactory getOperationFactory() {
-		return getOperationSpec().getOperationFactory();
-	}
 
 }

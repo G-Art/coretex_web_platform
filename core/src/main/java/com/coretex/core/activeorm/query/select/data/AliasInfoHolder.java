@@ -1,6 +1,7 @@
 package com.coretex.core.activeorm.query.select.data;
 
 import com.coretex.core.activeorm.query.select.scanners.FromItemScanner;
+import com.coretex.core.activeorm.query.select.scanners.SubSelectScanner;
 
 public class AliasInfoHolder<T> {
 	private String alias;
@@ -21,6 +22,9 @@ public class AliasInfoHolder<T> {
 
 	public boolean isTable(){
 		return owner instanceof FromItemScanner && ((FromItemScanner) owner).isTable();
+	}
+	public boolean isSubSelect(){
+		return owner instanceof SubSelectScanner;
 	}
 
 	public String getAlias() {
