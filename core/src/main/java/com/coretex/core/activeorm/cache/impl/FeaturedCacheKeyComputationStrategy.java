@@ -44,7 +44,7 @@ public class FeaturedCacheKeyComputationStrategy implements CacheKeyComputationS
 	public class CacheKey {
 
 		private final String query;
-		private Map<String, Object> parameters;
+		private final Map<String, Object> parameters;
 
 		public CacheKey(String query, Map<String, Object> parameters) {
 			this.query = query;

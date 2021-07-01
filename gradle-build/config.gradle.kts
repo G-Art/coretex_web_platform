@@ -1,0 +1,3 @@
+
+extra["moduleForModelGen"] = "core"
+

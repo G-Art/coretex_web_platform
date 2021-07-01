@@ -1,6 +1,0 @@
-configurations { cxf }
-
-ext {
-    moduleForModelGen = 'core'
-}
-

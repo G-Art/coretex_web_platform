@@ -1,8 +1,0 @@
-
-configurations.all {
-    exclude group: "commons-logging", module: "commons-logging"
-}
-
-dependencies {
-    implementation project(":core")
-}
