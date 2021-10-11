@@ -1,7 +1,7 @@
 package com.coretex.core.activeorm.query.operations.sources;
 
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.coretex.items.core.GenericItem;
 import com.coretex.meta.AbstractGenericItem;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -9,14 +9,15 @@ import org.springframework.lang.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 public class SelectSqlParameterSource extends MapSqlParameterSource {
 	private SelectOperationSpec selectOperationSpec;
-	private CortexContext cortexContext;
+	private CoretexContext coretexContext;
 
-	public SelectSqlParameterSource(SelectOperationSpec selectOperationSpec, CortexContext cortexContext) {
+	public SelectSqlParameterSource(SelectOperationSpec selectOperationSpec, CoretexContext coretexContext) {
 		this.selectOperationSpec = selectOperationSpec;
-		this.cortexContext = cortexContext;
+		this.coretexContext = coretexContext;
 		addValues(selectOperationSpec.getParameters());
 	}
 
@@ -26,16 +27,16 @@ public class SelectSqlParameterSource extends MapSqlParameterSource {
 			if(Objects.isNull(((GenericItem) value).getUuid())){
 				throw new NullPointerException(String.format("Item type [%s] for parameter [%s] has no uuid", ((GenericItem) value).getMetaType().getTypeCode(), paramName));
 			}
-			return super.addValue(paramName, ((AbstractGenericItem) value).getUuid());
+			return super.addValue(paramName, ((AbstractGenericItem) value).getUuid(), coretexContext.getSqlType(coretexContext.getRegularType(UUID.class)));
 		}
 		if(value instanceof Enum){
-			var metaEnumValueTypeItem = cortexContext.findMetaEnumValueTypeItem((Enum) value);
+			var metaEnumValueTypeItem = coretexContext.findMetaEnumValueTypeItem((Enum) value);
 			if(Objects.nonNull(metaEnumValueTypeItem)){
-				return super.addValue(paramName, metaEnumValueTypeItem.getUuid());
+				return super.addValue(paramName, metaEnumValueTypeItem.getUuid(), coretexContext.getSqlType(coretexContext.getRegularType(UUID.class)));
 			}
-			return super.addValue(paramName, value.toString(), cortexContext.getSqlType(cortexContext.getRegularType(String.class)));
+			return super.addValue(paramName, value.toString(), coretexContext.getSqlType(coretexContext.getRegularType(String.class)));
 		}
-		return super.addValue(paramName, value, cortexContext.getSqlType(cortexContext.getRegularType(value.getClass())));
+		return super.addValue(paramName, value, coretexContext.getSqlType(coretexContext.getRegularType(value.getClass())));
 	}
 
 	public MapSqlParameterSource addValues(@Nullable Map<String, ?> values) {

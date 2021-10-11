@@ -8,7 +8,7 @@ import net.sf.jsqlparser.statement.delete.Delete;
 import java.util.stream.Stream;
 
 public class RemoveOperationConfigContext
-		extends AbstractOperationConfigContext<Delete, RemoveOperationSpec, RemoveOperationConfigContext> {
+		extends AbstractOperationConfigContext<Delete, RemoveOperationSpec> {
 
 	public RemoveOperationConfigContext(RemoveOperationSpec operationSpec) {
 		super(operationSpec);

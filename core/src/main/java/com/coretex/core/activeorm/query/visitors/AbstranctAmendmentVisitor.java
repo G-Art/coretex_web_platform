@@ -1,19 +1,23 @@
 package com.coretex.core.activeorm.query.visitors;
 
+import com.coretex.core.activeorm.exceptions.QueryException;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
+import net.sf.jsqlparser.expression.operators.conditional.XorExpression;
 import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.*;
 import net.sf.jsqlparser.statement.alter.Alter;
+import net.sf.jsqlparser.statement.alter.AlterSession;
 import net.sf.jsqlparser.statement.alter.sequence.AlterSequence;
 import net.sf.jsqlparser.statement.comment.Comment;
 import net.sf.jsqlparser.statement.create.index.CreateIndex;
 import net.sf.jsqlparser.statement.create.schema.CreateSchema;
 import net.sf.jsqlparser.statement.create.sequence.CreateSequence;
+import net.sf.jsqlparser.statement.create.synonym.CreateSynonym;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
 import net.sf.jsqlparser.statement.create.view.AlterView;
 import net.sf.jsqlparser.statement.create.view.CreateView;
@@ -25,6 +29,7 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.merge.Merge;
 import net.sf.jsqlparser.statement.replace.Replace;
 import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.show.ShowTablesStatement;
 import net.sf.jsqlparser.statement.truncate.Truncate;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.statement.upsert.Upsert;
@@ -76,7 +81,7 @@ public abstract class AbstranctAmendmentVisitor implements SelectVisitor, FromIt
 	}
 
 	public void visit(WithItem withItem) {
-		withItem.getSelectBody().accept(this);
+		throw new QueryException(NOT_SUPPORTED_YET + " With items query expressions.");
 	}
 
 	public void visit(PlainSelect plainSelect) {
@@ -119,8 +124,8 @@ public abstract class AbstranctAmendmentVisitor implements SelectVisitor, FromIt
 
 	@Override
 	public void visit(ValuesStatement values) {
-		for (Expression expr : values.getExpressions()) {
-			expr.accept(this);
+		if(values.getExpressions() != null){
+			values.getExpressions().accept(this);
 		}
 	}
 
@@ -200,8 +205,6 @@ public abstract class AbstranctAmendmentVisitor implements SelectVisitor, FromIt
 	public void visit(InExpression inExpression) {
 		if (inExpression.getLeftExpression() != null) {
 			inExpression.getLeftExpression().accept(this);
-		} else if (inExpression.getLeftItemsList() != null) {
-			inExpression.getLeftItemsList().accept(this);
 		}
 
 		inExpression.getRightItemsList().accept(this);
@@ -299,6 +302,14 @@ public abstract class AbstranctAmendmentVisitor implements SelectVisitor, FromIt
 	@Override
 	public void visit(ArrayExpression aThis) {
 
+	}
+
+	@Override
+	public void visit(TimezoneExpression timezoneExpression) {
+	}
+
+	@Override
+	public void visit(XMLSerializeExpr xmlSerializeExpr) {
 	}
 
 	@Override
@@ -714,5 +725,55 @@ public abstract class AbstranctAmendmentVisitor implements SelectVisitor, FromIt
 	@Override
 	public void visit(ShowStatement set) {
 		throw new UnsupportedOperationException(NOT_SUPPORTED_YET);
+	}
+
+	@Override
+	public void visit(XorExpression orExpression) {
+		this.visitBinaryExpression(orExpression);
+	}
+
+	@Override
+	public void visit(RowGetExpression rowGetExpression) {
+
+	}
+
+	@Override
+	public void visit(ArrayConstructor aThis) {
+
+	}
+
+	@Override
+	public void visit(VariableAssignment aThis) {
+
+	}
+
+	@Override
+	public void visit(SavepointStatement savepointStatement) {
+
+	}
+
+	@Override
+	public void visit(RollbackStatement rollbackStatement) {
+
+	}
+
+	@Override
+	public void visit(ResetStatement reset) {
+
+	}
+
+	@Override
+	public void visit(ShowTablesStatement showTables) {
+
+	}
+
+	@Override
+	public void visit(CreateSynonym createSynonym) {
+
+	}
+
+	@Override
+	public void visit(AlterSession alterSession) {
+
 	}
 }

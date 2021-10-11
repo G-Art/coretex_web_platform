@@ -1,6 +1,6 @@
 package com.coretex.core.services.items.context.attributes;
 
-import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
+import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.provider.AttributeProvider;
 import com.coretex.items.core.MetaAttributeTypeItem;
@@ -47,7 +47,7 @@ public class LocalizedAttributeValueHolder implements AttributeValueHolderState 
 	private LocalizedAttributeValueHolder(String attributeName, ItemContext owner) {
 		checkArgument(isNotBlank(attributeName), "Attribute name is required to construct value holder");
 		checkArgument(nonNull(owner), "Item context is required to construct value holder");
-		metaTypeProvider = ApplicationContextProvider.getApplicationContext().getBean(MetaTypeProvider.class);
+		metaTypeProvider = ApplicationContextProvider.getBean(MetaTypeProvider.class);
 		MetaAttributeTypeItem metaAttributeTypeItem = metaTypeProvider.findAttribute(owner.getTypeCode(), attributeName);
 		checkNotNull(metaAttributeTypeItem, "Attribute ["+attributeName+"] is exist for type ["+owner.getTypeCode()+"]");
 		checkArgument(metaAttributeTypeItem.getLocalized(), "Attribute ["+attributeName+"] is not localized for type ["+owner.getTypeCode()+"]");

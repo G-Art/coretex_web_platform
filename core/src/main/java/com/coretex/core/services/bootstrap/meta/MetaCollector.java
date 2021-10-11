@@ -8,6 +8,8 @@ import com.coretex.items.core.MetaTypeItem;
 import com.coretex.items.core.RegularTypeItem;
 import com.coretex.meta.AbstractGenericItem;
 import org.apache.commons.lang3.ClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,8 @@ import java.util.function.Consumer;
 
 public class MetaCollector {
 
+    private final Logger LOG = LoggerFactory.getLogger(MetaCollector.class);
+
     private MetaDataExtractor extractor;
 
     private MetaItemContext itemCtx;
@@ -26,6 +30,7 @@ public class MetaCollector {
         MetaDataContext dataCtx = createTypeDataContext();
         itemCtx = createItemContext(dataCtx);
         MetaItemResolver resolver = new MetaItemResolver(itemCtx, dataCtx);
+        LOG.info("Meta data resolving ...");
         resolver.resolve();
     }
 
@@ -51,10 +56,15 @@ public class MetaCollector {
 
     private MetaDataContext createTypeDataContext() {
         MetaDataContext ctx = new MetaDataContext();
+        LOG.info("Collect meta data [TypeItems] ...");
         populateItemData(extractor.selectTypeItems(), ctx::addTypeData);
+        LOG.info("Collect meta data [AttributeItems] ...");
         populateItemData(extractor.selectAttributeItems(), ctx::addAttributeData);
+        LOG.info("Collect meta data [RegularItems] ...");
         populateItemData(extractor.selectRegularItems(), ctx::addRegularData);
+        LOG.info("Collect meta data [EnumTypes] ...");
         populateItemData(extractor.selectEnumTypes(), ctx::addEnumData);
+        LOG.info("Collect meta data [EnumValues] ...");
         populateItemData(extractor.selectEnumValues(), ctx::addEnumValueData);
         return ctx;
     }

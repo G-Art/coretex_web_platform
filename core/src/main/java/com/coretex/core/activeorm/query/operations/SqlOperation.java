@@ -14,8 +14,8 @@ import java.util.stream.Stream;
 
 public abstract class SqlOperation<
 		S extends Statement,
-		OS extends SqlOperationSpec<S, OS, CTX>,
-		CTX extends OperationConfigContext<S, OS, CTX>> {
+		OS extends SqlOperationSpec<S>,
+		CTX extends OperationConfigContext<S, OS>> {
 
 	private Logger LOG = LoggerFactory.getLogger(SqlOperation.class);
 

@@ -42,7 +42,7 @@ public enum DataInjectionType {
 
 		ditMapping.put(JoinScanner.class, scanner -> JOIN);
 
-		ditMapping.put(ExpressionScanner.class, scanner -> ((ExpressionScanner)scanner).getExpresionType());
+		ditMapping.put(ExpressionScanner.class, scanner -> ((ExpressionScanner)scanner).getExpressionType());
 	}
 
 	public static <S extends Scanner> DataInjectionType getTypeForScanner(S scanner){

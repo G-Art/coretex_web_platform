@@ -6,7 +6,6 @@ import com.coretex.core.activeorm.query.select.scanners.ExpressionScanner;
 import com.coretex.core.activeorm.query.select.scanners.JoinScanner;
 import com.coretex.core.activeorm.query.select.scanners.Scanner;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
-import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.AbstractScannerDataInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.dip.ExpressionDataInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.dip.JoinDataInjectionPoint;
@@ -17,14 +16,13 @@ import net.sf.jsqlparser.statement.select.SelectBody;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public class PlainSelectTransformationStrategy extends AbstractTransformationStrategy<SelectBodyDataInjectionPoint, SelectBody> {
 
-	public PlainSelectTransformationStrategy(Map<DataInjectionType, AbstractTransformationStrategy> transformationStrategies, SelectQueryTransformationHelper transformationHelper) {
-		super(transformationStrategies, transformationHelper);
+	public PlainSelectTransformationStrategy(SelectQueryTransformationHelper transformationHelper) {
+		super(transformationHelper);
 	}
 
 	public SelectBody apply(SelectBodyDataInjectionPoint injectionPoint) {

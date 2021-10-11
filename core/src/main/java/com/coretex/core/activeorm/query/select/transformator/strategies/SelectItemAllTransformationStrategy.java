@@ -4,9 +4,7 @@ import com.coretex.core.activeorm.query.select.SelectQueryTransformationHelper;
 import com.coretex.core.activeorm.query.select.data.TableTransformationData;
 import com.coretex.core.activeorm.query.select.scanners.FromItemScanner;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
-import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.SelectItemDataInjectionPoint;
-import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SelectBody;
@@ -14,7 +12,6 @@ import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import net.sf.jsqlparser.statement.select.SelectItem;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,8 +19,8 @@ import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 public class SelectItemAllTransformationStrategy extends AbstractTransformationStrategy<SelectItemDataInjectionPoint, SelectBody> {
 
-	public SelectItemAllTransformationStrategy(Map<DataInjectionType, AbstractTransformationStrategy> transformationStrategies, SelectQueryTransformationHelper transformationHelper) {
-		super(transformationStrategies, transformationHelper);
+	public SelectItemAllTransformationStrategy(SelectQueryTransformationHelper transformationHelper) {
+		super(transformationHelper);
 	}
 
 	public SelectBody apply(SelectItemDataInjectionPoint dataInjectionPoint) {
@@ -46,8 +43,7 @@ public class SelectItemAllTransformationStrategy extends AbstractTransformationS
 		getTransformationHelper().getCortexContext().getAllAttributes(infoHolder.getTableTransformationData().getTypeItemBind())
 				.values().forEach(attribute -> {
 			if (isNoneBlank(attribute.getColumnName())) {
-				SelectExpressionItem selectExpressionItem = new SelectExpressionItem();
-				selectExpressionItem.setExpression(new Column(infoHolder.getTableTransformationData().getTable(), attribute.getColumnName()));
+				SelectExpressionItem selectExpressionItem = getTransformationHelper().createSelectExpressionItem(infoHolder.getTableTransformationData(), attribute);
 				selectItems.add(selectExpressionItem);
 			}
 		});

@@ -19,19 +19,24 @@ package com.coretex.core.activeorm.translator.standard;
 
 import com.coretex.core.activeorm.translator.TypeTranslator;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.Objects;
 
 public class LocalDateTimeTranslator implements TypeTranslator<LocalDateTime>
 {
     public LocalDateTime read(ResultSet resultSet, int columnIndex) throws Exception
     {
-        Timestamp time = resultSet.getTimestamp(columnIndex);
-        if (time == null) return null;
-        else              return time.toLocalDateTime();
+        Object object = resultSet.getObject(columnIndex);
+        if (Objects.nonNull(object)) {
+            if (object instanceof Timestamp) {
+                return ((Timestamp) object).toLocalDateTime();
+            }
+            if (object instanceof LocalDateTime) {
+                return (LocalDateTime) object;
+            }
+        }
+        return null;
     }
 }

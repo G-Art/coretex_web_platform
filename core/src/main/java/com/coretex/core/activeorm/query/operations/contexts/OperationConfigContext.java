@@ -5,17 +5,13 @@ import com.coretex.core.activeorm.query.specs.SqlOperationSpec;
 import com.coretex.core.activeorm.services.ReactiveSearchResult;
 import net.sf.jsqlparser.statement.Statement;
 
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public interface OperationConfigContext<
 		S extends Statement,
-		OS extends SqlOperationSpec<S, OS, CTX>,
-		CTX extends OperationConfigContext<S, OS, CTX>> {
+		OS extends SqlOperationSpec<S>> {
 
 	OS getOperationSpec();
-
-	Supplier<String> getQuerySupplier();
 
 	QueryType getQueryType();
 

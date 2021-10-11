@@ -1,16 +1,13 @@
 package com.coretex.core.activeorm.query.select.transformator.strategies;
 
 import com.coretex.core.activeorm.query.select.SelectQueryTransformationHelper;
-import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.ExpressionDataInjectionPoint;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
-import java.util.Map;
-
 public class WhereTransformationStrategy extends AbstractTransformationStrategy<ExpressionDataInjectionPoint, PlainSelect> {
 
-	public WhereTransformationStrategy(Map<DataInjectionType, AbstractTransformationStrategy> transformationStrategies, SelectQueryTransformationHelper transformationHelper) {
-		super(transformationStrategies, transformationHelper);
+	public WhereTransformationStrategy(SelectQueryTransformationHelper transformationHelper) {
+		super(transformationHelper);
 	}
 
 	public PlainSelect apply(ExpressionDataInjectionPoint dataInjectionPoint){

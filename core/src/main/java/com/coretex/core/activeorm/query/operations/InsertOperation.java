@@ -2,14 +2,14 @@ package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.contexts.InsertOperationConfigContext;
-import com.coretex.core.activeorm.query.operations.dataholders.InsertValueDataHolder;
+import com.coretex.core.activeorm.query.operations.dataholders.AbstractValueDataHolder;
 import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.CascadeInsertOperationSpec;
 import com.coretex.core.activeorm.query.specs.InsertOperationSpec;
 import com.coretex.core.activeorm.services.AbstractJdbcService;
 import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
+import com.coretex.core.services.bootstrap.dialect.DbDialectService;
 import com.coretex.items.core.GenericItem;
-import com.coretex.items.core.MetaAttributeTypeItem;
 import net.sf.jsqlparser.statement.insert.Insert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,19 +24,19 @@ public class InsertOperation extends ModificationOperation<
 
 	private Logger LOG = LoggerFactory.getLogger(InsertOperation.class);
 
-	public InsertOperation(AbstractJdbcService abstractJdbcService, ItemOperationInterceptorService itemOperationInterceptorService) {
-		super(abstractJdbcService, itemOperationInterceptorService);
+	public InsertOperation(AbstractJdbcService abstractJdbcService, ItemOperationInterceptorService itemOperationInterceptorService, DbDialectService dbDialectService) {
+		super(abstractJdbcService, itemOperationInterceptorService, dbDialectService);
 	}
 
 	@Override
 	protected void executeBefore(InsertOperationConfigContext operationConfigContext) {
 		var operationSpec = operationConfigContext.getOperationSpec();
 		if (operationSpec.isCascadeEnabled()) {
-			operationSpec.getInsertValueDatas()
+			operationSpec.getValueDataHolders()
 					.values()
 					.stream()
-					.filter(InsertValueDataHolder::isItemRelation)
-					.filter(InsertValueDataHolder::availableForBeforeExecution)
+					.filter(AbstractValueDataHolder::isItemRelation)
+					.filter(AbstractValueDataHolder::availableForBeforeExecution)
 					.forEach(insertValueDataHolder -> getActiveOrmOperationExecutor()
 							.executeSaveOperation(
 									insertValueDataHolder.getRelatedItem(),
@@ -55,12 +55,12 @@ public class InsertOperation extends ModificationOperation<
 	@Override
 	public void executeOperation(InsertOperationConfigContext operationConfigContext) {
 		var operationSpec = operationConfigContext.getOperationSpec();
-		var query = operationConfigContext.getQuerySupplier().get();
+		var query = buildQuery(operationConfigContext);
 		if (LOG.isDebugEnabled()) {
 			LOG.debug(String.format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), operationSpec instanceof CascadeInsertOperationSpec));
 		}
 		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query,
-				new ModificationSqlParameterSource<InsertValueDataHolder>(operationSpec.getInsertValueDatas())));
+				new ModificationSqlParameterSource<>(operationSpec.getValueDataHolders())));
 	}
 
 	@Override
@@ -93,9 +93,7 @@ public class InsertOperation extends ModificationOperation<
 	}
 
 
-	public static InsertValueDataHolder createInsertValueDataHolder(InsertOperationSpec operationSpec, MetaAttributeTypeItem attributeTypeItem) {
-		return new InsertValueDataHolder(attributeTypeItem, operationSpec);
-	}
+
 
 	@Override
 	protected boolean isTransactionInitiator() {

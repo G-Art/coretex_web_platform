@@ -7,6 +7,7 @@ import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.DataInjectionPoint;
 import com.coretex.items.core.MetaTypeItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import org.springframework.beans.factory.annotation.Lookup;
 
 import java.util.Map;
 
@@ -17,10 +18,8 @@ public abstract class AbstractTransformationStrategy<S extends DataInjectionPoin
 		AdjustColumnAction {
 
 	private SelectQueryTransformationHelper transformationHelper;
-	private Map<DataInjectionType, AbstractTransformationStrategy> transformationStrategies;
 
-	public AbstractTransformationStrategy(Map<DataInjectionType, AbstractTransformationStrategy> transformationStrategies, SelectQueryTransformationHelper transformationHelper) {
-		this.transformationStrategies = transformationStrategies;
+	public AbstractTransformationStrategy( SelectQueryTransformationHelper transformationHelper) {
 		this.transformationHelper = transformationHelper;
 	}
 
@@ -46,6 +45,11 @@ public abstract class AbstractTransformationStrategy<S extends DataInjectionPoin
 	public abstract R apply(S dataInjectionPoint);
 
 	protected <T> T applyTransformation(DataInjectionPoint dataInjectionPoint) {
-		return (T) transformationStrategies.get(dataInjectionPoint.getDataInjectionType()).apply(dataInjectionPoint);
+		return (T) getTransformationStrategies().get(dataInjectionPoint.getDataInjectionType()).apply(dataInjectionPoint);
+	}
+
+	@Lookup("transformationStrategies")
+	public Map<DataInjectionType, AbstractTransformationStrategy> getTransformationStrategies() {
+		return null;
 	}
 }

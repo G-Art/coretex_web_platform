@@ -12,17 +12,15 @@ import com.coretex.core.activeorm.query.select.transformator.dip.AbstractScanner
 import com.coretex.core.activeorm.query.select.transformator.dip.WrapperInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.dip.factory.DataInjectionPointFactory;
 import com.coretex.core.activeorm.query.visitors.TableAmendVisitor;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.dialect.QueryTransformationHints;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaTypeItem;
 import com.google.common.collect.Lists;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Alias;
 import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.StringValue;
-import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
-import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
-import net.sf.jsqlparser.expression.operators.relational.InExpression;
+import net.sf.jsqlparser.expression.operators.relational.ComparisonOperator;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
@@ -31,10 +29,8 @@ import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.SingletonMap;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -46,8 +42,10 @@ import static java.util.Objects.isNull;
 
 public class SelectQueryTransformationHelper {
 
-	private CortexContext cortexContext;
+	private CoretexContext coretexContext;
 	private DataInjectionPointFactory injectionPointFactory;
+	private QueryTransformationHints queryTransformationHints;
+
 
 	@SuppressWarnings("unchecked")
 	public <S extends Scanner, DIP extends AbstractScannerDataInjectionPoint<S>> DIP createDateInjectionPoint(S scanner, QueryInfoHolder<? extends Statement> statementContext) {
@@ -62,9 +60,10 @@ public class SelectQueryTransformationHelper {
 				}).collect(Collectors.toList()));
 	}
 
-	public SelectQueryTransformationHelper(CortexContext cortexContext, DataInjectionPointFactory dataInjectionPointFactory) {
-		this.cortexContext = cortexContext;
+	public SelectQueryTransformationHelper(CoretexContext coretexContext, DataInjectionPointFactory dataInjectionPointFactory, QueryTransformationHints queryTransformationHints) {
+		this.coretexContext = coretexContext;
 		this.injectionPointFactory = dataInjectionPointFactory;
+		this.queryTransformationHints = queryTransformationHints;
 	}
 
 	public PlainSelect clone(PlainSelect select) {
@@ -83,41 +82,23 @@ public class SelectQueryTransformationHelper {
 	}
 
 	public Expression createMetaEqExpression(MetaTypeItem meta, Expression left, Set<MetaTypeItem> subTypeItemSet) {
-		Expression whereExpression;
-		if (CollectionUtils.isNotEmpty(subTypeItemSet)) {
-			whereExpression = new InExpression();
-			((InExpression) whereExpression).setLeftExpression(left);
-			ExpressionList expressionList = new ExpressionList();
-			List<Expression> expressions = new ArrayList<>();
-			expressions.add(new StringValue(meta.getUuid().toString()));
+		return queryTransformationHints.createMetaEqExpression(meta, left, subTypeItemSet);
 
-			subTypeItemSet.forEach(sub -> expressions.add(new StringValue(sub.getUuid().toString())));
-			expressionList.setExpressions(expressions);
-			((InExpression) whereExpression).setRightItemsList(expressionList);
-
-		} else {
-			whereExpression = new EqualsTo();
-			((EqualsTo) whereExpression).setLeftExpression(left);
-			Expression right = new StringValue(meta.getUuid().toString());
-			((EqualsTo) whereExpression).setRightExpression(right);
-
-		}
-		return whereExpression;
 	}
 
 	public TableTransformationData bindItem(Table table) {
 		var tableName = table.getFullyQualifiedName().replaceAll("\"", "");
-		if(tableName.endsWith("_LOC")){
+		if (tableName.endsWith("_LOC")) {
 			String locTable = tableName.replace("_LOC", "");
-			Set<MetaTypeItem> metaTypeForTable = cortexContext.findMetaTypeForTable(locTable);
+			Set<MetaTypeItem> metaTypeForTable = coretexContext.findMetaTypeForTable(locTable);
 			return new TableTransformationData(table, null, metaTypeForTable, true);
 		}
-		var mType = cortexContext.findMetaType(tableName);
+		var mType = coretexContext.findMetaType(tableName);
 		Set<MetaTypeItem> metaTypesForTable;
 		if (Objects.isNull(mType)) {
-			metaTypesForTable = cortexContext.findMetaTypeForTable(tableName);
+			metaTypesForTable = coretexContext.findMetaTypeForTable(tableName);
 		} else {
-			metaTypesForTable = cortexContext.findMetaTypeForTable(mType.getTableName());
+			metaTypesForTable = coretexContext.findMetaTypeForTable(mType.getTableName());
 		}
 		return new TableTransformationData(table, mType, metaTypesForTable);
 	}
@@ -140,28 +121,11 @@ public class SelectQueryTransformationHelper {
 			}
 			processInternalExpression(scanner, ownerSelectBodyScanner);
 		} else {
+
 			Column column = (Column) scanner.getExpression();
 
 			TableTransformationData tableTransformationData = getTableTransformationDataForColumn(column, ownerSelectBodyScanner);
-
-			if (Objects.nonNull(tableTransformationData)) {
-				if (Objects.isNull(column.getTable()) && !ownerSelectBodyScanner.isWrapped()) {
-					column.setTable(tableTransformationData.getTable());
-				}
-				if (Objects.isNull(column.getTable()) && ownerSelectBodyScanner.isWrapped()) {
-					var table = new Table();
-					table.setAlias(((PlainSelect) ownerSelectBodyScanner.scannedObject()).getFromItem().getAlias());
-					column.setTable(table);
-				}
-
-				if (tableTransformationData.isBind()) {
-					MetaAttributeTypeItem metaAttributeTypeItem = getCortexContext()
-							.findAttribute(tableTransformationData.getTypeItemBind().getTypeCode(), column.getColumnName().replaceAll("\"", ""));
-					if (Objects.nonNull(metaAttributeTypeItem)) {
-						column.setColumnName(metaAttributeTypeItem.getColumnName());
-					}
-				}
-			}
+			queryTransformationHints.adjustColumn(scanner, tableTransformationData, ownerSelectBodyScanner);
 		}
 	}
 
@@ -219,6 +183,9 @@ public class SelectQueryTransformationHelper {
 			adjustColumn(expressionScanner, selectBodyScanner);
 		} else {
 			List<ExpressionScanner> internalExpressions = expressionScanner.getInternalExpressions();
+			if(expressionScanner.getExpression() instanceof ComparisonOperator){
+				queryTransformationHints.adjustParameter(expressionScanner, selectBodyScanner);
+			}
 			internalExpressions.forEach(internalExpression -> processInternalExpression(internalExpression, selectBodyScanner));
 		}
 	}
@@ -249,7 +216,15 @@ public class SelectQueryTransformationHelper {
 		}
 	}
 
-	public CortexContext getCortexContext() {
-		return cortexContext;
+	public CoretexContext getCortexContext() {
+		return coretexContext;
+	}
+
+	public Expression createColumn(TableTransformationData tableTransformationData, MetaAttributeTypeItem attribute) {
+		return queryTransformationHints.createColumn(tableTransformationData, attribute);
+	}
+
+	public SelectExpressionItem createSelectExpressionItem(TableTransformationData tableTransformationData, MetaAttributeTypeItem attribute) {
+		return queryTransformationHints.createSelectExpressionItem(tableTransformationData, attribute);
 	}
 }

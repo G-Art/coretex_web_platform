@@ -2,7 +2,7 @@ package com.coretex.core.activeorm.factories.mappers;
 
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.core.general.utils.ItemUtils;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
 import com.coretex.core.utils.TypeUtil;
@@ -31,17 +31,17 @@ import java.util.function.Function;
 public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T> {
 	private Logger LOG = LoggerFactory.getLogger(ItemRowMapper.class);
 
-	private CortexContext cortexContext;
+	private CoretexContext coretexContext;
 	private ItemContextFactory itemContextFactory;
 	private MetaAttributeTypeItem metaTypeAttributeTypeItem;
 	private MetaAttributeTypeItem uuidAttributeTypeItem;
 
-	public ItemRowMapper(CortexContext cortexContext, ItemContextFactory itemContextFactory) {
-		this.cortexContext = cortexContext;
+	public ItemRowMapper(CoretexContext coretexContext, ItemContextFactory itemContextFactory) {
+		this.coretexContext = coretexContext;
 		this.itemContextFactory = itemContextFactory;
 
-		this.metaTypeAttributeTypeItem = cortexContext.findAttribute(GenericItem.ITEM_TYPE, GenericItem.META_TYPE);
-		this.uuidAttributeTypeItem = cortexContext.findAttribute(GenericItem.ITEM_TYPE, GenericItem.UUID);
+		this.metaTypeAttributeTypeItem = coretexContext.findAttribute(GenericItem.ITEM_TYPE, GenericItem.META_TYPE);
+		this.uuidAttributeTypeItem = coretexContext.findAttribute(GenericItem.ITEM_TYPE, GenericItem.UUID);
 	}
 
 	@Override
@@ -61,14 +61,14 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 
 		if (ItemUtils.isSystemType(typeMetaType)) {
 			if (ItemUtils.isMetaAttributeType(typeMetaType)) {
-				return (T) cortexContext.findMetaAttributeTypeItem((UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
+				return (T) coretexContext.findMetaAttributeTypeItem((UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
 			}
-			return (T) cortexContext.findMetaType((UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
+			return (T) coretexContext.findMetaType((UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
 		}
 
 		ItemContext item = itemContextFactory.create(targetClass, (UUID) mapOfColValues.get(uuidAttributeTypeItem.getColumnName()).apply(uuidAttributeTypeItem));
 
-		cortexContext.getAllAttributes(typeMetaType.getTypeCode()).values().stream()
+		coretexContext.getAllAttributes(typeMetaType.getTypeCode()).values().stream()
 				.filter(metaAttributeTypeItem -> mapOfColValues.containsKey(metaAttributeTypeItem.getColumnName()))
 				.filter(metaAttributeTypeItem -> AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem) ||
 						(AttributeTypeUtils.isItemAttribute(metaAttributeTypeItem) &&
@@ -93,14 +93,17 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 		@Override
 		public Object apply(MetaAttributeTypeItem metaAttributeTypeItem) {
 			try {
+
 				if (metaAttributeTypeItem.getAttributeType() instanceof MetaTypeItem && Arrays.asList(MetaTypeItem.ITEM_TYPE, MetaRelationTypeItem.ITEM_TYPE).contains(((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getTypeCode())) {
-					return cortexContext.findMetaType((UUID) JdbcUtils.getResultSetValue(rs, index));
+					Object value = JdbcUtils.getResultSetValue(rs, index);
+					return coretexContext.findMetaType((UUID) (value instanceof String ? UUID.fromString((String) value): value));
 				}
 				if (AttributeTypeUtils.isEnumTypeAttribute(metaAttributeTypeItem)) {
-					return cortexContext.findMetaEnumValueTypeItem(((MetaEnumTypeItem) metaAttributeTypeItem.getAttributeType()).getEnumClass(), (UUID) JdbcUtils.getResultSetValue(rs, index));
+					Object value = JdbcUtils.getResultSetValue(rs, index);
+					return coretexContext.findMetaEnumValueTypeItem(((MetaEnumTypeItem) metaAttributeTypeItem.getAttributeType()).getEnumClass(), (UUID) (value instanceof String ? UUID.fromString((String) value): value));
 				}
 				if (AttributeTypeUtils.isRegularTypeAttribute(metaAttributeTypeItem)) {
-					var value = cortexContext.getTypeTranslator(((RegularTypeItem) metaAttributeTypeItem.getAttributeType()).getRegularClass()).read(rs, index);
+					var value = coretexContext.getTypeTranslator(((RegularTypeItem) metaAttributeTypeItem.getAttributeType()).getRegularClass()).read(rs, index);
 					if(Objects.isNull(value) && Objects.nonNull(metaAttributeTypeItem.getDefaultValue())){
 						return TypeUtil.toType(metaAttributeTypeItem.getDefaultValue(), (RegularTypeItem) metaAttributeTypeItem.getAttributeType());
 					}
@@ -109,7 +112,7 @@ public class ItemRowMapper<T extends AbstractGenericItem> implements RowMapper<T
 					Class<AbstractGenericItem> itemClass = ((MetaTypeItem) metaAttributeTypeItem.getAttributeType()).getItemClass();
 					var value = JdbcUtils.getResultSetValue(rs, index);
 					return Objects.nonNull(value) ?
-							ItemUtils.createItem(itemClass, itemContextFactory.create(itemClass, (UUID) value)) :
+							ItemUtils.createItem(itemClass, itemContextFactory.create(itemClass, (UUID) (value instanceof String ? UUID.fromString((String) value): value))) :
 							null;
 				}
 			} catch (Exception e) {

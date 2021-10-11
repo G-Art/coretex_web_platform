@@ -87,4 +87,5 @@ public class SelectItemScanner<Q> extends Scanner<SelectItem, Q> {
 	public ExpressionScanner<SelectItem> getExpressionScanner() {
 		return expressionScanner;
 	}
+
 }

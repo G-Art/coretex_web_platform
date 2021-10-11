@@ -3,7 +3,7 @@ package com.coretex.core.activeorm.query.operations.suppliers;
 import com.coretex.core.activeorm.query.operations.ModificationOperation;
 import com.coretex.core.activeorm.query.operations.contexts.AbstractOperationConfigContext;
 
-public class GenericOperationSupplier implements OperationSupplier<ModificationOperation<?, ?, ?>, AbstractOperationConfigContext<?, ?,? >> {
+public class GenericOperationSupplier implements OperationSupplier<ModificationOperation<?, ?, ?>, AbstractOperationConfigContext<?, ?>> {
 
 	private final ModificationOperation<?, ?, ?> operation;
 
@@ -12,7 +12,7 @@ public class GenericOperationSupplier implements OperationSupplier<ModificationO
 	}
 
 	@Override
-	public ModificationOperation<?, ?, ?> get(AbstractOperationConfigContext<?, ?, ?> abstractOperationConfigContext) {
+	public ModificationOperation<?, ?, ?> get(AbstractOperationConfigContext<?, ?> abstractOperationConfigContext) {
 		return operation;
 	}
 

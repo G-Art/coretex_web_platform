@@ -2,7 +2,7 @@ package com.coretex.core.activeorm.factories;
 
 import com.coretex.core.activeorm.exceptions.QueryException;
 import com.coretex.core.activeorm.factories.mappers.ItemRowMapper;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
 import com.coretex.meta.AbstractGenericItem;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import static org.springframework.util.Assert.notNull;
 public class RowMapperFactory {
 	private Logger LOG = LoggerFactory.getLogger(RowMapperFactory.class);
 
-	private CortexContext cortexContext;
+	private CoretexContext coretexContext;
 
 	private ItemContextFactory itemContextFactory;
 
@@ -37,11 +37,11 @@ public class RowMapperFactory {
 	}
 
 	protected <T> RowMapper<T> createItemMapper(Class<? super T> type) {
-		return new ItemRowMapper(cortexContext, itemContextFactory);
+		return new ItemRowMapper(coretexContext, itemContextFactory);
 	}
 
-	public void setCortexContext(CortexContext cortexContext) {
-		this.cortexContext = cortexContext;
+	public void setCoretexContext(CoretexContext coretexContext) {
+		this.coretexContext = coretexContext;
 	}
 
 	public void setItemContextFactory(ItemContextFactory itemContextFactory) {

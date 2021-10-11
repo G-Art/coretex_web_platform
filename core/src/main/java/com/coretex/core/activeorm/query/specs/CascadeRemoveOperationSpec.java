@@ -6,9 +6,9 @@ import com.coretex.items.core.MetaAttributeTypeItem;
 
 public class CascadeRemoveOperationSpec extends RemoveOperationSpec implements CascadeModificationOperationSpec {
 
-	private AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator;
+	private AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?>> initiator;
 
-	public CascadeRemoveOperationSpec(AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?, ?, ?>, ?> initiator, GenericItem item, MetaAttributeTypeItem attributeTypeItem) {
+	public CascadeRemoveOperationSpec(AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?>> initiator, GenericItem item, MetaAttributeTypeItem attributeTypeItem) {
 		super(item,
 				initiator.getOperationSpec().isCascadeEnabled(),
 				initiator.getOperationSpec().isTransactionEnabled());

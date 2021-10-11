@@ -1,10 +1,9 @@
 package com.coretex.core.activeorm.extractors;
 
 import com.coretex.core.activeorm.factories.RowMapperFactory;
-import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
+import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaTypeItem;
-import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -15,6 +14,7 @@ import org.springframework.jdbc.support.rowset.ResultSetWrappingSqlRowSet;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -61,7 +61,8 @@ public class CoretexReactiveResultSetExtractor<T> implements ResultSetExtractor<
 	}
 
 	private boolean hasMetaTypeColumn(ResultSetWrappingSqlRowSet rowSet) {
-		return ArrayUtils.contains(rowSet.getMetaData().getColumnNames(), metaTypeProvider.findAttribute(GenericItem.ITEM_TYPE, MetaTypeItem.META_TYPE).getColumnName().toLowerCase());
+		String mTypeC = metaTypeProvider.findAttribute(GenericItem.ITEM_TYPE, MetaTypeItem.META_TYPE).getColumnName();
+		return Arrays.stream(rowSet.getMetaData().getColumnNames()).anyMatch(s -> s.equalsIgnoreCase(mTypeC));
 	}
 
 	public void setMapperFactorySupplier(Supplier<RowMapperFactory> mapperFactorySupplier) {

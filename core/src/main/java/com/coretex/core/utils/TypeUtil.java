@@ -1,6 +1,6 @@
 package com.coretex.core.utils;
 
-import com.coretex.core.services.bootstrap.DbDialectService;
+import com.coretex.core.services.bootstrap.dialect.DbDialectService;
 import com.coretex.items.core.RegularTypeItem;
 import com.coretex.meta.AbstractGenericItem;
 import com.coretex.server.ApplicationContextProvider;
@@ -11,7 +11,6 @@ import org.springframework.util.ReflectionUtils;
 
 import java.beans.PropertyEditorSupport;
 import java.lang.reflect.Field;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -63,10 +62,10 @@ public final class TypeUtil {
 			@Override
 			public void setAsText(String text) throws IllegalArgumentException {
 				DbDialectService dialectService =
-				 ApplicationContextProvider.getApplicationContext().getBean(DbDialectService.class);
+				 ApplicationContextProvider.getBean(DbDialectService.class);
 
 				if (LOG.isDebugEnabled()) {
-					LOG.debug("Parse LocalDate [{}]", text);
+					LOG.debug("Parse Date [{}]", text);
 				}
 				setValue(dialectService.stringToDate(text));
 			}

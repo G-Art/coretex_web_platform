@@ -8,24 +8,29 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.util.Assert;
 
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 public class SelectOperationSpec extends SqlOperationSpec<
-		Select,
-		SelectOperationSpec,
-		SelectOperationConfigContext> {
+		Select> {
 
+	private Optional<String> query;
 	private Class<?> expectedResultType;
 	private Map<String, Object> parameters;
 	private ResultSetExtractor<?> customExtractor;
 	private String transformedQuery;
+
+	protected SelectOperationSpec(){
+
+	}
 
 	public SelectOperationSpec(String query) {
 		this(query, Maps.newHashMap());
 	}
 
 	public SelectOperationSpec(String query, Map<String, Object> parameters) {
-		super(query);
 		this.parameters = parameters;
+		this.query = Optional.of(query);
 	}
 
 	public SelectOperationSpec(String query, Map<String, Object> parameters, ResultSetExtractor<?> customExtractor) {
@@ -44,6 +49,9 @@ public class SelectOperationSpec extends SqlOperationSpec<
 
 	public void addQueryParameter(String key, Object value) {
 		Assert.notNull(value, "Value is required, null given for key: " + key);
+		if(Objects.isNull(parameters)){
+			parameters = Maps.newHashMap();
+		}
 		this.parameters.put(key, value);
 	}
 
@@ -63,12 +71,20 @@ public class SelectOperationSpec extends SqlOperationSpec<
 		return customExtractor;
 	}
 
+	protected void setCustomExtractor(ResultSetExtractor<?> customExtractor) {
+		this.customExtractor = customExtractor;
+	}
+
 	public String getTransformedQuery() {
 		return transformedQuery;
 	}
 
 	public void setTransformedQuery(String transformedQuery) {
 		this.transformedQuery = transformedQuery;
+	}
+
+	public String getQuery() {
+		return query.get();
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.coretex.converter;
 
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.coretex.items.core.*;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -23,11 +23,11 @@ public class ItemConverter {
 	private Logger LOG = LoggerFactory.getLogger(ItemConverter.class);
 
 	@Autowired
-	private CortexContext cortexContext;
+	private CoretexContext coretexContext;
 
 	public Map convertToMap(GenericItem item) {
 		Map<String, Object> result = Maps.newHashMap();
-		Map<String, MetaAttributeTypeItem> attributeTypeItemMap = cortexContext.getAllAttributes(getTypeCode(item));
+		Map<String, MetaAttributeTypeItem> attributeTypeItemMap = coretexContext.getAllAttributes(getTypeCode(item));
 
 		attributeTypeItemMap.forEach((key, attr) -> {
 

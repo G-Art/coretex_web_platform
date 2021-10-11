@@ -2,7 +2,7 @@ package com.coretex.core.activeorm.query.operations.dataholders;
 
 import com.coretex.core.activeorm.exceptions.MandatoryAttributeException;
 import com.coretex.core.activeorm.query.specs.ModificationOperationSpec;
-import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
+import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaEnumTypeItem;
@@ -42,6 +42,10 @@ public abstract class AbstractValueDataHolder<S extends ModificationOperationSpe
 		return !attributeTypeItem.getOptional();
 	}
 
+	public String columnName(){
+		return attributeTypeItem.getColumnName();
+	}
+
 	public MetaAttributeTypeItem getAttributeTypeItem() {
 		return attributeTypeItem;
 	}
@@ -67,11 +71,11 @@ public abstract class AbstractValueDataHolder<S extends ModificationOperationSpe
 		return new SqlParameterValue(getSqlType(), typeName(), value instanceof Class ? ((Class) value).getCanonicalName() : value);
 	}
 
-	private String typeName() {
+	protected String typeName() {
 		return getMetaTypeProvider().getSqlTypeName(getRegularType(getAttributeTypeItem().getAttributeType()));
 	}
 
-	private int getSqlType() {
+	protected int getSqlType() {
 		return getMetaTypeProvider().getSqlType(getRegularType(getAttributeTypeItem().getAttributeType()));
 	}
 

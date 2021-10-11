@@ -2,16 +2,16 @@ package com.coretex.core.activeorm.cache.features;
 
 import com.coretex.core.activeorm.cache.CacheContext;
 import com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 
 public class ItemTypeLocalizedCacheSegmentFeature extends ItemTypeCacheSegmentFeature {
 
-	public ItemTypeLocalizedCacheSegmentFeature(String type, CortexContext cortexContext) {
-		super(type, cortexContext);
+	public ItemTypeLocalizedCacheSegmentFeature(String type, CoretexContext coretexContext) {
+		super(type, coretexContext);
 	}
 
-	public ItemTypeLocalizedCacheSegmentFeature(String type, CortexContext cortexContext, boolean useSubTypes) {
-		super(type, cortexContext, useSubTypes);
+	public ItemTypeLocalizedCacheSegmentFeature(String type, CoretexContext coretexContext, boolean useSubTypes) {
+		super(type, coretexContext, useSubTypes);
 	}
 
 	@Override

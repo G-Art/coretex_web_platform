@@ -1,7 +1,7 @@
 package com.coretex.web.controllers;
 
 import com.coretex.core.activeorm.services.SearchService;
-import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
+import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.data.MetaTypeHierarchyDTO;
 import com.coretex.data.MetaTypeHierarchyItemDTO;
 import com.coretex.data.MetaTypeInfoDTO;

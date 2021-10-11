@@ -6,7 +6,6 @@ import com.coretex.core.activeorm.query.select.SelectQueryTransformationHelper;
 import com.coretex.core.activeorm.query.select.data.TableTransformationData;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
 import com.coretex.core.activeorm.query.select.scanners.SelectItemScanner;
-import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.SelectItemDataInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.dip.TableDataInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.dip.WrapperInjectionPoint;
@@ -35,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,8 +44,8 @@ public class TableTransformationStrategy extends AbstractTransformationStrategy<
 
 	private Logger LOG = LoggerFactory.getLogger(TableTransformationStrategy.class);
 
-	public TableTransformationStrategy(Map<DataInjectionType, AbstractTransformationStrategy> transformationStrategies, SelectQueryTransformationHelper transformationHelper) {
-		super(transformationStrategies, transformationHelper);
+	public TableTransformationStrategy(SelectQueryTransformationHelper transformationHelper) {
+		super(transformationHelper);
 	}
 
 	public SelectBody apply(TableDataInjectionPoint dataInjectionPoint) {

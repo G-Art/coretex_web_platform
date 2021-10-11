@@ -2,11 +2,15 @@ package com.coretex.core.services.bootstrap.meta.resolvers;
 
 import com.coretex.core.tests.tags.UnitTest;
 import com.coretex.items.core.GenericItem;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.stream.Stream;
 
 import static com.coretex.core.general.constants.GeneralConstants.SYSTEM_TIME_ZONE;
@@ -54,10 +58,10 @@ class GenericItemDataResolverTest extends DataResolverUnitTest {
     @DisplayName("Throws exception when ...")
     Stream<DynamicTest> checkCreateUpdateClass() {
         return DynamicTest.stream(asList(
-                of(GenericItem.CREATE_DATE, createDate),
+                of(GenericItem.CREATE_DATE, LocalDate.now()),
                 of(GenericItem.CREATE_DATE, null),
                 of(GenericItem.UPDATE_DATE, null),
-                of(GenericItem.UPDATE_DATE, updateDate)).iterator(),
+                of(GenericItem.UPDATE_DATE, LocalDate.now())).iterator(),
                 entry -> format("%s attribute with value type %s", entry.getKey(), defaultIfNull(entry.getValue(), NULL).getClass().getSimpleName()),
                 entry -> checkIllegalInstance(entry.getKey(), entry.getValue()));
 

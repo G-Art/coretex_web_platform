@@ -35,7 +35,7 @@ public abstract class ItemContext implements Serializable, Cloneable {
 	}
 
 	protected Object readResolve() throws ObjectStreamException {
-		provider = ApplicationContextProvider.getApplicationContext().getBean("defaultAttributeProvider", AttributeProvider.class);
+		provider = ApplicationContextProvider.getBean("defaultAttributeProvider", AttributeProvider.class);
 		return this;
 	}
 

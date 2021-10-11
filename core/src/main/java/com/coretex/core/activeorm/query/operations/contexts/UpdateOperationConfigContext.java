@@ -8,7 +8,7 @@ import net.sf.jsqlparser.statement.update.Update;
 import java.util.stream.Stream;
 
 public class UpdateOperationConfigContext
-		extends AbstractOperationConfigContext<Update, UpdateOperationSpec, UpdateOperationConfigContext> {
+		extends AbstractOperationConfigContext<Update, UpdateOperationSpec> {
 
 	public UpdateOperationConfigContext(UpdateOperationSpec operationSpec) {
 		super(operationSpec);

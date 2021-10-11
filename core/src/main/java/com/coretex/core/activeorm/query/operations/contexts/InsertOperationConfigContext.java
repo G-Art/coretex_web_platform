@@ -8,7 +8,7 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import java.util.stream.Stream;
 
 public class InsertOperationConfigContext
-		extends AbstractOperationConfigContext<Insert, InsertOperationSpec, InsertOperationConfigContext> {
+		extends AbstractOperationConfigContext<Insert, InsertOperationSpec> {
 
 	public InsertOperationConfigContext(InsertOperationSpec operationSpec) {
 		super(operationSpec);

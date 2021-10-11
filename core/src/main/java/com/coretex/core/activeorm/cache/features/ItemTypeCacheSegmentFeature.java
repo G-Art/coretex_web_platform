@@ -4,7 +4,7 @@ import com.coretex.core.activeorm.cache.CacheContext;
 import com.coretex.core.activeorm.cache.CacheSegmentFeature;
 import com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext;
 import com.coretex.core.general.utils.ItemUtils;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.coretex.items.core.MetaTypeItem;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -12,7 +12,7 @@ import java.util.Collection;
 
 public class ItemTypeCacheSegmentFeature implements CacheSegmentFeature {
 
-	private final CortexContext cortexContext;
+	private final CoretexContext coretexContext;
 
 	private int scoreBasis = 1;
 	private int scoreMultiplier = 10;
@@ -23,14 +23,14 @@ public class ItemTypeCacheSegmentFeature implements CacheSegmentFeature {
 
 	private final boolean useSubTypes;
 
-	public ItemTypeCacheSegmentFeature(String type, CortexContext cortexContext) {
-		this(type, cortexContext, true);
+	public ItemTypeCacheSegmentFeature(String type, CoretexContext coretexContext) {
+		this(type, coretexContext, true);
 	}
 
-	public ItemTypeCacheSegmentFeature(String type, CortexContext cortexContext, boolean useSubTypes) {
+	public ItemTypeCacheSegmentFeature(String type, CoretexContext coretexContext, boolean useSubTypes) {
 		this.type = type;
-		this.cortexContext = cortexContext;
-		this.metaType = cortexContext.findMetaType(type);
+		this.coretexContext = coretexContext;
+		this.metaType = coretexContext.findMetaType(type);
 		this.useSubTypes = useSubTypes;
 		if (this.useSubTypes) {
 			subTypes = ItemUtils.getAllSubtypes(metaType);

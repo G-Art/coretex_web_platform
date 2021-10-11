@@ -8,7 +8,7 @@ import com.coretex.core.activeorm.interceptors.OnSavePrepareInterceptor;
 import com.coretex.core.activeorm.interceptors.OnSavedInterceptor;
 import com.coretex.core.activeorm.services.ItemInterceptorsRegistry;
 import com.coretex.core.general.utils.ItemUtils;
-import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
+import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.core.utils.TypeUtil;
 import com.coretex.items.core.MetaTypeItem;
 import com.coretex.server.CoretexApplicationConfig;

@@ -23,16 +23,16 @@ public class ExpressionScanner<Q> extends Scanner<Expression, Q> {
 
 	private List<ExpressionScanner> internalExpressions = Lists.newArrayList();
 
-	private DataInjectionType expresionType;
+	private DataInjectionType expressionType;
 
-	public ExpressionScanner(int deep, Q parentStatement, DataInjectionType expresionType) {
+	public ExpressionScanner(int deep, Q parentStatement, DataInjectionType expressionType) {
 		super(deep, parentStatement);
-		this.expresionType = expresionType;
+		this.expressionType = expressionType;
 	}
 
-	public ExpressionScanner(int deep, Q parentStatement, Scanner parent, DataInjectionType expresionType) {
+	public ExpressionScanner(int deep, Q parentStatement, Scanner parent, DataInjectionType expressionType) {
 		super(deep, parentStatement, parent);
-		this.expresionType = expresionType;
+		this.expressionType = expressionType;
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class ExpressionScanner<Q> extends Scanner<Expression, Q> {
 		return internalExpressions;
 	}
 
-	public DataInjectionType getExpresionType() {
-		return expresionType;
+	public DataInjectionType getExpressionType() {
+		return expressionType;
 	}
 }

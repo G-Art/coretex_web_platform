@@ -8,9 +8,9 @@ public class CascadeUpdateOperationSpec extends UpdateOperationSpec implements C
 
 	private MetaAttributeTypeItem attributeTypeItem;
 
-	private AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?,?,?> ,?> initiator;
+	private AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?>> initiator;
 
-	public CascadeUpdateOperationSpec(AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?,?,?> ,?> initiator, GenericItem savingItem, MetaAttributeTypeItem attributeTypeItem) {
+	public CascadeUpdateOperationSpec(AbstractOperationConfigContext<?, ? extends ModificationOperationSpec<?>> initiator, GenericItem savingItem, MetaAttributeTypeItem attributeTypeItem) {
 		super(savingItem, initiator.getOperationSpec().isCascadeEnabled(), initiator.getOperationSpec().isTransactionEnabled());
 		this.initiator = initiator;
 		this.attributeTypeItem = attributeTypeItem;

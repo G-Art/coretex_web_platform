@@ -17,11 +17,12 @@ dependencies {
     api(group = "com.fasterxml.jackson.core", name = "jackson-databind", version = "2.9.9.3")
     api(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-xml", version = "2.9.9")
 
-    api(group = "com.github.jsqlparser", name = "jsqlparser", version = "3.2")
+    api(group = "com.github.jsqlparser", name = "jsqlparser", version = "4.1")
 
     api(group = "org.javalite", name = "javalite-common", version = "2.3")
     api(group = "com.zaxxer", name = "HikariCP", version = "3.4.1")
 
+    api(group = "org.springframework.boot", name = "spring-boot-starter-web", version = "2.5.5")
     api(group = "org.springframework", name = "spring-core", version = "${v["spring"]}")
     api(group = "org.springframework", name = "spring-context", version = "${v["spring"]}")
     api(group = "org.springframework", name = "spring-beans", version = "${v["spring"]}")
@@ -29,6 +30,7 @@ dependencies {
     api(group = "org.springframework", name = "spring-aop", version = "${v["spring"]}")
     api(group = "org.springframework", name = "spring-aspects", version = "${v["spring"]}")
     api(group = "org.springframework", name = "spring-instrument", version = "${v["spring"]}")
+    api(group = "org.springframework", name = "spring-test", version = "${v["spring"]}")
 
     web(group = "org.springframework", name = "spring-web", version = "${v["spring"]}")
     web(group = "javax.servlet", name = "javax.servlet-api", version = "4.0.1")

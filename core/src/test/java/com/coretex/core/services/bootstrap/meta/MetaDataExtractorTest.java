@@ -1,5 +1,6 @@
 package com.coretex.core.services.bootstrap.meta;
 
+import com.coretex.core.services.bootstrap.dialect.postgres.PostgresMetaDataExtractor;
 import com.coretex.core.tests.asserts.CoreAsserts;
 import com.coretex.core.tests.extentions.JDBCTemplateEmulator;
 import com.coretex.core.tests.tags.UnitTest;
@@ -7,9 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import sun.misc.Unsafe;
 
 import java.util.List;
 import java.util.Map;
@@ -19,13 +18,13 @@ import java.util.Map;
 @ExtendWith(JDBCTemplateEmulator.class)
 public class MetaDataExtractorTest {
 
-    private MetaDataExtractor metaDataExtractor = new MetaDataExtractor();
+    private MetaDataExtractor metaDataExtractor;
 
     private NamedParameterJdbcTemplate mockJdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        metaDataExtractor.setJdbcTemplate(mockJdbcTemplate);
+        metaDataExtractor = new PostgresMetaDataExtractor(mockJdbcTemplate);
     }
 
     @Test

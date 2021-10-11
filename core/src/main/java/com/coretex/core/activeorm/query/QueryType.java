@@ -1,7 +1,7 @@
 package com.coretex.core.activeorm.query;
 
 public enum QueryType {
-	SELECT,
+	SELECT, SELECT_ITEM_ATTRIBUTE,
 	UPDATE, UPDATE_CASCADE,
 	INSERT, INSERT_CASCADE,
 	DELETE, DELETE_CASCADE,

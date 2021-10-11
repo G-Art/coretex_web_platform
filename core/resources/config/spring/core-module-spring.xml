@@ -37,7 +37,7 @@
     </bean>
 
     <bean id="rowMapperFactory" class="com.coretex.core.activeorm.factories.RowMapperFactory">
-        <property name="cortexContext" ref="defaultBootstrapContext"/>
+        <property name="coretexContext" ref="defaultBootstrapContext"/>
         <property name="itemContextFactory" ref="defaultItemContextFactory"/>
     </bean>
 

@@ -4,7 +4,6 @@ import com.coretex.core.activeorm.query.select.SelectQueryTransformationHelper;
 import com.coretex.core.activeorm.query.select.data.TableTransformationData;
 import com.coretex.core.activeorm.query.select.scanners.ExpressionScanner;
 import com.coretex.core.activeorm.query.select.scanners.JoinScanner;
-import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.JoinDataInjectionPoint;
 import com.coretex.core.general.utils.ItemUtils;
 import com.coretex.items.core.GenericItem;
@@ -30,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -42,8 +40,8 @@ public class JoinTransformationStrategy extends AbstractTransformationStrategy<J
 
 	private Logger LOG = LoggerFactory.getLogger(JoinTransformationStrategy.class);
 
-	public JoinTransformationStrategy(Map<DataInjectionType, AbstractTransformationStrategy> transformationStrategies, SelectQueryTransformationHelper transformationHelper) {
-		super(transformationStrategies, transformationHelper);
+	public JoinTransformationStrategy(SelectQueryTransformationHelper transformationHelper) {
+		super(transformationHelper);
 	}
 
 	@Override

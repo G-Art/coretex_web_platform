@@ -9,7 +9,7 @@ import com.coretex.core.activeorm.query.operations.contexts.SelectOperationConfi
 import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.operations.sources.SelectSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import net.sf.jsqlparser.JSQLParserException;
@@ -17,6 +17,7 @@ import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.select.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.util.Objects;
@@ -28,6 +29,9 @@ import java.util.stream.Stream;
 public class SelectOperation
 		extends SqlOperation<Select, SelectOperationSpec, SelectOperationConfigContext> {
 
+	@Value("${db.query.cache.enable:true}")
+	private boolean queryCacheEnabled;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectOperation.class);
 
 	private static final Cache<Integer, QueryInfoHolder<Select>> selectCache = CacheBuilder.newBuilder()
@@ -38,7 +42,7 @@ public class SelectOperation
 			.build();
 
 	private final QueryTransformationProcessor<QueryInfoHolder<Select>> transformationProcessor;
-	private final CortexContext cortexContext;
+	private final CoretexContext coretexContext;
 	private final ResultSetExtractor<Stream<?>> extractor;
 
 	private final CacheService cacheService;
@@ -46,31 +50,35 @@ public class SelectOperation
 	protected final Function<SelectOperationSpec, FeaturedStatementCacheContext<Select>> searchQuerySupplier;
 
 	public SelectOperation(QueryTransformationProcessor<QueryInfoHolder<Select>> transformationProcessor,
-	                       CortexContext cortexContext, ResultSetExtractor<Stream<?>> extractor, CacheService cacheService) {
+	                       CoretexContext coretexContext, ResultSetExtractor<Stream<?>> extractor, CacheService cacheService) {
 		this.transformationProcessor = transformationProcessor;
-		this.cortexContext = cortexContext;
+		this.coretexContext = coretexContext;
 		this.extractor = extractor;
 		this.cacheService = cacheService;
 		searchQuerySupplier = (operationSpec) -> {
 			var query = operationSpec.getQuery();
 			try {
 				Select select = (Select) CCJSqlParserUtil.parse(query);
-				try {
-					var selectQueryInfoHolder = selectCache.get(Objects.hashCode(query), () -> {
-						var queryInfoHolder = new QueryInfoHolder<>(select);
-						this.transformationProcessor.transform(queryInfoHolder);
-						return queryInfoHolder;
-					});
-					operationSpec.setTransformedQuery(selectQueryInfoHolder.getStatement().toString());
-					return new FeaturedStatementCacheContext<>(selectQueryInfoHolder, operationSpec.getParameters());
-				} catch (ExecutionException e) {
-					LOGGER.error("Cache calculation error", e);
 
-					var queryInfoHolder = new QueryInfoHolder<>(select);
-					this.transformationProcessor.transform(queryInfoHolder);
-					operationSpec.setTransformedQuery(queryInfoHolder.getStatement().toString());
-					return new FeaturedStatementCacheContext<>(queryInfoHolder, operationSpec.getParameters());
+				if (queryCacheEnabled) {
+					try {
+						var selectQueryInfoHolder = selectCache.get(Objects.hashCode(query), () -> {
+							var queryInfoHolder = new QueryInfoHolder<>(select);
+							this.transformationProcessor.transform(queryInfoHolder);
+							return queryInfoHolder;
+						});
+						operationSpec.setTransformedQuery(selectQueryInfoHolder.getStatement().toString());
+						return new FeaturedStatementCacheContext<>(selectQueryInfoHolder, operationSpec.getParameters());
+					} catch (ExecutionException e) {
+						LOGGER.error("Cache calculation error", e);
+					}
 				}
+
+				var queryInfoHolder = new QueryInfoHolder<>(select);
+				this.transformationProcessor.transform(queryInfoHolder);
+				operationSpec.setTransformedQuery(queryInfoHolder.getStatement().toString());
+				return new FeaturedStatementCacheContext<>(queryInfoHolder, operationSpec.getParameters());
+
 			} catch (JSQLParserException e) {
 				throw new QueryException(String.format("Query parsing error [%s]", query), e);
 			}
@@ -96,7 +104,7 @@ public class SelectOperation
 
 					var customExtractor = operationConfigContext.customExtractor();
 					return getJdbcTemplate().query(query,
-							new SelectSqlParameterSource(operationConfigContext.getOperationSpec(), cortexContext),
+							new SelectSqlParameterSource(operationConfigContext.getOperationSpec(), coretexContext),
 							customExtractor.orElse(extractor));
 				}))
 				.apply(operationConfigContext.getOperationSpec());

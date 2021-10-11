@@ -2,7 +2,7 @@ package com.coretex.core.activeorm.services.impl;
 
 import com.coretex.core.activeorm.query.ActiveOrmOperationExecutor;
 import com.coretex.core.activeorm.services.ItemService;
-import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
+import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.core.services.items.context.factory.ItemContextFactory;
 import com.coretex.core.services.items.exceptions.ItemCreationException;
 import com.coretex.items.core.GenericItem;

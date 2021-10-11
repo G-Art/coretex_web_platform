@@ -1,9 +1,10 @@
 package com.coretex.core.services.bootstrap;
 
 import com.coretex.core.services.bootstrap.dialect.DbDialectFactory;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.dialect.DbDialectService;
+import com.coretex.core.services.bootstrap.dialect.QueryTransformationHints;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.coretex.core.services.bootstrap.meta.MetaCollector;
-import com.coretex.core.services.bootstrap.meta.MetaDataExtractor;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,12 +59,16 @@ public class BootstrapConfig {
         dataSource.setPassword(password);
     }
 
+    protected DataSource getDataSource(){
+        return dataSource;
+    }
+
     @Bean(DATASOURCE_QUALIFIER)
     public DataSource defaultDataSource() {
 //        props.put("dataSource.logWriter", new PrintWriter(System.out));
 
         HikariConfig config = new HikariConfig();
-        config.setDataSource(dataSource);
+        config.setDataSource(getDataSource());
         return new HikariDataSource(config);
     }
 
@@ -84,25 +89,23 @@ public class BootstrapConfig {
     }
 
     @Bean
-    protected MetaDataExtractor metaDataExtractor(@Autowired NamedParameterJdbcTemplate jdbcTemplate) {
-        MetaDataExtractor extractor = new MetaDataExtractor();
-        extractor.setJdbcTemplate(jdbcTemplate);
-        return extractor;
+    protected QueryTransformationHints queryTransformationHints() {
+        return dialectFactory.getQueryTransformationHints(dialect);
     }
 
     @Bean
-    protected MetaCollector metaCollector(@Autowired MetaDataExtractor metaDataExtractor) {
+    protected MetaCollector metaCollector(@Autowired NamedParameterJdbcTemplate jdbcTemplate) {
         MetaCollector collector = new MetaCollector();
-        collector.setExtractor(metaDataExtractor);
+        collector.setExtractor(dialectFactory.getMetaDataExtractor(jdbcTemplate, dialect));
         return collector;
     }
 
     @Bean(name = {META_TYPE_PROVIDER_QUALIFIER, BOOTSTRAP_CONTEXT_QUALIFIER})
-    public CortexContext cortexContext(@Autowired MetaCollector metaCollector) {
-        CortexContext cortexContext = new CortexContext();
-        cortexContext.setMetaCollector(metaCollector);
-        cortexContext.setDbDialectService(dbDialectService());
-        return cortexContext;
+    public CoretexContext coretexContext(@Autowired MetaCollector metaCollector) {
+        CoretexContext coretexContext = new CoretexContext();
+        coretexContext.setMetaCollector(metaCollector);
+        coretexContext.setDbDialectService(dbDialectService());
+        return coretexContext;
     }
 
     @Bean("jdbcTemplate")

@@ -1,23 +1,24 @@
 package com.coretex.core.activeorm.query.specs;
 
-import com.coretex.core.activeorm.query.operations.contexts.OperationConfigContext;
-import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
+import com.coretex.core.activeorm.query.operations.dataholders.AbstractValueDataHolder;
+import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import com.coretex.items.core.MetaRelationTypeItem;
 import com.coretex.server.ApplicationContextProvider;
+import com.google.common.collect.Maps;
 import net.sf.jsqlparser.statement.Statement;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public abstract class ModificationOperationSpec<
-		S extends Statement,
-		OS extends ModificationOperationSpec<S, OS, CTX>,
-		CTX extends OperationConfigContext<S, OS, CTX>>
-		extends SqlOperationSpec<S, OS, CTX> {
+		S extends Statement>
+		extends SqlOperationSpec<S> {
 
 	private MetaTypeProvider metaTypeProvider;
 
@@ -28,9 +29,10 @@ public abstract class ModificationOperationSpec<
 	private List<MetaAttributeTypeItem> localizedFields;
 	private Map<String, MetaAttributeTypeItem> allAttributes;
 	private List<MetaAttributeTypeItem> relationAttributes;
+	private final Map<String, AbstractValueDataHolder<?>> valueDataHolders = Maps.newHashMap();
 
 	public ModificationOperationSpec(GenericItem item) {
-		metaTypeProvider = ApplicationContextProvider.getApplicationContext().getBean(MetaTypeProvider.class);
+		metaTypeProvider = ApplicationContextProvider.getBean(MetaTypeProvider.class);
 		this.item = item;
 		setNativeQuery(true);
 	}
@@ -97,8 +99,24 @@ public abstract class ModificationOperationSpec<
 		return allAttributes;
 	}
 
+	public Map<String, AbstractValueDataHolder<?>> getValueDataHolders() {
+		return valueDataHolders;
+	}
+
 	public void flush() {
 		item.getItemContext().flush();
 	}
 
+	public void addValueDataHolders(Collection<? extends AbstractValueDataHolder<?>> values) {
+		valueDataHolders.putAll(
+				values.stream()
+						.collect(
+								Collectors.toMap(AbstractValueDataHolder::getAttributeName, Function.identity())
+						)
+		);
+	}
+
+	public void addValueDataHolder(AbstractValueDataHolder<?> dataHolder) {
+		valueDataHolders.put(dataHolder.getAttributeName(), dataHolder);
+	}
 }

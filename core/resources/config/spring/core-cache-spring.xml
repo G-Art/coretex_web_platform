@@ -47,7 +47,7 @@
                 <bean class="com.coretex.core.activeorm.cache.features.ItemTypeLocalizedCacheSegmentFeature">
                     <constructor-arg name="type" value="#{T(com.coretex.items.core.GenericItem).ITEM_TYPE}"/>
                     <constructor-arg name="useSubTypes" value="true"/>
-                    <constructor-arg name="cortexContext" ref="defaultMetaTypeProvider"/>
+                    <constructor-arg name="coretexContext" ref="defaultMetaTypeProvider"/>
                 </bean>
             </list>
         </constructor-arg>

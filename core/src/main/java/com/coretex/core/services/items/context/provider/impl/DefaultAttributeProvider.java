@@ -1,7 +1,7 @@
 package com.coretex.core.services.items.context.provider.impl;
 
 
-import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
+import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.core.services.items.context.ItemContext;
 import com.coretex.core.services.items.context.provider.AttributeProvider;
 import com.coretex.core.services.items.context.provider.strategies.LoadAttributeValueStrategyProvider;

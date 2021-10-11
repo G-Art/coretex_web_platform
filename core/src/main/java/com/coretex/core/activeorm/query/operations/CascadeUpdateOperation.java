@@ -3,6 +3,7 @@ package com.coretex.core.activeorm.query.operations;
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.services.AbstractJdbcService;
 import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
+import com.coretex.core.services.bootstrap.dialect.DbDialectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,8 +11,8 @@ public class CascadeUpdateOperation extends UpdateOperation {
 
 	private Logger LOG = LoggerFactory.getLogger(CascadeUpdateOperation.class);
 
-	public CascadeUpdateOperation(AbstractJdbcService abstractJdbcService, ItemOperationInterceptorService itemOperationInterceptorService) {
-		super(abstractJdbcService, itemOperationInterceptorService);
+	public CascadeUpdateOperation(AbstractJdbcService abstractJdbcService, ItemOperationInterceptorService itemOperationInterceptorService, DbDialectService dbDialectService) {
+		super(abstractJdbcService, itemOperationInterceptorService, dbDialectService);
 	}
 
 	@Override

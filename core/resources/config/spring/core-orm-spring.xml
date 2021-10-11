@@ -23,7 +23,7 @@
         <constructor-arg name="defaultRowMapperFactory" ref="rowMapperFactory"/>
     </bean>
     <bean id="selectOperation" class="com.coretex.core.activeorm.query.operations.SelectOperation" parent="sqlOperation">
-        <constructor-arg name="cortexContext" ref="defaultBootstrapContext"/>
+        <constructor-arg name="coretexContext" ref="defaultBootstrapContext"/>
         <constructor-arg name="extractor" ref="defailtReactiveResultSetExtractor"/>
         <constructor-arg name="cacheService" ref="activeSearchCacheService"/>
     </bean>
@@ -34,6 +34,7 @@
     <bean id="modificationOperation" abstract="true" class="com.coretex.core.activeorm.query.operations.ModificationOperation" parent="sqlOperation">
         <constructor-arg name="abstractJdbcService" ref="defaultSearchService"/>
         <constructor-arg name="itemOperationInterceptorService" ref="defaultItemOperationInterceptorService"/>
+        <constructor-arg name="dbDialectService" ref="dbDialectService"/>
         <lookup-method name="getActiveOrmOperationExecutor" bean="activeOrmOperationExecutor"/>
     </bean>
     <bean id="insertOperation" class="com.coretex.core.activeorm.query.operations.InsertOperation" parent="modificationOperation"/>
@@ -45,12 +46,18 @@
 
     <bean id="localizedDataRemoveOperation" class="com.coretex.core.activeorm.query.operations.LocalizedDataRemoveOperation" parent="modificationOperation"/>
     <bean id="localizedDataSaveOperation" class="com.coretex.core.activeorm.query.operations.LocalizedDataSaveOperation" parent="modificationOperation">
-        <constructor-arg name="dbDialectService" ref="dbDialectService"/>
+
     </bean>
 
     <util:map id="activeOrmOperationMap"
               key-type="com.coretex.core.activeorm.query.QueryType">
         <entry key="SELECT">
+            <bean class="com.coretex.core.activeorm.query.operations.suppliers.SelectOperationSupplier">
+                <constructor-arg name="pageableSelectOperation" ref="pageableSelectOperation"/>
+                <constructor-arg name="selectOperation" ref="selectOperation"/>
+            </bean>
+        </entry>
+        <entry key="SELECT_ITEM_ATTRIBUTE">
             <bean class="com.coretex.core.activeorm.query.operations.suppliers.SelectOperationSupplier">
                 <constructor-arg name="pageableSelectOperation" ref="pageableSelectOperation"/>
                 <constructor-arg name="selectOperation" ref="selectOperation"/>

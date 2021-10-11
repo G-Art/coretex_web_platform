@@ -5,7 +5,7 @@ import com.coretex.core.activeorm.query.specs.select.PageableSelectOperationSpec
 import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.core.activeorm.services.PageableSearchResult;
 import com.coretex.core.activeorm.services.SearchService;
-import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
+import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.data.MetaTypeDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

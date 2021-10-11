@@ -38,14 +38,15 @@
           class="com.coretex.core.activeorm.query.select.SelectQueryTransformationHelper">
         <constructor-arg index="0" ref="defaultMetaTypeProvider"/>
         <constructor-arg index="1" ref="dataInjectionFactory"/>
+        <constructor-arg index="2" ref="queryTransformationHints"/>
     </bean>
 
     <!--============================================ TRANSFORMATION STRATEGIES ==========================================-->
 
     <bean id="abstractTransformationStrategy" abstract="true"
           class="com.coretex.core.activeorm.query.select.transformator.strategies.AbstractTransformationStrategy">
-        <constructor-arg index="0" ref="transformationStrategies"/>
-        <constructor-arg index="1" ref="queryTransformationHelper"/>
+        <constructor-arg index="0" ref="queryTransformationHelper"/>
+        <lookup-method name="getTransformationStrategies" bean="transformationStrategies"/>
     </bean>
 
     <bean id="subSelectTransformationStrategy"

@@ -2,13 +2,13 @@ package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.contexts.RemoveOperationConfigContext;
-import com.coretex.core.activeorm.query.operations.dataholders.RemoveValueDataHolder;
 import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.CascadeRemoveOperationSpec;
 import com.coretex.core.activeorm.query.specs.RemoveOperationSpec;
 import com.coretex.core.activeorm.services.AbstractJdbcService;
 import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
 import com.coretex.core.general.utils.AttributeTypeUtils;
+import com.coretex.core.services.bootstrap.dialect.DbDialectService;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaTypeItem;
 import net.sf.jsqlparser.statement.delete.Delete;
@@ -25,8 +25,8 @@ import static java.lang.String.format;
 public class RemoveOperation extends ModificationOperation<Delete, RemoveOperationSpec, RemoveOperationConfigContext> {
 	private Logger LOG = LoggerFactory.getLogger(RemoveOperation.class);
 
-	public RemoveOperation(AbstractJdbcService abstractJdbcService, ItemOperationInterceptorService itemOperationInterceptorService) {
-		super(abstractJdbcService, itemOperationInterceptorService);
+	public RemoveOperation(AbstractJdbcService abstractJdbcService, ItemOperationInterceptorService itemOperationInterceptorService, DbDialectService dbDialectService) {
+		super(abstractJdbcService, itemOperationInterceptorService, dbDialectService);
 	}
 
 
@@ -74,12 +74,12 @@ public class RemoveOperation extends ModificationOperation<Delete, RemoveOperati
 	@Override
 	public void executeOperation(RemoveOperationConfigContext operationConfigContext) {
 		var operationSpec = operationConfigContext.getOperationSpec();
-		var query = operationConfigContext.getQuerySupplier().get();
+		var query = buildQuery(operationConfigContext);
 		if (LOG.isDebugEnabled()) {
 			LOG.debug(format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), operationSpec instanceof CascadeRemoveOperationSpec));
 		}
 		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query,
-				new ModificationSqlParameterSource<RemoveValueDataHolder>(operationSpec.getValueDatas())));
+				new ModificationSqlParameterSource<>(operationSpec.getValueDataHolders())));
 	}
 
 	@Override

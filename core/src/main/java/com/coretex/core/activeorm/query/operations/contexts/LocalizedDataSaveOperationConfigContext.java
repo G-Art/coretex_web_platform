@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import static com.coretex.core.activeorm.query.QueryType.LOCALIZED_DATA_SAVE;
 
 public class LocalizedDataSaveOperationConfigContext
-		extends AbstractOperationConfigContext<Statement, LocalizedDataSaveOperationSpec, LocalizedDataSaveOperationConfigContext> {
+		extends AbstractOperationConfigContext<Statement, LocalizedDataSaveOperationSpec> {
 
 	public LocalizedDataSaveOperationConfigContext(LocalizedDataSaveOperationSpec operationSpec) {
 		super(operationSpec);

@@ -4,7 +4,7 @@ import com.coretex.core.activeorm.constraints.ItemConstraint;
 import com.coretex.core.activeorm.constraints.exceptions.ItemUniqueFieldConstraintViolationException;
 import com.coretex.core.activeorm.services.SearchService;
 import com.coretex.core.general.utils.AttributeTypeUtils;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
 import org.apache.commons.collections4.CollectionUtils;
@@ -24,14 +24,14 @@ public class ItemUniqueFieldConstraint implements ItemConstraint {
 	private final String SEARCH_QUERY_CONDITION = "item.%s = %s";
 
 	@Resource
-	private CortexContext cortexContext;
+	private CoretexContext coretexContext;
 
 	@Resource
 	private SearchService searchService;
 
 	@Override
 	public void check(GenericItem item) throws ItemUniqueFieldConstraintViolationException {
-		var uniqueAttributes = cortexContext.getAllAttributes(item.getMetaType())
+		var uniqueAttributes = coretexContext.getAllAttributes(item.getMetaType())
 				.values()
 				.stream()
 				.filter(MetaAttributeTypeItem::getUnique)

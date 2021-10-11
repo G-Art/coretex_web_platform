@@ -12,7 +12,7 @@ elements {
         }
 
         MetaAttributeOwnerRelation(source: MetaAttributeType, target: MetaType) {
-            source('owner') {
+            source(owner) {
                 description = "Owner of this attribute"
                 optional = false
             }
@@ -23,7 +23,7 @@ elements {
         }
 
         MetaEnumValueOwnerRelation(source: MetaEnumValueType, target: MetaEnumType) {
-            source('owner') {
+            source(owner) {
                 description = "Enum value owner"
             }
             target(values) {
@@ -32,7 +32,7 @@ elements {
             }
         }
 
-        LocaleCountryRelation(source: 'Locale', target: Country) {
+        LocaleCountryRelation(source: Locale, target: Country) {
             source(countries) {
                 description = "Countries "
                 containerType = Set
@@ -115,12 +115,11 @@ elements {
                     description = "Specify creation separate table for that item"
                     defaultValue = true
                 }
-
                 description(String) {
                     description = "Description of type"
                 }
 
-                'abstract'(Boolean) {
+                abstract(Boolean) {
                     description = "Is abstract type"
                 }
             }
@@ -261,7 +260,7 @@ elements {
                     localized = true
                 }
                 supported(Boolean)
-                defaultLocale('Locale') {
+                defaultLocale(Locale) {
                     description = "default locale"
                 }
                 active(Boolean) {

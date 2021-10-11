@@ -3,7 +3,7 @@ package com.coretex.core.activeorm.cache.features;
 import com.coretex.core.activeorm.cache.CacheContext;
 import com.coretex.core.activeorm.cache.CacheSegmentFeature;
 import com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.coretex.items.core.MetaTypeItem;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
@@ -18,7 +18,7 @@ public class SingleItemCacheSegmentFeature implements CacheSegmentFeature {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SingleItemCacheSegmentFeature.class);
 
-	private CortexContext cortexContext;
+	private CoretexContext coretexContext;
 
 	private int scoreBasis = 3;
 
@@ -33,10 +33,10 @@ public class SingleItemCacheSegmentFeature implements CacheSegmentFeature {
 	public SingleItemCacheSegmentFeature() {
 	}
 
-	public SingleItemCacheSegmentFeature(String type, CortexContext cortexContext) {
+	public SingleItemCacheSegmentFeature(String type, CoretexContext coretexContext) {
 		this.type = type;
-		this.cortexContext = cortexContext;
-		this.metaTypeItem = this.cortexContext.findMetaType(type);
+		this.coretexContext = coretexContext;
+		this.metaTypeItem = this.coretexContext.findMetaType(type);
 	}
 
 	@Override

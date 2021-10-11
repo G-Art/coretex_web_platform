@@ -7,7 +7,7 @@ import com.coretex.core.activeorm.query.operations.contexts.SelectOperationConfi
 import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.specs.select.PageableSelectOperationSpec;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
-import com.coretex.core.services.bootstrap.impl.CortexContext;
+import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import net.sf.jsqlparser.statement.select.Select;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -24,13 +24,13 @@ public class PageableSelectOperation extends SelectOperation {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PageableSelectOperation.class);
 
-	private final CortexContext cortexContext;
+	private final CoretexContext coretexContext;
 
 
 	public PageableSelectOperation(QueryTransformationProcessor<QueryInfoHolder<Select>> transformationProcessor,
-	                               CortexContext cortexContext, ResultSetExtractor<Stream<?>> extractor, CacheService cacheService) {
-		super(transformationProcessor, cortexContext, extractor, cacheService);
-		this.cortexContext = cortexContext;
+	                               CoretexContext coretexContext, ResultSetExtractor<Stream<?>> extractor, CacheService cacheService) {
+		super(transformationProcessor, coretexContext, extractor, cacheService);
+		this.coretexContext = coretexContext;
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class PageableSelectOperation extends SelectOperation {
 	}
 
 	private String getTotalCountQuery(String query) {
-		return String.format("SELECT count(*) FROM (%s) as co", query);
+		return String.format("SELECT count(*) as count FROM (%s) as co", query);
 	}
 
 	@Lookup

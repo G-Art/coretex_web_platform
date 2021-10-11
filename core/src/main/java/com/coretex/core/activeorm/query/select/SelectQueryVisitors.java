@@ -5,13 +5,16 @@ import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.expression.operators.arithmetic.*;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
+import net.sf.jsqlparser.expression.operators.conditional.XorExpression;
 import net.sf.jsqlparser.expression.operators.relational.*;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.*;
 import net.sf.jsqlparser.statement.alter.Alter;
+import net.sf.jsqlparser.statement.alter.AlterSession;
 import net.sf.jsqlparser.statement.comment.Comment;
 import net.sf.jsqlparser.statement.create.index.CreateIndex;
+import net.sf.jsqlparser.statement.create.synonym.CreateSynonym;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
 import net.sf.jsqlparser.statement.create.view.AlterView;
 import net.sf.jsqlparser.statement.create.view.CreateView;
@@ -22,6 +25,7 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.merge.Merge;
 import net.sf.jsqlparser.statement.replace.Replace;
 import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.show.ShowTablesStatement;
 import net.sf.jsqlparser.statement.truncate.Truncate;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.statement.upsert.Upsert;
@@ -86,8 +90,8 @@ public interface SelectQueryVisitors extends SelectVisitor, FromItemVisitor, Exp
 
 	@Override
 	default void visit(ValuesStatement values) {
-		for (Expression expr : values.getExpressions()) {
-			expr.accept(this);
+		if(values.getExpressions() != null){
+			values.getExpressions().accept(this);
 		}
 	}
 
@@ -95,8 +99,6 @@ public interface SelectQueryVisitors extends SelectVisitor, FromItemVisitor, Exp
 	default void visit(InExpression inExpression) {
 		if (inExpression.getLeftExpression() != null) {
 			inExpression.getLeftExpression().accept(this);
-		} else if (inExpression.getLeftItemsList() != null) {
-			inExpression.getLeftItemsList().accept(this);
 		}
 		inExpression.getRightItemsList().accept(this);
 	}
@@ -349,8 +351,15 @@ public interface SelectQueryVisitors extends SelectVisitor, FromItemVisitor, Exp
 	}
 
 	@Override
-	default void visit(DateTimeLiteralExpression literal) {
+	default void visit(TimezoneExpression timezoneExpression) {
+	}
 
+	@Override
+	default void visit(XMLSerializeExpr xmlSerializeExpr) {
+	}
+
+	@Override
+	default void visit(DateTimeLiteralExpression literal) {
 	}
 
 	@Override
@@ -629,5 +638,56 @@ public interface SelectQueryVisitors extends SelectVisitor, FromItemVisitor, Exp
 		for (Expression expression : namedExpressionList.getExpressions()) {
 			expression.accept(this);
 		}
+	}
+
+
+	@Override
+	default void visit(XorExpression orExpression) {
+		visitBinaryExpression(orExpression);
+	}
+
+	@Override
+	default void visit(RowGetExpression rowGetExpression) {
+
+	}
+
+	@Override
+	default void visit(ArrayConstructor aThis) {
+
+	}
+
+	@Override
+	default void visit(VariableAssignment aThis) {
+
+	}
+
+	@Override
+	default void visit(SavepointStatement savepointStatement) {
+
+	}
+
+	@Override
+	default void visit(RollbackStatement rollbackStatement) {
+
+	}
+
+	@Override
+	default void visit(ResetStatement reset) {
+
+	}
+
+	@Override
+	default void visit(ShowTablesStatement showTables) {
+
+	}
+
+	@Override
+	default void visit(CreateSynonym createSynonym) {
+
+	}
+
+	@Override
+	default void visit(AlterSession alterSession) {
+
 	}
 }

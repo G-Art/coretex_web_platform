@@ -29,7 +29,7 @@ public abstract class AbstractGenericItem implements Serializable, Cloneable {
     private transient ItemContextFactory itemContextFactory;
 
     public AbstractGenericItem() {
-        itemContextFactory = ApplicationContextProvider.getApplicationContext().getBean(ITEM_CONTEXT_FACTORY_QUALIFIER, ItemContextFactory.class);
+        itemContextFactory = ApplicationContextProvider.getBean(ITEM_CONTEXT_FACTORY_QUALIFIER, ItemContextFactory.class);
         checkNotNull(this.itemContextFactory, ITEM_COX_FACTORY_UNAVAILABLE_ERROR_MSG);
         create(getFactory().create(this.getClass()));
     }
@@ -41,8 +41,7 @@ public abstract class AbstractGenericItem implements Serializable, Cloneable {
     private void create(ItemContext ctx) {
         this.ctx = ctx;
         if (!ctx.isSystemType()) {
-            var operationInterceptorService = ApplicationContextProvider.getApplicationContext()
-                    .getBean(ItemOperationInterceptorService.class);
+            var operationInterceptorService = ApplicationContextProvider.getBean(ItemOperationInterceptorService.class);
             if (ctx.isNew()) {
                 operationInterceptorService.onCreate(this);
             } else {

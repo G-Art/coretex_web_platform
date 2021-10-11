@@ -3,7 +3,6 @@ package com.coretex.core.activeorm.query.select.transformator.strategies;
 import com.coretex.core.activeorm.query.select.SelectQueryTransformationHelper;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
 import com.coretex.core.activeorm.query.select.scanners.SelectItemScanner;
-import com.coretex.core.activeorm.query.select.transformator.DataInjectionType;
 import com.coretex.core.activeorm.query.select.transformator.dip.SelectItemDataInjectionPoint;
 import com.coretex.core.activeorm.query.select.transformator.dip.WrapperInjectionPoint;
 import com.coretex.items.core.GenericItem;
@@ -15,13 +14,12 @@ import net.sf.jsqlparser.statement.select.SelectBody;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class SelectItemExpressionTransformationStrategy extends AbstractTransformationStrategy<WrapperInjectionPoint<List<SelectItemDataInjectionPoint>>, SelectBody> {
 
-	public SelectItemExpressionTransformationStrategy(Map<DataInjectionType, AbstractTransformationStrategy> transformationStrategies, SelectQueryTransformationHelper transformationHelper) {
-		super(transformationStrategies, transformationHelper);
+	public SelectItemExpressionTransformationStrategy(SelectQueryTransformationHelper transformationHelper) {
+		super(transformationHelper);
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.coretex.core.activeorm.query.operations;
 
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.contexts.UpdateOperationConfigContext;
-import com.coretex.core.activeorm.query.operations.dataholders.UpdateValueDataHolder;
+import com.coretex.core.activeorm.query.operations.dataholders.AbstractValueDataHolder;
 import com.coretex.core.activeorm.query.operations.sources.ModificationSqlParameterSource;
 import com.coretex.core.activeorm.query.specs.CascadeUpdateOperationSpec;
 import com.coretex.core.activeorm.query.specs.UpdateOperationSpec;
@@ -10,6 +10,7 @@ import com.coretex.core.activeorm.services.AbstractJdbcService;
 import com.coretex.core.activeorm.services.ItemOperationInterceptorService;
 import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.core.general.utils.OperationUtils;
+import com.coretex.core.services.bootstrap.dialect.DbDialectService;
 import com.coretex.items.core.GenericItem;
 import com.google.common.collect.Lists;
 import net.sf.jsqlparser.statement.update.Update;
@@ -27,8 +28,8 @@ public class UpdateOperation extends ModificationOperation<Update, UpdateOperati
 
 	private Logger LOG = LoggerFactory.getLogger(UpdateOperation.class);
 
-	public UpdateOperation(AbstractJdbcService abstractJdbcService, ItemOperationInterceptorService itemOperationInterceptorService) {
-		super(abstractJdbcService, itemOperationInterceptorService);
+	public UpdateOperation(AbstractJdbcService abstractJdbcService, ItemOperationInterceptorService itemOperationInterceptorService, DbDialectService dbDialectService) {
+		super(abstractJdbcService, itemOperationInterceptorService, dbDialectService);
 	}
 
 	@Override
@@ -40,10 +41,10 @@ public class UpdateOperation extends ModificationOperation<Update, UpdateOperati
 	protected void executeBefore(UpdateOperationConfigContext operationConfigContext) {
 		var operationSpec = operationConfigContext.getOperationSpec();
 		if (operationSpec.isCascadeEnabled()) {
-			operationSpec.getUpdateValueDatas()
+			operationSpec.getValueDataHolders()
 					.values()
 					.stream()
-					.filter(UpdateValueDataHolder::isItemRelation)
+					.filter(AbstractValueDataHolder::isItemRelation)
 					.forEach(valueDataHolder -> {
 						if (Objects.isNull(valueDataHolder.getRelatedItem()) && valueDataHolder.getAttributeTypeItem().getAssociated()) {
 							GenericItem val = operationSpec.getItem().getItemContext().getOriginValue(valueDataHolder.getAttributeTypeItem().getAttributeName());
@@ -65,12 +66,12 @@ public class UpdateOperation extends ModificationOperation<Update, UpdateOperati
 	@Override
 	public void executeOperation(UpdateOperationConfigContext operationConfigContext) {
 		var operationSpec = operationConfigContext.getOperationSpec();
-		var query = operationConfigContext.getQuerySupplier().get();
+		var query = buildQuery(operationConfigContext);
 		if (LOG.isDebugEnabled()) {
 			LOG.debug(String.format("Execute query: [%s]; type: [%s]; cascade [%s]", query, getQueryType(), operationSpec instanceof CascadeUpdateOperationSpec));
 		}
 		executeJdbcOperation(jdbcTemplate -> jdbcTemplate.update(query,
-				new ModificationSqlParameterSource<UpdateValueDataHolder>(operationSpec.getUpdateValueDatas())));
+				new ModificationSqlParameterSource<>(operationSpec.getValueDataHolders())));
 	}
 
 	@Override

@@ -14,26 +14,30 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class SelectOperationConfigContext extends AbstractOperationConfigContext<
+public class SelectOperationConfigContext implements OperationConfigContext<
 		Select,
-		SelectOperationSpec,
-		SelectOperationConfigContext> {
+		SelectOperationSpec> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectOperationConfigContext.class);
 
 	private final boolean pageable;
 	private Long totalCount = 0L;
+	private final SelectOperationSpec operationSpec;
 
 	public SelectOperationConfigContext(SelectOperationSpec operationSpec){
 		this(operationSpec, false);
 	}
 
 	public SelectOperationConfigContext(SelectOperationSpec operationSpec, boolean pageable) {
-		super(operationSpec);
+		this.operationSpec = operationSpec;
 		this.pageable = pageable;
 	}
 
 	@Override
+	public SelectOperationSpec getOperationSpec() {
+		return operationSpec;
+	}
+
 	public Supplier<String> getQuerySupplier() {
 		return () -> getOperationSpec().getQuery();
 	}

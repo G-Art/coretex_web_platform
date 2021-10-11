@@ -32,7 +32,7 @@ public abstract class Scanner<T, Q> implements SelectQueryVisitors {
 		this.deep = deep;
 		this.parentStatement = parentStatement;
 		if(Objects.isNull(transformationHelper)){
-			transformationHelper = ApplicationContextProvider.getApplicationContext().getBean(SelectQueryTransformationHelper.class);
+			transformationHelper = ApplicationContextProvider.getBean(SelectQueryTransformationHelper.class);
 		}
 	}
 

@@ -2,7 +2,7 @@ package com.coretex.core.activeorm.extractors;
 
 import com.coretex.core.activeorm.factories.RowMapperFactory;
 import com.coretex.core.activeorm.query.operations.SelectOperation;
-import com.coretex.core.services.bootstrap.meta.MetaTypeProvider;
+import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaTypeItem;
 import org.apache.commons.lang3.ArrayUtils;

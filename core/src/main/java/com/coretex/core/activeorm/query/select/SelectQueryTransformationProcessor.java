@@ -1,6 +1,5 @@
 package com.coretex.core.activeorm.query.select;
 
-import com.coretex.core.activeorm.cache.impl.FeaturedStatementCacheContext;
 import com.coretex.core.activeorm.query.QueryTransformationProcessor;
 import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.select.scanners.SelectBodyScanner;
