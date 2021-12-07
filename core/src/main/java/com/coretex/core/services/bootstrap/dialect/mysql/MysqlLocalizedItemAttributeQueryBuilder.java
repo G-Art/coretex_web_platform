@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class MysqlLocalizedItemAttributeQueryBuilder implements QueryBuilder<SelectItemAttributeOperationConfigContext> {
-	private static final String SELECT_LOCALIZED_ITEM_FIELD_BY_UUID_TEMPLATE = "select item.localeiso, item.value FROM %s_LOC as item WHERE item.owner = UUID_TO_BIN(:ownerUuid) AND item.attribute = UUID_TO_BIN(:uuid)";
+	private static final String SELECT_LOCALIZED_ITEM_FIELD_BY_UUID_TEMPLATE = "select \"item\".\"localeiso\", \"item\".\"value\" FROM %s_loc as \"item\" WHERE \"item\".\"owner\" = UUID_TO_BIN(:ownerUuid) AND \"item\".\"attribute\" = UUID_TO_BIN(:uuid)";
 
 	@Override
 	public String createQuery(SelectItemAttributeOperationConfigContext context){

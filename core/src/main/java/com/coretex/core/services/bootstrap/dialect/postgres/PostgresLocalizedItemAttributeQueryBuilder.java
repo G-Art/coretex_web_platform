@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class PostgresLocalizedItemAttributeQueryBuilder implements QueryBuilder<SelectItemAttributeOperationConfigContext> {
-	private static final String SELECT_LOCALIZED_ITEM_FIELD_BY_UUID_TEMPLATE = "select item.localeiso, item.value FROM %s_LOC as item WHERE item.owner = :ownerUuid AND item.attribute = :uuid";
+	private static final String SELECT_LOCALIZED_ITEM_FIELD_BY_UUID_TEMPLATE = "select \"item\".\"localeiso\", \"item\".\"value\" FROM \"%s_loc\" as \"item\" WHERE \"item\".\"owner\" = :ownerUuid AND \"item\".\"attribute\" = :uuid";
 
 	@Override
 	public String createQuery(SelectItemAttributeOperationConfigContext context) {

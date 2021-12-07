@@ -53,7 +53,7 @@ public class PageableSelectOperation extends SelectOperation {
 	}
 
 	private String getTotalCountQuery(String query) {
-		return String.format("SELECT count(*) as count FROM (%s) as co", query);
+		return String.format("SELECT count(*) as \"count\" FROM (%s) as co", query);
 	}
 
 	@Lookup

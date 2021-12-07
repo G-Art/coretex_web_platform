@@ -18,7 +18,7 @@ public class PostgresEnumAttributeQueryBuilder implements QueryBuilder<SelectIte
 
 	private final Logger LOG = LoggerFactory.getLogger(PostgresEnumAttributeQueryBuilder.class);
 
-	private static final String SELECT_ENUM_FIELD_BY_UUID_TEMPLATE = "select item.%s from \"%s\" as item where item.uuid = :uuid";
+	private static final String SELECT_ENUM_FIELD_BY_UUID_TEMPLATE = "select \"item\".\"%s\" from \"%s\" as \"item\" where \"item\".\"uuid\" = :uuid";
 
 
 	@Override

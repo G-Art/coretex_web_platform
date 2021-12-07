@@ -3,6 +3,7 @@ package com.coretex.core.services.bootstrap.dialect;
 import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.contexts.OperationConfigContext;
 import com.coretex.items.core.RegularTypeItem;
+import org.apache.calcite.sql.SqlDialect;
 
 import java.util.Date;
 
@@ -16,4 +17,6 @@ public interface DbDialectService {
 	QueryBuilder<? extends OperationConfigContext<?,?>> getQueryBuilder(QueryType queryType);
 
 	String getSqlTypeName(RegularTypeItem regularTypeItem);
+
+	SqlDialect.DatabaseProduct getDatabaseProduct();
 }

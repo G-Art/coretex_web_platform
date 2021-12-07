@@ -14,6 +14,7 @@ public class MetaTypeInfoDTO {
 	private String typeCode;
 	private String description;
 	private Collection<MetaAttributeTypeInfoDTO> itemAttributes;
+	private MetaTypeDTO metaType;
 
 	public MetaTypeInfoDTO(MetaTypeItem metaTypeItem, Collection<MetaAttributeTypeItem> allAttributes) {
 		this.uuid = metaTypeItem.getUuid().toString();
@@ -23,6 +24,7 @@ public class MetaTypeInfoDTO {
 				.stream()
 				.map(MetaAttributeTypeInfoDTO::new)
 				.collect(Collectors.toSet()) : Collections.EMPTY_SET;
+		this.metaType = new MetaTypeDTO(metaTypeItem);
 	}
 
 	public Collection<MetaAttributeTypeInfoDTO> getItemAttributes() {
@@ -57,4 +59,11 @@ public class MetaTypeInfoDTO {
 		this.typeCode = typeCode;
 	}
 
+	public MetaTypeDTO getMetaType() {
+		return metaType;
+	}
+
+	public void setMetaType(MetaTypeDTO metaType) {
+		this.metaType = metaType;
+	}
 }

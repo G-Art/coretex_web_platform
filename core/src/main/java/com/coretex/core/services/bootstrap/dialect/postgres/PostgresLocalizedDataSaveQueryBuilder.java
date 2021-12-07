@@ -15,8 +15,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PostgresLocalizedDataSaveQueryBuilder extends AbstractLocalizedDataSaveQueryBuilder {
 
-	private final static String INSERT_LOCALIZED_DATA_QUERY = "insert into %s_LOC (owner, attribute, localeiso, value) values (:owner, :attribute, :localeiso, :value)";
-	private final static String UPDATE_LOCALIZED_DATA_QUERY = "update %s_LOC set value = :value where owner = :owner and attribute = :attribute and localeiso = :localeiso";
+	private final static String INSERT_LOCALIZED_DATA_QUERY = "insert into %s_loc (owner, attribute, localeiso, value) values (:owner, :attribute, :localeiso, :value)";
+	private final static String UPDATE_LOCALIZED_DATA_QUERY = "update %s_loc set value = :value where owner = :owner and attribute = :attribute and localeiso = :localeiso";
 
 	public PostgresLocalizedDataSaveQueryBuilder(DbDialectService dbDialectService) {
 		super(dbDialectService);

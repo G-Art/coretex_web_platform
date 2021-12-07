@@ -8,7 +8,7 @@ import com.coretex.items.core.MetaAttributeTypeItem;
 
 public class PostgresLocalizedDataRemoveQueryBuilder implements QueryBuilder<LocalizedDataRemoveOperationConfigContext> {
 
-	private final static String DELETE_LOCALIZED_DATA_QUERY = "delete from %s_LOC where owner = :owner and attribute = :attribute";
+	private final static String DELETE_LOCALIZED_DATA_QUERY = "delete from %s_loc where owner = :owner and attribute = :attribute";
 
 
 	@Override

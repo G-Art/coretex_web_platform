@@ -22,6 +22,8 @@ dependencies {
     api(group = "org.javalite", name = "javalite-common", version = "2.3")
     api(group = "com.zaxxer", name = "HikariCP", version = "3.4.1")
 
+    api(group = "org.apache.calcite", name = "calcite-core", version = "1.28.0")
+
     api(group = "org.springframework.boot", name = "spring-boot-starter-web", version = "2.5.5")
     api(group = "org.springframework", name = "spring-core", version = "${v["spring"]}")
     api(group = "org.springframework", name = "spring-context", version = "${v["spring"]}")
@@ -35,3 +37,27 @@ dependencies {
     web(group = "org.springframework", name = "spring-web", version = "${v["spring"]}")
     web(group = "javax.servlet", name = "javax.servlet-api", version = "4.0.1")
 }
+
+calcite {
+    config.set(file("src/main/codegen/config.fmpp"))
+    templates.set(file("src/main/codegen/templates"))
+    packageName.set("com.coretex.core.activeorm.query")
+}
+
+//val fmppMain by tasks.registering(org.apache.calcite.buildtools.fmpp.FmppTask::class) {
+//    config.set(file("codegen/config.fmpp"))
+//    templates.set(file("codegen/templates"))
+//}
+//
+//val javaCCMain by tasks.registering(org.apache.calcite.buildtools.javacc.JavaCCTask::class) {
+//    dependsOn(fmppMain)
+//    val parserFile = fmppMain.map {
+//        it.output.asFileTree.matching { include("**/Parser.jj") }
+//    }
+//    inputFile.from(parserFile)
+//    packageName.set("org.apache.calcite.sql.parser.impl")
+//}
+
+//tasks.compileKotlin {
+//    dependsOn(javaCCMain)
+//}

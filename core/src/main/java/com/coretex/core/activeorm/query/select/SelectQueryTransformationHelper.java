@@ -88,8 +88,8 @@ public class SelectQueryTransformationHelper {
 
 	public TableTransformationData bindItem(Table table) {
 		var tableName = table.getFullyQualifiedName().replaceAll("\"", "");
-		if (tableName.endsWith("_LOC")) {
-			String locTable = tableName.replace("_LOC", "");
+		if (tableName.endsWith("_loc")) {
+			String locTable = tableName.replace("_loc", "");
 			Set<MetaTypeItem> metaTypeForTable = coretexContext.findMetaTypeForTable(locTable);
 			return new TableTransformationData(table, null, metaTypeForTable, true);
 		}

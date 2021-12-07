@@ -16,8 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MysqlLocalizedDataSaveQueryBuilder extends AbstractLocalizedDataSaveQueryBuilder {
 
-	private final static String INSERT_LOCALIZED_DATA_QUERY = "insert into %s_LOC (owner, attribute, localeiso, value) values (UUID_TO_BIN(:owner), UUID_TO_BIN(:attribute), :localeiso, :value)";
-	private final static String UPDATE_LOCALIZED_DATA_QUERY = "update %s_LOC set value = :value where owner = UUID_TO_BIN(:owner) and attribute = UUID_TO_BIN(:attribute) and localeiso = :localeiso";
+	private final static String INSERT_LOCALIZED_DATA_QUERY = "insert into %s_loc (owner, attribute, localeiso, value) values (UUID_TO_BIN(:owner), UUID_TO_BIN(:attribute), :localeiso, :value)";
+	private final static String UPDATE_LOCALIZED_DATA_QUERY = "update %s_loc set value = :value where owner = UUID_TO_BIN(:owner) and attribute = UUID_TO_BIN(:attribute) and localeiso = :localeiso";
 
 	public MysqlLocalizedDataSaveQueryBuilder(DbDialectService dbDialectService) {
 		super(dbDialectService);

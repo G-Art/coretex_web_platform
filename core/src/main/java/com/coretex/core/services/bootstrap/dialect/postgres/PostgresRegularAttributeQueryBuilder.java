@@ -23,7 +23,7 @@ public class PostgresRegularAttributeQueryBuilder implements QueryBuilder<Select
 
 	private final PostgresLocalizedItemAttributeQueryBuilder localizedItemAttributeQueryBuilder = new PostgresLocalizedItemAttributeQueryBuilder();
 
-	private static final String SELECT_REGULAR_FIELD_BY_UUID_TEMPLATE = "select %s from \"%s\" as item where item.uuid = :uuid";
+	private static final String SELECT_REGULAR_FIELD_BY_UUID_TEMPLATE = "select %s from \"%s\" as \"item\" where \"item\".\"uuid\" = :uuid";
 
 	@Override
 	public String createQuery(SelectItemAttributeOperationConfigContext context) {
@@ -72,7 +72,7 @@ public class PostgresRegularAttributeQueryBuilder implements QueryBuilder<Select
 
 	protected String createQuery(List<MetaAttributeTypeItem> unloadedAttributes, ItemContext ctx) {
 		var columns = unloadedAttributes.stream()
-				.map(attr -> String.format("item.%s", attr.getAttributeName()))
+				.map(attr -> String.format("\"item\".\"%s\"", attr.getAttributeName()))
 				.collect(Collectors.joining(","));
 		return String.format(SELECT_REGULAR_FIELD_BY_UUID_TEMPLATE, columns, ctx.getTypeCode());
 	}

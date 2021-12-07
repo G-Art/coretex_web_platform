@@ -5,9 +5,92 @@ elements {
     }
 
     items {
+        BlueprintConvasConfig(abstract: true) {
+            description = "Blueprint convas configuration"
+            attributes {
+                background(String)
+            }
+        }
 
+        RegularBlueprintConvasConfig(extend:BlueprintConvasConfig, table:false){
+            description = "Regular mono color convas configuration"
+//            no attribute required
+        }
+
+        CustomBlueprintConvasConfig(extend:BlueprintConvasConfig, table:false){
+            description = "Convas configuration with custom background"
+            attributes{
+                type(BlueprintBackgroundType)
+                color(String)
+                size(Integer)
+                distance(Integer)
+            }
+        }
+
+        BlueprintNodeConfig {
+            description = "Blueprint node configuration"
+            attributes {
+                boxType(BlueprintTypeNode)
+                titleTextColor(String)
+                titleBoxColor(String)
+                backgroundColor(String)
+                backgroundColorHover(String)
+                backgroundColorSelected(String)
+                borderSize(Integer)
+                borderColor(String)
+                borderRadius(Integer)
+                minHeight(Integer)
+                minWidth(Integer)
+                paddingTop(Integer)
+                paddingBottom(Integer)
+                boxShadownHoritzontalLength(Integer)
+                boxShadownVerticalLength(Integer)
+                boxShadownBlurRadius(Integer)
+                boxShadownSpread(Integer)
+                boxShadownColor(String)
+                boxShadownColorHover(String)
+                boxShadownColorSelected(String)
+            }
+        }
+        BlueprintLineConfig {
+            description = "Blueprint line configuration"
+            attributes {
+                lineType(BlueprintLineType)
+                width(Integer)
+                color(String)
+                colorHover(String)
+                colorSelected(String)
+            }
+        }
+        BlueprintConfig {
+            description = "Blueprint configuration"
+            attributes {
+                code(String){
+                    unique = true
+                }
+                title(String)
+                description(String)
+                convasConfig(BlueprintConvasConfig)
+                nodeConfig(BlueprintConvasConfig)
+                lineConfig(BlueprintConvasConfig)
+            }
+        }
     }
 
     enums {
+        BlueprintLineType {
+            regular
+            arrow
+            reverce_arrow
+            bedirection_arrow
+        }
+        BlueprintTypeNode {
+            flex
+            block
+        }
+        BlueprintBackgroundType {
+            grid
+            dots
+        }
     }
 }

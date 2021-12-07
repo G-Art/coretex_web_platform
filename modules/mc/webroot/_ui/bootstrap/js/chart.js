@@ -3,7 +3,6 @@ new Vue({
     data: {},
     methods: {
 
-
         createChart: function (chartData) {
 
             let totalMemoryDataset = {

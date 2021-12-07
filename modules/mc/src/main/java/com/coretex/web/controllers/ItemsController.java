@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -57,15 +58,35 @@ public class ItemsController extends AbstractController {
 
 	@RequestMapping(method = RequestMethod.GET, path = "/itemtype/info")
 	@ResponseBody
-	public MetaTypeInfoDTO getMetaTypeInfo(@RequestParam("uuid") String uuid) {
-		var metaType = metaTypeProvider.findMetaType(UUID.fromString(uuid));
-		return new MetaTypeInfoDTO(metaType, metaTypeProvider.getAllAttributes(metaType).values());
+	public MetaTypeInfoDTO getMetaTypeInfo(@RequestParam(value = "uuid", required = false) String uuid, @RequestParam(value = "typeCode", required = false) String typeCode) {
+		if (uuid == null ^ typeCode == null) {
+			MetaTypeItem metaType;
+			if (Objects.nonNull(uuid)) {
+				metaType = metaTypeProvider.findMetaType(UUID.fromString(uuid));
+			} else {
+				metaType = metaTypeProvider.findMetaType(typeCode);
+			}
+			return new MetaTypeInfoDTO(metaType, metaTypeProvider.getAllAttributes(metaType).values());
+		}
+		throw new IllegalArgumentException("Only one parameter is required [uuid or typeCode]");
 	}
+
+	@RequestMapping(method = RequestMethod.GET, path = "/subtypes/info")
+	@ResponseBody
+	public Set<MetaTypeInfoDTO> getSubtypesInfo(@RequestParam(value = "uuid", required = false) String uuid) {
+
+		MetaTypeItem metaType = metaTypeProvider.findMetaType(UUID.fromString(uuid));
+		return metaType.getSubtypes()
+				.stream()
+				.map(item -> new MetaTypeInfoDTO(item, metaTypeProvider.getAllAttributes(item).values()))
+				.collect(Collectors.toSet());
+	}
+
 
 	@RequestMapping(method = RequestMethod.POST, path = "/type/{type}/instances")
 	@ResponseBody
 	public List<Map> getMetaTypeInfo(@PathVariable("type") String type, @RequestBody final MultiValueMap<String, Object> formData) {
-		var attributes = formData.containsKey("attributes") ? List.of(((String)formData.getFirst("attributes")).split(",")): List.of();
+		var attributes = formData.containsKey("attributes") ? List.of(((String) formData.getFirst("attributes")).split(",")) : List.of();
 		var metaType = metaTypeProvider.findMetaType(type); // required for case if type is not exist
 		var attributeTypeItemMap = metaTypeProvider.getAllAttributes(metaType).entrySet()
 				.stream()
@@ -78,9 +99,9 @@ public class ItemsController extends AbstractController {
 					Map params = Maps.newHashMap();
 					var itemContext = items.getItemContext();
 					attributeTypeItemMap.forEach((s, metaAttributeTypeItem) -> {
-						if(metaAttributeTypeItem.getLocalized()){
+						if (metaAttributeTypeItem.getLocalized()) {
 							params.put(s, itemContext.getLocalizedValues(s));
-						}else{
+						} else {
 							params.put(s, Objects.toString(itemContext.getValue(s), StringUtils.EMPTY));
 						}
 					});

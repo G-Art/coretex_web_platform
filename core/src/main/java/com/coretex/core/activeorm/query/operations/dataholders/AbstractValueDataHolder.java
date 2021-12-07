@@ -2,18 +2,15 @@ package com.coretex.core.activeorm.query.operations.dataholders;
 
 import com.coretex.core.activeorm.exceptions.MandatoryAttributeException;
 import com.coretex.core.activeorm.query.specs.ModificationOperationSpec;
+import com.coretex.core.general.utils.AttributeTypeUtils;
 import com.coretex.core.services.bootstrap.impl.MetaTypeProvider;
 import com.coretex.items.core.GenericItem;
 import com.coretex.items.core.MetaAttributeTypeItem;
-import com.coretex.items.core.MetaEnumTypeItem;
 import com.coretex.items.core.MetaTypeItem;
-import com.coretex.items.core.RegularTypeItem;
-import com.coretex.meta.AbstractGenericItem;
 import org.springframework.jdbc.core.SqlParameterValue;
 
 import java.util.Objects;
 
-import static com.coretex.core.general.utils.ItemUtils.getTypeCode;
 import static com.coretex.core.general.utils.OperationUtils.isLoopSafe;
 import static java.util.Objects.nonNull;
 
@@ -72,18 +69,11 @@ public abstract class AbstractValueDataHolder<S extends ModificationOperationSpe
 	}
 
 	protected String typeName() {
-		return getMetaTypeProvider().getSqlTypeName(getRegularType(getAttributeTypeItem().getAttributeType()));
+		return getMetaTypeProvider().getSqlTypeName(AttributeTypeUtils.getRegularTypeForAttribute(getAttributeTypeItem()));
 	}
 
 	protected int getSqlType() {
-		return getMetaTypeProvider().getSqlType(getRegularType(getAttributeTypeItem().getAttributeType()));
-	}
-
-	private RegularTypeItem getRegularType(GenericItem attributeType) {
-		if(attributeType instanceof MetaTypeItem || attributeType instanceof MetaEnumTypeItem){
-			return (RegularTypeItem) getMetaTypeProvider().findAttribute(getTypeCode(attributeType), AbstractGenericItem.UUID).getAttributeType();
-		}
-		return (RegularTypeItem) attributeType;
+		return getMetaTypeProvider().getSqlType(AttributeTypeUtils.getRegularTypeForAttribute(getAttributeTypeItem()));
 	}
 
 	public Boolean isItemRelation() {

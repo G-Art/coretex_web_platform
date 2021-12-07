@@ -17,7 +17,7 @@ public class PostgresRelatedItemAttributeQueryBuilder implements QueryBuilder<Se
 
 	private final Logger LOG = LoggerFactory.getLogger(PostgresRelatedItemAttributeQueryBuilder.class);
 
-	private static final String SELECT_ITEM_FIELD_BY_UUID_TEMPLATE = "select item.* from \"%s\" as item left join \"%s\" as j on (j.%s = item.uuid) where j.uuid = :uuid";
+	private static final String SELECT_ITEM_FIELD_BY_UUID_TEMPLATE = "select \"item\".* from \"%s\" as \"item\" left join \"%s\" as \"j\" on (\"j\".\"%s\" = \"item\".\"uuid\") where \"j\".\"uuid\" = :uuid";
 
 
 	@Override

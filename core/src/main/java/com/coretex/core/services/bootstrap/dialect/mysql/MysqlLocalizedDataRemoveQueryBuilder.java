@@ -8,7 +8,7 @@ import com.coretex.items.core.MetaAttributeTypeItem;
 
 public class MysqlLocalizedDataRemoveQueryBuilder implements QueryBuilder<LocalizedDataRemoveOperationConfigContext> {
 
-	private final static String DELETE_LOCALIZED_DATA_QUERY = "delete from %s_LOC where owner = UUID_TO_BIN(:owner) and attribute = UUID_TO_BIN(:attribute)";
+	private final static String DELETE_LOCALIZED_DATA_QUERY = "delete from %s_loc where owner = UUID_TO_BIN(:owner) and attribute = UUID_TO_BIN(:attribute)";
 
 	@Override
 	public String createQuery(LocalizedDataRemoveOperationConfigContext context) {

@@ -1,0 +1,64 @@
+.cytoscape-navigator{
+    position: fixed;
+    z-index: 99999;
+    bottom: 6px;
+    right: -8px;
+    overflow: hidden;
+    border: 2px solid #bebebe !important;
+    background: #262626;
+    background-image: repeating-linear-gradient(to bottom, #343434, #343434 1px, transparent 1px, transparent 8px),
+    repeating-linear-gradient(to right, #343434, #343434 1px, transparent 1px, transparent 8px);
+    height: 25vh !important;
+    width: 25vw !important;
+    margin-bottom: 24px;
+    margin-right: 24px;
+}
+
+.cytoscape-navigator > img{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.cytoscape-navigator > canvas{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 101;
+}
+
+.cytoscape-navigatorView{
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: move;
+    background: #B7E1ED;
+    -moz-opacity: 0.50;
+    opacity: 0.50;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha"(Opacity=50);
+    z-index: 102;
+}
+
+.cytoscape-navigatorOverlay{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 103;
+}
+
+.cytoscape-navigator .cytoscape-navigatorView {
+    border: 2px solid rgba(170, 170, 170, 0.99);
+    background-color: rgba(130, 144, 175, 0.3);
+}
+
+/*Ovveride overlay container when mouse is over Navigator*/
+.cytoscape-navigator:hover .cytoscape-navigatorOverlay {
+    border: 2px solid rgba(170, 170, 170, 0.99);
+    background: transparent;
+}
+
+/*Ovveride view's container when mouse is over view*/
+.cytoscape-navigator.mouseover-view .cytoscape-navigatorView {
+    background-color: rgba(130, 144, 175, 0.3);
+}

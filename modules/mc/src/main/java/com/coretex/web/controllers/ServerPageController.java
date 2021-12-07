@@ -4,14 +4,14 @@ import com.coretex.core.activeorm.services.ItemService;
 import com.coretex.data.SystemInfo;
 import com.coretex.data.SystemMemoryInfo;
 import com.coretex.server.PluginAccessor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
 
 /**
  * @author Gerasimenko (g-art) Artem "gerasimenko.art@gmail.com"
@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/")
 public class ServerPageController extends AbstractController {
 
-    @Autowired
+    @Resource
     private ItemService itemService;
 
-    @Autowired
+    @Resource
     private PluginAccessor pluginAccessor;
 
     public static final String PAGE_ROOT = "/server/contexts";

@@ -12,6 +12,7 @@
 
     <import resource="core-cache-spring.xml"/>
     <import resource="core-query-transformation-spring.xml"/>
+    <import resource="core-query-optimizer-spring.xml"/>
     <import resource="core-attribute-load-spring.xml"/>
 
     <bean id="sqlOperation" abstract="true" class="com.coretex.core.activeorm.query.operations.SqlOperation">

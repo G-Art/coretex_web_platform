@@ -6,6 +6,7 @@ import com.coretex.core.services.bootstrap.dialect.DbDialectService;
 import com.coretex.core.services.bootstrap.dialect.QueryBuilder;
 import com.coretex.items.core.RegularTypeItem;
 import com.google.common.collect.Maps;
+import org.apache.calcite.sql.SqlDialect;
 import org.postgresql.core.BaseConnection;
 import org.postgresql.core.TypeInfo;
 import org.postgresql.jdbc.TimestampUtils;
@@ -82,6 +83,11 @@ public class PostgresDbDialectService implements DbDialectService {
 	@Override
 	public String getSqlTypeName(RegularTypeItem regularTypeItem) {
 		return regularTypeItem.getDbType();
+	}
+
+	@Override
+	public SqlDialect.DatabaseProduct getDatabaseProduct() {
+		return SqlDialect.DatabaseProduct.POSTGRESQL;
 	}
 
 }

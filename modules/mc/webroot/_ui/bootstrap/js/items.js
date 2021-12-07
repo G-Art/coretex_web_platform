@@ -14,7 +14,7 @@ new Vue({
                     uuid: value
                 });
                 fetch(`/mc/items/itemtype/info?${params.toString()}`)
-                    .then(responce => responce.json())
+                    .then(response => response.json())
                     .then(data => {
                         this.item = data;
                     })

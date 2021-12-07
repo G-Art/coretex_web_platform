@@ -23,7 +23,7 @@ public class MysqlRegularAttributeQueryBuilder implements QueryBuilder<SelectIte
 
 	private final MysqlLocalizedItemAttributeQueryBuilder localizedItemAttributeQueryBuilder = new MysqlLocalizedItemAttributeQueryBuilder();
 
-	private static final String SELECT_REGULAR_FIELD_BY_UUID_TEMPLATE = "select %s from \"%s\" as item where item.uuid = :uuid";
+	private static final String SELECT_REGULAR_FIELD_BY_UUID_TEMPLATE = "select %s from \"%s\" as \"item\" where \"item\".\"uuid\" = UUID_TO_BIN(:uuid)";
 
 	@Override
 	public String createQuery(SelectItemAttributeOperationConfigContext context) {
@@ -75,9 +75,9 @@ public class MysqlRegularAttributeQueryBuilder implements QueryBuilder<SelectIte
 				.map(attr -> {
 					RegularTypeItem regularTypeItem = (RegularTypeItem) attr.getAttributeType();
 					if (regularTypeItem.getPersistenceType().equalsIgnoreCase(AbstractGenericItem.UUID)) {
-						return String.format("BIN_TO_UUID(item.%s) as %s", attr.getAttributeName(), attr.getColumnName());
+						return String.format("BIN_TO_UUID(\"item\".\"%s\") as \"%s\"", attr.getAttributeName(), attr.getColumnName());
 					}
-					return String.format("item.%s", attr.getAttributeName());
+					return String.format("\"item\".\"%s\"", attr.getAttributeName());
 				})
 				.collect(Collectors.joining(","));
 		return String.format(SELECT_REGULAR_FIELD_BY_UUID_TEMPLATE, columns, ctx.getTypeCode());

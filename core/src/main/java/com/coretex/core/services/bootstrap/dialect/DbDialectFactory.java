@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 public class DbDialectFactory {
 
-	private enum SqlDialect {
+	protected enum SqlDialect {
 		MYSQL(MysqlDbDialectService::new, MysqlMetaDataExtractor::new, MysqlQueryTransformationHints::new),
 		POSTGRES(PostgresDbDialectService::new, PostgresMetaDataExtractor::new, PostgresQueryTransformationHints::new),
 		ORACLE(null, null, null);
@@ -76,7 +76,6 @@ public class DbDialectFactory {
 			return ENUM_MAP.get(name.toLowerCase());
 		}
 	}
-
 
 	public DbDialectService getDialectService(DataSource defaultDataSource, String dialect) {
 		return SqlDialect.get(dialect).getDbDialectService(defaultDataSource);

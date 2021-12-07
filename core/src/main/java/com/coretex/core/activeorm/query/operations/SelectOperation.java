@@ -8,6 +8,7 @@ import com.coretex.core.activeorm.query.QueryType;
 import com.coretex.core.activeorm.query.operations.contexts.SelectOperationConfigContext;
 import com.coretex.core.activeorm.query.operations.dataholders.QueryInfoHolder;
 import com.coretex.core.activeorm.query.operations.sources.SelectSqlParameterSource;
+import com.coretex.core.activeorm.query.select.SelectQueryOptimizer;
 import com.coretex.core.activeorm.query.specs.select.SelectOperationSpec;
 import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import com.google.common.cache.Cache;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
+import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -47,6 +49,9 @@ public class SelectOperation
 
 	private final CacheService cacheService;
 
+	@Resource
+	private SelectQueryOptimizer selectQueryOptimizer;
+
 	protected final Function<SelectOperationSpec, FeaturedStatementCacheContext<Select>> searchQuerySupplier;
 
 	public SelectOperation(QueryTransformationProcessor<QueryInfoHolder<Select>> transformationProcessor,
@@ -57,6 +62,11 @@ public class SelectOperation
 		this.cacheService = cacheService;
 		searchQuerySupplier = (operationSpec) -> {
 			var query = operationSpec.getQuery();
+
+			LOGGER.info("QUERY: ["+ query +"]");
+			var queryResult = selectQueryOptimizer.process(query);
+			LOGGER.info("OPTIMIZED QUERY: ["+queryResult+"]");
+
 			try {
 				Select select = (Select) CCJSqlParserUtil.parse(query);
 
@@ -67,7 +77,7 @@ public class SelectOperation
 							this.transformationProcessor.transform(queryInfoHolder);
 							return queryInfoHolder;
 						});
-						operationSpec.setTransformedQuery(selectQueryInfoHolder.getStatement().toString());
+						operationSpec.setTransformedQuery(queryResult);
 						return new FeaturedStatementCacheContext<>(selectQueryInfoHolder, operationSpec.getParameters());
 					} catch (ExecutionException e) {
 						LOGGER.error("Cache calculation error", e);
@@ -76,7 +86,7 @@ public class SelectOperation
 
 				var queryInfoHolder = new QueryInfoHolder<>(select);
 				this.transformationProcessor.transform(queryInfoHolder);
-				operationSpec.setTransformedQuery(queryInfoHolder.getStatement().toString());
+				operationSpec.setTransformedQuery(queryResult);
 				return new FeaturedStatementCacheContext<>(queryInfoHolder, operationSpec.getParameters());
 
 			} catch (JSQLParserException e) {
@@ -96,7 +106,7 @@ public class SelectOperation
 	public <T> Stream<T> execute(SelectOperationConfigContext operationConfigContext) {
 		return (Stream<T>) searchQuerySupplier
 				.andThen(queryStatementContext -> cacheService.get(queryStatementContext, () -> {
-					var query = queryStatementContext.getStatement().toString();
+					var query = operationConfigContext.getOperationSpec().getTransformedQuery();
 
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug(String.format("Execute query: [%s]; type: [%s];", query, getQueryType()));

@@ -18,7 +18,7 @@ public class MysqlRelationAttributeQueryBuilder implements QueryBuilder<SelectIt
 
 	private final Logger LOG = LoggerFactory.getLogger(MysqlRelationAttributeQueryBuilder.class);
 
-	private static final String SELECT_RELATION_ITEM_FIELD_BY_UUID_TEMPLATE = "select item.* FROM \"%s\" as item LEFT JOIN \"%s\" as rel ON item.uuid = rel.%s where rel.%s = UUID_TO_BIN(:uuid) ORDER BY rel.createDate";
+	private static final String SELECT_RELATION_ITEM_FIELD_BY_UUID_TEMPLATE = "select \"item\".* FROM \"%s\" as \"item\" LEFT JOIN \"%s\" as \"rel\" ON \"item\".uuid = \"rel\".%s where \"rel\".%s = UUID_TO_BIN(:uuid) ORDER BY \"rel\".createDate";
 
 
 	@Override

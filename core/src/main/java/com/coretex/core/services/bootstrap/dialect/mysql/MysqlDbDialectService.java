@@ -8,6 +8,7 @@ import com.coretex.items.core.RegularTypeItem;
 import com.coretex.server.ApplicationContextProvider;
 import com.google.common.collect.Maps;
 import com.mysql.cj.MysqlType;
+import org.apache.calcite.sql.SqlDialect;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -69,6 +70,11 @@ public class MysqlDbDialectService implements DbDialectService {
 			return getSqlTypeName(ApplicationContextProvider.getCoretexContext().getRegularType(String.class));
 		}
 		return regularTypeItem.getDbType();
+	}
+
+	@Override
+	public SqlDialect.DatabaseProduct getDatabaseProduct() {
+		return SqlDialect.DatabaseProduct.MYSQL;
 	}
 
 }

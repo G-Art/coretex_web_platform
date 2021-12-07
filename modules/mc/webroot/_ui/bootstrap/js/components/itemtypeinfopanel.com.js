@@ -44,6 +44,34 @@ Vue.component('item-type-info-panel', {
                                         <footer class="blockquote-footer">[{{item.uuid}}]</footer>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-3 text-left"><small>Item Class: </small></div>
+                                    <div class="col-9 text-left"><small>{{item.metaType.itemClass}}</small></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3 text-left"><small>Create date:  </small></div>
+                                    <div class="col-9 text-left"><small>{{item.metaType.createDate}}</small></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3 text-left"><small>Update date: </small></div>
+                                    <div class="col-9 text-left"><small>{{item.metaType.updateDate}}</small></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3 text-left"><small>Meta Type: </small></div>
+                                    <div class="col-9 text-left"><small>{{item.metaType.metaType}}<small></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3 text-left"><small>Table Name: </small></div>
+                                    <div class="col-9 text-left"><small>{{item.metaType.tableName}}</small></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3 text-left"><small>Table Owner: </small></div>
+                                    <div class="col-9 text-left">
+                                        <small>
+                                        <span class="badge badge-pill badge-info">{{item.metaType.tableOwner}}</span>
+                                        </small>
+                                    </div>
+                                </div>
                                 <hr class="border-top-1 border-white">
                                 <div v-for="ga in generalAttributes" class="row ">
                                     <div class="col-6">

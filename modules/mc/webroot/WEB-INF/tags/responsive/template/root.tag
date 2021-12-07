@@ -2,6 +2,7 @@
 
 <%@ attribute name="pageTitle" required="false" rtexprvalue="true" %>
 
+<%@attribute name="headerStyle" fragment="true" required="false" %>
 <%@attribute name="headerJs" fragment="true" %>
 <%@attribute name="footerJs" fragment="true" %>
 
@@ -20,9 +21,9 @@
     <title>Manager Console (${pageTitle})</title>
     <%--<link rel="icon" href="../../favicon.ico">--%>
 
-    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+    <link href="<c:url value="/resources/vendor/vue/css/bootstrap-vue.min.css"/>" rel="stylesheet" type="text/css">
 
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="<c:url value="/resources/vendor/vue/vue.min.js"/>"></script>
 
     <link href="<c:url value="/resources/vendor/fontawesome-free/css/all.min.css"/>" rel="stylesheet" type="text/css">
 
@@ -32,6 +33,7 @@
     <!-- Custom styles for this template-->
     <link href="<c:url value="/resources/css/sb-admin.css"/>" rel="stylesheet">
 
+    <jsp:invoke fragment="headerStyle"/>
     <jsp:invoke fragment="headerJs"/>
 <body id="page-top">
 <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
@@ -79,8 +81,8 @@
 <script src="<c:url value="/resources/js/demo/datatables-demo.js"/>"></script>
 <%--<script src="<c:url value="/resources/js/demo/chart-area-demo.js"/>"></script>--%>
 
-<script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
-<script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+<script src="<c:url value="/resources/vendor/polyfill/polyfill.min.js"/>"></script>
+<script src="<c:url value="/resources/vendor/vue/bootstrap-vue.min.js"/>"></script>
 <jsp:invoke fragment="footerJs"/>
 
 </body>

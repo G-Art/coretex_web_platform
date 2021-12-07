@@ -352,7 +352,7 @@ public abstract class SaveItemTest {
 		testItem.setCharacterType(Character.MAX_VALUE);
 		testItem.setClassType(RegularTypeContainerTestItem.class);
 		testItem.setLocalDateTimeType(LocalDateTime.now());
-		testItem.setLocalTimeType(LocalTime.now());
+		testItem.setLocalTimeType(LocalTime.of(10, 10, 30));
 		testItem.setLocalDateType(LocalDate.now());
 		testItem.setShortType(Short.MAX_VALUE);
 		testItem.setDateType(new Date());

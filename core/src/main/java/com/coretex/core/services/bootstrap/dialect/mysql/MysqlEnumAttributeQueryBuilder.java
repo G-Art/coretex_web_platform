@@ -18,7 +18,7 @@ public class MysqlEnumAttributeQueryBuilder implements QueryBuilder<SelectItemAt
 
 	private final Logger LOG = LoggerFactory.getLogger(MysqlEnumAttributeQueryBuilder.class);
 
-	private static final String SELECT_ENUM_FIELD_BY_UUID_TEMPLATE = "select %s from \"%s\" as item where item.uuid = :uuid";
+	private static final String SELECT_ENUM_FIELD_BY_UUID_TEMPLATE = "select %s from \"%s\" as \"item\" where \"item\".\"uuid\" = UUID_TO_BIN(:uuid)";
 
 
 	@Override
@@ -44,7 +44,7 @@ public class MysqlEnumAttributeQueryBuilder implements QueryBuilder<SelectItemAt
 
 	protected String createQuery(MetaAttributeTypeItem attribute, ItemContext ctx) {
 		return String.format(SELECT_ENUM_FIELD_BY_UUID_TEMPLATE,
-				"BIN_TO_UUID(item." + attribute.getColumnName() + ") as " + attribute.getColumnName(),
+				"BIN_TO_UUID(\"item\"." + attribute.getColumnName() + ") as \"" + attribute.getColumnName() +"\"",
 				ctx.getTypeCode());
 	}
 

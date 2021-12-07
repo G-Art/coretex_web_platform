@@ -1,17 +1,15 @@
 package com.coretex.core.test.transformation.query;
 
-import com.coretex.core.activeorm.query.select.SelectQueryTransformationProcessor;
 import com.coretex.core.tests.extentions.MockitoExtension;
 import com.coretex.core.tests.tags.IntegrationTest;
 import com.coretex.server.spring.CortexEnvironmentInitializer;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import javax.annotation.Resource;
 
 @ActiveProfiles("testmysql")
 @ContextConfiguration(
@@ -21,13 +19,14 @@ import javax.annotation.Resource;
 @DisplayName("Query Transformation Test (MySql)")
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @IntegrationTest
+@Disabled
 public class QueryTransformationMysqlTest {
 
-	@Resource
-	SelectQueryTransformationProcessor queryTransformationProcessor;
+//	@Resource
+//	SelectQueryTransformationProcessor queryTransformationProcessor;
 
 	@Test
 	void name() {
-		queryTransformationProcessor.transform(null);
+//		queryTransformationProcessor.transform(null);
 	}
 }

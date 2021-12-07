@@ -1,5 +1,6 @@
 package com.coretex.server;
 
+import com.coretex.core.services.bootstrap.dialect.DbDialectService;
 import com.coretex.core.services.bootstrap.impl.CoretexContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoader;
@@ -29,6 +30,10 @@ public final class ApplicationContextProvider {
 			coretexContext = getBean(CoretexContext.class);
 		}
 		return coretexContext;
+	}
+
+	public static DbDialectService getDbDialectService(){
+		return getCoretexContext().getDbDialectService();
 	}
 
 	public static <T> T getBean(Class<T> requiredType) {

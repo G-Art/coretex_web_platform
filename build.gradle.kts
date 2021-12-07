@@ -19,7 +19,7 @@ buildscript {
     }
     dependencies {
         classpath(group = "com.bmuschko", name = "gradle-docker-plugin", version = "6.6.1")
-        classpath(group = "com.coretex.build.plugin.helium", name = "build.plugin", version = "He-2.1.38-Dev")
+        classpath(group = "com.coretex.build.plugin.helium", name = "build.plugin", version = "He-2.1.46-Dev")
     }
 }
 

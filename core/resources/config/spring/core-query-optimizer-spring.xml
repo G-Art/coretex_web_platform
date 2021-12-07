@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="coretexItemsSchema" class="com.coretex.core.activeorm.query.select.CoretexItemsSchema">
+        <constructor-arg name="coretexContext" ref="defaultBootstrapContext"/>
+    </bean>
+
+    <util:properties id="calciteConfigProperties">
+        <prop key="#{T(org.apache.calcite.config.CalciteConnectionProperty).CASE_SENSITIVE.camelName()}">
+            true
+        </prop>
+        <prop key="#{T(org.apache.calcite.config.CalciteConnectionProperty).UNQUOTED_CASING.camelName()}">
+            UNCHANGED
+        </prop>
+        <prop key="#{T(org.apache.calcite.config.CalciteConnectionProperty).QUOTED_CASING.camelName()}">
+            UNCHANGED
+        </prop>
+    </util:properties>
+
+    <bean id="calciteConnectionConfig" class="org.apache.calcite.config.CalciteConnectionConfigImpl">
+        <constructor-arg name="properties" ref="calciteConfigProperties"/>
+    </bean>
+
+    <bean id="rootSchema" class="com.coretex.core.activeorm.query.select.QueryOptimizerConfigFactory" factory-method="creteRootSchema">
+        <constructor-arg name="name" value="public"/>
+        <constructor-arg name="schema" ref="coretexItemsSchema"/>
+    </bean>
+
+
+    <bean id="typeFactory" class="com.coretex.core.activeorm.query.select.CoretexSqlTypeFactoryImpl"/>
+
+    <bean id="calciteCatalogReader" class="org.apache.calcite.prepare.CalciteCatalogReader">
+        <constructor-arg name="rootSchema" ref="rootSchema"/>
+        <constructor-arg name="defaultSchema">
+            <list>
+                <value>public</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="typeFactory" ref="typeFactory"/>
+        <constructor-arg name="config" ref="calciteConnectionConfig"/>
+    </bean>
+
+
+    <bean id="optimizerConfigFactory" class="com.coretex.core.activeorm.query.select.QueryOptimizerConfigFactory">
+        <constructor-arg name="catalogReader" ref="calciteCatalogReader"/>
+        <constructor-arg name="typeFactory" ref="typeFactory"/>
+        <constructor-arg name="config" ref="calciteConnectionConfig"/>
+    </bean>
+
+    <bean id="sqlValidator" factory-bean="optimizerConfigFactory" factory-method="createSqlValidator"/>
+    <bean id="planner" factory-bean="optimizerConfigFactory" factory-method="createPlanner">
+        <constructor-arg name="coretexContext" ref="defaultBootstrapContext"/>
+    </bean>
+
+    <bean id="sqlToRelConverter" factory-bean="optimizerConfigFactory" factory-method="createSqlToRelConverter">
+        <constructor-arg name="planner" ref="planner"/>
+        <constructor-arg name="validator" ref="sqlValidator"/>
+    </bean>
+
+    <bean id="selectQueryOptimizer" class="com.coretex.core.activeorm.query.select.SelectQueryOptimizer">
+        <constructor-arg name="planner" ref="planner"/>
+        <constructor-arg name="validator" ref="sqlValidator"/>
+        <constructor-arg name="converter" ref="sqlToRelConverter"/>
+        <constructor-arg name="coretexContext" ref="defaultBootstrapContext" />
+    </bean>
+
+
+</beans>
